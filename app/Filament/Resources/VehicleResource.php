@@ -3,13 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehicleResource\{Pages};
-use App\Models\{Vehicle};
+use App\Models\Vehicle;
+use Filament\Forms\Components\{DatePicker, Section, Select, TextInput};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-
-use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
+use Filament\{Tables};
+use Illuminate\Database\Eloquent\{Builder};
 
 class VehicleResource extends Resource
 {
@@ -29,64 +31,70 @@ class VehicleResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\DatePicker::make('purchase_date')
-                    ->required(),
-                Forms\Components\TextInput::make('fipe_price')
-                    ->numeric(),
-                Forms\Components\TextInput::make('purchase_price')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('sale_price')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('promotional_price')
-                    ->numeric(),
-                Forms\Components\TextInput::make('vehicle_model_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('supplier_id')
-                    ->relationship('supplier', 'name'),
-                Forms\Components\TextInput::make('year_one')
-                    ->required(),
-                Forms\Components\TextInput::make('year_two')
-                    ->required(),
-                Forms\Components\TextInput::make('km')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('fuel')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('engine_power')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('steering')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('transmission')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('doors')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('seats')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('traction')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('color')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('plate')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('chassi')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('renavam')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('sold_date'),
-                Forms\Components\TextInput::make('description')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('annotation')
-                    ->maxLength(255),
+                Section::make()->schema([
+                    DatePicker::make('purchase_date')
+                        ->required(),
+                    TextInput::make('fipe_price')
+                        ->prefix('R$')
+                        ->numeric(),
+                    TextInput::make('purchase_price')
+                        ->prefix('R$')
+                        ->required()
+                        ->numeric(),
+                    TextInput::make('sale_price')
+                        ->prefix('R$')
+                        ->required()
+                        ->numeric(),
+                    TextInput::make('promotional_price')
+                        ->prefix('R$')
+                        ->numeric(),
+                    Select::make('vehicle_model_id')
+                        ->relationship('model', 'name'),
+                    Select::make('supplier_id')
+                        ->relationship('supplier', 'name'),
+                    TextInput::make('year_one')
+                        ->required(),
+                    TextInput::make('year_two')
+                        ->required(),
+                    TextInput::make('km')
+                        ->required()
+                        ->numeric(),
+                    TextInput::make('fuel')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('engine_power')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('steering')
+                        ->maxLength(255),
+                    TextInput::make('transmission')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('doors')
+                        ->maxLength(255),
+                    TextInput::make('seats')
+                        ->maxLength(255),
+                    TextInput::make('traction')
+                        ->maxLength(255),
+                    TextInput::make('color')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('plate')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('chassi')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('renavam')
+                        ->required()
+                        ->maxLength(255),
+                    DatePicker::make('sold_date')->disabled(),
+                    TextInput::make('description')
+                        ->maxLength(255),
+                    TextInput::make('annotation')
+                        ->maxLength(255),
+                ])->columns(4),
+
             ]);
     }
 
@@ -94,97 +102,111 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('plate')
+                TextColumn::make('plate')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('purchase_date')
+                TextColumn::make('purchase_date')
                     ->date('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('fipe_price')
+                TextColumn::make('fipe_price')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->money('BRL'),
-                Tables\Columns\TextColumn::make('purchase_price')
+                TextColumn::make('purchase_price')
                     ->sortable()
                     ->money('BRL'),
-                Tables\Columns\TextColumn::make('sale_price')
+                TextColumn::make('sale_price')
                     ->sortable()
                     ->money('BRL'),
-                Tables\Columns\TextColumn::make('promotional_price')
+                TextColumn::make('promotional_price')
                     ->sortable()
                     ->money('BRL'),
-                Tables\Columns\TextColumn::make('model.name')
+                TextColumn::make('model.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('supplier.name')
+                TextColumn::make('supplier.name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('combined_years')
+                TextColumn::make('combined_years')
                     ->label('Year'),
-                Tables\Columns\TextColumn::make('km')
+                TextColumn::make('km')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('fuel')
+                TextColumn::make('fuel')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('engine_power')
+                TextColumn::make('engine_power')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('steering')
+                TextColumn::make('steering')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('transmission')
+                TextColumn::make('transmission')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('doors')
+                TextColumn::make('doors')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('seats')
+                TextColumn::make('seats')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('traction')
+                TextColumn::make('traction')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('color')
+                TextColumn::make('color')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('chassi')
+                TextColumn::make('chassi')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('renavam')
+                TextColumn::make('renavam')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('sold_date')
+                TextColumn::make('sold_date')
                     ->date('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('annotation')
+                TextColumn::make('annotation')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-
+                Filter::make('purchase_date')
+                ->form([
+                    DatePicker::make('purchase_date_initial')
+                        ->label('Purchase Date After'),
+                    DatePicker::make('purchase_date_final')
+                        ->label('Purchase Date Before'),
+                ])->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
+                        ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value));
+                }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageVehicles::route('/'),
+            'index'  => Pages\ListVehicles::route('/'),
+            'create' => Pages\CreateVehicle::route('/create'),
+            'view'   => Pages\ViewVehicle::route('/{record}'),
+            'edit'   => Pages\EditVehicle::route('/{record}/edit'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }
