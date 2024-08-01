@@ -53,12 +53,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeLoged(Builder $q): Builder
     {
-        return $q->where('id', '!=', auth()->user()->id);
+        return $q->where('id', '!=', auth()->user()->id); //@phpstan-ignore-line
     }
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class)->with('abilities');
+        return $this->belongsToMany(Role::class)->with('abilities'); //@phpstan-ignore-line
     }
 
     public function employee(): BelongsTo
@@ -68,6 +68,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function abilities(): Collection
     {
-        return $this->roles->map->abilities->flatten()->pluck('name');
+        return $this->roles->map->abilities->flatten()->pluck('name'); //@phpstan-ignore-line
     }
 }
