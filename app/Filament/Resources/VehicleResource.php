@@ -94,27 +94,27 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('plate')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('purchase_date')
                     ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fipe_price')
-                    ->numeric()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->money('BRL'),
                 Tables\Columns\TextColumn::make('purchase_price')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->money('BRL'),
                 Tables\Columns\TextColumn::make('sale_price')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->money('BRL'),
                 Tables\Columns\TextColumn::make('promotional_price')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->money('BRL'),
                 Tables\Columns\TextColumn::make('model.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('supplier.name')
-                    ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('combined_years')
@@ -124,31 +124,21 @@ class VehicleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('fuel')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('engine_power')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('steering')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('transmission')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('doors')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('seats')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('traction')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('color')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('plate')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('chassi')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -156,20 +146,18 @@ class VehicleResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sold_date')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('annotation')
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
