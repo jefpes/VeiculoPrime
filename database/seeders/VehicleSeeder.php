@@ -35,46 +35,25 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'corrola-branco-2014-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-1.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-1.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-1.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-2.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-2.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-2.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-3.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-3.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-3.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-4.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-4.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-4.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-5.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-5.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-5.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-6.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-6.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-6.webp',
             ],
             [
-                'photo_name' => 'corrola-branco-2014-7.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-branco-2014-7.webp',
-                'path'       => 'storage/vehicle_photos/corrola-branco-2014-7.webp',
+                'path' => 'vehicle_photos/corrola-branco-2014-7.webp',
             ],
         ]);
 
@@ -97,34 +76,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'bros-branca-2015-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-branca-2015-1.webp',
-                'path'       => 'storage/vehicle_photos/bros-branca-2015-1.webp',
+                'path' => 'vehicle_photos/bros-branca-2015-1.webp',
             ],
             [
-                'photo_name' => 'bros-branca-2015-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-branca-2015-2.webp',
-                'path'       => 'storage/vehicle_photos/bros-branca-2015-2.webp',
+                'path' => 'vehicle_photos/bros-branca-2015-2.webp',
             ],
             [
-                'photo_name' => 'bros-branca-2015-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-branca-2015-3.webp',
-                'path'       => 'storage/vehicle_photos/bros-branca-2015-3.webp',
+                'path' => 'vehicle_photos/bros-branca-2015-3.webp',
             ],
             [
-                'photo_name' => 'bros-branca-2015-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-branca-2015-4.webp',
-                'path'       => 'storage/vehicle_photos/bros-branca-2015-4.webp',
+                'path' => 'vehicle_photos/bros-branca-2015-4.webp',
             ],
             [
-                'photo_name' => 'bros-branca-2015-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-branca-2015-5.webp',
-                'path'       => 'storage/vehicle_photos/bros-branca-2015-5.webp',
+                'path' => 'vehicle_photos/bros-branca-2015-5.webp',
             ],
         ]);
 
@@ -148,34 +112,19 @@ class VehicleSeeder extends Seeder
             'description'       => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'bros-preta-2015-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-preta-2015-1.webp',
-                'path'       => 'storage/vehicle_photos/bros-preta-2015-1.webp',
+                'path' => 'vehicle_photos/bros-preta-2015-1.webp',
             ],
             [
-                'photo_name' => 'bros-preta-2015-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-preta-2015-2.webp',
-                'path'       => 'storage/vehicle_photos/bros-preta-2015-2.webp',
+                'path' => 'vehicle_photos/bros-preta-2015-2.webp',
             ],
             [
-                'photo_name' => 'bros-preta-2015-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-preta-2015-3.webp',
-                'path'       => 'storage/vehicle_photos/bros-preta-2015-3.webp',
+                'path' => 'vehicle_photos/bros-preta-2015-3.webp',
             ],
             [
-                'photo_name' => 'bros-preta-2015-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-preta-2015-4.webp',
-                'path'       => 'storage/vehicle_photos/bros-preta-2015-4.webp',
+                'path' => 'vehicle_photos/bros-preta-2015-4.webp',
             ],
             [
-                'photo_name' => 'bros-preta-2015-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-preta-2015-5.webp',
-                'path'       => 'storage/vehicle_photos/bros-preta-2015-5.webp',
+                'path' => 'vehicle_photos/bros-preta-2015-5.webp',
             ],
         ]);
 
@@ -199,34 +148,19 @@ class VehicleSeeder extends Seeder
             'description'       => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'bros-vermelha-2015-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-vermelha-2015-1.webp',
-                'path'       => 'storage/vehicle_photos/bros-vermelha-2015-1.webp',
+                'path' => 'vehicle_photos/bros-vermelha-2015-1.webp',
             ],
             [
-                'photo_name' => 'bros-vermelha-2015-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-vermelha-2015-2.webp',
-                'path'       => 'storage/vehicle_photos/bros-vermelha-2015-2.webp',
+                'path' => 'vehicle_photos/bros-vermelha-2015-2.webp',
             ],
             [
-                'photo_name' => 'bros-vermelha-2015-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-vermelha-2015-3.webp',
-                'path'       => 'storage/vehicle_photos/bros-vermelha-2015-3.webp',
+                'path' => 'vehicle_photos/bros-vermelha-2015-3.webp',
             ],
             [
-                'photo_name' => 'bros-vermelha-2015-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-vermelha-2015-4.webp',
-                'path'       => 'storage/vehicle_photos/bros-vermelha-2015-4.webp',
+                'path' => 'vehicle_photos/bros-vermelha-2015-4.webp',
             ],
             [
-                'photo_name' => 'bros-vermelha-2015-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/bros-vermelha-2015-5.webp',
-                'path'       => 'storage/vehicle_photos/bros-vermelha-2015-5.webp',
+                'path' => 'vehicle_photos/bros-vermelha-2015-5.webp',
             ],
         ]);
 
@@ -254,46 +188,25 @@ class VehicleSeeder extends Seeder
             'description'       => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'celta-preto-2012-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-1.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-1.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-1.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-2.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-2.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-2.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-3.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-3.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-3.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-4.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-4.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-4.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-5.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-5.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-5.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-6.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-6.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-6.webp',
             ],
             [
-                'photo_name' => 'celta-preto-2012-7.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-preto-2012-7.webp',
-                'path'       => 'storage/vehicle_photos/celta-preto-2012-7.webp',
+                'path' => 'vehicle_photos/celta-preto-2012-7.webp',
             ],
         ]);
 
@@ -320,46 +233,25 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'celta-vermelho-2013-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-1.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-1.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-1.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-2.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-2.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-2.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-3.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-3.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-3.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-4.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-4.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-4.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-5.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-5.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-5.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-6.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-6.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-6.webp',
             ],
             [
-                'photo_name' => 'celta-vermelho-2013-7.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/celta-vermelho-2013-7.webp',
-                'path'       => 'storage/vehicle_photos/celta-vermelho-2013-7.webp',
+                'path' => 'vehicle_photos/celta-vermelho-2013-7.webp',
             ],
         ]);
 
@@ -386,40 +278,22 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'corrola-preto-2021-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-1.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-1.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-1.webp',
             ],
             [
-                'photo_name' => 'corrola-preto-2021-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-2.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-2.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-2.webp',
             ],
             [
-                'photo_name' => 'corrola-preto-2021-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-3.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-3.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-3.webp',
             ],
             [
-                'photo_name' => 'corrola-preto-2021-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-4.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-4.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-4.webp',
             ],
             [
-                'photo_name' => 'corrola-preto-2021-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-5.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-5.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-5.webp',
             ],
             [
-                'photo_name' => 'corrola-preto-2021-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-preto-2021-6.webp',
-                'path'       => 'storage/vehicle_photos/corrola-preto-2021-6.webp',
+                'path' => 'vehicle_photos/corrola-preto-2021-6.webp',
             ],
         ]);
 
@@ -447,34 +321,19 @@ class VehicleSeeder extends Seeder
             'description'       => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'corrola-vermelho-2016-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-vermelho-2016-1.webp',
-                'path'       => 'storage/vehicle_photos/corrola-vermelho-2016-1.webp',
+                'path' => 'vehicle_photos/corrola-vermelho-2016-1.webp',
             ],
             [
-                'photo_name' => 'corrola-vermelho-2016-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-vermelho-2016-2.webp',
-                'path'       => 'storage/vehicle_photos/corrola-vermelho-2016-2.webp',
+                'path' => 'vehicle_photos/corrola-vermelho-2016-2.webp',
             ],
             [
-                'photo_name' => 'corrola-vermelho-2016-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-vermelho-2016-3.webp',
-                'path'       => 'storage/vehicle_photos/corrola-vermelho-2016-3.webp',
+                'path' => 'vehicle_photos/corrola-vermelho-2016-3.webp',
             ],
             [
-                'photo_name' => 'corrola-vermelho-2016-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-vermelho-2016-4.webp',
-                'path'       => 'storage/vehicle_photos/corrola-vermelho-2016-4.webp',
+                'path' => 'vehicle_photos/corrola-vermelho-2016-4.webp',
             ],
             [
-                'photo_name' => 'corrola-vermelho-2016-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/corrola-vermelho-2016-5.webp',
-                'path'       => 'storage/vehicle_photos/corrola-vermelho-2016-5.webp',
+                'path' => 'vehicle_photos/corrola-vermelho-2016-5.webp',
             ],
         ]);
 
@@ -497,34 +356,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'crosser-branca-2020-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-branca-2020-1.webp',
-                'path'       => 'storage/vehicle_photos/crosser-branca-2020-1.webp',
+                'path' => 'vehicle_photos/crosser-branca-2020-1.webp',
             ],
             [
-                'photo_name' => 'crosser-branca-2020-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-branca-2020-2.webp',
-                'path'       => 'storage/vehicle_photos/crosser-branca-2020-2.webp',
+                'path' => 'vehicle_photos/crosser-branca-2020-2.webp',
             ],
             [
-                'photo_name' => 'crosser-branca-2020-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-branca-2020-3.webp',
-                'path'       => 'storage/vehicle_photos/crosser-branca-2020-3.webp',
+                'path' => 'vehicle_photos/crosser-branca-2020-3.webp',
             ],
             [
-                'photo_name' => 'crosser-branca-2020-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-branca-2020-4.webp',
-                'path'       => 'storage/vehicle_photos/crosser-branca-2020-4.webp',
+                'path' => 'vehicle_photos/crosser-branca-2020-4.webp',
             ],
             [
-                'photo_name' => 'crosser-branca-2020-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-branca-2020-5.webp',
-                'path'       => 'storage/vehicle_photos/crosser-branca-2020-5.webp',
+                'path' => 'vehicle_photos/crosser-branca-2020-5.webp',
             ],
         ]);
 
@@ -547,34 +391,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'crosser-preta-2020-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-preta-2020-1.webp',
-                'path'       => 'storage/vehicle_photos/crosser-preta-2020-1.webp',
+                'path' => 'vehicle_photos/crosser-preta-2020-1.webp',
             ],
             [
-                'photo_name' => 'crosser-preta-2020-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-preta-2020-2.webp',
-                'path'       => 'storage/vehicle_photos/crosser-preta-2020-2.webp',
+                'path' => 'vehicle_photos/crosser-preta-2020-2.webp',
             ],
             [
-                'photo_name' => 'crosser-preta-2020-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-preta-2020-3.webp',
-                'path'       => 'storage/vehicle_photos/crosser-preta-2020-3.webp',
+                'path' => 'vehicle_photos/crosser-preta-2020-3.webp',
             ],
             [
-                'photo_name' => 'crosser-preta-2020-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-preta-2020-4.webp',
-                'path'       => 'storage/vehicle_photos/crosser-preta-2020-4.webp',
+                'path' => 'vehicle_photos/crosser-preta-2020-4.webp',
             ],
             [
-                'photo_name' => 'crosser-preta-2020-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/crosser-preta-2020-5.webp',
-                'path'       => 'storage/vehicle_photos/crosser-preta-2020-5.webp',
+                'path' => 'vehicle_photos/crosser-preta-2020-5.webp',
             ],
         ]);
 
@@ -601,34 +430,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'hb20-preto-2017-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-preto-2017-1.webp',
-                'path'       => 'storage/vehicle_photos/hb20-preto-2017-1.webp',
+                'path' => 'vehicle_photos/hb20-preto-2017-1.webp',
             ],
             [
-                'photo_name' => 'hb20-preto-2017-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-preto-2017-2.webp',
-                'path'       => 'storage/vehicle_photos/hb20-preto-2017-2.webp',
+                'path' => 'vehicle_photos/hb20-preto-2017-2.webp',
             ],
             [
-                'photo_name' => 'hb20-preto-2017-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-preto-2017-3.webp',
-                'path'       => 'storage/vehicle_photos/hb20-preto-2017-3.webp',
+                'path' => 'vehicle_photos/hb20-preto-2017-3.webp',
             ],
             [
-                'photo_name' => 'hb20-preto-2017-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-preto-2017-4.webp',
-                'path'       => 'storage/vehicle_photos/hb20-preto-2017-4.webp',
+                'path' => 'vehicle_photos/hb20-preto-2017-4.webp',
             ],
             [
-                'photo_name' => 'hb20-preto-2017-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-preto-2017-5.webp',
-                'path'       => 'storage/vehicle_photos/hb20-preto-2017-5.webp',
+                'path' => 'vehicle_photos/hb20-preto-2017-5.webp',
             ],
         ]);
 
@@ -655,34 +469,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'hb20-vermelho-2015-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-vermelho-2015-1.webp',
-                'path'       => 'storage/vehicle_photos/hb20-vermelho-2015-1.webp',
+                'path' => 'vehicle_photos/hb20-vermelho-2015-1.webp',
             ],
             [
-                'photo_name' => 'hb20-vermelho-2015-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-vermelho-2015-2.webp',
-                'path'       => 'storage/vehicle_photos/hb20-vermelho-2015-2.webp',
+                'path' => 'vehicle_photos/hb20-vermelho-2015-2.webp',
             ],
             [
-                'photo_name' => 'hb20-vermelho-2015-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-vermelho-2015-3.webp',
-                'path'       => 'storage/vehicle_photos/hb20-vermelho-2015-3.webp',
+                'path' => 'vehicle_photos/hb20-vermelho-2015-3.webp',
             ],
             [
-                'photo_name' => 'hb20-vermelho-2015-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-vermelho-2015-4.webp',
-                'path'       => 'storage/vehicle_photos/hb20-vermelho-2015-4.webp',
+                'path' => 'vehicle_photos/hb20-vermelho-2015-4.webp',
             ],
             [
-                'photo_name' => 'hb20-vermelho-2015-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hb20-vermelho-2015-5.webp',
-                'path'       => 'storage/vehicle_photos/hb20-vermelho-2015-5.webp',
+                'path' => 'vehicle_photos/hb20-vermelho-2015-5.webp',
             ],
         ]);
 
@@ -709,34 +508,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'hilux-preta-2017-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-preta-2017-1.webp',
-                'path'       => 'storage/vehicle_photos/hilux-preta-2017-1.webp',
+                'path' => 'vehicle_photos/hilux-preta-2017-1.webp',
             ],
             [
-                'photo_name' => 'hilux-preta-2017-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-preta-2017-2.webp',
-                'path'       => 'storage/vehicle_photos/hilux-preta-2017-2.webp',
+                'path' => 'vehicle_photos/hilux-preta-2017-2.webp',
             ],
             [
-                'photo_name' => 'hilux-preta-2017-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-preta-2017-3.webp',
-                'path'       => 'storage/vehicle_photos/hilux-preta-2017-3.webp',
+                'path' => 'vehicle_photos/hilux-preta-2017-3.webp',
             ],
             [
-                'photo_name' => 'hilux-preta-2017-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-preta-2017-4.webp',
-                'path'       => 'storage/vehicle_photos/hilux-preta-2017-4.webp',
+                'path' => 'vehicle_photos/hilux-preta-2017-4.webp',
             ],
             [
-                'photo_name' => 'hilux-preta-2017-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-preta-2017-5.webp',
-                'path'       => 'storage/vehicle_photos/hilux-preta-2017-5.webp',
+                'path' => 'vehicle_photos/hilux-preta-2017-5.webp',
             ],
         ]);
 
@@ -763,40 +547,22 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'hilux-cereja-2022-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-1.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-1.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-1.webp',
             ],
             [
-                'photo_name' => 'hilux-cereja-2022-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-2.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-2.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-2.webp',
             ],
             [
-                'photo_name' => 'hilux-cereja-2022-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-3.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-3.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-3.webp',
             ],
             [
-                'photo_name' => 'hilux-cereja-2022-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-4.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-4.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-4.webp',
             ],
             [
-                'photo_name' => 'hilux-cereja-2022-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-5.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-5.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-5.webp',
             ],
             [
-                'photo_name' => 'hilux-cereja-2022-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/hilux-cereja-2022-6.webp',
-                'path'       => 'storage/vehicle_photos/hilux-cereja-2022-6.webp',
+                'path' => 'vehicle_photos/hilux-cereja-2022-6.webp',
             ],
         ]);
 
@@ -823,46 +589,25 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'kwid-branco-2019-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-1.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-1.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-1.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-2.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-2.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-2.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-3.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-3.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-3.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-4.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-4.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-4.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-5.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-5.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-5.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-6.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-6.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-6.webp',
             ],
             [
-                'photo_name' => 'kwid-branco-2019-7.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-branco-2019-7.webp',
-                'path'       => 'storage/vehicle_photos/kwid-branco-2019-7.webp',
+                'path' => 'vehicle_photos/kwid-branco-2019-7.webp',
             ],
         ]);
 
@@ -889,34 +634,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'kwid-vermelho-2018-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-vermelho-2018-1.webp',
-                'path'       => 'storage/vehicle_photos/kwid-vermelho-2018-1.webp',
+                'path' => 'vehicle_photos/kwid-vermelho-2018-1.webp',
             ],
             [
-                'photo_name' => 'kwid-vermelho-2018-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-vermelho-2018-2.webp',
-                'path'       => 'storage/vehicle_photos/kwid-vermelho-2018-2.webp',
+                'path' => 'vehicle_photos/kwid-vermelho-2018-2.webp',
             ],
             [
-                'photo_name' => 'kwid-vermelho-2018-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-vermelho-2018-3.webp',
-                'path'       => 'storage/vehicle_photos/kwid-vermelho-2018-3.webp',
+                'path' => 'vehicle_photos/kwid-vermelho-2018-3.webp',
             ],
             [
-                'photo_name' => 'kwid-vermelho-2018-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-vermelho-2018-4.webp',
-                'path'       => 'storage/vehicle_photos/kwid-vermelho-2018-4.webp',
+                'path' => 'vehicle_photos/kwid-vermelho-2018-4.webp',
             ],
             [
-                'photo_name' => 'kwid-vermelho-2018-5.web',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/kwid-vermelho-2018-5.webp',
-                'path'       => 'storage/vehicle_photos/kwid-vermelho-2018-5.webp',
+                'path' => 'vehicle_photos/kwid-vermelho-2018-5.webp',
             ],
         ]);
 
@@ -939,22 +669,13 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'lander-azul-2020-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/lander-azul-2020-1.webp',
-                'path'       => 'storage/vehicle_photos/lander-azul-2020-1.webp',
+                'path' => 'vehicle_photos/lander-azul-2020-1.webp',
             ],
             [
-                'photo_name' => 'lander-azul-2020-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/lander-azul-2020-2.webp',
-                'path'       => 'storage/vehicle_photos/lander-azul-2020-2.webp',
+                'path' => 'vehicle_photos/lander-azul-2020-2.webp',
             ],
             [
-                'photo_name' => 'lander-azul-2020-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/lander-azul-2020-3.webp',
-                'path'       => 'storage/vehicle_photos/lander-azul-2020-3.webp',
+                'path' => 'vehicle_photos/lander-azul-2020-3.webp',
             ],
         ]);
 
@@ -981,34 +702,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 's10-branco-2018-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-branco-2018-1.webp',
-                'path'       => 'storage/vehicle_photos/s10-branco-2018-1.webp',
+                'path' => 'vehicle_photos/s10-branco-2018-1.webp',
             ],
             [
-                'photo_name' => 's10-branco-2018-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-branco-2018-2.webp',
-                'path'       => 'storage/vehicle_photos/s10-branco-2018-2.webp',
+                'path' => 'vehicle_photos/s10-branco-2018-2.webp',
             ],
             [
-                'photo_name' => 's10-branco-2018-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-branco-2018-3.webp',
-                'path'       => 'storage/vehicle_photos/s10-branco-2018-3.webp',
+                'path' => 'vehicle_photos/s10-branco-2018-3.webp',
             ],
             [
-                'photo_name' => 's10-branco-2018-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-branco-2018-4.webp',
-                'path'       => 'storage/vehicle_photos/s10-branco-2018-4.webp',
+                'path' => 'vehicle_photos/s10-branco-2018-4.webp',
             ],
             [
-                'photo_name' => 's10-branco-2018-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-branco-2018-5.webp',
-                'path'       => 'storage/vehicle_photos/s10-branco-2018-5.webp',
+                'path' => 'vehicle_photos/s10-branco-2018-5.webp',
             ],
         ]);
 
@@ -1035,40 +741,22 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 's10-vermelha-2016-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-1.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-1.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-1.webp',
             ],
             [
-                'photo_name' => 's10-vermelha-2016-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-2.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-2.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-2.webp',
             ],
             [
-                'photo_name' => 's10-vermelha-2016-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-3.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-3.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-3.webp',
             ],
             [
-                'photo_name' => 's10-vermelha-2016-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-4.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-4.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-4.webp',
             ],
             [
-                'photo_name' => 's10-vermelha-2016-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-5.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-5.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-5.webp',
             ],
             [
-                'photo_name' => 's10-vermelha-2016-6.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/s10-vermelha-2016-6.webp',
-                'path'       => 'storage/vehicle_photos/s10-vermelha-2016-6.webp',
+                'path' => 'vehicle_photos/s10-vermelha-2016-6.webp',
             ],
         ]);
 
@@ -1091,22 +779,13 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'titan-azul-2012-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-azul-2012-1.webp',
-                'path'       => 'storage/vehicle_photos/titan-azul-2012-1.webp',
+                'path' => 'vehicle_photos/titan-azul-2012-1.webp',
             ],
             [
-                'photo_name' => 'titan-azul-2012-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-azul-2012-2.webp',
-                'path'       => 'storage/vehicle_photos/titan-azul-2012-2.webp',
+                'path' => 'vehicle_photos/titan-azul-2012-2.webp',
             ],
             [
-                'photo_name' => 'titan-azul-2012-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-azul-2012-3.webp',
-                'path'       => 'storage/vehicle_photos/titan-azul-2012-3.webp',
+                'path' => 'vehicle_photos/titan-azul-2012-3.webp',
             ],
         ]);
 
@@ -1129,28 +808,16 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'titan-vermelha-2012-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2012-1.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2012-1.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2012-1.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2012-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2012-2.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2012-2.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2012-2.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2012-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2012-3.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2012-3.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2012-3.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2012-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2012-4.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2012-4.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2012-4.webp',
             ],
         ]);
 
@@ -1173,34 +840,19 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'titan-vermelha-2015-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2015-1.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2015-1.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2015-1.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2015-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2015-2.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2015-2.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2015-2.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2015-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2015-3.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2015-3.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2015-3.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2015-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2015-4.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2015-4.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2015-4.webp',
             ],
             [
-                'photo_name' => 'titan-vermelha-2015-5.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/titan-vermelha-2015-5.webp',
-                'path'       => 'storage/vehicle_photos/titan-vermelha-2015-5.webp',
+                'path' => 'vehicle_photos/titan-vermelha-2015-5.webp',
             ],
         ]);
 
@@ -1223,28 +875,16 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'twister-prata-2020-1.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-prata-2020-1.jpg',
-                'path'       => 'storage/vehicle_photos/twister-prata-2020-1.jpg',
+                'path' => 'vehicle_photos/twister-prata-2020-1.jpg',
             ],
             [
-                'photo_name' => 'twister-prata-2020-2.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-prata-2020-2.jpg',
-                'path'       => 'storage/vehicle_photos/twister-prata-2020-2.jpg',
+                'path' => 'vehicle_photos/twister-prata-2020-2.jpg',
             ],
             [
-                'photo_name' => 'twister-prata-2020-3.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-prata-2020-3.jpg',
-                'path'       => 'storage/vehicle_photos/twister-prata-2020-3.jpg',
+                'path' => 'vehicle_photos/twister-prata-2020-3.jpg',
             ],
             [
-                'photo_name' => 'twister-prata-2020-4.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-prata-2020-4.jpg',
-                'path'       => 'storage/vehicle_photos/twister-prata-2020-4.jpg',
+                'path' => 'vehicle_photos/twister-prata-2020-4.jpg',
             ],
         ]);
 
@@ -1267,28 +907,16 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'twister-vermelha-2020-1.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-vermelha-2020-1.jpg',
-                'path'       => 'storage/vehicle_photos/twister-vermelha-2020-1.jpg',
+                'path' => 'vehicle_photos/twister-vermelha-2020-1.jpg',
             ],
             [
-                'photo_name' => 'twister-vermelha-2020-2.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-vermelha-2020-2.jpg',
-                'path'       => 'storage/vehicle_photos/twister-vermelha-2020-2.jpg',
+                'path' => 'vehicle_photos/twister-vermelha-2020-2.jpg',
             ],
             [
-                'photo_name' => 'twister-vermelha-2020-3.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-vermelha-2020-3.jpg',
-                'path'       => 'storage/vehicle_photos/twister-vermelha-2020-3.jpg',
+                'path' => 'vehicle_photos/twister-vermelha-2020-3.jpg',
             ],
             [
-                'photo_name' => 'twister-vermelha-2020-4.jpg',
-                'format'     => 'jpg',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/twister-vermelha-2020-4.jpg',
-                'path'       => 'storage/vehicle_photos/twister-vermelha-2020-4.jpg',
+                'path' => 'vehicle_photos/twister-vermelha-2020-4.jpg',
             ],
         ]);
 
@@ -1311,28 +939,16 @@ class VehicleSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->photos()->createMany([
             [
-                'photo_name' => 'xre-preta-2020-1.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/xre-preta-2020-1.webp',
-                'path'       => 'storage/vehicle_photos/xre-preta-2020-1.webp',
+                'path' => 'vehicle_photos/xre-preta-2020-1.webp',
             ],
             [
-                'photo_name' => 'xre-preta-2020-2.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/xre-preta-2020-2.webp',
-                'path'       => 'storage/vehicle_photos/xre-preta-2020-2.webp',
+                'path' => 'vehicle_photos/xre-preta-2020-2.webp',
             ],
             [
-                'photo_name' => 'xre-preta-2020-3.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/xre-preta-2020-3.webp',
-                'path'       => 'storage/vehicle_photos/xre-preta-2020-3.webp',
+                'path' => 'vehicle_photos/xre-preta-2020-3.webp',
             ],
             [
-                'photo_name' => 'xre-preta-2020-4.webp',
-                'format'     => 'webp',
-                'full_path'  => 'C:\Users\Duhasky\Documents\Projetos\MotorMarket\storage\app/vehicle_photos/xre-preta-2020-4.webp',
-                'path'       => 'storage/vehicle_photos/xre-preta-2020-4.webp',
+                'path' => 'vehicle_photos/xre-preta-2020-4.webp',
             ],
         ]);
     }

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
+use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Models\Vehicle;
 use Carbon\Carbon;
@@ -242,7 +243,7 @@ class VehicleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PhotosRelationManager::class,
         ];
     }
 
