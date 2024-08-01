@@ -4,8 +4,8 @@ namespace App\Filament\Resources\VehicleResource\Pages;
 
 use App\Filament\Resources\VehicleResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListVehicles extends ListRecords
@@ -20,8 +20,8 @@ class ListVehicles extends ListRecords
     public function getTabs(): array
     {
         return [
-            'All'  => Tab::make(__('All')),
-            'Sold' => Tab::make(__('Sold'))->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('sold_date')),
+            'All'    => Tab::make(__('All')),
+            'Sold'   => Tab::make(__('Sold'))->modifyQueryUsing(fn (Builder $query) => $query->whereNotNull('sold_date')),
             'Unsold' => Tab::make(__('Unsold'))->modifyQueryUsing(fn (Builder $query) => $query->whereNull('sold_date')),
         ];
     }

@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\{FuelTypes, SteeringTypes};
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Section, Select, TextInput};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -49,24 +51,31 @@ class VehicleResource extends Resource
                         ->prefix('R$')
                         ->numeric(),
                     Select::make('vehicle_model_id')
-                        ->relationship('model', 'name'),
+                        ->relationship('model', 'name')
+                        ->columnSpan(2),
                     Select::make('supplier_id')
-                        ->relationship('supplier', 'name'),
+                        ->relationship('supplier', 'name')
+                        ->columnSpan(3),
                     TextInput::make('year_one')
-                        ->required(),
+                        ->required()
+                        ->label('Year'),
                     TextInput::make('year_two')
-                        ->required(),
+                        ->required()
+                        ->label('Year (Model)'),
                     TextInput::make('km')
                         ->required()
                         ->numeric(),
-                    TextInput::make('fuel')
-                        ->required()
-                        ->maxLength(255),
+                    Select::make('fuel')
+                        ->options(collect(FuelTypes::cases())->mapWithKeys(fn (FuelTypes $status) => [
+                            $status->value => $status->value,
+                        ])->toArray()),
                     TextInput::make('engine_power')
                         ->required()
                         ->maxLength(255),
-                    TextInput::make('steering')
-                        ->maxLength(255),
+                    Select::make('steering')
+                        ->options(collect(SteeringTypes::cases())->mapWithKeys(fn (SteeringTypes $status) => [
+                            $status->value => $status->value,
+                        ])->toArray()),
                     TextInput::make('transmission')
                         ->required()
                         ->maxLength(255),
@@ -93,7 +102,7 @@ class VehicleResource extends Resource
                         ->maxLength(255),
                     TextInput::make('annotation')
                         ->maxLength(255),
-                ])->columns(4),
+                ])->columns(7),
 
             ]);
     }
@@ -180,6 +189,42 @@ class VehicleResource extends Resource
                     return $query
                         ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
                         ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value));
+                })->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['purchase_date_initial'] ?? null) {
+                        $indicators[] = __('Purchase Date After: ') . Carbon::parse($data['purchase_date_initial'])->format('d/m/Y');
+                    }
+
+                    if ($data['purchase_date_final'] ?? null) {
+                        $indicators[] = __('Purchase Date Before: ') . Carbon::parse($data['purchase_date_final'])->format('d/m/Y');
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('year_one')
+                ->form([
+                    Select::make('year_one')
+                        ->label('After Year')
+                        ->options(function () {
+                            return Vehicle::query()
+                                ->select('year_one')
+                                ->distinct()
+                                ->orderBy('year_one')
+                                ->pluck('year_one', 'year_one')
+                                ->toArray();
+                        }),
+                ])
+                ->query(
+                    fn (Builder $query, array $data) => $query->when($data['year_one'], fn ($query, $value) => $query->where('year_one', '>=', $value))
+                )->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['year_one'] ?? null) {
+                        $indicators[] = __('After Year') . ': ' . $data['year_one'];
+                    }
+
+                    return $indicators;
                 }),
             ])
             ->actions([
