@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\{FuelTypes, SteeringTypes};
+use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Models\Vehicle;
 use Carbon\Carbon;
-use Filament\Forms\Components\{DatePicker, Section, Select, TextInput};
+use Filament\Forms\Components\{DatePicker, Section, Select, TextInput, Textarea};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -76,13 +76,14 @@ class VehicleResource extends Resource
                         ->options(collect(SteeringTypes::cases())->mapWithKeys(fn (SteeringTypes $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
-                    TextInput::make('transmission')
-                        ->required()
-                        ->maxLength(255),
+                    Select::make('transmission')
+                        ->options(collect(TransmissionTypes::cases())->mapWithKeys(fn (TransmissionTypes $status) => [
+                            $status->value => $status->value,
+                        ])->toArray()),
                     TextInput::make('doors')
-                        ->maxLength(255),
+                        ->numeric(),
                     TextInput::make('seats')
-                        ->maxLength(255),
+                        ->numeric(),
                     TextInput::make('traction')
                         ->maxLength(255),
                     TextInput::make('color')
@@ -90,7 +91,8 @@ class VehicleResource extends Resource
                         ->maxLength(255),
                     TextInput::make('plate')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->mask('aaa-9*99'),
                     TextInput::make('chassi')
                         ->required()
                         ->maxLength(255),
@@ -98,12 +100,11 @@ class VehicleResource extends Resource
                         ->required()
                         ->maxLength(255),
                     DatePicker::make('sold_date')->disabled(),
-                    TextInput::make('description')
-                        ->maxLength(255),
-                    TextInput::make('annotation')
-                        ->maxLength(255),
+                    Textarea::make('description')
+                        ->maxLength(255)->columnStart(1)->columnSpanFull(),
+                    Textarea::make('annotation')
+                        ->maxLength(255)->columnStart(1)->columnSpanFull(),
                 ])->columns(7),
-
             ]);
     }
 
