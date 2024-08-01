@@ -1,5 +1,10 @@
 {
   "(and :count more error)": "(e mais :count erro)",
+  "Sold date": "Data de venda",
+  "Sale price": "Preço de venda",
+  "Promotional price": "Preço promocional",
+  "Purchase price": "Preço de compra",
+    "Purchase date": "Data de compra",
   "(and :count more errors)": "(e mais :count erros)",
   "Search": "Buscar",
   "Update": "Atualizar",

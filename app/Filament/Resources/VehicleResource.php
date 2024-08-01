@@ -3,10 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehicleResource\{Pages};
-use App\Models\Vehicle;
+use App\Models\{Vehicle};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
 
@@ -14,7 +15,10 @@ class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?string $navigationGroup = 'Vehicle';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Vehicle');
+    }
 
     public static function getModelLabel(): string
     {
@@ -113,8 +117,8 @@ class VehicleResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('year_one'),
-                Tables\Columns\TextColumn::make('year_two'),
+                Tables\Columns\TextColumn::make('combined_years')
+                    ->label('Year'),
                 Tables\Columns\TextColumn::make('km')
                     ->numeric()
                     ->sortable()
@@ -170,6 +174,7 @@ class VehicleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -14,7 +14,10 @@ class VehicleTypeResource extends Resource
 {
     protected static ?string $model = VehicleType::class;
 
-    protected static ?string $navigationGroup = 'Vehicle';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Vehicle');
+    }
 
     public static function getModelLabel(): string
     {
