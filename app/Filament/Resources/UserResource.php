@@ -3,7 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\{Pages};
-use App\Models\User;
+use App\Models\{Role, User};
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -32,6 +33,13 @@ class UserResource extends Resource
                     ->required()
                     ->unique(ignoreRecord:true)
                     ->maxLength(255),
+                Select::make('role')
+                    ->relationship('roles')
+                        ->options([
+                            Role::query()->pluck('name', 'id')->toArray(),
+                        ])
+                        ->multiple()
+                        ->searchable(false),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
