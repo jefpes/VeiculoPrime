@@ -52,11 +52,9 @@ class VehicleResource extends Resource
                         ->prefix('R$')
                         ->numeric(),
                     Select::make('vehicle_model_id')
-                        ->relationship('model', 'name')
-                        ->columnSpan(2),
+                        ->relationship('model', 'name'),
                     Select::make('supplier_id')
-                        ->relationship('supplier', 'name')
-                        ->columnSpan(3),
+                        ->relationship('supplier', 'name'),
                     TextInput::make('year_one')
                         ->required()
                         ->label('Year'),
@@ -102,18 +100,17 @@ class VehicleResource extends Resource
                         ->maxLength(255),
                     DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
-                        ->maxLength(255)->columnStart(1)->columnSpanFull(),
+                        ->maxLength(255)->columnSpanFull(),
                     Textarea::make('annotation')
-                        ->maxLength(255)->columnStart(1)->columnSpanFull(),
+                        ->maxLength(255)->columnSpanFull(),
                     Repeater::make('path')
                     ->relationship('photos')
                     ->schema([
                         FileUpload::make('path')
                             ->directory('vehicle_photos')
                             ->required(),
-                    ])
-                    ->columnSpan('full'),
-                ])->columns(7),
+                    ])->columnSpanFull(),
+                ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4, 'xl' => 5]),
             ]);
     }
 
