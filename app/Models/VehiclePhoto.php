@@ -11,7 +11,7 @@ class VehiclePhoto extends Model
 {
     use HasFactory;
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
