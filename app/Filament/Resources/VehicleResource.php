@@ -112,8 +112,7 @@ class VehicleResource extends Resource
                             ->directory('vehicle_photos')
                             ->required(),
                     ])
-                    ->columnSpan('full')
-                    ->collapsible(),
+                    ->columnSpan('full'),
                 ])->columns(7),
             ]);
     }
