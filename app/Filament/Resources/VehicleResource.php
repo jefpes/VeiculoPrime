@@ -7,7 +7,7 @@ use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManage
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Models\Vehicle;
 use Carbon\Carbon;
-use Filament\Forms\Components\{DatePicker, FileUpload, Repeater, Section, Select, TextInput, Textarea};
+use Filament\Forms\Components\{DatePicker, Fieldset, FileUpload, Repeater, Section, Select, TextInput, Textarea};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -103,13 +103,17 @@ class VehicleResource extends Resource
                         ->maxLength(255)->columnSpanFull(),
                     Textarea::make('annotation')
                         ->maxLength(255)->columnSpanFull(),
-                    Repeater::make('path')
-                    ->relationship('photos')
-                    ->schema([
-                        FileUpload::make('path')
-                            ->directory('vehicle_photos')
-                            ->required(),
-                    ])->columnSpanFull(),
+                    Fieldset::make(__('Photos'))->schema([
+                        Repeater::make('path')
+                        ->label(null)
+                        ->relationship('photos')
+                        ->schema([
+                            FileUpload::make('path')
+                                ->directory('vehicle_photos')
+                                ->required()
+                                ->image(),
+                        ])->columnSpan('full'),
+                    ]),
                 ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4, 'xl' => 5]),
             ]);
     }
