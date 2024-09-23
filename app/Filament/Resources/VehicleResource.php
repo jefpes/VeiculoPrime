@@ -77,7 +77,7 @@ class VehicleResource extends Resource
                         ])->toArray()),
                     TextInput::make('engine_power')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(30),
                     Select::make('steering')
                         ->options(collect(SteeringTypes::cases())->mapWithKeys(fn (SteeringTypes $status) => [
                             $status->value => $status->value,
