@@ -10,11 +10,6 @@ class Vehicle extends Model
 {
     use HasFactory;
 
-    public function getCombinedYearsAttribute(): string
-    {
-        return "{$this->year_one}/{$this->year_two}"; //@phpstan-ignore-line
-    }
-
     public function model(): BelongsTo
     {
         return $this->belongsTo(VehicleModel::class, 'vehicle_model_id', 'id');

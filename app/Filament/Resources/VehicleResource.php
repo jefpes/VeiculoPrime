@@ -137,6 +137,9 @@ class VehicleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('combined_years')
+                    ->getStateUsing(function ($record) {
+                        return  $record->year_one . '/' . $record->year_two;
+                    })
                     ->label('Year'),
                 TextColumn::make('km')
                     ->numeric()

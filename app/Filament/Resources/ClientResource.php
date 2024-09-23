@@ -141,7 +141,14 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('cpf')
                     ->label('CPF')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('combined_phones')
+                Tables\Columns\TextColumn::make('phones')
+                    ->getStateUsing(function ($record) {
+                        if ($record->phone_two !== null) {
+                            return  $record->phone_one . ' | ' . $record->phone_two;
+                        }
+
+                        return  $record->phone_one;
+                    })
                     ->label('Phone'),
                 Tables\Columns\TextColumn::make('birth_date')
                     ->label('Birth Date')
