@@ -19,10 +19,7 @@ class ClientSeeder extends Seeder
             $folder = "client_photos";
 
             $client->photos()->create([
-                'photo_name' => $photo,
-                'format'     => 'webp',
-                'full_path'  => base_path("storage/app/$folder/$photo"),
-                'path'       => "storage/$folder/$photo",
+                'path' => "$folder/$photo",
             ]);
         }
     }

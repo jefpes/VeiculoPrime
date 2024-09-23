@@ -5,16 +5,28 @@ namespace App\Filament\Resources;
 use App\Enums\{Genders, MaritalStatus, States};
 use App\Filament\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Resources\ClientResource\{Pages};
+use App\Forms\Components\PhoneInput;
 use App\Models\Client;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
+
+    public static function getModelLabel(): string
+    {
+        return __('Client');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Clients');
+    }
 
     public static function form(Form $form): Form
     {
@@ -30,54 +42,59 @@ class ClientResource extends Resource
                             $status->value => $status->value,
                         ])->toArray()),
                     Forms\Components\TextInput::make('rg')
+                            ->label('RG')
                         ->required()
                         ->mask('99999999999999999999')
                         ->maxLength(20),
                     Forms\Components\TextInput::make('cpf')
+                            ->label('CPF')
                         ->required()
                         ->mask('999.999.999-99')
                         ->maxLength(20),
                     Forms\Components\Select::make('marital_status')
+                            ->label('Marital Status')
                         ->required()
                         ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
-                    Forms\Components\TextInput::make('phone_one')
-                        ->tel()
-                        ->required()
-                        ->maxLength(20),
-                    Forms\Components\TextInput::make('phone_two')
-                        ->tel()
-                        ->maxLength(20),
-                    Forms\Components\DatePicker::make('birth_date')
+                    PhoneInput::make('phone_one')
+                        ->label('Phone (1)')
                         ->required(),
+                    PhoneInput::make('phone_two')
+                        ->label('Phone (2)'),
+                    Forms\Components\DatePicker::make('birth_date')
+                            ->label('Birth Date')
+                        ->required(),
+                    Forms\Components\Textarea::make('description')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
+                ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3, 'xl' => 3]),
+
+                Section::make(__('Affiliates'))->schema([
                     Forms\Components\TextInput::make('father')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('father_phone')
-                        ->tel()
-                        ->maxLength(20),
+                    PhoneInput::make('father_phone')
+                        ->label('Father Phone'),
                     Forms\Components\TextInput::make('mother')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('mother_phone')
-                        ->tel()
-                        ->maxLength(20),
+                    PhoneInput::make('mother_phone')
+                        ->label('Mother Phone'),
                     Forms\Components\TextInput::make('affiliated_one')
+                        ->label('Affiliated (1)')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('affiliated_one_phone')
-                        ->tel()
-                        ->maxLength(255),
+                    PhoneInput::make('affiliated_one_phone')
+                        ->label('Affiliated Phone (1)'),
                     Forms\Components\TextInput::make('affiliated_two')
+                        ->label('Affiliated (2)')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('affiliated_two_phone')
-                        ->tel()
-                        ->maxLength(255),
-                    Forms\Components\RichEditor::make('description')
-                        ->maxLength(255),
-                ]),
-                Section::make('Address')->relationship('address')->schema([
+                    PhoneInput::make('affiliated_two_phone')
+                        ->label('Affiliated Phone (2)'),
+                ])->columns(['sm' => 1, 'md' => 2]),
+
+                Section::make(__('Address'))->relationship('address')->schema([
                     Forms\Components\TextInput::make('zip_code')
                         ->required()
-                        ->maxLength(255),
+                        ->mask('99999-999'),
                     Forms\Components\TextInput::make('street')
                         ->required()
                         ->maxLength(255),
@@ -101,57 +118,35 @@ class ClientResource extends Resource
                         ->required()
                         ->searchable()
                         ->preload(),
-                ]),
+                ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->modelLabel('Cliente')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('gender')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('rg')
+                    ->badge()
+                    ->color(fn (string $state): string|array => match ($state) {
+                        'MASCULINO' => 'info',
+                        'FEMININO'  => Color::hex('#ff00b2'),
+                        default     => 'warning',
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cpf')
+                    ->label('CPF')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('marital_status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone_one')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone_two')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('combined_phones')
+                    ->label('Phone'),
                 Tables\Columns\TextColumn::make('birth_date')
-                    ->date()
+                    ->label('Birth Date')
+                    ->date('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('father')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('affiliated_one')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('affiliated_one_phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('affiliated_two')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('affiliated_two_phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

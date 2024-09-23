@@ -11,11 +11,15 @@ class PhotosRelationManager extends RelationManager
 {
     protected static string $relationship = 'photos';
 
+    protected static ?string $title = 'Fotos';
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('path')
+                    ->label('Foto')
+                    ->directory('client_photos')
                     ->required(),
             ]);
     }
@@ -24,8 +28,11 @@ class PhotosRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('path')
+            ->modelLabel('Foto')
             ->columns([
-                Tables\Columns\ImageColumn::make('path')->size(250),
+                Tables\Columns\ImageColumn::make('path')
+                    ->label('Foto')
+                    ->size(250),
             ])
             ->filters([
                 //
