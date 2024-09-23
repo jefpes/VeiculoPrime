@@ -14,6 +14,8 @@ class VehicleTypeResource extends Resource
 {
     protected static ?string $model = VehicleType::class;
 
+    protected static ?int $navigationSort = 1;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');
@@ -21,12 +23,12 @@ class VehicleTypeResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('Vehicle Types');
+        return __('Type');
     }
 
-    public static function getNavigationBadge(): ?string
+    public static function getPluralModelLabel(): string
     {
-        return static::getModel()::count();
+        return __('Types');
     }
 
     public static function form(Form $form): Form
@@ -35,7 +37,8 @@ class VehicleTypeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
             ]);
     }
 
