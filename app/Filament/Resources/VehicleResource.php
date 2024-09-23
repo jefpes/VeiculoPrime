@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\VehicleResource\{Pages};
+use App\Forms\Components\MoneyInput;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Section, Select, TextInput, Textarea};
@@ -47,17 +48,11 @@ class VehicleResource extends Resource
                     TextInput::make('fipe_price')
                         ->prefix('R$')
                         ->numeric(),
-                    TextInput::make('purchase_price')
-                        ->prefix('R$')
-                        ->required()
-                        ->numeric(),
-                    TextInput::make('sale_price')
-                        ->prefix('R$')
-                        ->required()
-                        ->numeric(),
-                    TextInput::make('promotional_price')
-                        ->prefix('R$')
-                        ->numeric(),
+                    MoneyInput::make('purchase_price')
+                        ->required(),
+                    MoneyInput::make('sale_price')
+                        ->required(),
+                    MoneyInput::make('promotional_price'),
                     Select::make('vehicle_model_id')
                         ->relationship('model', 'name'),
                     Select::make('supplier_id')

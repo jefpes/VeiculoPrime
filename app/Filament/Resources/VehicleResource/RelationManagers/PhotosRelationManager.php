@@ -11,7 +11,7 @@ class PhotosRelationManager extends RelationManager
 {
     protected static string $relationship = 'photos';
 
-    protected static ?string $label = 'Fotos de Veículos';
+    protected static ?string $label = 'Foto';
 
     protected static ?string $title = 'Fotos';
 
