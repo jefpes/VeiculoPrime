@@ -44,7 +44,7 @@ class ClientResource extends Resource
                         ])->toArray()),
                     Forms\Components\ToggleButtons::make('taxpayer_type')
                         ->inline()
-                        ->label('Taxpayer Type')
+                        ->label('Tipo de Pessoa')
                         ->required()
                         ->options(TaxpayerType::class)
                         ->live()
