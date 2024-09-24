@@ -18,9 +18,11 @@ class EmployeeFactory extends Factory
      */
     public function definition(): array
     {
+        $gender = $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases()));
+
         return [
-            'name'             => $this->faker->name,
-            'gender'           => $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())),
+            'name'             => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'gender'           => $gender,
             'email'            => fake()->unique()->safeEmail(),
             'salary'           => $this->faker->randomFloat(2, 1000, 10000),
             'rg'               => $this->faker->unique()->numerify('##.###.###-#'),
