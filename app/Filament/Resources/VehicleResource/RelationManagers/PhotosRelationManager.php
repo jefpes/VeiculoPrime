@@ -20,6 +20,8 @@ class PhotosRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('path')
+                    ->label('Foto')
+                    ->columnSpanFull()
                     ->required()
                     ->image()
                     ->directory('vehicle_photos'),
@@ -37,7 +39,7 @@ class PhotosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('Adicionar Foto')->modalHeading('Adicionar Foto'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -99,8 +99,8 @@ class ClientResource extends Resource
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('number')
-                        ->required()
-                        ->maxLength(255),
+                        ->numeric()
+                        ->minValue(0),
                     Forms\Components\TextInput::make('complement')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('neighborhood')
@@ -150,10 +150,6 @@ class ClientResource extends Resource
                         return  $record->phone_one;
                     })
                     ->label('Phone'),
-                Tables\Columns\TextColumn::make('birth_date')
-                    ->label('Birth Date')
-                    ->date('d/m/Y')
-                    ->sortable(),
             ])
             ->filters([
                 //

@@ -19,6 +19,7 @@ class PhotosRelationManager extends RelationManager
             ->schema([
                 Forms\Components\FileUpload::make('path')
                     ->label('Foto')
+                    ->columnSpanFull()
                     ->directory('client_photos')
                     ->required(),
             ]);
@@ -38,7 +39,7 @@ class PhotosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('Adicionar Foto')->modalHeading('Adicionar Foto'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
