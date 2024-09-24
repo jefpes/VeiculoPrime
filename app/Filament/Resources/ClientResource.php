@@ -35,20 +35,16 @@ class ClientResource extends Resource
             ->schema([
                 Section::make('Dados Pessoais')->schema([
                     Forms\Components\TextInput::make('name')
-                        ->required()
                         ->maxLength(255),
                     Forms\Components\Select::make('gender')
-                        ->required()
-                        ->options(collect(Genders::cases())->mapWithKeys(fn (Genders $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->options(Genders::class),
                     Forms\Components\ToggleButtons::make('taxpayer_type')
+                        ->rule('required')
                         ->inline()
                         ->label('Tipo de Pessoa')
-                        ->required()
                         ->options(TaxpayerType::class)
-                        ->live()
-                        ->afterStateUpdated(fn (Forms\Set $set) => $set('rg', null)),
+                        ->live(),
                     Forms\Components\TextInput::make('taxpayer_id')
                             ->label(fn (Forms\Get $get): string => match ($get('taxpayer_type')) {
                                 'Física'   => 'CPF',
@@ -68,14 +64,12 @@ class ClientResource extends Resource
                         }),
                     Forms\Components\TextInput::make('rg')
                         ->label('RG')
-                        ->readOnly(function (Forms\Get $get): bool {
-                            return $get('taxpayer_type') === 'Jurídica';
-                        })
+                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
                         ->mask('99999999999999999999')
                         ->maxLength(20),
                     Forms\Components\Select::make('marital_status')
                         ->label('Marital Status')
-                        ->required()
+                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
                         ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
@@ -85,12 +79,13 @@ class ClientResource extends Resource
                     PhoneInput::make('phone_two')
                         ->label('Phone (2)'),
                     Forms\Components\DatePicker::make('birth_date')
-                            ->label('Birth Date')
-                        ->required(),
+                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->label('Birth Date')
+                        ->required(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física'),
                     Forms\Components\Textarea::make('description')
                         ->maxLength(255)
                         ->columnSpanFull(),
-                ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3, 'xl' => 3]),
+                ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
 
                 Section::make(__('Affiliates'))->schema([
                     Forms\Components\TextInput::make('father')
@@ -157,11 +152,12 @@ class ClientResource extends Resource
                     ->color(fn (string $state): string|array => match ($state) {
                         'MASCULINO' => 'info',
                         'FEMININO'  => Color::hex('#ff00b2'),
-                        default     => 'warning',
+                        default     => 'success',
                     })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('cpf')
-                    ->label('CPF')
+                Tables\Columns\TextColumn::make('taxpayer_id')
+                    ->label('CPF/CNPJ')
+                    ->copyable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phones')
                     ->getStateUsing(function ($record) {

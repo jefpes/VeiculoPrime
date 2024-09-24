@@ -20,7 +20,7 @@ class ClientFactory extends Factory
     {
         // Gera o tipo de contribuinte
         $taxpayerType = $this->faker->randomElement(['Física', 'Jurídica']);
-        $gender       = $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases()));
+        $gender       = $taxpayerType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
 
         return [
             'name'                 => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),

@@ -18,10 +18,10 @@ return new class () extends Migration {
             $table->string('rg', 20)->unique()->nullable();
             $table->string('taxpayer_id')->unique();
             $table->string('taxpayer_type');
-            $table->string('marital_status');
-            $table->string('phone_one', 20);
+            $table->string('marital_status')->nullable();
+            $table->string('phone_one', 20)->nullable();
             $table->string('phone_two', 20)->nullable();
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
             $table->string('father_phone', 20)->nullable();
             $table->string('mother')->nullable();
