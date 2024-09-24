@@ -42,23 +42,39 @@ class ClientResource extends Resource
                         ->options(collect(Genders::cases())->mapWithKeys(fn (Genders $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
-                    Forms\Components\TextInput::make('rg')
-                        ->label('RG')
-                        ->required()
-                        ->mask('99999999999999999999')
-                        ->maxLength(20),
                     Forms\Components\ToggleButtons::make('taxpayer_type')
                         ->inline()
                         ->label('Taxpayer Type')
                         ->required()
-                        ->options(TaxpayerType::class),
-                    Forms\Components\TextInput::make('cpf')
-                            ->label('CPF')
+                        ->options(TaxpayerType::class)
+                        ->live()
+                        ->afterStateUpdated(fn (Forms\Set $set) => $set('rg', null)),
+                    Forms\Components\TextInput::make('taxpayer_id')
+                            ->label(fn (Forms\Get $get): string => match ($get('taxpayer_type')) {
+                                'Física'   => 'CPF',
+                                'Jurídica' => 'CNPJ',
+                                default    => 'CPF',
+                            })
                         ->required()
-                        ->mask('999.999.999-99')
+                        ->mask(fn (Forms\Get $get): string => match ($get('taxpayer_type')) {
+                            'Física'   => '999.999.999-99',
+                            'Jurídica' => '99.999.999/9999-99',
+                            default    => '999.999.999-99',
+                        })
+                        ->length(fn (Forms\Get $get): int => match ($get('taxpayer_type')) {
+                            'Física'   => 14,
+                            'Jurídica' => 18,
+                            default    => 14,
+                        }),
+                    Forms\Components\TextInput::make('rg')
+                        ->label('RG')
+                        ->readOnly(function (Forms\Get $get): bool {
+                            return $get('taxpayer_type') === 'Jurídica';
+                        })
+                        ->mask('99999999999999999999')
                         ->maxLength(20),
                     Forms\Components\Select::make('marital_status')
-                            ->label('Marital Status')
+                        ->label('Marital Status')
                         ->required()
                         ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                             $status->value => $status->value,
