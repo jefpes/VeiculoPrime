@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TaxpayerType;
 use App\Enums\{Genders, MaritalStatus, States};
 use App\Filament\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Resources\ClientResource\{Pages};
@@ -42,10 +43,17 @@ class ClientResource extends Resource
                             $status->value => $status->value,
                         ])->toArray()),
                     Forms\Components\TextInput::make('rg')
-                            ->label('RG')
+                        ->label('RG')
                         ->required()
                         ->mask('99999999999999999999')
                         ->maxLength(20),
+                    Forms\Components\ToggleButtons::make('taxpayer_type')
+                        ->inline()
+                        ->label('Taxpayer Type')
+                        ->required()
+                        ->options(collect(TaxpayerType::cases())->mapWithKeys(fn (TaxpayerType $status) => [
+                            $status->value => $status->value,
+                        ])->toArray()),
                     Forms\Components\TextInput::make('cpf')
                             ->label('CPF')
                         ->required()
