@@ -28,10 +28,10 @@ class ClientFactory extends Factory
             'taxpayer_type'        => $taxpayerType, // Define o tipo de contribuinte
             'taxpayer_id'          => $taxpayerType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
             'rg'                   => $taxpayerType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
-            'marital_status'       => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
+            'marital_status'       => $taxpayerType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
-            'birth_date'           => $this->faker->date(),
+            'birth_date'           => $taxpayerType === 'Física' ? $this->faker->date() : null,
             'father'               => $this->faker->optional()->name('male'),
             'father_phone'         => $this->faker->optional()->numerify('(##) #####-####'),
             'mother'               => $this->faker->name('female'),
