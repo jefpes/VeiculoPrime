@@ -51,9 +51,7 @@ class ClientResource extends Resource
                         ->inline()
                         ->label('Taxpayer Type')
                         ->required()
-                        ->options(collect(TaxpayerType::cases())->mapWithKeys(fn (TaxpayerType $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(TaxpayerType::class),
                     Forms\Components\TextInput::make('cpf')
                             ->label('CPF')
                         ->required()

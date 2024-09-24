@@ -51,9 +51,6 @@ return new class () extends Migration {
         Schema::create('supplier_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete();
-            $table->string('photo_name', 255);
-            $table->string('format', 5);
-            $table->string('full_path', 255);
             $table->string('path', 255);
             $table->timestamps();
         });

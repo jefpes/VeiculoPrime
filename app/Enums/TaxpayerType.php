@@ -6,8 +6,8 @@ use Filament\Support\Contracts\{HasIcon, HasLabel};
 
 enum TaxpayerType: string implements HasLabel, HasIcon
 {
-    case FISICA   = 'FÍSICA';
-    case JURIDICA = 'JURÍDICA';
+    case FISICA   = 'Física';
+    case JURIDICA = 'Jurídica';
 
     public function getLabel(): ?string
     {
@@ -21,7 +21,7 @@ enum TaxpayerType: string implements HasLabel, HasIcon
     {
         return match ($this) {
             self::FISICA   => 'heroicon-o-user',
-            self::JURIDICA => 'heroicon-o-office-building',
+            self::JURIDICA => 'heroicon-o-building-office',
         };
     }
 }
