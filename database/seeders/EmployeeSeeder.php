@@ -19,10 +19,6 @@ class EmployeeSeeder extends Seeder
 
             $folder = "employee_photos";
 
-            $employee->photos()->create([
-                'path' => "$folder/$photo",
-            ]);
-
             // Desabilitar eventos para a criação da foto
             EmployeePhoto::withoutEvents(function () use ($employee, $folder, $photo) {
                 $employee->photos()->create([
