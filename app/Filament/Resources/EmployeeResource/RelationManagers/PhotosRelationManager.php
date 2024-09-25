@@ -11,6 +11,8 @@ class PhotosRelationManager extends RelationManager
 {
     protected static string $relationship = 'photos';
 
+    protected static ?string $title = 'Fotos';
+
     public function form(Form $form): Form
     {
         return $form
