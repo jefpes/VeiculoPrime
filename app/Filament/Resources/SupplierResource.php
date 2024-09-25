@@ -19,6 +19,21 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Supplier');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Suppliers');
+    }
+
     public static function form(Form $form): Form
     {
 

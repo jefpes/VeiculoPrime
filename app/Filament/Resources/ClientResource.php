@@ -19,6 +19,11 @@ class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('People');
+    }
+
     public static function getModelLabel(): string
     {
         return __('Client');
