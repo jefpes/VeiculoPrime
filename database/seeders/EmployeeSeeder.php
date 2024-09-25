@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EmployeePhoto;
 use App\Models\{Employee};
 use Illuminate\Database\Seeder;
 
@@ -19,11 +20,15 @@ class EmployeeSeeder extends Seeder
             $folder = "employee_photos";
 
             $employee->photos()->create([
-                'photo_name' => $photo,
-                'format'     => 'webp',
-                'full_path'  => base_path("storage/app/$folder/$photo"),
-                'path'       => "storage/$folder/$photo",
+                'path' => "$folder/$photo",
             ]);
+
+            // Desabilitar eventos para a criação da foto
+            EmployeePhoto::withoutEvents(function () use ($employee, $folder, $photo) {
+                $employee->photos()->create([
+                    'path' => "$folder/$photo",
+                ]);
+            });
         }
     }
 }

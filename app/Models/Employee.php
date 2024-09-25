@@ -22,7 +22,7 @@ class Employee extends Model
 
     public function photos(): HasMany
     {
-        return $this->hasMany(EmployeePhotos::class);
+        return $this->hasMany(EmployeePhoto::class);
     }
 
     public function user(): HasOne
