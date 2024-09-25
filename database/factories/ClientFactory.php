@@ -19,19 +19,19 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         // Gera o tipo de contribuinte
-        $taxpayerType = $this->faker->randomElement(['Física', 'Jurídica']);
-        $gender       = $taxpayerType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
+        $clientType = $this->faker->randomElement(['Física', 'Jurídica']);
+        $gender     = $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
 
         return [
             'name'                 => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
             'gender'               => $gender,
-            'taxpayer_type'        => $taxpayerType, // Define o tipo de contribuinte
-            'taxpayer_id'          => $taxpayerType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
-            'rg'                   => $taxpayerType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
-            'marital_status'       => $taxpayerType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
+            'client_type'          => $clientType, // Define o tipo de contribuinte
+            'client_id'            => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
+            'rg'                   => $clientType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
+            'marital_status'       => $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
-            'birth_date'           => $taxpayerType === 'Física' ? $this->faker->date() : null,
+            'birth_date'           => $clientType === 'Física' ? $this->faker->date() : null,
             'father'               => $this->faker->optional()->name('male'),
             'father_phone'         => $this->faker->optional()->numerify('(##) #####-####'),
             'mother'               => $this->faker->name('female'),

@@ -37,39 +37,39 @@ class ClientResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->maxLength(255),
                     Forms\Components\Select::make('gender')
-                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                         ->options(Genders::class),
-                    Forms\Components\ToggleButtons::make('taxpayer_type')
+                    Forms\Components\ToggleButtons::make('client_type')
                         ->rule('required')
                         ->inline()
                         ->label('Tipo de Pessoa')
                         ->options(TaxpayerType::class)
                         ->live(),
-                    Forms\Components\TextInput::make('taxpayer_id')
-                            ->label(fn (Forms\Get $get): string => match ($get('taxpayer_type')) {
+                    Forms\Components\TextInput::make('client_id')
+                            ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
                                 'Física'   => 'CPF',
                                 'Jurídica' => 'CNPJ',
                                 default    => 'CPF',
                             })
                         ->required()
-                        ->mask(fn (Forms\Get $get): string => match ($get('taxpayer_type')) {
+                        ->mask(fn (Forms\Get $get): string => match ($get('client_type')) {
                             'Física'   => '999.999.999-99',
                             'Jurídica' => '99.999.999/9999-99',
                             default    => '999.999.999-99',
                         })
-                        ->length(fn (Forms\Get $get): int => match ($get('taxpayer_type')) {
+                        ->length(fn (Forms\Get $get): int => match ($get('client_type')) {
                             'Física'   => 14,
                             'Jurídica' => 18,
                             default    => 14,
                         }),
                     Forms\Components\TextInput::make('rg')
                         ->label('RG')
-                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                         ->mask('99999999999999999999')
                         ->maxLength(20),
                     Forms\Components\Select::make('marital_status')
                         ->label('Marital Status')
-                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                         ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
@@ -79,9 +79,9 @@ class ClientResource extends Resource
                     PhoneInput::make('phone_two')
                         ->label('Phone (2)'),
                     Forms\Components\DatePicker::make('birth_date')
-                        ->visible(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física')
+                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                         ->label('Birth Date')
-                        ->required(fn (Forms\Get $get): bool => $get('taxpayer_type') === 'Física'),
+                        ->required(fn (Forms\Get $get): bool => $get('client_type') === 'Física'),
                     Forms\Components\Textarea::make('description')
                         ->maxLength(255)
                         ->columnSpanFull(),
@@ -155,7 +155,7 @@ class ClientResource extends Resource
                         default     => 'success',
                     })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('taxpayer_id')
+                Tables\Columns\TextColumn::make('client_id')
                     ->label('CPF/CNPJ')
                     ->copyable()
                     ->searchable(),
