@@ -115,10 +115,25 @@ class VehicleResource extends Resource
             ->columns([
                 TextColumn::make('plate')
                     ->searchable(),
+                TextColumn::make('model.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
+                TextColumn::make('combined_years')
+                    ->getStateUsing(function ($record) {
+                        return  $record->year_one . '/' . $record->year_two;
+                    })
+                    ->label('Year')
+                    ->sortable(),
+                TextColumn::make('km')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('purchase_date')
                     ->date('d/m/Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('fipe_price')
+                    ->label('FIPE')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->money('BRL'),
@@ -130,19 +145,11 @@ class VehicleResource extends Resource
                     ->money('BRL'),
                 TextColumn::make('promotional_price')
                     ->sortable()
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('model.name')
                     ->sortable(),
                 TextColumn::make('supplier.name')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('combined_years')
-                    ->getStateUsing(function ($record) {
-                        return  $record->year_one . '/' . $record->year_two;
-                    })
-                    ->label('Year'),
-                TextColumn::make('km')
-                    ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('fuel')
@@ -168,8 +175,9 @@ class VehicleResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sold_date')
-                    ->date('d/m/Y')
-                    ->sortable(),
+                ->date('d/m/Y')
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('description')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('annotation')
