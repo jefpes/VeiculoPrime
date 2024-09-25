@@ -10,6 +10,7 @@ use App\Models\Employee;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 
@@ -56,6 +57,7 @@ class EmployeeResource extends Resource
                         ->mask('99999999999999999999')
                         ->maxLength(20),
                     Forms\Components\TextInput::make('cpf')
+                        ->label('CPF')
                         ->mask('999.999.999-99')
                         ->required()
                         ->maxLength(20),
@@ -114,45 +116,58 @@ class EmployeeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gender')
-                    ->searchable(),
+                    ->badge()
+                    ->color(fn (string $state): string|array => match ($state) {
+                        'MASCULINO' => 'info',
+                        'FEMININO'  => Color::hex('#ff00b2'),
+                        default     => 'success',
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone_one')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone_two')
-                    ->searchable(),
+                    ->copyable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('phones')
+                    ->getStateUsing(function ($record) {
+                        if ($record->phone_two !== null) {
+                            return  $record->phone_one . ' | ' . $record->phone_two;
+                        }
+
+                        return  $record->phone_one;
+                    })
+                    ->label('Phone'),
                 Tables\Columns\TextColumn::make('salary')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('rg')
-                    ->searchable(),
+                    ->label('RG')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('cpf')
+                    ->label('CPF')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birth_date')
                     ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('father')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('marital_status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('spouse')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('hiring_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('resignation_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                Tables\Columns\TextColumn::make('father')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('mother')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('marital_status')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('spouse')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('hiring_date')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('resignation_date')
+                    ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
