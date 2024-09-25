@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use Filament\Support\Contracts\{HasIcon, HasLabel};
 
-enum TaxpayerType: string implements HasLabel, HasIcon
+enum PersonType: string implements HasLabel, HasIcon
 {
     case FISICA   = 'Física';
     case JURIDICA = 'Jurídica';

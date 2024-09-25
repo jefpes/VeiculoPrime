@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\TaxpayerType;
+use App\Enums\PersonType;
 use App\Enums\{Genders, MaritalStatus, States};
 use App\Filament\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Resources\ClientResource\{Pages};
@@ -43,7 +43,7 @@ class ClientResource extends Resource
                         ->rule('required')
                         ->inline()
                         ->label('Tipo de Pessoa')
-                        ->options(TaxpayerType::class)
+                        ->options(PersonType::class)
                         ->live(),
                     Forms\Components\TextInput::make('client_id')
                             ->label(fn (Forms\Get $get): string => match ($get('client_type')) {

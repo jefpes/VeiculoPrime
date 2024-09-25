@@ -16,8 +16,8 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('gender');
             $table->string('rg', 20)->unique()->nullable();
-            $table->string('taxpayer_id')->unique();
-            $table->string('taxpayer_type');
+            $table->string('supplier_type');
+            $table->string('supplier_id')->unique();
             $table->string('marital_status')->nullable();
             $table->string('phone_one', 20)->nullable();
             $table->string('phone_two', 20)->nullable();
