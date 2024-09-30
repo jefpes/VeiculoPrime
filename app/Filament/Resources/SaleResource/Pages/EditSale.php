@@ -26,6 +26,7 @@ class EditSale extends EditRecord
         $data['discount'] > 0 ? $data['discount_surcharge']              = 'discount' : $data['discount_surcharge'] = 'surcharge';
         $data['number_installments'] > 1 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
         $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
+        $data['number_installments'] > 1 ? $data['first_installment']    = PaymentInstallments::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
 
         return $data;
     }

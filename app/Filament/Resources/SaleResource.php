@@ -91,6 +91,7 @@ class SaleResource extends Resource
                         ->label('Type')
                         ->live()
                         ->inline()
+                        ->required()
                         ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                             $set('surcharge', 0); // Define surcharge como null
                             $set('discount', 0); // Define discount como null
@@ -136,6 +137,7 @@ class SaleResource extends Resource
                         ])
                         ->label('Type')
                         ->live()
+                        ->required()
                         ->inline()
                         ->afterStateUpdated(function (Forms\Set $set) {
                             $set('number_installments', 1);

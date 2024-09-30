@@ -41,7 +41,7 @@ class CreateSale extends CreateRecord
         return $data;
     }
 
-    protected function afterSave(): void
+    protected function afterCreate(): void
     {
         Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
 
