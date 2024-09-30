@@ -114,6 +114,12 @@ class SaleResource extends Resource
                             $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
                             $total        = $vehiclePrice + $surcharge - $discount;
                             $set('total', $total);
+
+                            if ($get('payment_type') === 'on_time') {
+                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
+                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
+                                $set('installment_value', $installmentValue);
+                            }
                         }),
                     MoneyInput::make('surcharge')
                         ->label('Acréscimo')
@@ -127,6 +133,12 @@ class SaleResource extends Resource
                             $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
                             $total        = $vehiclePrice + $surcharge - $discount;
                             $set('total', $total);
+
+                            if ($get('payment_type') === 'on_time') {
+                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
+                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
+                                $set('installment_value', $installmentValue);
+                            }
                         }),
                     MoneyInput::make('total')
                         ->readOnly(),
@@ -147,12 +159,9 @@ class SaleResource extends Resource
                 Section::make(__('Installments'))->visible(
                     fn (Forms\Get $get) => $get('payment_type') === 'on_time'
                 )->schema([
-                    Forms\Components\TextInput::make('number_installments')
+                    MoneyInput::make('down_payment')
                         ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
-                        ->numeric()
                         ->live(debounce: 1000)
-                        ->default(1)
-                        ->minValue(1)
                         ->afterStateUpdated(
                             function (Forms\Set $set, Forms\Get $get) {
                                 $total            = $get('total');
@@ -161,9 +170,12 @@ class SaleResource extends Resource
                                 $set('installment_value', $installmentValue);
                             }
                         ),
-                    MoneyInput::make('down_payment')
+                    Forms\Components\TextInput::make('number_installments')
                         ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                        ->numeric()
                         ->live(debounce: 1000)
+                        ->default(1)
+                        ->minValue(1)
                         ->afterStateUpdated(
                             function (Forms\Set $set, Forms\Get $get) {
                                 $total            = $get('total');
