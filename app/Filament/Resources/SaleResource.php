@@ -43,8 +43,17 @@ class SaleResource extends Resource
                     Forms\Components\Select::make('vehicle_id')
                         ->relationship('vehicle', 'id')
                         ->unique(ignoreRecord: true)
-                        ->options(function () {
-                            return Vehicle::where('sold_date', null)->get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
+                        ->options(function (Forms\Get $get) {
+                            $selectedVehicleId = $get('vehicle_id');
+
+                            $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
+
+                            // Inclui o veículo selecionado, mesmo que esteja vendido
+                            if ($selectedVehicleId) {
+                                $query->orWhere('id', $selectedVehicleId);
+                            }
+
+                            return $query->get()->mapWithKeys(function (Vehicle $vehicle) {
                                 $price = $vehicle->promotional_price ?? $vehicle->sale_price; //@phpstan-ignore-line
                                 $price = number_format($price, 2, ',', '.');
                                 $price = "R$ {$price}";
@@ -54,15 +63,6 @@ class SaleResource extends Resource
                                 ];
                             });
                         })
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-                        })
-                        ->live()
                         ->required(),
                     Forms\Components\Select::make('client_id')
                         ->relationship('client', 'name')
@@ -101,6 +101,12 @@ class SaleResource extends Resource
                             $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
                             $total        = $vehiclePrice + $surcharge - $discount;
                             $set('total', $total);
+
+                            if ($get('payment_type') === 'on_time') {
+                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
+                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
+                                $set('installment_value', $installmentValue);
+                            }
                         }),
                     MoneyInput::make('discount')
                         ->label('Desconto')

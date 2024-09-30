@@ -14,6 +14,8 @@ class EditSale extends EditRecord
 
     public array $dataInstallments = []; //@phpstan-ignore-line
 
+    public int $oldVehicleId;
+
     protected function getHeaderActions(): array
     {
         return [
@@ -23,6 +25,7 @@ class EditSale extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
+        $this->oldVehicleId                                              = $data['vehicle_id'];
         $data['discount'] > 0 ? $data['discount_surcharge']              = 'discount' : $data['discount_surcharge'] = 'surcharge';
         $data['number_installments'] > 1 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
         $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
@@ -33,6 +36,10 @@ class EditSale extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        if ($data['vehicle_id'] !== $this->oldVehicleId) {
+            Vehicle::where('id', $this->oldVehicleId)->update(['sold_date' => null]); //@phpstan-ignore-line
+            Vehicle::where('id', $data['vehicle_id'])->update(['sold_date' => $data['date_sale']]); //@phpstan-ignore-line
+        }
         $data['surcharge'] = $data['discount_surcharge'] === 'discount' ? 0 : $data['surcharge'];
         $data['discount']  = $data['discount_surcharge'] === 'surcharge' ? 0 : $data['discount'];
 
