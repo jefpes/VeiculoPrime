@@ -7,12 +7,6 @@ use App\Models\PaymentInstallments;
 use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Exceptions\Halt;
-use Filament\Support\Facades\FilamentView;
-
-use function Filament\Support\is_app_url;
-
-use Throwable;
 
 class EditSale extends EditRecord
 {
@@ -41,10 +35,20 @@ class EditSale extends EditRecord
         $data['surcharge'] = $data['discount_surcharge'] === 'discount' ? 0 : $data['surcharge'];
         $data['discount']  = $data['discount_surcharge'] === 'surcharge' ? 0 : $data['discount'];
 
-        $this->dataInstallments = array_merge($this->dataInstallments, [
-            'installment_value' => $data['installment_value'],
-            'first_installment' => Carbon::parse($data['first_installment']),
-        ]);
+        if ($data['payment_type'] === 'in_sight') {
+            $data['number_installments'] = 1;
+            $data['status']              = 'PAGO';
+            $data['down_payment']        = 0;
+            PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
+        }
+
+        if ($data['payment_type'] === 'on_time') {
+            $data['status']         = 'PENDENTE';
+            $this->dataInstallments = array_merge($this->dataInstallments, [
+                'installment_value' => $data['installment_value'],
+                'first_installment' => Carbon::parse($data['first_installment']),
+            ]);
+        }
 
         if ($this->getRecord()->number_installments > 1 && $this->data['number_installments'] == 1) { //@phpstan-ignore-line
             PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete();//@phpstan-ignore-line
@@ -80,52 +84,6 @@ class EditSale extends EditRecord
 
                 PaymentInstallments::create($installmentData); //@phpstan-ignore-line
             }
-        }
-    }
-
-    public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
-    {
-        $this->authorizeAccess();
-
-        try {
-            $this->beginDatabaseTransaction();
-
-            $this->callHook('beforeValidate');
-
-            $data = $this->form->getState(afterValidate: function () {
-                $this->callHook('afterValidate');
-
-                $this->callHook('beforeSave');
-            });
-
-            $data = $this->mutateFormDataBeforeSave($data);
-
-            $this->handleRecordUpdate($this->getRecord(), $data);
-
-            $this->callHook('afterSave');
-            // dd(PaymentInstallments::where('sale_id', $this->getRecord()->id)->get() !== null);
-
-            $this->commitDatabaseTransaction();
-        } catch (Halt $exception) {
-            $exception->shouldRollbackDatabaseTransaction() ?
-                $this->rollBackDatabaseTransaction() :
-                $this->commitDatabaseTransaction();
-
-            return;
-        } catch (Throwable $exception) {
-            $this->rollBackDatabaseTransaction();
-
-            throw $exception;
-        }
-
-        $this->rememberData();
-
-        if ($shouldSendSavedNotification) {
-            $this->getSavedNotification()?->send();
-        }
-
-        if ($shouldRedirect && ($redirectUrl = $this->getRedirectUrl())) {
-            $this->redirect($redirectUrl, navigate: FilamentView::hasSpaMode() && is_app_url($redirectUrl));
         }
     }
 }
