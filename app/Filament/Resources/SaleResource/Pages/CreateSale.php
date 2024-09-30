@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\SaleResource\Pages;
 
 use App\Filament\Resources\SaleResource;
-use App\Models\PaymentInstallments;
+use App\Models\{PaymentInstallments, Vehicle};
 use Carbon\Carbon;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -43,19 +43,21 @@ class CreateSale extends CreateRecord
 
     protected function afterSave(): void
     {
-        if ($this->getRecord()->number_installments > 1) { //@phpstan-ignore-line
-            if (PaymentInstallments::where('sale_id', $this->getRecord()->id) !== null) { //@phpstan-ignore-line
-                PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
+        Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
+
+        if ($this->record->number_installments > 1) { //@phpstan-ignore-line
+            if (PaymentInstallments::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
+                PaymentInstallments::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
 
-            for ($i = 0; $i < $this->getRecord()->number_installments; $i++) {
+            for ($i = 0; $i < $this->record->number_installments; $i++) {
                 if ($i > 0) {
                     $this->dataInstallments['first_installment'] = $this->dataInstallments['first_installment']->addMonthNoOverflow(1);
                 }
 
                 $installmentData = [
-                    'sale_id'  => $this->getRecord()->id, //@phpstan-ignore-line
-                    'user_id'  => $this->getRecord()->user_id, //@phpstan-ignore-line
+                    'sale_id'  => $this->record->id, //@phpstan-ignore-line
+                    'user_id'  => $this->record->user_id, //@phpstan-ignore-line
                     'value'    => $this->dataInstallments['installment_value'],
                     'due_date' => $this->dataInstallments['first_installment'],
                     'status'   => 'PENDENTE',

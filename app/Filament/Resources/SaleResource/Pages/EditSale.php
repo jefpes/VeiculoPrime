@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\SaleResource\Pages;
 
 use App\Filament\Resources\SaleResource;
-use App\Models\PaymentInstallments;
+use App\Models\{PaymentInstallments, Vehicle};
 use Carbon\Carbon;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -23,7 +23,7 @@ class EditSale extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $data['discount'] >= 0 ? $data['discount_surcharge']             = 'discount' : $data['discount_surcharge'] = 'surcharge';
+        $data['discount'] > 0 ? $data['discount_surcharge']              = 'discount' : $data['discount_surcharge'] = 'surcharge';
         $data['number_installments'] > 1 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
         $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
 
@@ -65,19 +65,21 @@ class EditSale extends EditRecord
 
     protected function afterSave(): void
     {
-        if ($this->getRecord()->number_installments > 1) { //@phpstan-ignore-line
-            if (PaymentInstallments::where('sale_id', $this->getRecord()->id) !== null) { //@phpstan-ignore-line
-                PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
+        Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
+
+        if ($this->record->number_installments > 1) { //@phpstan-ignore-line
+            if (PaymentInstallments::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
+                PaymentInstallments::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
 
-            for ($i = 0; $i < $this->getRecord()->number_installments; $i++) {
+            for ($i = 0; $i < $this->record->number_installments; $i++) { //@phpstan-ignore-line
                 if ($i > 0) {
                     $this->dataInstallments['first_installment'] = $this->dataInstallments['first_installment']->addMonthNoOverflow(1);
                 }
 
                 $installmentData = [
-                    'sale_id'  => $this->getRecord()->id, //@phpstan-ignore-line
-                    'user_id'  => $this->getRecord()->user_id, //@phpstan-ignore-line
+                    'sale_id'  => $this->record->id, //@phpstan-ignore-line
+                    'user_id'  => $this->record->user_id, //@phpstan-ignore-line
                     'value'    => $this->dataInstallments['installment_value'],
                     'due_date' => $this->dataInstallments['first_installment'],
                     'status'   => 'PENDENTE',

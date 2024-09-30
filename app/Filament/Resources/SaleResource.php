@@ -42,10 +42,15 @@ class SaleResource extends Resource
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->relationship('vehicle', 'id')
+                        ->unique(ignoreRecord: true)
                         ->options(function () {
-                            return Vehicle::all()->mapWithKeys(function (Vehicle $vehicle) {
+                            return Vehicle::where('sold_date', null)->get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
+                                $price = $vehicle->promotional_price ?? $vehicle->sale_price; //@phpstan-ignore-line
+                                $price = number_format($price, 2, ',', '.');
+                                $price = "R$ {$price}";
+
                                 return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})", //@phpstan-ignore-line
+                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})", //@phpstan-ignore-line
                                 ];
                             });
                         })
