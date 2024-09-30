@@ -39,6 +39,7 @@ class EditSale extends EditRecord
             $data['number_installments'] = 1;
             $data['status']              = 'PAGO';
             $data['down_payment']        = 0;
+            $data['date_payment']        = $data['date_sale'];
             PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
         }
 
