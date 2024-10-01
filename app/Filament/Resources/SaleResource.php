@@ -6,11 +6,15 @@ use App\Enums\PaymentMethod;
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Sale, Vehicle};
+use Carbon\Carbon;
 use Filament\Forms\Components\{Section, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\HtmlString;
 
 class SaleResource extends Resource
 {
@@ -253,6 +257,48 @@ class SaleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('sale_cancel')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Cancel sale'))
+                    ->modalDescription(function (Sale $sale) {
+                        return new HtmlString(
+                            Blade::render(
+                                '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
+                                <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
+                                <p>Cliente: {{ $sale->client->name }}</p>
+                                <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
+                                @if ($valueReceived > 0)
+                                    <p>Valor recebido: R$ {{ number_format($valueReceived, 2, ",", ".") }}</p>
+                                @endif
+                                @if ($datePayment)
+                                    <p>Data do pagamento: {{ $datePayment }}</p>
+                                @endif',
+                                [
+                                    'sale'          => $sale,
+                                    'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
+                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'), //@phpstan-ignore-line
+                                ]
+                            )
+                        );
+
+                    })
+                    ->label('Cancel')
+                    ->translateLabel()
+                    ->icon('heroicon-o-x-circle')
+                    ->iconSize('md')
+                    ->color('danger')
+                    ->form([
+                        MoneyInput::make('reimbursement')
+                            ->label('Reimbursement')
+                            ->live(debounce: 500),
+                    ])
+                    ->action(function (Sale $sale, array $data) {
+
+                        $sale->update([
+                            'date_cancel'   => Carbon::now()->format('Y-m-d'),
+                            'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
+                        ]);
+                    }),
             ]);
     }
 
