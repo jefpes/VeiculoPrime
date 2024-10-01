@@ -256,7 +256,7 @@ class SaleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
                 Action::make('sale_cancel')
                     ->requiresConfirmation()
                     ->modalHeading(__('Cancel sale'))
@@ -312,7 +312,7 @@ class SaleResource extends Resource
                         ]);
 
                         Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
-                    }),
+                    })->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
             ]);
     }
 
