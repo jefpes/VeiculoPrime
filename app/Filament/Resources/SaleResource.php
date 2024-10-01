@@ -305,11 +305,13 @@ class SaleResource extends Resource
                             ->live(debounce: 500),
                     ])
                     ->action(function (Sale $sale, array $data) {
-
                         $sale->update([
                             'date_cancel'   => Carbon::now()->format('Y-m-d'),
                             'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
+                            'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
                         ]);
+
+                        Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
                     }),
             ]);
     }
