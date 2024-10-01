@@ -265,18 +265,30 @@ class SaleResource extends Resource
                             Blade::render(
                                 '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
                                 <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
-                                <p>Cliente: {{ $sale->client->name }}</p>
+                                <p>Data da venda: {{ $dateSale }}</p>
                                 <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
-                                @if ($valueReceived > 0)
-                                    <p>Valor recebido: R$ {{ number_format($valueReceived, 2, ",", ".") }}</p>
+                                <p>Cliente: {{ $sale->client->name }}</p>
+                                @if ($sale->discount > 0)
+                                    <p>Desconto: R$ {{ number_format($sale->discount, 2, ",", ".") }} </p>
                                 @endif
-                                @if ($datePayment)
-                                    <p>Data do pagamento: {{ $datePayment }}</p>
-                                @endif',
+                                @if ($sale->surcharge > 0)
+                                    <p>Acrescimo: R$ {{ number_format($sale->surcharge, 2, ",", ".") }} </p>
+                                @endif
+                                @if ($sale->down_payment > 0)
+                                    <p>Entrada: R$ {{ number_format($sale->down_payment, 2, ",", ".") }} </p>
+                                @endif
+                                @if ($sale->number_installments > 1)
+                                    <p>N° Parcelas: {{ $sale->paymentInstallments->count() }}</p>
+                                    <p>Valor: R$ {{ number_format($sale->paymentInstallments[0]->value, 2, ",", ".") }}</p>
+                                    <p>Parcelas pagas: {{ $sale->paymentInstallments->where("status", "PAGO")->count() }}</p>
+                                    <p>Valor das parcelas pago: R$ {{ number_format($sale->paymentInstallments->where("status", "PAGO")->sum("value"), 2, ",", ".") }} </p>
+                                @endif
+                                    <p>Total recebido: R$ {{ number_format(($sale->paymentInstallments->where("status", "PAGO")->sum("value") ?? 0)+($sale->down_payment ?? 0), 2, ",", ".") }} </p>',
                                 [
                                     'sale'          => $sale,
                                     'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
                                     'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'), //@phpstan-ignore-line
+                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'), //@phpstan-ignore-line
                                 ]
                             )
                         );
