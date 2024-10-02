@@ -204,51 +204,66 @@ class SaleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Seller')
+                    ->disabledClick()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('vehicle.model.name')
+                    ->disabledClick()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('client.name')
+                    ->disabledClick()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('payment_method')
+                    ->disabledClick()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                    ->disabledClick(),
                 Tables\Columns\TextColumn::make('date_sale')
+                    ->disabledClick()
                     ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_payment')
+                    ->disabledClick()
                     ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('discount')
+                    ->disabledClick()
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('surcharge')
+                    ->disabledClick()
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('down_payment')
+                    ->disabledClick()
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('number_installments')
+                    ->disabledClick()
                     ->label('Installments')
                     ->numeric(),
                 Tables\Columns\TextColumn::make('reimbursement')
+                    ->disabledClick()
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_cancel')
+                    ->disabledClick()
                     ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('total')
+                    ->disabledClick()
                     ->money('BRL')
                     ->sortable(),
             ])
@@ -256,7 +271,8 @@ class SaleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
+                Tables\Actions\EditAction::make()
+                    ->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
                 Action::make('sale_cancel')
                     ->requiresConfirmation()
                     ->modalHeading(__('Cancel sale'))
@@ -312,7 +328,7 @@ class SaleResource extends Resource
                         ]);
 
                         Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
-                    })->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
+                    }),
             ]);
     }
 
