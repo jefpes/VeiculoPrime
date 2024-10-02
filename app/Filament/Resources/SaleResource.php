@@ -12,6 +12,7 @@ use Filament\Forms\Components\{Section, Select, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -364,7 +365,7 @@ class SaleResource extends Resource
 
                         return $indicators;
                     }),
-            ])
+            ], layout: FiltersLayout::Modal)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->hidden(fn (Sale $sale) => $sale->status === 'REEMBOLSADO' || $sale->status === 'CANCELADO'), //@phpstan-ignore-line
