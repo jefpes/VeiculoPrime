@@ -46,7 +46,14 @@ class SaleResource extends Resource
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->relationship('vehicle', 'id')
-                        ->unique(ignoreRecord: true)
+                        ->unique(function (Forms\Get $get) {
+                            $exists = Sale::where('vehicle_id', $get('vehicle_id') ?? null) //@phpstan-ignore-line
+                                ->where('status', 'REEMBOLSADO')
+                                ->orWhere('status', 'CANCELADO')
+                                ->exists();
+
+                            return !$exists;
+                        }, ignoreRecord: true)
                         ->options(function (Forms\Get $get) {
                             $selectedVehicleId = $get('vehicle_id');
 
@@ -221,8 +228,8 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'PENDENTE'    => 'warning',
-                        'REEMBOLSADO' => 'info',
+                        'PENDENTE'    => 'info',
+                        'REEMBOLSADO' => 'warning',
                         'CANCELADO'   => 'danger',
                         default       => 'success',
                     }),
