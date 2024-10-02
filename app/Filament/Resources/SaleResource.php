@@ -2,17 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\PaymentMethod;
+use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
-use Filament\Forms\Components\{Section, ToggleButtons};
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\{Section, Select, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
@@ -268,7 +271,99 @@ class SaleResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Filter::make('date_sale')
+                    ->form([
+                        DatePicker::make('sale_date_initial')->label('Sale Date After'),
+                        DatePicker::make('sale_date_final')->label('Sale Date Before'),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
+                            ->when($data['sale_date_final'], fn ($query, $value) => $query->where('date_sale', '<=', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['sale_date_initial'] ?? null) {
+                            $indicators[] = __('Sale Date After') . ': ' . Carbon::parse($data['sale_date_initial'])->format('d/m/Y');
+                        }
+
+                        if ($data['sale_date_final'] ?? null) {
+                            $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('payment_method')
+                    ->form([
+                        Forms\Components\Select::make('payment_method')
+                        ->options(
+                            collect(PaymentMethod::cases())
+                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
+                        ),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['payment_method'] ?? null) {
+                            $indicators[] = __('Payment Method') . ': ' . $data['payment_method'];
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('status')
+                    ->form([
+                        Forms\Components\Select::make('status')
+                        ->options(
+                            collect(StatusPayments::cases())
+                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
+                        ),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['status'] ?? null) {
+                            $indicators[] = __('Status') . ': ' . $data['status'];
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('model')
+                    ->form([
+                        Select::make('model')
+                            ->searchable()
+                            ->options(function () {
+                                return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
+                                    return [
+                                        $model->id => "{$model->name}", //@phpstan-ignore-line
+                                    ];
+                                });
+                            }),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (!empty($data['model'])) {
+                            return $query->whereHas('vehicle', function ($query) use ($data) {
+                                $query->where('vehicle_model_id', $data['model']);
+                            });
+                        }
+
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if (!empty($data['model'])) {
+                            $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
+
+                            if ($modelName) {
+                                $indicators[] = __('Model') . ': ' . $modelName;
+                            }
+                        }
+
+                        return $indicators;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
