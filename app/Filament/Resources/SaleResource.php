@@ -272,7 +272,7 @@ class SaleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->visible(fn (Sale $sale) => $sale->status === 'PENDENTE'), //@phpstan-ignore-line
+                    ->hidden(fn (Sale $sale) => $sale->status === 'REEMBOLSADO' || $sale->status === 'CANCELADO'), //@phpstan-ignore-line
                 Action::make('sale_cancel')
                     ->requiresConfirmation()
                     ->modalHeading(__('Cancel sale'))
