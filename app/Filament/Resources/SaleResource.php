@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
+use App\Filament\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Sale, Vehicle};
@@ -431,7 +432,7 @@ class SaleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            InstallmentsRelationManager::class,
         ];
     }
 
