@@ -88,7 +88,7 @@ class InstallmentsRelationManager extends RelationManager
                             ->success()
                             ->title(__('Installment received'))
                             ->send();
-                    }),
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PENDENTE'), //@phpstan-ignore-line
                 Tables\Actions\Action::make('refund')
                     ->translateLabel()
                     ->icon('heroicon-o-receipt-refund')
@@ -109,7 +109,7 @@ class InstallmentsRelationManager extends RelationManager
                             ->success()
                             ->title(__('Installment refunded'))
                             ->send();
-                    }),
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
             ]);
     }
 }
