@@ -92,7 +92,24 @@ class InstallmentsRelationManager extends RelationManager
                 Tables\Actions\Action::make('refund')
                     ->translateLabel()
                     ->icon('heroicon-o-receipt-refund')
-                    ->color('danger'),
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (PaymentInstallments $installment) {
+                        $installment->update([
+                            'user_id'        => Auth::id(),
+                            'status'         => 'PENDENTE',
+                            'discount'       => null,
+                            'surcharge'      => null,
+                            'payment_date'   => null,
+                            'payment_value'  => null,
+                            'payment_method' => null,
+                        ]);
+                    })->after(function () {
+                        Notification::make()
+                            ->success()
+                            ->title(__('Installment refunded'))
+                            ->send();
+                    }),
             ]);
     }
 }
