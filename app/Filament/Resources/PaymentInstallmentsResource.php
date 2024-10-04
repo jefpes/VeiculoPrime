@@ -22,10 +22,10 @@ class PaymentInstallmentsResource extends Resource
 {
     protected static ?string $model = PaymentInstallments::class;
 
-    // public static function getNavigationGroup(): ?string
-    // {
-    //     return __('Financial');
-    // }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Financial');
+    }
 
     public static function getModelLabel(): string
     {
