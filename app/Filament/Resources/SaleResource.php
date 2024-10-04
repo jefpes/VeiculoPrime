@@ -25,10 +25,10 @@ class SaleResource extends Resource
 {
     protected static ?string $model = Sale::class;
 
-    // public static function getNavigationGroup(): ?string
-    // {
-    //     return __('Financial');
-    // }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Financial');
+    }
 
     public static function getModelLabel(): string
     {
