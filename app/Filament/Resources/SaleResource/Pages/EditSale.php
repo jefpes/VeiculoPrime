@@ -96,5 +96,6 @@ class EditSale extends EditRecord
                 PaymentInstallments::create($installmentData); //@phpstan-ignore-line
             }
         }
+
     }
 }

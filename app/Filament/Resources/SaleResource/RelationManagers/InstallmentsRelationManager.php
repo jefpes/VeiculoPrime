@@ -5,7 +5,6 @@ namespace App\Filament\Resources\SaleResource\RelationManagers;
 use App\Enums\PaymentMethod;
 use App\Forms\Components\MoneyInput;
 use App\Models\PaymentInstallments;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
@@ -18,19 +17,10 @@ class InstallmentsRelationManager extends RelationManager
 
     protected static ?string $title = 'Parcelas';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('sale_id')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
+            ->paginated(false)
             ->recordTitleAttribute('sale_id')
             ->columns([
                 Tables\Columns\TextColumn::make('due_date')->date('d/m/Y'),
