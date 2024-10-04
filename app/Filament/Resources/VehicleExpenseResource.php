@@ -52,12 +52,11 @@ class VehicleExpenseResource extends Resource
                         ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
-                Forms\Components\TextInput::make('description')
+                MoneyInput::make('value')
+                    ->required(),
+                Forms\Components\Textarea::make('description')
                     ->required()
                     ->maxLength(255),
-                MoneyInput::make('value')
-                    ->required()
-                    ->numeric(),
             ])->columns(1);
     }
 
