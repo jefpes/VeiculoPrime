@@ -4,16 +4,19 @@ namespace App\Filament\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentsResource\{Pages};
+use App\Forms\Components\MoneyInput;
 use App\Models\PaymentInstallments;
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Select};
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Support\Facades\Auth;
 
 class PaymentInstallmentsResource extends Resource
 {
@@ -110,15 +113,74 @@ class PaymentInstallmentsResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->actions([
+                Tables\Actions\Action::make('receive')
+                    ->translateLabel()
+                    ->icon('heroicon-o-banknotes')
+                    ->slideOver()
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Receive installment'))
+                    ->modalDescription(null)
+                    ->modalIcon('heroicon-o-banknotes')
+                    ->fillForm(fn (PaymentInstallments $record): array => [
+                        'value'        => $record->value, // @phpstan-ignore-line
+                        'payment_date' => now(),
+                    ])
+                    ->form([
+                        MoneyInput::make('value')->readOnly(),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(
+                                collect(PaymentMethod::cases())
+                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
+                            )
+                            ->required(),
+                        MoneyInput::make('payment_value')->required(),
+                        Forms\Components\DatePicker::make('payment_date')->required(),
+                    ])->action(function (PaymentInstallments $installment, array $data) {
+                        $installment->update([
+                            'user_id'        => Auth::id(),
+                            'status'         => 'PAGO',
+                            'discount'       => $data['payment_value'] < $installment->value ? ($installment->value - $data['payment_value']) : 0, //@phpstan-ignore-line
+                            'surcharge'      => $data['payment_value'] > $installment->value ? ($data['payment_value'] - $installment->value) : 0,
+                            'payment_date'   => $data['payment_date'],
+                            'payment_value'  => $data['payment_value'],
+                            'payment_method' => $data['payment_method'],
+                        ]);
+                    })->after(function () {
+                        Notification::make()
+                            ->success()
+                            ->title(__('Installment received'))
+                            ->send();
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PENDENTE'), //@phpstan-ignore-line
+                Tables\Actions\Action::make('refund')
+                    ->translateLabel()
+                    ->icon('heroicon-o-receipt-refund')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (PaymentInstallments $installment) {
+                        $installment->update([
+                            'user_id'        => Auth::id(),
+                            'status'         => 'PENDENTE',
+                            'discount'       => null,
+                            'surcharge'      => null,
+                            'payment_date'   => null,
+                            'payment_value'  => null,
+                            'payment_method' => null,
+                        ]);
+                    })->after(function () {
+                        Notification::make()
+                            ->success()
+                            ->title(__('Installment refunded'))
+                            ->send();
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+            ])
             ->filters([
                 Filter::make('date_sale')
                     ->form([
                         Forms\Components\Group::make([
-                            DatePicker::make('due_date_initial')->label('From'),
-                            DatePicker::make('due_date_final')->label('To'),
+                            DatePicker::make('due_date_initial')->label('From')->default(now()->subMonth()->format('Y-m-d')),
+                            DatePicker::make('due_date_final')->label('To')->default(now()->format('Y-m-d')),
                         ])->columns(2),
-                        // DatePicker::make('due_date_initial')->label('Due date after'),
-                        // DatePicker::make('due_date_final')->label('Due date before'),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['due_date_initial'], fn ($query, $value) => $query->where('due_date', '>=', $value))
