@@ -22,6 +22,8 @@ class PaymentInstallmentsResource extends Resource
 {
     protected static ?string $model = PaymentInstallments::class;
 
+    protected static ?int $navigationSort = 2;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Financial');
