@@ -53,16 +53,6 @@ class SaleResource extends Resource
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->relationship('vehicle', 'id')
-                        ->unique(function (Forms\Get $get) {
-                            $vehicleId = $get('vehicle_id');
-
-                            return Sale::where('vehicle_id', $vehicleId) //@phpstan-ignore-line
-                                ->where(function ($query) {
-                                    $query->where('status', 'REEMBOLSADO')
-                                        ->orWhere('status', 'CANCELADO');
-                                })
-                                ->exists();
-                        }, ignoreRecord: true)
                         ->options(function ($record) {
                             $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
 
