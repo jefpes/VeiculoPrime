@@ -5,7 +5,6 @@ namespace App\Filament\Resources\SaleResource\Pages;
 use App\Filament\Resources\SaleResource;
 use App\Models\{PaymentInstallments, Vehicle};
 use Carbon\Carbon;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSale extends EditRecord
@@ -15,13 +14,6 @@ class EditSale extends EditRecord
     public array $dataInstallments = []; //@phpstan-ignore-line
 
     public int $oldVehicleId;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            // Actions\DeleteAction::make(),
-        ];
-    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
