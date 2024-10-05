@@ -14,11 +14,9 @@ class ManageVehicleExpenses extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->before(
-                function ($data) {
-                    $data = array_merge($data, ['user_id' => Auth::id()]);
-
-                    return $data;
+            Actions\CreateAction::make()->after(
+                function ($record) {
+                    $record->update(['user_id' => Auth::id()]);
                 }
             ),
         ];

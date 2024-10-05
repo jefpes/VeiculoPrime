@@ -14,6 +14,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class VehicleExpenseResource extends Resource
 {
@@ -165,7 +166,11 @@ class VehicleExpenseResource extends Resource
                     }),
             ], layout: FiltersLayout::Modal)
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->after(
+                    function ($record) {
+                        $record->update(['user_id' => Auth::id()]);
+                    }
+                ),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
