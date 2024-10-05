@@ -10,8 +10,19 @@ class City extends Model
 {
     use HasFactory;
 
-    public function client(): HasMany
+    public function clients(): HasMany
     {
-        return $this->hasMany(City::class);
+        return $this->hasMany(ClientAddress::class);
     }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(EmployeeAddress::class);
+    }
+
+    public function suppliers(): HasMany
+    {
+        return $this->hasMany(SupplierAddress::class);
+    }
+
 }
