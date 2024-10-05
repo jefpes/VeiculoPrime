@@ -54,30 +54,29 @@ class SaleResource extends Resource
                     Forms\Components\Select::make('vehicle_id')
                         ->relationship('vehicle', 'id')
                         ->unique(function (Forms\Get $get) {
-                            $exists = Sale::where('vehicle_id', $get('vehicle_id') ?? null) //@phpstan-ignore-line
-                                ->where('status', 'REEMBOLSADO')
-                                ->orWhere('status', 'CANCELADO')
+                            $vehicleId = $get('vehicle_id');
+
+                            return Sale::where('vehicle_id', $vehicleId) //@phpstan-ignore-line
+                                ->where(function ($query) {
+                                    $query->where('status', 'REEMBOLSADO')
+                                        ->orWhere('status', 'CANCELADO');
+                                })
                                 ->exists();
-
-                            return !$exists;
                         }, ignoreRecord: true)
-                        ->options(function (Forms\Get $get) {
-                            $selectedVehicleId = $get('vehicle_id');
-
+                        ->options(function ($record) {
                             $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
 
-                            // Inclui o veículo selecionado, mesmo que esteja vendido
-                            if ($selectedVehicleId) {
-                                $query->orWhere('id', $selectedVehicleId);
+                            if ($record !== null) {
+                                $query->orWhere('id', $record->vehicle_id);
                             }
 
                             return $query->get()->mapWithKeys(function (Vehicle $vehicle) {
-                                $price = $vehicle->promotional_price ?? $vehicle->sale_price; //@phpstan-ignore-line
+                                $price = $vehicle->promotional_price ?? $vehicle->sale_price;  //@phpstan-ignore-line
                                 $price = number_format($price, 2, ',', '.');
                                 $price = "R$ {$price}";
 
                                 return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})", //@phpstan-ignore-line
+                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})",  //@phpstan-ignore-line
                                 ];
                             });
                         })
