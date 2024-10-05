@@ -5,10 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VehicleTypeResource\{Pages};
 use App\Models\VehicleType;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
 
 class VehicleTypeResource extends Resource
 {
@@ -38,7 +38,8 @@ class VehicleTypeResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -62,7 +63,25 @@ class VehicleTypeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                ->action(function ($record) {
+                    if ($record->models->count() > 0) {
+                        Notification::make()
+                            ->danger()
+                            ->title(__('Type is in use'))
+                            ->body(__('Type is in use by vehicles'))
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('Type deleted successfully'))
+                        ->send();
+
+                    $record->delete();
+                }),
             ]);
     }
 
@@ -71,13 +90,5 @@ class VehicleTypeResource extends Resource
         return [
             'index' => Pages\ManageVehicleTypes::route('/'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }
