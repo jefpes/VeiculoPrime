@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -20,11 +19,11 @@ class VehicleExpenseResource extends Resource
 {
     protected static ?string $model = VehicleExpense::class;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Financial');
+        return __('Vehicle');
     }
 
     public static function getModelLabel(): string
@@ -164,7 +163,7 @@ class VehicleExpenseResource extends Resource
 
                         return $indicators;
                     }),
-            ], layout: FiltersLayout::Modal)
+            ])
             ->actions([
                 Tables\Actions\EditAction::make()->after(
                     function ($record) {
