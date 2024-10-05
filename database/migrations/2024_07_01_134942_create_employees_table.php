@@ -38,7 +38,7 @@ return new class () extends Migration {
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->foreignIdFor(City::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(City::class)->constrained();
             $table->string('state');
             $table->string('complement')->nullable();
             $table->timestamps();
