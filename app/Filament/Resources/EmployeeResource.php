@@ -175,6 +175,7 @@ class EmployeeResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -197,6 +198,7 @@ class EmployeeResource extends Resource
             'index'  => Pages\ListEmployees::route('/'),
             'create' => Pages\CreateEmployee::route('/create'),
             'edit'   => Pages\EditEmployee::route('/{record}/edit'),
+            'view'   => Pages\ViewEmployee::route('/{record}'),
         ];
     }
 }
