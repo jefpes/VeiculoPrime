@@ -27,7 +27,7 @@ class Cards extends BaseWidget
 
         foreach ($this->vehiclesTypeSale() as $value) {
             if ($value['count'] > 0) {
-                $stats[] = Stat::make(__('Total Sales ') . $value["type"], $value['count'])->description('R$ ' . number_format($value['total_value'], 2, ',', '.'));
+                $stats[] = Stat::make(__('Total Sales') . ' (' . $value["type"] . ')', $value['count'])->description('R$ ' . number_format($value['total_value'], 2, ',', '.'));
             }
         }
 
@@ -50,7 +50,15 @@ class Cards extends BaseWidget
         // Iterar sobre cada tipo de veículo
         foreach ($types as $type) {
             // Obter os veículos vendidos de cada tipo
-            $vehicles = Vehicle::query()
+            $vehicles = Sale::query()
+                ->whereHas('vehicle', function ($query) use ($type) {
+                    // Aplicar o filtro de data de venda e tipo de veículo nos veículos
+                    $query->when($this->filters['start_date'], fn ($query) => $query->where('sold_date', '>', $this->filters['start_date']))
+                        ->when($this->filters['end_date'], fn ($query) => $query->where('sold_date', '<', $this->filters['end_date']))
+                        ->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $type['id']));
+                })
+                ->get();
+            Vehicle::query()
                 ->whereNotNull('sold_date') // Somente veículos vendidos
                 ->when($this->filters['start_date'], fn ($query) => $query->where('sold_date', '>', $this->filters['start_date']))
                 ->when($this->filters['end_date'], fn ($query) => $query->where('sold_date', '<', $this->filters['end_date']))
@@ -59,9 +67,9 @@ class Cards extends BaseWidget
 
             // Adicionar ao array de resultados
             $salesByType[] = [
-                'type'        => $type['name'],     // Nome do tipo de veículo
-                'count'       => $vehicles->count(),      // Quantidade de veículos vendidos
-                'total_value' => $vehicles->sum('sale_price'), // Valor total das vendas
+                'type'        => $type['name'],
+                'count'       => $vehicles->count(),
+                'total_value' => $vehicles->sum('total'),
             ];
         }
 
