@@ -2,11 +2,12 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\{Sale, User};
+use App\Models\Vehicle;
+use App\Models\{Sale, User, VehicleType};
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Number;
+use Illuminate\Database\Eloquent\Builder;
 
 class Cards extends BaseWidget
 {
@@ -18,17 +19,59 @@ class Cards extends BaseWidget
 
     protected function getStats(): array
     {
-        return [
+        $stats = [
             Stat::make(__('Total Users'), User::count()), // @phpstan-ignore-line
-            Stat::make(__('Total Sales'), Number::currency($this->loadSaleFiltersAndQuery(), 'BRL')),
+            Stat::make(__('Total Sales'), $this->loadSaleFiltersAndQuery()->count())
+                 ->description('R$ ' . number_format($this->loadSaleFiltersAndQuery()->sum('total'), 2, ',', '.')),
         ];
+
+        foreach ($this->vehiclesTypeSale() as $value) {
+            if ($value['count'] > 0) {
+                $stats[] = Stat::make(__('Total Sales ') . $value["type"], $value['count'])->description('R$ ' . number_format($value['total_value'], 2, ',', '.'));
+            }
+        }
+
+        return $stats;
     }
 
-    private function loadSaleFiltersAndQuery(): float
+    /**
+     * Obtém as vendas de veículos agrupadas por tipo.
+     *
+     * @return array<int, array{type: string, count: int, total_value: float}>
+     */
+    private function vehiclesTypeSale(): array
+    {
+        // Obter todos os tipos de veículos
+        $types = VehicleType::get(['id', 'name'])->toArray(); //@phpstan-ignore-line
+
+        // Preparar o resultado final
+        $salesByType = [];
+
+        // Iterar sobre cada tipo de veículo
+        foreach ($types as $type) {
+            // Obter os veículos vendidos de cada tipo
+            $vehicles = Vehicle::query()
+                ->whereNotNull('sold_date') // Somente veículos vendidos
+                ->when($this->filters['start_date'], fn ($query) => $query->where('sold_date', '>', $this->filters['start_date']))
+                ->when($this->filters['end_date'], fn ($query) => $query->where('sold_date', '<', $this->filters['end_date']))
+                ->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $type['id']))
+                ->get();
+
+            // Adicionar ao array de resultados
+            $salesByType[] = [
+                'type'        => $type['name'],     // Nome do tipo de veículo
+                'count'       => $vehicles->count(),      // Quantidade de veículos vendidos
+                'total_value' => $vehicles->sum('sale_price'), // Valor total das vendas
+            ];
+        }
+
+        return $salesByType;
+    }
+
+    private function loadSaleFiltersAndQuery(): Builder
     {
         return Sale::query()
             ->when($this->filters['start_date'], fn ($query) => $query->where('date_sale', '>', $this->filters['start_date']))
-            ->when($this->filters['end_date'], fn ($query) => $query->where('date_sale', '<', $this->filters['end_date']))
-            ->sum('total');
+            ->when($this->filters['end_date'], fn ($query) => $query->where('date_sale', '<', $this->filters['end_date']));
     }
 }
