@@ -11,6 +11,8 @@ class SalesGraphic extends ChartWidget
 {
     protected static ?int $sort = 2;
 
+    protected static ?string $pollingInterval = '30s';
+
     public function getHeading(): string | Htmlable | null
     {
         return __('Sales in the last year');
