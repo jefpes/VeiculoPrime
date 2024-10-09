@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Sale;
+use App\Models\{Sale, Vehicle};
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\{Trend, TrendValue};
 use Illuminate\Contracts\Support\Htmlable;
@@ -15,7 +15,7 @@ class SalesGraphic extends ChartWidget
 
     public function getHeading(): string | Htmlable | null
     {
-        return __('Sales in the last year');
+        return __('Last year');
     }
 
     /**
@@ -34,7 +34,7 @@ class SalesGraphic extends ChartWidget
     protected function getData(): array
     {
 
-        $data = Trend::model(Sale::class)
+        $sale = Trend::model(Sale::class)
                 ->dateColumn('date_sale')
                 ->between(
                     start: now()->subMonth(12), //@phpstan-ignore-line
@@ -43,16 +43,31 @@ class SalesGraphic extends ChartWidget
                 ->perMonth()
                 ->sum('total');
 
+        $purchase = Trend::model(Vehicle::class)
+                ->dateColumn('purchase_date')
+                ->between(
+                    start: now()->subMonth(12), //@phpstan-ignore-line
+                    end: now(),
+                )
+                ->perMonth()
+                ->sum('purchase_price');
+
         return [
             'datasets' => [
                 [
+                    'label'           => __('Purchases'),
+                    'data'            => $purchase->map(fn (TrendValue $value) => $value->aggregate),
+                    'backgroundColor' => '#33ff42',
+                    'borderColor'     => '#93ff33',
+                ],
+                [
                     'label'           => __('Sales'),
-                    'data'            => $data->map(fn (TrendValue $value) => $value->aggregate),
+                    'data'            => $sale->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => '#36A2EB',
                     'borderColor'     => '#9BD0F5',
                 ],
             ],
-            'labels' => $data->map(fn (TrendValue $value) => $value->date),
+            'labels' => $sale->map(fn (TrendValue $value) => $value->date),
         ];
     }
 
