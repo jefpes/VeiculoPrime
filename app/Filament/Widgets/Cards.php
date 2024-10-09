@@ -30,7 +30,7 @@ class Cards extends BaseWidget
             }
         }
 
-        $stats[] = Stat::make(__('Profit'), 'R$ ' . number_format($this->calculateProfit(), 2, ',', '.'));
+        $stats[] = Stat::make(__('Total Profit'), 'R$ ' . number_format($this->calculateProfit(), 2, ',', '.'));
 
         foreach ($this->vehiclesTypeSale() as $value) {
             if ($value['count'] > 0) {
