@@ -12,6 +12,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{Section, Select, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
@@ -223,11 +224,30 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'PENDENTE'    => 'info',
-                        'REEMBOLSADO' => 'warning',
-                        'CANCELADO'   => 'danger',
-                        default       => 'success',
+                    ->color(function (string $state, $record): string|array {
+                        // Se o status for 'PENDENTE', verificar se há parcelas em atraso
+                        if ($state === 'PENDENTE') {
+                            // Verificar se a venda possui parcelas e se alguma está atrasada
+                            $hasLateInstallments = $record->paymentInstallments()
+                                ->where('status', '!=', 'PAGO') // Status diferente de pago
+                                ->where('due_date', '<', now()) // Data de vencimento no passado
+                                ->exists(); // Verificar se existe pelo menos uma
+
+                            // Se houver parcelas em atraso, retornar 'danger'
+                            if ($hasLateInstallments) {
+                                return 'danger';
+                            }
+
+                            // Caso não haja parcelas em atraso, manter a cor 'info'
+                            return 'info';
+                        }
+
+                        // Verificar os demais estados
+                        return match ($state) {
+                            'REEMBOLSADO' => 'warning',
+                            'CANCELADO'   => Color::hex('#fe0000'),
+                            default       => 'success',
+                        };
                     }),
                 Tables\Columns\TextColumn::make('date_sale')
                     ->date('d/m/Y')
