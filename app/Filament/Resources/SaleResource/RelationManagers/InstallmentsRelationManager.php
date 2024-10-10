@@ -73,6 +73,11 @@ class InstallmentsRelationManager extends RelationManager
                             'payment_value'  => $data['payment_value'],
                             'payment_method' => $data['payment_method'],
                         ]);
+
+                        if ($installment->sale->paymentInstallments->where('status', 'PENDENTE')->isEmpty()) { //@phpstan-ignore-line
+                            $installment->sale->update(['status' => 'PAGO']); //@phpstan-ignore-line
+                        }
+
                     })->after(function () {
                         Notification::make()
                             ->success()
@@ -94,6 +99,10 @@ class InstallmentsRelationManager extends RelationManager
                             'payment_value'  => null,
                             'payment_method' => null,
                         ]);
+
+                        if ($installment->sale->status === 'PAGO') { //@phpstan-ignore-line
+                            $installment->sale->update(['status' => 'PENDENTE']); //@phpstan-ignore-line
+                        }
                     })->after(function () {
                         Notification::make()
                             ->success()
