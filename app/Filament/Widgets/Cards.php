@@ -31,7 +31,7 @@ class Cards extends BaseWidget
         }
 
         $stats = [
-            Stat::make(__('Total Purchases'), Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->count())
+            Stat::make(__('Total Purchase'), Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->count())
                 ->description('R$ ' . number_format(Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->sum('purchase_price'), 2, ',', '.')),
         ];
 
