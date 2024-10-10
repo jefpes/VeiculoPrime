@@ -19,44 +19,30 @@ class Cards extends BaseWidget
 
     protected function getStats(): array
     {
-        $stats = [
-            Stat::make(__('Total Sales'), $this->loadSaleFiltersAndQuery()->count())
-                ->description('R$ ' . number_format($this->loadSaleFiltersAndQuery()->sum('total'), 2, ',', '.')),
-        ];
+        $stats[] = Stat::make(__('Total Sales'), $this->loadSaleFiltersAndQuery()->count())
+                ->description('R$ ' . number_format($this->loadSaleFiltersAndQuery()->sum('total'), 2, ',', '.'));
 
         foreach ($this->vehiclesTypeSale() as $value) {
-            if ($value['count'] > 0) {
-                $stats[] = Stat::make(__('Total Sales') . ' (' . $value["type"] . ')', $value['count'])->description('R$ ' . number_format($value['total_value'], 2, ',', '.'));
-            }
+            $stats[] = Stat::make(__('Total Sales') . ' (' . $value["type"] . ')', $value['count'])->description('R$ ' . number_format($value['total_value'], 2, ',', '.'));
         }
 
-        $stats = [
-            Stat::make(__('Total Purchase'), Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->count())
-                ->description('R$ ' . number_format(Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->sum('purchase_price'), 2, ',', '.')),
-        ];
+        $stats[] = Stat::make(__('Total Purchase'), Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->count())
+                ->description('R$ ' . number_format(Vehicle::query()->when($this->filters['start_date'], fn ($query) => $query->where('purchase_date', '>', $this->filters['start_date']))->when($this->filters['end_date'], fn ($query) => $query->where('purchase_date', '<', $this->filters['end_date']))->sum('purchase_price'), 2, ',', '.'));
 
         foreach ($this->vehiclesTypePurchase() as $value) {
-            if ($value['count'] > 0) {
-                $stats[] = Stat::make(__('Purchases') . ' (' . $value["type"] . ')', $value['count'])->description('R$ ' . number_format($value['total_by_type'], 2, ',', '.'));
-            }
+            $stats[] = Stat::make(__('Purchases') . ' (' . $value["type"] . ')', $value['count'])->description('R$ ' . number_format($value['total_by_type'], 2, ',', '.'));
         }
 
         $stats[] = Stat::make(__('Total Profit'), 'R$ ' . number_format($this->calculateProfit(), 2, ',', '.'));
 
         foreach ($this->vehiclesTypeSale() as $value) {
-            if ($value['count'] > 0) {
-                $stats[] = Stat::make(__('Profit') . ' (' . $value["type"] . ')', 'R$ ' . number_format($value['profit'], 2, ',', '.'));
-            }
+            $stats[] = Stat::make(__('Profit') . ' (' . $value["type"] . ')', 'R$ ' . number_format($value['profit'], 2, ',', '.'));
         }
 
-        if ($this->totalExpensesByType()['total_expenses'] > 0) {
-            $stats[] = Stat::make(__('Total Expenses'), 'R$ ' . number_format($this->totalExpensesByType()['total_expenses'], 2, ',', '.'));
-        }
+        $stats[] = Stat::make(__('Total Expenses'), 'R$ ' . number_format($this->totalExpensesByType()['total_expenses'], 2, ',', '.'));
 
         foreach ($this->totalExpensesByType()['expenses_by_type'] as $value) {
-            if ($value['total_expenses'] > 0) {
-                $stats[] = Stat::make(__('Expense') . ' (' . $value["type"] . ')', 'R$ ' . number_format($value['total_expenses'], 2, ',', '.'));
-            }
+            $stats[] = Stat::make(__('Expense') . ' (' . $value["type"] . ')', 'R$ ' . number_format($value['total_expenses'], 2, ',', '.'));
         }
 
         $vStock = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
@@ -64,9 +50,7 @@ class Cards extends BaseWidget
         $stats[] = Stat::make(__('Total Stock'), $vStock->count() . ' - ' . 'R$ ' . number_format($vStock->sum('purchase_price'), 2, ',', '.'))->description(__('Sale price') . ': R$ ' . number_format($vStock->sum('sale_price'), 2, ',', '.'));
 
         foreach ($this->vehicleStock() as $value) {
-            if ($value['count'] > 0) {
-                $stats[] = Stat::make(__('Stock') . ' (' . $value["type"] . ')', $value['count'] . ' - ' . 'R$ ' . number_format($value['total_stock_purchase'], 2, ',', '.'))->description(__('Sale price') . ': R$ ' . number_format($value['total_stock_sale'], 2, ',', '.'));
-            }
+            $stats[] = Stat::make(__('Stock') . ' (' . $value["type"] . ')', $value['count'] . ' - ' . 'R$ ' . number_format($value['total_stock_purchase'], 2, ',', '.'))->description(__('Sale price') . ': R$ ' . number_format($value['total_stock_sale'], 2, ',', '.'));
         }
 
         return $stats;
