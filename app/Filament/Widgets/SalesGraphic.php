@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\{Sale, Vehicle};
+use App\Models\{Sale, Vehicle, VehicleExpense};
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\{Trend, TrendValue};
 use Illuminate\Contracts\Support\Htmlable;
@@ -18,6 +18,11 @@ class SalesGraphic extends ChartWidget
         return __('Last year');
     }
 
+    public function getDescription(): ?string
+    {
+        return __('Purchases, sales and expenses, per month');
+    }
+
     /**
      * @return int | string | array<string, int | null>
      */
@@ -28,7 +33,7 @@ class SalesGraphic extends ChartWidget
 
     protected function getMaxHeight(): ?string
     {
-        return '70vh';
+        return '66vh';
     }
 
     protected function getData(): array
@@ -52,6 +57,15 @@ class SalesGraphic extends ChartWidget
                 ->perMonth()
                 ->sum('purchase_price');
 
+        $expenses = Trend::model(VehicleExpense::class)
+                ->dateColumn('date')
+                ->between(
+                    start: now()->subMonth(12), //@phpstan-ignore-line
+                    end: now(),
+                )
+                ->perMonth()
+                ->sum('value');
+
         return [
             'datasets' => [
                 [
@@ -65,6 +79,12 @@ class SalesGraphic extends ChartWidget
                     'data'            => $sale->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => '#36A2EB',
                     'borderColor'     => '#9BD0F5',
+                ],
+                [
+                    'label'           => __('Expenses'),
+                    'data'            => $expenses->map(fn (TrendValue $value) => $value->aggregate),
+                    'backgroundColor' => '#fa0808',
+                    'borderColor'     => '#f89c7c',
                 ],
             ],
             'labels' => $sale->map(fn (TrendValue $value) => $value->date),
