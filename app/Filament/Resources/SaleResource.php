@@ -9,7 +9,7 @@ use App\Forms\Components\MoneyInput;
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\{Section, Select, ToggleButtons};
+use Filament\Forms\Components\{FileUpload, Section, Select, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -21,6 +21,7 @@ use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class SaleResource extends Resource
 {
@@ -436,6 +437,59 @@ class SaleResource extends Resource
                         ]);
 
                         Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
+                    }),
+                Action::make('contract')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Contract'))
+                    ->label('Contract')
+                    ->translateLabel()
+                    ->icon('heroicon-o-document')
+                    ->iconSize('md')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('contract')
+                            ->label('Contract')
+                            ->panelAspectRatio('2:1')
+                            ->storeFiles(false)
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            ]),
+                    ])
+                    ->action(function (array $data, Sale $sale) {
+
+                        $templateProcessor = new TemplateProcessor($data['contract']->getRealPath());
+
+                        // Substitui os placeholders com os valores da venda
+                        $templateProcessor->setValue('nome_cliente', $sale->client->name); //@phpstan-ignore-line
+                        $templateProcessor->setValue('cpf/cnpj', $sale->client->client_id); //@phpstan-ignore-line
+                        $templateProcessor->setValue('endereco_cliente', $sale->client->address); //@phpstan-ignore-line
+                        $templateProcessor->setValue('veiculo_placa', $sale->vehicle->plate); //@phpstan-ignore-line
+                        $templateProcessor->setValue('veiculo_modelo', $sale->vehicle->model->name); //@phpstan-ignore-line
+                        $templateProcessor->setValue('veiculo_ano_um', $sale->vehicle->year_one); //@phpstan-ignore-line
+                        $templateProcessor->setValue('veiculo_ano_dois', $sale->vehicle->year_two); //@phpstan-ignore-line
+                        $templateProcessor->setValue('valor_total', number_format($sale->total, 2, ',', '.')); //@phpstan-ignore-line
+                        // $templateProcessor->setValue('data_venda', $sale->date_sale->format('d/m/Y'));
+
+                        // Verifica a presença de campos adicionais
+                        if ($sale->discount > 0) { //@phpstan-ignore-line
+                            $templateProcessor->setValue('desconto', number_format($sale->discount, 2, ',', '.'));
+                        } else {
+                            $templateProcessor->setValue('desconto', 'N/A');
+                        }
+
+                        if ($sale->surcharge > 0) { //@phpstan-ignore-line
+                            $templateProcessor->setValue('acrescimo', number_format($sale->surcharge, 2, ',', '.'));
+                        } else {
+                            $templateProcessor->setValue('acrescimo', 'N/A');
+                        }
+
+                        // Salva o contrato preenchido
+                        $caminhoContratoPreenchido = "storage/contracts/contrato_{$sale->client->name}.docx"; //@phpstan-ignore-line
+                        $templateProcessor->saveAs($caminhoContratoPreenchido);
+
+                        // Retorna uma resposta ou faz o download do arquivo
+                        return response()->download($caminhoContratoPreenchido)->deleteFileAfterSend(true);
+
                     }),
             ]);
     }
