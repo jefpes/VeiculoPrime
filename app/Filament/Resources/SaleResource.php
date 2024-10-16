@@ -514,33 +514,35 @@ class SaleResource extends Resource
                         $template->setValue('anotacao', $sale->vehicle->annotation); //@phpstan-ignore-line
 
                         //Substitui os placeholders com os dados do fornecedor
-                        $template->setValue('fornecedor_nome', $sale->supplier->name); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_genero', $sale->supplier->gender); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_tipo', $sale->supplier->client_type); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_rg', $sale->supplier->rg); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_cpf/cnpj', $sale->supplier->client_id); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_estdo_civil', $sale->supplier->marital_status); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_data_de_nascimento', Carbon::parse($sale->supplier->birth_date)->format('d/m/Y')); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_pai', $sale->supplier->father); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_mae', $sale->supplier->mother); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_mae', $sale->supplier->mother_phone); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_afiliado_1', $sale->supplier->affiliated_one); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_afiliado_1', $sale->supplier->affiliated_one_phone); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_afiliado_2', $sale->supplier->affiliated_two); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_telefone_afiliado_2', $sale->supplier->affiliated_two_phone); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_descricao', $sale->supplier->description); //@phpstan-ignore-line
+                        if ($sale->supplier !== null) { //@phpstan-ignore-line
+                            $template->setValue('fornecedor_nome', $sale->supplier->name);
+                            $template->setValue('fornecedor_genero', $sale->supplier->gender);
+                            $template->setValue('fornecedor_tipo', $sale->supplier->client_type);
+                            $template->setValue('fornecedor_rg', $sale->supplier->rg);
+                            $template->setValue('fornecedor_cpf/cnpj', $sale->supplier->client_id);
+                            $template->setValue('fornecedor_estdo_civil', $sale->supplier->marital_status);
+                            $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one);
+                            $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two);
+                            $template->setValue('fornecedor_data_de_nascimento', Carbon::parse($sale->supplier->birth_date)->format('d/m/Y'));
+                            $template->setValue('fornecedor_pai', $sale->supplier->father);
+                            $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone);
+                            $template->setValue('fornecedor_mae', $sale->supplier->mother);
+                            $template->setValue('fornecedor_telefone_mae', $sale->supplier->mother_phone);
+                            $template->setValue('fornecedor_afiliado_1', $sale->supplier->affiliated_one);
+                            $template->setValue('fornecedor_telefone_afiliado_1', $sale->supplier->affiliated_one_phone);
+                            $template->setValue('fornecedor_afiliado_2', $sale->supplier->affiliated_two);
+                            $template->setValue('fornecedor_telefone_afiliado_2', $sale->supplier->affiliated_two_phone);
+                            $template->setValue('fornecedor_descricao', $sale->supplier->description);
 
-                        //Substitui os placeholders com os dados do endereco do fornecedor
-                        $template->setValue('fornecedor_cep', $sale->supplier->address->cep); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_rua', $sale->supplier->address->street); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_numero', $sale->supplier->address->number); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_bairro', $sale->supplier->address->neighborhood); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_cidade', $sale->supplier->address->city->name); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_estado', $sale->supplier->address->state); //@phpstan-ignore-line
-                        $template->setValue('fornecedor_complemento', $sale->supplier->address->complement); //@phpstan-ignore-line
+                            //Substitui os placeholders com os dados do endereco do fornecedor
+                            $template->setValue('fornecedor_cep', $sale->supplier->address->cep);
+                            $template->setValue('fornecedor_rua', $sale->supplier->address->street);
+                            $template->setValue('fornecedor_numero', $sale->supplier->address->number);
+                            $template->setValue('fornecedor_bairro', $sale->supplier->address->neighborhood);
+                            $template->setValue('fornecedor_cidade', $sale->supplier->address->city->name);
+                            $template->setValue('fornecedor_estado', $sale->supplier->address->state);
+                            $template->setValue('fornecedor_complemento', $sale->supplier->address->complement);
+                        }
 
                         //Substitui os placeholders com os dados da venda
                         $template->setValue('metodo_de_pagamento', $sale->payment_method); //@phpstan-ignore-line
