@@ -2,15 +2,18 @@
 
 namespace App\Helpers;
 
-use App\Models\Sale;
 use Carbon\Carbon;
+use App\Models\Sale;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class SaleContract
+class Contracts
 {
-    public static function generateContract(TemplateProcessor $template, Sale $sale): BinaryFileResponse
+    public static function generateSaleContract(TemplateProcessor $template, Sale $sale): BinaryFileResponse
     {
+
+        // Substitui os placeholders com os dados do cliente
         $template->setValue('cliente_nome', $sale->client->name); //@phpstan-ignore-line
         $template->setValue('cliente_genero', $sale->client->gender); //@phpstan-ignore-line
         $template->setValue('cliente_tipo', $sale->client->client_type); //@phpstan-ignore-line
@@ -65,33 +68,35 @@ class SaleContract
         $template->setValue('anotacao', $sale->vehicle->annotation); //@phpstan-ignore-line
 
         //Substitui os placeholders com os dados do fornecedor
-        $template->setValue('fornecedor_nome', $sale->supplier->name); //@phpstan-ignore-line
-        $template->setValue('fornecedor_genero', $sale->supplier->gender); //@phpstan-ignore-line
-        $template->setValue('fornecedor_tipo', $sale->supplier->client_type); //@phpstan-ignore-line
-        $template->setValue('fornecedor_rg', $sale->supplier->rg); //@phpstan-ignore-line
-        $template->setValue('fornecedor_cpf/cnpj', $sale->supplier->client_id); //@phpstan-ignore-line
-        $template->setValue('fornecedor_estdo_civil', $sale->supplier->marital_status); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two); //@phpstan-ignore-line
-        $template->setValue('fornecedor_data_de_nascimento', Carbon::parse($sale->supplier->birth_date)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('fornecedor_pai', $sale->supplier->father); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone); //@phpstan-ignore-line
-        $template->setValue('fornecedor_mae', $sale->supplier->mother); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_mae', $sale->supplier->mother_phone); //@phpstan-ignore-line
-        $template->setValue('fornecedor_afiliado_1', $sale->supplier->affiliated_one); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_afiliado_1', $sale->supplier->affiliated_one_phone); //@phpstan-ignore-line
-        $template->setValue('fornecedor_afiliado_2', $sale->supplier->affiliated_two); //@phpstan-ignore-line
-        $template->setValue('fornecedor_telefone_afiliado_2', $sale->supplier->affiliated_two_phone); //@phpstan-ignore-line
-        $template->setValue('fornecedor_descricao', $sale->supplier->description); //@phpstan-ignore-line
+        if ($sale->supplier !== null) { //@phpstan-ignore-line
+            $template->setValue('fornecedor_nome', $sale->supplier->name);
+            $template->setValue('fornecedor_genero', $sale->supplier->gender);
+            $template->setValue('fornecedor_tipo', $sale->supplier->client_type);
+            $template->setValue('fornecedor_rg', $sale->supplier->rg);
+            $template->setValue('fornecedor_cpf/cnpj', $sale->supplier->client_id);
+            $template->setValue('fornecedor_estdo_civil', $sale->supplier->marital_status);
+            $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one);
+            $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two);
+            $template->setValue('fornecedor_data_de_nascimento', Carbon::parse($sale->supplier->birth_date)->format('d/m/Y'));
+            $template->setValue('fornecedor_pai', $sale->supplier->father);
+            $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone);
+            $template->setValue('fornecedor_mae', $sale->supplier->mother);
+            $template->setValue('fornecedor_telefone_mae', $sale->supplier->mother_phone);
+            $template->setValue('fornecedor_afiliado_1', $sale->supplier->affiliated_one);
+            $template->setValue('fornecedor_telefone_afiliado_1', $sale->supplier->affiliated_one_phone);
+            $template->setValue('fornecedor_afiliado_2', $sale->supplier->affiliated_two);
+            $template->setValue('fornecedor_telefone_afiliado_2', $sale->supplier->affiliated_two_phone);
+            $template->setValue('fornecedor_descricao', $sale->supplier->description);
 
-        //Substitui os placeholders com os dados do endereco do fornecedor
-        $template->setValue('fornecedor_cep', $sale->supplier->address->cep); //@phpstan-ignore-line
-        $template->setValue('fornecedor_rua', $sale->supplier->address->street); //@phpstan-ignore-line
-        $template->setValue('fornecedor_numero', $sale->supplier->address->number); //@phpstan-ignore-line
-        $template->setValue('fornecedor_bairro', $sale->supplier->address->neighborhood); //@phpstan-ignore-line
-        $template->setValue('fornecedor_cidade', $sale->supplier->address->city->name); //@phpstan-ignore-line
-        $template->setValue('fornecedor_estado', $sale->supplier->address->state); //@phpstan-ignore-line
-        $template->setValue('fornecedor_complemento', $sale->supplier->address->complement); //@phpstan-ignore-line
+            //Substitui os placeholders com os dados do endereco do fornecedor
+            $template->setValue('fornecedor_cep', $sale->supplier->address->cep);
+            $template->setValue('fornecedor_rua', $sale->supplier->address->street);
+            $template->setValue('fornecedor_numero', $sale->supplier->address->number);
+            $template->setValue('fornecedor_bairro', $sale->supplier->address->neighborhood);
+            $template->setValue('fornecedor_cidade', $sale->supplier->address->city->name);
+            $template->setValue('fornecedor_estado', $sale->supplier->address->state);
+            $template->setValue('fornecedor_complemento', $sale->supplier->address->complement);
+        }
 
         //Substitui os placeholders com os dados da venda
         $template->setValue('metodo_de_pagamento', $sale->payment_method); //@phpstan-ignore-line
@@ -106,24 +111,26 @@ class SaleContract
         $template->setValue('data_cancelamento', Carbon::parse($sale->date_cancel)->format('d/m/Y')); //@phpstan-ignore-line
         $template->setValue('total', number_format($sale->total, 2, ',', '.')); //@phpstan-ignore-line
 
-        if ($sale->number_installments > 1) {//@phpstan-ignore-line
+        if ($sale->number_installments > 1) { //@phpstan-ignore-line
             for ($i = 0; $i < $sale->number_installments; $i++) {
-                $template->setValue("parcela_{$i}_data_vencimento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_valor", number_format($sale->paymentInstallments[$i]->value, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_status", $sale->paymentInstallments[$i]->status); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_data_pagamento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_valor_pagamento", number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_metodo_pagamento", $sale->paymentInstallments[$i]->payment_method); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_discount", number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_{$i}_surcharge", number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_data_vencimento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_valor", number_format($sale->paymentInstallments[$i]->value, 2, ',', '.')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_status", $sale->paymentInstallments[$i]->status); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_data_pagamento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_valor_pagamento", number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_metodo_pagamento", $sale->paymentInstallments[$i]->payment_method); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_discount", number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.')); //@phpstan-ignore-line
+                $template->setValue("parcela_" . ($i + 1) . "_surcharge", number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.')); //@phpstan-ignore-line
             }
         }
 
         // Salva o contrato preenchido
-        $caminhoContratoPreenchido = "storage/contracts/contrato_{$sale->client->name}.docx"; //@phpstan-ignore-line
+        file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
+        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx"; //@phpstan-ignore-line
         $template->saveAs($caminhoContratoPreenchido);
 
         // Retorna uma resposta ou faz o download do arquivo
         return response()->download($caminhoContratoPreenchido)->deleteFileAfterSend(true);
+
     }
 }
