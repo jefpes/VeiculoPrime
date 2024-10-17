@@ -2,14 +2,50 @@
 
 namespace App\Helpers;
 
-use App\Models\{PaymentInstallments, Sale};
-use Illuminate\Support\Facades\Storage;
+use App\Models\{PaymentInstallments, Sale, User};
+use Illuminate\Support\Facades\{Auth, Storage};
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
 {
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
+        // Substitui os placeholders com os dados do usuario
+        $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
+
+        if ($user->employee !== null) { //@phpstan-ignore-line
+            $template->setValue('usuario_nome', $user->name); //@phpstan-ignore-line
+            $template->setValue('usuario_nome_completo', $user->employee->name);
+            $template->setValue('usuario_genero', $user->employee->gender);
+            $template->setValue('usuario_email', $user->email); //@phpstan-ignore-line
+            $template->setValue('usuario_telefone_1', $user->employee->phone_one);
+            $template->setValue('usuario_telefone_2', $user->employee->phone_two);
+            $template->setValue('usuario_salario', number_format($user->employee->salary, 2, ',', '.'));
+            $template->setValue('usuario_salario_extenso', Tools::spellNumber($user->employee->salary));
+            $template->setValue('usuario_salario_dinheiro', Tools::spellMonetary($user->employee->salary));
+            $template->setValue('usuario_rg', $user->employee->rg);
+            $template->setValue('usuario_cpf', $user->employee->cpf);
+            $template->setValue('usuario_data_nascimento', Tools::dateFormat($user->employee->birth_date));
+            $template->setValue('usuario_data_nascimento_extenso', Tools::spellDate($user->employee->birth_date));
+            $template->setValue('usuario_pai', $user->employee->father);
+            $template->setValue('usuario_mae', $user->employee->mother);
+            $template->setValue('usuario_estado_civil', $user->employee->marital_status);
+            $template->setValue('usuario_conjuje', $user->employee->spouse);
+            $template->setValue('usuario_data_contratacao', Tools::dateFormat($user->employee->hiring_date));
+            $template->setValue('usuario_data_contratacao_extenso', Tools::spellDate($user->employee->hiring_date));
+            $template->setValue('usuario_data_demissao', Tools::dateFormat($user->employee->resignation_date));
+            $template->setValue('usuario_data_demissao_extenso', Tools::spellDate($user->employee->resignation_date));
+
+            //Substitui os placeholders com os dados do endereco do usuario
+            $template->setValue('usuario_endereco_cep', $user->employee->address->zip_code);
+            $template->setValue('usuario_endereco_rua', $user->employee->address->street);
+            $template->setValue('usuario_endereco_numero', $user->employee->address->number);
+            $template->setValue('usuario_endereco_bairro', $user->employee->address->neighborhood);
+            $template->setValue('usuario_endereco_cidade', $user->employee->address->city->name);
+            $template->setValue('usuario_endereco_estado', $user->employee->address->state);
+            $template->setValue('usuario_endereco_complemento', $user->employee->address->complement);
+        }
+
         // Substitui os placeholders com os dados do cliente
         $template->setValue('cliente_nome', $sale->client->name); //@phpstan-ignore-line
         $template->setValue('cliente_genero', $sale->client->gender); //@phpstan-ignore-line
@@ -169,6 +205,42 @@ class Contracts
 
     public static function generateReceiptContract(TemplateProcessor $template, PaymentInstallments $installment): string
     {
+        // Substitui os placeholders com os dados do usuario
+        $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
+
+        if ($user->employee !== null) { //@phpstan-ignore-line
+            $template->setValue('usuario_nome', $user->name); //@phpstan-ignore-line
+            $template->setValue('usuario_nome_completo', $user->employee->name);
+            $template->setValue('usuario_genero', $user->employee->gender);
+            $template->setValue('usuario_email', $user->email); //@phpstan-ignore-line
+            $template->setValue('usuario_telefone_1', $user->employee->phone_one);
+            $template->setValue('usuario_telefone_2', $user->employee->phone_two);
+            $template->setValue('usuario_salario', number_format($user->employee->salary, 2, ',', '.'));
+            $template->setValue('usuario_salario_extenso', Tools::spellNumber($user->employee->salary));
+            $template->setValue('usuario_salario_dinheiro', Tools::spellMonetary($user->employee->salary));
+            $template->setValue('usuario_rg', $user->employee->rg);
+            $template->setValue('usuario_cpf', $user->employee->cpf);
+            $template->setValue('usuario_data_nascimento', Tools::dateFormat($user->employee->birth_date));
+            $template->setValue('usuario_data_nascimento_extenso', Tools::spellDate($user->employee->birth_date));
+            $template->setValue('usuario_pai', $user->employee->father);
+            $template->setValue('usuario_mae', $user->employee->mother);
+            $template->setValue('usuario_estado_civil', $user->employee->marital_status);
+            $template->setValue('usuario_conjuje', $user->employee->spouse);
+            $template->setValue('usuario_data_contratacao', Tools::dateFormat($user->employee->hiring_date));
+            $template->setValue('usuario_data_contratacao_extenso', Tools::spellDate($user->employee->hiring_date));
+            $template->setValue('usuario_data_demissao', Tools::dateFormat($user->employee->resignation_date));
+            $template->setValue('usuario_data_demissao_extenso', Tools::spellDate($user->employee->resignation_date));
+
+            //Substitui os placeholders com os dados do endereco do usuario
+            $template->setValue('usuario_endereco_cep', $user->employee->address->zip_code);
+            $template->setValue('usuario_endereco_rua', $user->employee->address->street);
+            $template->setValue('usuario_endereco_numero', $user->employee->address->number);
+            $template->setValue('usuario_endereco_bairro', $user->employee->address->neighborhood);
+            $template->setValue('usuario_endereco_cidade', $user->employee->address->city->name);
+            $template->setValue('usuario_endereco_estado', $user->employee->address->state);
+            $template->setValue('usuario_endereco_complemento', $user->employee->address->complement);
+        }
+
         // Substitui os placeholders com os dados do cliente
         $template->setValue('cliente_nome', $installment->sale->client->name); //@phpstan-ignore-line
         $template->setValue('cliente_genero', $installment->sale->client->gender); //@phpstan-ignore-line
