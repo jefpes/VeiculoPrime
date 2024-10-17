@@ -48,7 +48,7 @@ class Contracts
         $template->setValue('preco_fipe', number_format($sale->vehicle->fipe_price, 2, ',', '.')); //@phpstan-ignore-line
         $template->setValue('preco_compra', number_format($sale->vehicle->purchase_price, 2, ',', '.')); //@phpstan-ignore-line
         $template->setValue('preco_venda', number_format($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('preco_fipe_extenso', Number::spell($sale->vehicle->fipe_price, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('preco_fipe_extenso', Number::spell(($sale->vehicle->fipe_price ?? 0), locale: 'br'));
         $template->setValue('preco_compra_extenso', Number::spell($sale->vehicle->purchase_price, locale: 'br')); //@phpstan-ignore-line
         $template->setValue('preco_venda_extenso', Number::spell(($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price), locale: 'br')); //@phpstan-ignore-line
         $template->setValue('modelo', $sale->vehicle->model->name); //@phpstan-ignore-line
@@ -57,6 +57,7 @@ class Contracts
         $template->setValue('ano_um', $sale->vehicle->year_one); //@phpstan-ignore-line
         $template->setValue('ano_dois', $sale->vehicle->year_two); //@phpstan-ignore-line
         $template->setValue('km', number_format($sale->vehicle->km, 0, '', '.')); //@phpstan-ignore-line
+        $template->setValue('km_extenso', Number::spell($sale->vehicle->km, locale: 'br')); //@phpstan-ignore-line
         $template->setValue('combustivel', $sale->vehicle->fuel); //@phpstan-ignore-line
         $template->setValue('motor_potencia', $sale->vehicle->engine_power); //@phpstan-ignore-line
         $template->setValue('direcao', $sale->vehicle->steering); //@phpstan-ignore-line
@@ -118,8 +119,8 @@ class Contracts
         $template->setValue('entrada_extenso', Number::spell($sale->down_payment, locale: 'br')); //@phpstan-ignore-line
         $template->setValue('numero_parcelas', $sale->number_installments); //@phpstan-ignore-line
         $template->setValue('numero_parcelas_extenso', Number::spell($sale->number_installments, locale: 'br')); //@phpstan-ignore-line
-        $template->setValue('reembolso', $sale->reimbursement); //@phpstan-ignore-line
-        $template->setValue('reembolso_extenso', Number::spell($sale->reimbursement, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('reembolso', number_format($sale->reimbursement, 2, ',', '.')); //@phpstan-ignore-line
+        $template->setValue('reembolso_extenso', Number::spell(($sale->reimbursement ?? 0), locale: 'br'));
         $template->setValue('data_cancelamento', Carbon::parse($sale->date_cancel)->format('d/m/Y')); //@phpstan-ignore-line
         $template->setValue('data_cancelamento_extenso', Carbon::create($sale->date_cancel)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
         $template->setValue('total', number_format($sale->total, 2, ',', '.')); //@phpstan-ignore-line
