@@ -3,9 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Sale;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Number;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
@@ -21,8 +19,8 @@ class Contracts
         $template->setValue('cliente_estado_civil', $sale->client->marital_status); //@phpstan-ignore-line
         $template->setValue('cliente_telefone_1', $sale->client->phone_one); //@phpstan-ignore-line
         $template->setValue('cliente_telefone_2', $sale->client->phone_two); //@phpstan-ignore-line
-        $template->setValue('cliente_data_de_nascimento', Carbon::parse($sale->client->birth_date)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('cliente_data_de_nascimento_extenso', Carbon::create($sale->client->birth_date)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
+        $template->setValue('cliente_data_de_nascimento', Tools::dateFormat($sale->client->birth_date)); //@phpstan-ignore-line
+        $template->setValue('cliente_data_de_nascimento_extenso', Tools::spellDate($sale->client->birth_date)); //@phpstan-ignore-line
         $template->setValue('cliente_pai', $sale->client->father); //@phpstan-ignore-line
         $template->setValue('cliente_telefone_pai', $sale->client->father_phone); //@phpstan-ignore-line
         $template->setValue('cliente_mae', $sale->client->mother); //@phpstan-ignore-line
@@ -43,27 +41,32 @@ class Contracts
         $template->setValue('cliente_endereco_complemento', $sale->client->address->complement); //@phpstan-ignore-line
 
         //Substitui os placeholders com os dados do veiculo
-        $template->setValue('data_compra', Carbon::parse($sale->vehicle->purchase_date)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('data_compra_extenso', Carbon::create($sale->vehicle->purchase_date)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
+        $template->setValue('data_compra', Tools::dateFormat($sale->vehicle->purchase_date)); //@phpstan-ignore-line
+        $template->setValue('data_compra_extenso', Tools::spellDate($sale->vehicle->purchase_date)); //@phpstan-ignore-line
         $template->setValue('preco_fipe', number_format($sale->vehicle->fipe_price, 2, ',', '.')); //@phpstan-ignore-line
+        $template->setValue('preco_fipe_extenso', Tools::spellNumber($sale->vehicle->fipe_price)); //@phpstan-ignore-line
+        $template->setValue('preco_fipe_dinheiro', Tools::spellMonetary($sale->vehicle->fipe_price)); //@phpstan-ignore-line
         $template->setValue('preco_compra', number_format($sale->vehicle->purchase_price, 2, ',', '.')); //@phpstan-ignore-line
+        $template->setValue('preco_compra_extenso', Tools::spellNumber($sale->vehicle->purchase_price)); //@phpstan-ignore-line
+        $template->setValue('preco_compra_dinheiro', Tools::spellMonetary($sale->vehicle->purchase_price)); //@phpstan-ignore-line
         $template->setValue('preco_venda', number_format($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('preco_fipe_extenso', Number::spell(($sale->vehicle->fipe_price ?? 0), locale: 'br'));
-        $template->setValue('preco_compra_extenso', Number::spell($sale->vehicle->purchase_price, locale: 'br')); //@phpstan-ignore-line
-        $template->setValue('preco_venda_extenso', Number::spell(($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price), locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('preco_venda_extenso', Tools::spellNumber($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price)); //@phpstan-ignore-line
+        $template->setValue('preco_venda_dinheiro', Tools::spellMonetary($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price)); //@phpstan-ignore-line
         $template->setValue('modelo', $sale->vehicle->model->name); //@phpstan-ignore-line
         $template->setValue('tipo', $sale->vehicle->model->type->name); //@phpstan-ignore-line
         $template->setValue('marca', $sale->vehicle->model->brand->name); //@phpstan-ignore-line
         $template->setValue('ano_um', $sale->vehicle->year_one); //@phpstan-ignore-line
         $template->setValue('ano_dois', $sale->vehicle->year_two); //@phpstan-ignore-line
         $template->setValue('km', number_format($sale->vehicle->km, 0, '', '.')); //@phpstan-ignore-line
-        $template->setValue('km_extenso', Number::spell($sale->vehicle->km, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('km_extenso', Tools::spellNumber($sale->vehicle->km)); //@phpstan-ignore-line
         $template->setValue('combustivel', $sale->vehicle->fuel); //@phpstan-ignore-line
         $template->setValue('motor_potencia', $sale->vehicle->engine_power); //@phpstan-ignore-line
         $template->setValue('direcao', $sale->vehicle->steering); //@phpstan-ignore-line
         $template->setValue('transmissao', $sale->vehicle->transmission); //@phpstan-ignore-line
         $template->setValue('portas', $sale->vehicle->doors); //@phpstan-ignore-line
+        $template->setValue('portas_extenso', Tools::spellNumber($sale->vehicle->doors)); //@phpstan-ignore-line
         $template->setValue('lugares', $sale->vehicle->seats); //@phpstan-ignore-line
+        $template->setValue('lugares_extenso', Tools::spellNumber($sale->vehicle->seats)); //@phpstan-ignore-line
         $template->setValue('tracao', $sale->vehicle->traction); //@phpstan-ignore-line
         $template->setValue('cor', $sale->vehicle->color); //@phpstan-ignore-line
         $template->setValue('placa', $sale->vehicle->plate); //@phpstan-ignore-line
@@ -82,8 +85,8 @@ class Contracts
             $template->setValue('fornecedor_estado_civil', $sale->supplier->marital_status);
             $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one);
             $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two);
-            $template->setValue('fornecedor_data_de_nascimento', Carbon::parse($sale->supplier->birth_date)->format('d/m/Y'));
-            $template->setValue('fornecedor_data_de_nascimento_extenso', Carbon::create($sale->supplier->birth_date)->locale('pt_BR')->isoFormat('LL'));
+            $template->setValue('fornecedor_data_de_nascimento', Tools::dateFormat($sale->supplier->birth_date));
+            $template->setValue('fornecedor_data_de_nascimento_extenso', Tools::spellDate($sale->supplier->birth_date));
             $template->setValue('fornecedor_pai', $sale->supplier->father);
             $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone);
             $template->setValue('fornecedor_mae', $sale->supplier->mother);
@@ -107,43 +110,52 @@ class Contracts
         //Substitui os placeholders com os dados da venda
         $template->setValue('metodo_de_pagamento', $sale->payment_method); //@phpstan-ignore-line
         $template->setValue('status', $sale->status); //@phpstan-ignore-line
-        $template->setValue('data_venda', Carbon::parse($sale->date_sale)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('data_venda_extenso', Carbon::create($sale->date_sale)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
-        $template->setValue('data_pagamento', Carbon::parse($sale->date_payment)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('data_pagamento_extenso', Carbon::create($sale->date_payment)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
+        $template->setValue('data_venda', Tools::dateFormat($sale->date_sale)); //@phpstan-ignore-line
+        $template->setValue('data_venda_extenso', Tools::spellDate($sale->date_sale)); //@phpstan-ignore-line
+        $template->setValue('data_pagamento', Tools::dateFormat($sale->date_payment)); //@phpstan-ignore-line
+        $template->setValue('data_pagamento_extenso', Tools::spellDate($sale->date_payment)); //@phpstan-ignore-line
         $template->setValue('desconto', $sale->discount); //@phpstan-ignore-line
-        $template->setValue('desconto_extenso', Number::spell($sale->discount, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('desconto_extenso', Tools::spellNumber($sale->discount)); //@phpstan-ignore-line
+        $template->setValue('desconto_dinheiro', Tools::spellMonetary($sale->discount)); //@phpstan-ignore-line
         $template->setValue('acrescimo', $sale->surcharge); //@phpstan-ignore-line
-        $template->setValue('acrescimo_extenso', Number::spell($sale->surcharge, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('acrescimo_extenso', Tools::spellNumber($sale->surcharge)); //@phpstan-ignore-line
+        $template->setValue('acrescimo_dinheiro', Tools::spellMonetary($sale->surcharge)); //@phpstan-ignore-line
         $template->setValue('entrada', $sale->down_payment); //@phpstan-ignore-line
-        $template->setValue('entrada_extenso', Number::spell($sale->down_payment, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('entrada_extenso', Tools::spellNumber($sale->down_payment)); //@phpstan-ignore-line
+        $template->setValue('entrada_dinheiro', Tools::spellMonetary($sale->down_payment)); //@phpstan-ignore-line
         $template->setValue('numero_parcelas', $sale->number_installments); //@phpstan-ignore-line
-        $template->setValue('numero_parcelas_extenso', Number::spell($sale->number_installments, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('numero_parcelas_extenso', Tools::spellNumber($sale->number_installments)); //@phpstan-ignore-line
         $template->setValue('reembolso', number_format($sale->reimbursement, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('reembolso_extenso', Number::spell(($sale->reimbursement ?? 0), locale: 'br'));
-        $template->setValue('data_cancelamento', Carbon::parse($sale->date_cancel)->format('d/m/Y')); //@phpstan-ignore-line
-        $template->setValue('data_cancelamento_extenso', Carbon::create($sale->date_cancel)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
+        $template->setValue('reembolso_extenso', Tools::spellNumber($sale->reimbursement)); //@phpstan-ignore-line
+        $template->setValue('reembolso_dinheiro', Tools::spellMonetary($sale->reimbursement)); //@phpstan-ignore-line
+        $template->setValue('data_cancelamento', Tools::dateFormat($sale->date_cancel)); //@phpstan-ignore-line
+        $template->setValue('data_cancelamento_extenso', Tools::spellDate($sale->date_cancel)); //@phpstan-ignore-line
         $template->setValue('total', number_format($sale->total, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('total_extenso', Number::spell($sale->total, locale: 'br')); //@phpstan-ignore-line
+        $template->setValue('total_extenso', Tools::spellNumber($sale->total)); //@phpstan-ignore-line
+        $template->setValue('total_dinheiro', Tools::spellMonetary($sale->total)); //@phpstan-ignore-line
 
         if ($sale->number_installments > 1) { //@phpstan-ignore-line
             for ($i = 0; $i < $sale->number_installments; $i++) {
                 $template->setValues([
-                    "parcela_" . ($i + 1) . "_data_vencimento"  => Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor"            => number_format($sale->paymentInstallments[$i]->value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_status"           => $sale->paymentInstallments[$i]->status, //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_pagamento"   => Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento"  => number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_metodo_pagamento" => $sale->paymentInstallments[$i]->payment_method, //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_discount"         => number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_surcharge"        => number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.'), //@phpstan-ignore-line
-
-                    "parcela_" . ($i + 1) . "_data_vencimento_extenso" => Carbon::create($sale->paymentInstallments[$i]->due_date)->locale('pt_BR')->isoFormat('LL'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_extenso"           => Number::spell($sale->paymentInstallments[$i]->value, locale: 'br'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_pagamento_extenso"  => Carbon::create($sale->paymentInstallments[$i]->payment_date)->locale('pt_BR')->isoFormat('LL'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento_extenso" => Number::spell($sale->paymentInstallments[$i]->payment_value, locale: 'br'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_discount_extenso"        => Number::spell(($sale->paymentInstallments[$i]->discount ?? 0), locale: 'br'),
-                    "parcela_" . ($i + 1) . "_surcharge_extenso"       => Number::spell(($sale->paymentInstallments[$i]->surcharge ?? 0), locale: 'br'),                ]);
+                    "parcela_" . ($i + 1) . "_data_vencimento"          => Tools::dateFormat($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_vencimento_extenso"  => Tools::spellDate($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor"                    => number_format($sale->paymentInstallments[$i]->value, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_extenso"            => Tools::spellNumber($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_dinheiro"           => Tools::spellMonetary($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_status"                   => $sale->paymentInstallments[$i]->status, //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_pagamento"           => Tools::dateFormat($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_pagamento_extenso"   => Tools::spellDate($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_pagamento"          => number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_pagamento_extenso"  => Tools::spellNumber($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_pagamento_dinheiro" => Tools::spellMonetary($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_metodo_pagamento"         => $sale->paymentInstallments[$i]->payment_method, //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_desconto"                 => number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_desconto_extenso"         => Tools::spellNumber($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_desconto_dinheiro"        => Tools::spellMonetary($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_acrescimo"                => number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_acrescimo_extenso"        => Tools::spellNumber($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
+                ]);
             }
         }
 

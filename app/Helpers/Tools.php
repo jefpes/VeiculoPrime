@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Number;
 
 class Tools
@@ -43,8 +44,9 @@ class Tools
         return "$reaisExtenso $reaisText e $centavosExtenso $centavosText";
     }
 
-    public function spellNumber(?float $value): string
+    public static function spellNumber(?float $value): string
     {
+
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
             return 'valor não especificado';
@@ -57,23 +59,46 @@ class Tools
         // Converte a parte inteira para extenso
         $parteInteiraExtenso = Number::spell($parteInteira, locale: 'br');
 
-        // Caso não haja parte fracionada
+        // Caso não haja parte fracionada, retorna apenas a parte inteira
         if ($parteFracionada == 0) {
             return $parteInteiraExtenso;
         }
 
-        // Trata a parte fracionada (convertendo para extenso)
-        $parteFracionadaExtenso = '';
-        $parteFracionadaStr     = substr((string) $parteFracionada, 2); // Remove o "0."
+        // Limita a parte fracionada a dois dígitos, multiplicando por 100
+        $parteFracionada = round($parteFracionada * 100);
 
         // Verifica se a parte fracionada é maior que 0 e trata a exibição
-        if ($parteFracionadaStr !== '0') {
-            $parteFracionadaExtenso = Number::spell((int)$parteFracionadaStr, locale: 'br');
+        if ($parteFracionada > 0) {
+            $parteFracionadaExtenso = Number::spell($parteFracionada, locale: 'br');
 
             return "$parteInteiraExtenso vírgula $parteFracionadaExtenso";
         }
 
         return $parteInteiraExtenso;
+    }
+
+    public static function dateFormat(?string $value): string
+    {
+        // Verifica se o valor é nulo e retorna uma mensagem padrão
+        if (is_null($value)) {
+            return 'valor não especificado';
+        }
+
+        $value = Carbon::parse($value)->format('d/m/Y');
+
+        return $value;
+    }
+
+    public static function spellDate(?string $value, string $locale = 'pt_BR', string $isoFormat = 'LL'): string
+    {
+        // Verifica se o valor é nulo e retorna uma mensagem padrão
+        if (is_null($value)) {
+            return 'valor não especificado';
+        }
+
+        $value = Carbon::create($value)->locale($locale)->isoFormat($isoFormat);
+
+        return $value;
     }
 
 }
