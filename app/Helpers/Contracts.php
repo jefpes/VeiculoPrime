@@ -34,13 +34,13 @@ class Contracts
         $template->setValue('cliente_descricao', $sale->client->description); //@phpstan-ignore-line
 
         //Substitui os placeholders com os dados do endereco do cliente
-        $template->setValue('cliente_cep', $sale->client->address->zip_code); //@phpstan-ignore-line
-        $template->setValue('cliente_rua', $sale->client->address->street); //@phpstan-ignore-line
-        $template->setValue('cliente_numero', $sale->client->address->number); //@phpstan-ignore-line
-        $template->setValue('cliente_bairro', $sale->client->address->neighborhood); //@phpstan-ignore-line
-        $template->setValue('cliente_cidade', $sale->client->address->city->name); //@phpstan-ignore-line
-        $template->setValue('cliente_estado', $sale->client->address->state); //@phpstan-ignore-line
-        $template->setValue('cliente_complemento', $sale->client->address->complement); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_cep', $sale->client->address->zip_code); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_rua', $sale->client->address->street); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_numero', $sale->client->address->number); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_bairro', $sale->client->address->neighborhood); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_cidade', $sale->client->address->city->name); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_estado', $sale->client->address->state); //@phpstan-ignore-line
+        $template->setValue('cliente_endereco_complemento', $sale->client->address->complement); //@phpstan-ignore-line
 
         //Substitui os placeholders com os dados do veiculo
         $template->setValue('data_compra', Carbon::parse($sale->vehicle->purchase_date)->format('d/m/Y')); //@phpstan-ignore-line
@@ -95,13 +95,13 @@ class Contracts
             $template->setValue('fornecedor_descricao', $sale->supplier->description);
 
             //Substitui os placeholders com os dados do endereco do fornecedor
-            $template->setValue('fornecedor_cep', $sale->supplier->address->zip_code);
-            $template->setValue('fornecedor_rua', $sale->supplier->address->street);
-            $template->setValue('fornecedor_numero', $sale->supplier->address->number);
-            $template->setValue('fornecedor_bairro', $sale->supplier->address->neighborhood);
-            $template->setValue('fornecedor_cidade', $sale->supplier->address->city->name);
-            $template->setValue('fornecedor_estado', $sale->supplier->address->state);
-            $template->setValue('fornecedor_complemento', $sale->supplier->address->complement);
+            $template->setValue('fornecedor_endereco_cep', $sale->supplier->address->zip_code);
+            $template->setValue('fornecedor_endereco_rua', $sale->supplier->address->street);
+            $template->setValue('fornecedor_endereco_numero', $sale->supplier->address->number);
+            $template->setValue('fornecedor_endereco_bairro', $sale->supplier->address->neighborhood);
+            $template->setValue('fornecedor_endereco_cidade', $sale->supplier->address->city->name);
+            $template->setValue('fornecedor_endereco_estado', $sale->supplier->address->state);
+            $template->setValue('fornecedor_endereco_complemento', $sale->supplier->address->complement);
         }
 
         //Substitui os placeholders com os dados da venda
@@ -128,21 +128,22 @@ class Contracts
 
         if ($sale->number_installments > 1) { //@phpstan-ignore-line
             for ($i = 0; $i < $sale->number_installments; $i++) {
-                $template->setValue("parcela_" . ($i + 1) . "_data_vencimento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_valor", number_format($sale->paymentInstallments[$i]->value, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_status", $sale->paymentInstallments[$i]->status); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_data_pagamento", Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_valor_pagamento", number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_metodo_pagamento", $sale->paymentInstallments[$i]->payment_method); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_discount", number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_surcharge", number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.')); //@phpstan-ignore-line
+                $template->setValues([
+                    "parcela_" . ($i + 1) . "_data_vencimento"  => Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor"            => number_format($sale->paymentInstallments[$i]->value, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_status"           => $sale->paymentInstallments[$i]->status, //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_pagamento"   => Carbon::parse($sale->paymentInstallments[$i]->due_date)->format('d/m/Y'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_pagamento"  => number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_metodo_pagamento" => $sale->paymentInstallments[$i]->payment_method, //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_discount"         => number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_surcharge"        => number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.'), //@phpstan-ignore-line
 
-                $template->setValue("parcela_" . ($i + 1) . "_data_vencimento_extenso", Carbon::create($sale->paymentInstallments[$i]->due_date)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_valor_extenso", Number::spell($sale->paymentInstallments[$i]->value, locale: 'br')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_data_pagamento_extenso", Carbon::create($sale->paymentInstallments[$i]->payment_date)->locale('pt_BR')->isoFormat('LL')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_valor_pagamento_extenso", Number::spell($sale->paymentInstallments[$i]->payment_value, locale: 'br')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_discount_extenso", Number::spell($sale->paymentInstallments[$i]->discount, locale: 'br')); //@phpstan-ignore-line
-                $template->setValue("parcela_" . ($i + 1) . "_surcharge_extenso", Number::spell($sale->paymentInstallments[$i]->surcharge, locale: 'br')); //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_vencimento_extenso" => Carbon::create($sale->paymentInstallments[$i]->due_date)->locale('pt_BR')->isoFormat('LL'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_extenso"           => Number::spell($sale->paymentInstallments[$i]->value, locale: 'br'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_data_pagamento_extenso"  => Carbon::create($sale->paymentInstallments[$i]->payment_date)->locale('pt_BR')->isoFormat('LL'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_valor_pagamento_extenso" => Number::spell($sale->paymentInstallments[$i]->payment_value, locale: 'br'), //@phpstan-ignore-line
+                    "parcela_" . ($i + 1) . "_discount_extenso"        => Number::spell(($sale->paymentInstallments[$i]->discount ?? 0), locale: 'br'),
+                    "parcela_" . ($i + 1) . "_surcharge_extenso"       => Number::spell(($sale->paymentInstallments[$i]->surcharge ?? 0), locale: 'br'),                ]);
             }
         }
 
