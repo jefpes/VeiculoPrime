@@ -4,13 +4,16 @@ namespace App\Filament\Resources\SaleResource\RelationManagers;
 
 use App\Enums\PaymentMethod;
 use App\Forms\Components\MoneyInput;
-use App\Models\PaymentInstallments;
+use App\Helpers\Contracts;
+use App\Models\{PaymentInstallments};
+use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class InstallmentsRelationManager extends RelationManager
 {
@@ -123,6 +126,57 @@ class InstallmentsRelationManager extends RelationManager
                             ->title(__('Installment refunded'))
                             ->send();
                     })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+                Tables\Actions\Action::make('refund')
+                    ->translateLabel()
+                    ->icon('heroicon-o-receipt-refund')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function (PaymentInstallments $installment) {
+                        $installment->update([
+                            'user_id'        => Auth::id(),
+                            'status'         => 'PENDENTE',
+                            'discount'       => null,
+                            'surcharge'      => null,
+                            'payment_date'   => null,
+                            'payment_value'  => null,
+                            'payment_method' => null,
+                        ]);
+
+                        if ($installment->sale->status === 'PAGO') { //@phpstan-ignore-line
+                            $installment->sale->update(['status' => 'PENDENTE']); //@phpstan-ignore-line
+                        }
+                    })->after(function () {
+                        Notification::make()
+                            ->success()
+                            ->title(__('Installment refunded'))
+                            ->send();
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+                Tables\Actions\Action::make('receipt')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Receipt'))
+                    ->label('Receipt')
+                    ->translateLabel()
+                    ->icon('heroicon-o-document')
+                    ->iconSize('md')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('receipt')
+                            ->label('Contract')
+                            ->panelAspectRatio('2:1')
+                            ->storeFiles(false)
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            ]),
+                    ])
+                    ->action(function (array $data, PaymentInstallments $installment) {
+
+                        $template = new TemplateProcessor($data['receipt']->getRealPath());
+
+                        $caminho = Contracts::generateReceiptContract($template, $installment);
+
+                        return response()->download($caminho)->deleteFileAfterSend(true);
+                    }),
+                // })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
             ]);
     }
 }
