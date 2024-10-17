@@ -7,6 +7,7 @@ use App\Forms\Components\MoneyInput;
 use App\Models\PaymentInstallments;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +26,25 @@ class InstallmentsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('due_date')->date('d/m/Y'),
                 Tables\Columns\TextColumn::make('value')->money('BRL'),
-                Tables\Columns\TextColumn::make('status')->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'PENDENTE'    => 'info',
-                        'REEMBOLSADO' => 'warning',
-                        'CANCELADO'   => 'danger',
-                        default       => 'success',
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(function (string $state, $record): string|array {
+                        // Se o status for 'PENDENTE', verificar se há parcelas em atraso
+                        if ($state === 'PENDENTE') {
+                            if ($record->due_date < now() && $record->status === 'PENDENTE') {
+                                return 'danger';
+                            }
+
+                            // Caso não haja parcelas em atraso, manter a cor 'info'
+                            return 'info';
+                        }
+
+                        // Verificar os demais estados
+                        return match ($state) {
+                            'REEMBOLSADO' => 'warning',
+                            'CANCELADO'   => Color::hex('#fe0000'),
+                            default       => 'success',
+                        };
                     }),
                 Tables\Columns\TextColumn::make('discount')->money('BRL')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('surcharge')->money('BRL')->toggleable(isToggledHiddenByDefault: true),
