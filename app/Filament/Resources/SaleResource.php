@@ -460,7 +460,9 @@ class SaleResource extends Resource
 
                         $template = new TemplateProcessor($data['contract']->getRealPath());
 
-                        Contracts::generateSaleContract($template, $sale);
+                        $caminho = Contracts::generateSaleContract($template, $sale);
+
+                        return response()->download($caminho)->deleteFileAfterSend(true);
                     }),
             ]);
     }
