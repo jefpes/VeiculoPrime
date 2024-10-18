@@ -268,32 +268,35 @@ class Contracts
             return $template;
         }
 
-        $sale = Sale::with('paymentInstallments')->findOrFail($sale_id);
+        $installments = PaymentInstallments::where('sale_id', $sale_id)->orderBy('due_date')->get(); //@phpstan-ignore-line
+
+        if ($installments == null) {
+            return $template;
+        }
 
         //Substitui os placeholders com os dados das parcelas
-        if ($sale->number_installments > 1) { //@phpstan-ignore-line
-            for ($i = 0; $i < $sale->number_installments; $i++) {
-                $template->setValues([
-                    "parcela_" . ($i + 1) . "_data_vencimento"          => Tools::dateFormat($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_vencimento_extenso"  => Tools::spellDate($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor"                    => number_format($sale->paymentInstallments[$i]->value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_extenso"            => Tools::spellNumber($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_dinheiro"           => Tools::spellMonetary($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_status"                   => $sale->paymentInstallments[$i]->status ?? 'Valor não especificado',
-                    "parcela_" . ($i + 1) . "_data_pagamento"           => Tools::dateFormat($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_pagamento_extenso"   => Tools::spellDate($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento"          => number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento_extenso"  => Tools::spellNumber($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento_dinheiro" => Tools::spellMonetary($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_metodo_pagamento"         => $sale->paymentInstallments[$i]->payment_method, //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto"                 => number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto_extenso"         => Tools::spellNumber($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto_dinheiro"        => Tools::spellMonetary($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo"                => number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo_extenso"        => Tools::spellNumber($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
-                ]);
-            }
+        for ($i = 0; $i < $installments->count(); $i++) {
+            $template->setValues([
+                "parcela_numero"                                    => ($i + 1),
+                "parcela_" . ($i + 1) . "_data_vencimento"          => Tools::dateFormat($installments[$i]->due_date),
+                "parcela_" . ($i + 1) . "_data_vencimento_extenso"  => Tools::spellDate($installments[$i]->due_date),
+                "parcela_" . ($i + 1) . "_valor"                    => number_format($installments[$i]->value, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_valor_extenso"            => Tools::spellNumber($installments[$i]->value),
+                "parcela_" . ($i + 1) . "_valor_dinheiro"           => Tools::spellMonetary($installments[$i]->value),
+                "parcela_" . ($i + 1) . "_status"                   => $installments[$i]->status ?? 'Valor não especificado',
+                "parcela_" . ($i + 1) . "_data_pagamento"           => Tools::dateFormat($installments[$i]->payment_date),
+                "parcela_" . ($i + 1) . "_data_pagamento_extenso"   => Tools::spellDate($installments[$i]->payment_date),
+                "parcela_" . ($i + 1) . "_valor_pagamento"          => number_format($installments[$i]->payment_value, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_valor_pagamento_extenso"  => Tools::spellNumber($installments[$i]->payment_value),
+                "parcela_" . ($i + 1) . "_valor_pagamento_dinheiro" => Tools::spellMonetary($installments[$i]->payment_value),
+                "parcela_" . ($i + 1) . "_metodo_pagamento"         => $installments[$i]->payment_method,
+                "parcela_" . ($i + 1) . "_desconto"                 => number_format($installments[$i]->discount, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_desconto_extenso"         => Tools::spellNumber($installments[$i]->discount),
+                "parcela_" . ($i + 1) . "_desconto_dinheiro"        => Tools::spellMonetary($installments[$i]->discount),
+                "parcela_" . ($i + 1) . "_acrescimo"                => number_format($installments[$i]->surcharge, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_acrescimo_extenso"        => Tools::spellNumber($installments[$i]->surcharge),
+                "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($installments[$i]->surcharge),
+            ]);
         }
 
         return $template;
@@ -513,6 +516,8 @@ class Contracts
 
         //Substitui os placeholders com os dados da parcela
         self::setInstallmentValues($template, $installment->id ?? null);
+
+        self::setInstallmentsValues($template, $installment->sale->id ?? null);
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
