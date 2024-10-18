@@ -9,13 +9,13 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
 {
-    public static function setUserValues(TemplateProcessor $template): TemplateProcessor
+    public static function setUserValues(TemplateProcessor $template): void
     {
         // Substitui os placeholders com os dados do usuario
-        $user = User::with('employee', 'employee.address')->find(Auth::user()->id);//@phpstan-ignore-line
+        $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
 
         if ($user === null) {
-            return $template;
+            return;
         }
 
         if ($user->employee !== null) { //@phpstan-ignore-line
@@ -41,8 +41,10 @@ class Contracts
                 'usuario_data_contratacao_extenso' => Tools::spellDate($user->employee->hiring_date),
                 'usuario_data_demissao'            => Tools::dateFormat($user->employee->resignation_date),
                 'usuario_data_demissao_extenso'    => Tools::spellDate($user->employee->resignation_date),
+            ]);
 
-                //Substitui os placeholders com os dados do endereco do usuario
+            //Substitui os placeholders com os dados do endereco do usuario
+            $template->setValues([
                 'usuario_endereco_cep'         => $user->employee->address->zip_code ?? 'Valor não especificado',
                 'usuario_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
                 'usuario_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
@@ -52,17 +54,16 @@ class Contracts
                 'usuario_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
             ]);
         }
-
-        return $template;
     }
 
-    public static function setClientValues(TemplateProcessor $template, ?int $clientId): TemplateProcessor
+    public static function setClientValues(TemplateProcessor $template, ?int $clientId): void
     {
         if ($clientId === null) {
-            return $template;
+            return;
         }
 
-        $client = Client::with('address', 'address.city')->findOrFail($clientId);
+        $client = Client::with('address', 'address.city')->find($clientId);
+
         // Substitui os placeholders com os dados do cliente
         $template->setValues([
             'cliente_nome'                       => $client->name ?? 'Valor não especificado',
@@ -84,8 +85,10 @@ class Contracts
             'cliente_afiliado_2'                 => $client->affiliated_two ?? 'Valor não especificado',
             'cliente_telefone_afiliado_2'        => $client->affiliated_two_phone ?? 'Valor não especificado',
             'cliente_descricao'                  => $client->description ?? 'Valor não especificado',
+        ]);
 
-            //Substitui os placeholders com os dados do endereco do cliente
+        //Substitui os placeholders com os dados do endereco do cliente
+        $template->setValues([
             'cliente_endereco_cep'         => $client->address->zip_code ?? 'Valor não especificado',
             'cliente_endereco_rua'         => $client->address->street ?? 'Valor não especificado',
             'cliente_endereco_numero'      => $client->address->number ?? 'Valor não especificado',
@@ -94,17 +97,15 @@ class Contracts
             'cliente_endereco_estado'      => $client->address->state ?? 'Valor não especificado',
             'cliente_endereco_complemento' => $client->address->complement ?? 'Valor não especificado',
         ]);
-
-        return $template;
     }
 
-    public static function setVehicleValues(TemplateProcessor $template, ?int $vehicle_id): TemplateProcessor
+    public static function setVehicleValues(TemplateProcessor $template, ?int $vehicle_id): void
     {
         if ($vehicle_id === null) {
-            return $template;
+            return;
         }
 
-        $vehicle = Vehicle::with('model', 'model.type', 'model.brand')->findOrFail($vehicle_id);
+        $vehicle = Vehicle::with('model', 'model.type', 'model.brand')->find($vehicle_id);
 
         //Substitui os placeholders com os dados do veiculo
         $template->setValues([
@@ -142,17 +143,15 @@ class Contracts
             'descricao'             => $vehicle->description ?? 'Valor não especificado',
             'anotacao'              => $vehicle->annotation ?? 'Valor não especificado',
         ]);
-
-        return $template;
     }
 
-    public static function setSupplierValues(TemplateProcessor $template, ?int $supplier_id): TemplateProcessor
+    public static function setSupplierValues(TemplateProcessor $template, ?int $supplier_id): void
     {
         if ($supplier_id === null) {
-            return $template;
+            return;
         }
 
-        $supplier = Supplier::with('address', 'address.city')->findOrFail($supplier_id);
+        $supplier = Supplier::with('address', 'address.city')->find($supplier_id);
 
         //Substitui os placeholders com os dados do fornecedor
         $template->setValues([
@@ -175,8 +174,10 @@ class Contracts
             'fornecedor_afiliado_2'                 => $supplier->affiliated_two ?? 'Valor não especificado',
             'fornecedor_telefone_afiliado_2'        => $supplier->affiliated_two_phone ?? 'Valor não especificado',
             'fornecedor_descricao'                  => $supplier->description ?? 'Valor não especificado',
+        ]);
 
-            //Substitui os placeholders com os dados do endereco do fornecedor
+        //Substitui os placeholders com os dados do endereco do fornecedor
+        $template->setValues([
             'fornecedor_endereco_cep'         => $supplier->address->zip_code ?? 'Valor não especificado',
             'fornecedor_endereco_rua'         => $supplier->address->street ?? 'Valor não especificado',
             'fornecedor_endereco_numero'      => $supplier->address->number ?? 'Valor não especificado',
@@ -185,17 +186,15 @@ class Contracts
             'fornecedor_endereco_estado'      => $supplier->address->state ?? 'Valor não especificado',
             'fornecedor_endereco_complemento' => $supplier->address->complement ?? 'Valor não especificado',
         ]);
-
-        return $template;
     }
 
-    public static function setSaleValues(TemplateProcessor $template, ?int $sale_id): TemplateProcessor
+    public static function setSaleValues(TemplateProcessor $template, ?int $sale_id): void
     {
         if ($sale_id === null) {
-            return $template;
+            return;
         }
 
-        $sale = Sale::findOrFail($sale_id);//@phpstan-ignore-line
+        $sale = Sale::find($sale_id);//@phpstan-ignore-line
 
         //Substitui os placeholders com os dados da venda
         $template->setValues([
@@ -225,19 +224,17 @@ class Contracts
             'total_extenso'             => Tools::spellNumber($sale->total),
             'total_dinheiro'            => Tools::spellMonetary($sale->total),
         ]);
-
-        return $template;
     }
 
-    public static function setInstallmentValues(TemplateProcessor $template, ?int $installment_id): TemplateProcessor
+    public static function setInstallmentValues(TemplateProcessor $template, ?int $installment_id): void
     {
         if ($installment_id === null) {
-            return $template;
+            return;
         }
 
-        $installment = PaymentInstallments::findOrFail($installment_id); //@phpstan-ignore-line
+        $installment = PaymentInstallments::find($installment_id); //@phpstan-ignore-line
 
-        $sale = Sale::with('paymentInstallments')->findOrFail($installment->sale_id);
+        $sale = Sale::with('paymentInstallments')->find($installment->sale_id);
 
         $iteration = 1;
 
@@ -274,20 +271,18 @@ class Contracts
             "parcela_acrescimo_extenso"        => Tools::spellNumber($installment->surcharge),
             "parcela_acrescimo_dinheiro"       => Tools::spellMonetary($installment->surcharge),
         ]);
-
-        return $template;
     }
 
-    public static function setInstallmentsValues(TemplateProcessor $template, ?int $sale_id): TemplateProcessor
+    public static function setInstallmentsValues(TemplateProcessor $template, ?int $sale_id): void
     {
         if ($sale_id === null) {
-            return $template;
+            return;
         }
 
         $installments = PaymentInstallments::where('sale_id', $sale_id)->orderBy('due_date')->get(); //@phpstan-ignore-line
 
-        if ($installments == null) {
-            return $template;
+        if ($installments->first() === null) {
+            return;
         }
 
         //Substitui os placeholders com os dados das parcelas
@@ -320,196 +315,27 @@ class Contracts
                 "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($installments[$i]->surcharge),
             ]);
         }
-
-        return $template;
     }
 
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
         // Substitui os placeholders com os dados do usuario
-        $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
-
-        if ($user->employee !== null) { //@phpstan-ignore-line
-            $template->setValue('usuario_nome', $user->name); //@phpstan-ignore-line
-            $template->setValue('usuario_nome_completo', $user->employee->name);
-            $template->setValue('usuario_genero', $user->employee->gender);
-            $template->setValue('usuario_email', $user->email); //@phpstan-ignore-line
-            $template->setValue('usuario_telefone_1', $user->employee->phone_one);
-            $template->setValue('usuario_telefone_2', $user->employee->phone_two);
-            $template->setValue('usuario_salario', number_format($user->employee->salary, 2, ',', '.'));
-            $template->setValue('usuario_salario_extenso', Tools::spellNumber($user->employee->salary));
-            $template->setValue('usuario_salario_dinheiro', Tools::spellMonetary($user->employee->salary));
-            $template->setValue('usuario_rg', $user->employee->rg);
-            $template->setValue('usuario_cpf', $user->employee->cpf);
-            $template->setValue('usuario_data_nascimento', Tools::dateFormat($user->employee->birth_date));
-            $template->setValue('usuario_data_nascimento_extenso', Tools::spellDate($user->employee->birth_date));
-            $template->setValue('usuario_pai', $user->employee->father);
-            $template->setValue('usuario_mae', $user->employee->mother);
-            $template->setValue('usuario_estado_civil', $user->employee->marital_status);
-            $template->setValue('usuario_conjuje', $user->employee->spouse);
-            $template->setValue('usuario_data_contratacao', Tools::dateFormat($user->employee->hiring_date));
-            $template->setValue('usuario_data_contratacao_extenso', Tools::spellDate($user->employee->hiring_date));
-            $template->setValue('usuario_data_demissao', Tools::dateFormat($user->employee->resignation_date));
-            $template->setValue('usuario_data_demissao_extenso', Tools::spellDate($user->employee->resignation_date));
-
-            //Substitui os placeholders com os dados do endereco do usuario
-            $template->setValue('usuario_endereco_cep', $user->employee->address->zip_code);
-            $template->setValue('usuario_endereco_rua', $user->employee->address->street);
-            $template->setValue('usuario_endereco_numero', $user->employee->address->number);
-            $template->setValue('usuario_endereco_bairro', $user->employee->address->neighborhood);
-            $template->setValue('usuario_endereco_cidade', $user->employee->address->city->name);
-            $template->setValue('usuario_endereco_estado', $user->employee->address->state);
-            $template->setValue('usuario_endereco_complemento', $user->employee->address->complement);
-        }
+        self::setUserValues($template);
 
         // Substitui os placeholders com os dados do cliente
-        $template->setValue('cliente_nome', $sale->client->name); //@phpstan-ignore-line
-        $template->setValue('cliente_genero', $sale->client->gender); //@phpstan-ignore-line
-        $template->setValue('cliente_tipo', $sale->client->client_type); //@phpstan-ignore-line
-        $template->setValue('cliente_rg', $sale->client->rg); //@phpstan-ignore-line
-        $template->setValue('cliente_cpf/cnpj', $sale->client->client_id); //@phpstan-ignore-line
-        $template->setValue('cliente_estado_civil', $sale->client->marital_status); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_1', $sale->client->phone_one); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_2', $sale->client->phone_two); //@phpstan-ignore-line
-        $template->setValue('cliente_data_de_nascimento', Tools::dateFormat($sale->client->birth_date)); //@phpstan-ignore-line
-        $template->setValue('cliente_data_de_nascimento_extenso', Tools::spellDate($sale->client->birth_date)); //@phpstan-ignore-line
-        $template->setValue('cliente_pai', $sale->client->father); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_pai', $sale->client->father_phone); //@phpstan-ignore-line
-        $template->setValue('cliente_mae', $sale->client->mother); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_mae', $sale->client->mother_phone); //@phpstan-ignore-line
-        $template->setValue('cliente_afiliado_1', $sale->client->affiliated_one); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_afiliado_1', $sale->client->affiliated_one_phone); //@phpstan-ignore-line
-        $template->setValue('cliente_afiliado_2', $sale->client->affiliated_two); //@phpstan-ignore-line
-        $template->setValue('cliente_telefone_afiliado_2', $sale->client->affiliated_two_phone); //@phpstan-ignore-line
-        $template->setValue('cliente_descricao', $sale->client->description); //@phpstan-ignore-line
-
-        //Substitui os placeholders com os dados do endereco do cliente
-        $template->setValue('cliente_endereco_cep', $sale->client->address->zip_code); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_rua', $sale->client->address->street); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_numero', $sale->client->address->number); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_bairro', $sale->client->address->neighborhood); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_cidade', $sale->client->address->city->name); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_estado', $sale->client->address->state); //@phpstan-ignore-line
-        $template->setValue('cliente_endereco_complemento', $sale->client->address->complement); //@phpstan-ignore-line
+        self::setClientValues($template, $sale->client->id ?? null);
 
         //Substitui os placeholders com os dados do veiculo
-        $template->setValue('data_compra', Tools::dateFormat($sale->vehicle->purchase_date)); //@phpstan-ignore-line
-        $template->setValue('data_compra_extenso', Tools::spellDate($sale->vehicle->purchase_date)); //@phpstan-ignore-line
-        $template->setValue('preco_fipe', number_format($sale->vehicle->fipe_price, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('preco_fipe_extenso', Tools::spellNumber($sale->vehicle->fipe_price)); //@phpstan-ignore-line
-        $template->setValue('preco_fipe_dinheiro', Tools::spellMonetary($sale->vehicle->fipe_price)); //@phpstan-ignore-line
-        $template->setValue('preco_compra', number_format($sale->vehicle->purchase_price, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('preco_compra_extenso', Tools::spellNumber($sale->vehicle->purchase_price)); //@phpstan-ignore-line
-        $template->setValue('preco_compra_dinheiro', Tools::spellMonetary($sale->vehicle->purchase_price)); //@phpstan-ignore-line
-        $template->setValue('preco_venda', number_format($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('preco_venda_extenso', Tools::spellNumber($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price)); //@phpstan-ignore-line
-        $template->setValue('preco_venda_dinheiro', Tools::spellMonetary($sale->vehicle->promotional_price ?? $sale->vehicle->sale_price)); //@phpstan-ignore-line
-        $template->setValue('modelo', $sale->vehicle->model->name); //@phpstan-ignore-line
-        $template->setValue('tipo', $sale->vehicle->model->type->name); //@phpstan-ignore-line
-        $template->setValue('marca', $sale->vehicle->model->brand->name); //@phpstan-ignore-line
-        $template->setValue('ano_um', $sale->vehicle->year_one); //@phpstan-ignore-line
-        $template->setValue('ano_dois', $sale->vehicle->year_two); //@phpstan-ignore-line
-        $template->setValue('km', number_format($sale->vehicle->km, 0, '', '.')); //@phpstan-ignore-line
-        $template->setValue('km_extenso', Tools::spellNumber($sale->vehicle->km)); //@phpstan-ignore-line
-        $template->setValue('combustivel', $sale->vehicle->fuel); //@phpstan-ignore-line
-        $template->setValue('motor_potencia', $sale->vehicle->engine_power); //@phpstan-ignore-line
-        $template->setValue('direcao', $sale->vehicle->steering); //@phpstan-ignore-line
-        $template->setValue('transmissao', $sale->vehicle->transmission); //@phpstan-ignore-line
-        $template->setValue('portas', $sale->vehicle->doors); //@phpstan-ignore-line
-        $template->setValue('portas_extenso', Tools::spellNumber($sale->vehicle->doors)); //@phpstan-ignore-line
-        $template->setValue('lugares', $sale->vehicle->seats); //@phpstan-ignore-line
-        $template->setValue('lugares_extenso', Tools::spellNumber($sale->vehicle->seats)); //@phpstan-ignore-line
-        $template->setValue('tracao', $sale->vehicle->traction); //@phpstan-ignore-line
-        $template->setValue('cor', $sale->vehicle->color); //@phpstan-ignore-line
-        $template->setValue('placa', $sale->vehicle->plate); //@phpstan-ignore-line
-        $template->setValue('chassi', $sale->vehicle->chassi); //@phpstan-ignore-line
-        $template->setValue('renavam', $sale->vehicle->renavam); //@phpstan-ignore-line
-        $template->setValue('descricao', $sale->vehicle->description); //@phpstan-ignore-line
-        $template->setValue('anotacao', $sale->vehicle->annotation); //@phpstan-ignore-line
+        self::setVehicleValues($template, $sale->vehicle->id ?? null);
 
         //Substitui os placeholders com os dados do fornecedor
-        if ($sale->supplier !== null) { //@phpstan-ignore-line
-            $template->setValue('fornecedor_nome', $sale->supplier->name);
-            $template->setValue('fornecedor_genero', $sale->supplier->gender);
-            $template->setValue('fornecedor_tipo', $sale->supplier->client_type);
-            $template->setValue('fornecedor_rg', $sale->supplier->rg);
-            $template->setValue('fornecedor_cpf/cnpj', $sale->supplier->client_id);
-            $template->setValue('fornecedor_estado_civil', $sale->supplier->marital_status);
-            $template->setValue('fornecedor_telefone_1', $sale->supplier->phone_one);
-            $template->setValue('fornecedor_telefone_2', $sale->supplier->phone_two);
-            $template->setValue('fornecedor_data_de_nascimento', Tools::dateFormat($sale->supplier->birth_date));
-            $template->setValue('fornecedor_data_de_nascimento_extenso', Tools::spellDate($sale->supplier->birth_date));
-            $template->setValue('fornecedor_pai', $sale->supplier->father);
-            $template->setValue('fornecedor_telefone_pai', $sale->supplier->father_phone);
-            $template->setValue('fornecedor_mae', $sale->supplier->mother);
-            $template->setValue('fornecedor_telefone_mae', $sale->supplier->mother_phone);
-            $template->setValue('fornecedor_afiliado_1', $sale->supplier->affiliated_one);
-            $template->setValue('fornecedor_telefone_afiliado_1', $sale->supplier->affiliated_one_phone);
-            $template->setValue('fornecedor_afiliado_2', $sale->supplier->affiliated_two);
-            $template->setValue('fornecedor_telefone_afiliado_2', $sale->supplier->affiliated_two_phone);
-            $template->setValue('fornecedor_descricao', $sale->supplier->description);
-
-            //Substitui os placeholders com os dados do endereco do fornecedor
-            $template->setValue('fornecedor_endereco_cep', $sale->supplier->address->zip_code);
-            $template->setValue('fornecedor_endereco_rua', $sale->supplier->address->street);
-            $template->setValue('fornecedor_endereco_numero', $sale->supplier->address->number);
-            $template->setValue('fornecedor_endereco_bairro', $sale->supplier->address->neighborhood);
-            $template->setValue('fornecedor_endereco_cidade', $sale->supplier->address->city->name);
-            $template->setValue('fornecedor_endereco_estado', $sale->supplier->address->state);
-            $template->setValue('fornecedor_endereco_complemento', $sale->supplier->address->complement);
-        }
+        self::setSupplierValues($template, $sale->vehicle->supplier->id ?? null);
 
         //Substitui os placeholders com os dados da venda
-        $template->setValue('metodo_de_pagamento', $sale->payment_method); //@phpstan-ignore-line
-        $template->setValue('status', $sale->status); //@phpstan-ignore-line
-        $template->setValue('data_venda', Tools::dateFormat($sale->date_sale)); //@phpstan-ignore-line
-        $template->setValue('data_venda_extenso', Tools::spellDate($sale->date_sale)); //@phpstan-ignore-line
-        $template->setValue('data_pagamento', Tools::dateFormat($sale->date_payment)); //@phpstan-ignore-line
-        $template->setValue('data_pagamento_extenso', Tools::spellDate($sale->date_payment)); //@phpstan-ignore-line
-        $template->setValue('desconto', $sale->discount); //@phpstan-ignore-line
-        $template->setValue('desconto_extenso', Tools::spellNumber($sale->discount)); //@phpstan-ignore-line
-        $template->setValue('desconto_dinheiro', Tools::spellMonetary($sale->discount)); //@phpstan-ignore-line
-        $template->setValue('acrescimo', $sale->surcharge); //@phpstan-ignore-line
-        $template->setValue('acrescimo_extenso', Tools::spellNumber($sale->surcharge)); //@phpstan-ignore-line
-        $template->setValue('acrescimo_dinheiro', Tools::spellMonetary($sale->surcharge)); //@phpstan-ignore-line
-        $template->setValue('entrada', number_format($sale->down_payment, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('entrada_extenso', Tools::spellNumber($sale->down_payment)); //@phpstan-ignore-line
-        $template->setValue('entrada_dinheiro', Tools::spellMonetary($sale->down_payment)); //@phpstan-ignore-line
-        $template->setValue('numero_parcelas', $sale->number_installments); //@phpstan-ignore-line
-        $template->setValue('numero_parcelas_extenso', Tools::spellNumber($sale->number_installments)); //@phpstan-ignore-line
-        $template->setValue('reembolso', number_format($sale->reimbursement, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('reembolso_extenso', Tools::spellNumber($sale->reimbursement)); //@phpstan-ignore-line
-        $template->setValue('reembolso_dinheiro', Tools::spellMonetary($sale->reimbursement)); //@phpstan-ignore-line
-        $template->setValue('data_cancelamento', Tools::dateFormat($sale->date_cancel)); //@phpstan-ignore-line
-        $template->setValue('data_cancelamento_extenso', Tools::spellDate($sale->date_cancel)); //@phpstan-ignore-line
-        $template->setValue('total', number_format($sale->total, 2, ',', '.')); //@phpstan-ignore-line
-        $template->setValue('total_extenso', Tools::spellNumber($sale->total)); //@phpstan-ignore-line
-        $template->setValue('total_dinheiro', Tools::spellMonetary($sale->total)); //@phpstan-ignore-line
+        self::setSaleValues($template, $sale->id ?? null);
 
-        if ($sale->number_installments > 1) { //@phpstan-ignore-line
-            for ($i = 0; $i < $sale->number_installments; $i++) {
-                $template->setValues([
-                    "parcela_" . ($i + 1) . "_data_vencimento"          => Tools::dateFormat($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_vencimento_extenso"  => Tools::spellDate($sale->paymentInstallments[$i]->due_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor"                    => number_format($sale->paymentInstallments[$i]->value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_extenso"            => Tools::spellNumber($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_dinheiro"           => Tools::spellMonetary($sale->paymentInstallments[$i]->value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_status"                   => $sale->paymentInstallments[$i]->status, //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_pagamento"           => Tools::dateFormat($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_data_pagamento_extenso"   => Tools::spellDate($sale->paymentInstallments[$i]->payment_date), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento"          => number_format($sale->paymentInstallments[$i]->payment_value, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento_extenso"  => Tools::spellNumber($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_valor_pagamento_dinheiro" => Tools::spellMonetary($sale->paymentInstallments[$i]->payment_value), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_metodo_pagamento"         => $sale->paymentInstallments[$i]->payment_method, //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto"                 => number_format($sale->paymentInstallments[$i]->discount, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto_extenso"         => Tools::spellNumber($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_desconto_dinheiro"        => Tools::spellMonetary($sale->paymentInstallments[$i]->discount), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo"                => number_format($sale->paymentInstallments[$i]->surcharge, 2, ',', '.'), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo_extenso"        => Tools::spellNumber($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
-                    "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($sale->paymentInstallments[$i]->surcharge), //@phpstan-ignore-line
-                ]);
-            }
-        }
+        //Substitui os placeholders com os dados das parcelas
+        self::setInstallmentsValues($template, $sale->id ?? null);
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
@@ -539,6 +365,7 @@ class Contracts
         //Substitui os placeholders com os dados da parcela
         self::setInstallmentValues($template, $installment->id ?? null);
 
+        //Substitui os placeholders com os dados das parcelas
         self::setInstallmentsValues($template, $installment->sale->id ?? null);
 
         // Salva o contrato preenchido

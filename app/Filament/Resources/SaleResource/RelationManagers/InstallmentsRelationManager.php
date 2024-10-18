@@ -150,8 +150,7 @@ class InstallmentsRelationManager extends RelationManager
                         $caminho = Contracts::generateReceiptContract($template, $installment);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    }),
-                // })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
             ]);
     }
 }
