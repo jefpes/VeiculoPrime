@@ -11,7 +11,7 @@ class Tools
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
-            return 'valor não especificado';
+            return 'Valor não especificado';
         }
 
         // Separa o valor em reais e centavos
@@ -49,7 +49,7 @@ class Tools
 
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
-            return 'valor não especificado';
+            return 'Valor não especificado';
         }
 
         // Separa a parte inteira e a parte decimal
@@ -81,7 +81,7 @@ class Tools
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
-            return 'valor não especificado';
+            return 'Valor não especificado';
         }
 
         $value = Carbon::parse($value)->format('d/m/Y');
@@ -93,7 +93,7 @@ class Tools
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
-            return 'valor não especificado';
+            return 'Valor não especificado';
         }
 
         $value = Carbon::create($value)->locale($locale)->isoFormat($isoFormat);
