@@ -237,6 +237,22 @@ class Contracts
 
         $installment = PaymentInstallments::findOrFail($installment_id); //@phpstan-ignore-line
 
+        $sale = Sale::with('paymentInstallments')->findOrFail($installment->sale_id);
+
+        $iteration = 1;
+
+        foreach ($sale->paymentInstallments as $i) { //@phpstan-ignore-line
+            if ($i->id === $installment->id) {
+                $template->setValues([
+                    "parcela_numero"         => $iteration,
+                    "parcela_numero_extenso" => Tools::spellNumber($iteration),
+                ]);
+
+                break;
+            }
+            $iteration++;
+        }
+
         //Substitui os placeholders com os dados da parcela
         $template->setValues([
             "parcela_data_vencimento"          => Tools::dateFormat($installment->due_date),
@@ -275,9 +291,15 @@ class Contracts
         }
 
         //Substitui os placeholders com os dados das parcelas
+        $template->setValues([
+            'quantidade_parcelas'         => $installments->count(),
+            'quantidade_parcelas_extenso' => Tools::spellNumber($installments->count()),
+            'parcelas_restantes'          => $installments->whereNull('payment_date')->count(),
+            'parcelas_restantes_extenso'  => Tools::spellNumber($installments->whereNull('payment_date')->count()),
+        ]);
+
         for ($i = 0; $i < $installments->count(); $i++) {
             $template->setValues([
-                "parcela_numero"                                    => ($i + 1),
                 "parcela_" . ($i + 1) . "_data_vencimento"          => Tools::dateFormat($installments[$i]->due_date),
                 "parcela_" . ($i + 1) . "_data_vencimento_extenso"  => Tools::spellDate($installments[$i]->due_date),
                 "parcela_" . ($i + 1) . "_valor"                    => number_format($installments[$i]->value, 2, ',', '.'),
