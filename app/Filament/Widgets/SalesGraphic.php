@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\{Sale, Vehicle, VehicleExpense};
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\{Trend, TrendValue};
 use Illuminate\Contracts\Support\Htmlable;
@@ -38,33 +39,34 @@ class SalesGraphic extends ChartWidget
 
     protected function getData(): array
     {
-
         $sale = Trend::model(Sale::class)
-                ->dateColumn('date_sale')
-                ->between(
-                    start: now()->subMonth(12), //@phpstan-ignore-line
-                    end: now(),
-                )
-                ->perMonth()
-                ->sum('total');
+            ->dateColumn('date_sale')
+            ->between(
+                start: now()->subMonth(12)->startOfMonth(), //@phpstan-ignore-line
+                end: now()->endOfMonth()                    // Fim do mês atual
+            )
+            ->perMonth()
+            ->sum('total');
 
         $purchase = Trend::model(Vehicle::class)
-                ->dateColumn('purchase_date')
-                ->between(
-                    start: now()->subMonth(12), //@phpstan-ignore-line
-                    end: now(),
-                )
-                ->perMonth()
-                ->sum('purchase_price');
+            ->dateColumn('purchase_date')
+            ->between(
+                start: now()->subMonth(12)->startOfMonth(), //@phpstan-ignore-line
+                end: now()->endOfMonth()                    // Fim do mês atual
+            )
+            ->perMonth()
+            ->sum('purchase_price');
 
-        $expenses = Trend::model(VehicleExpense::class)
-                ->dateColumn('date')
-                ->between(
-                    start: now()->subMonth(12), //@phpstan-ignore-line
-                    end: now(),
-                )
-                ->perMonth()
-                ->sum('value');
+        $expenses = VehicleExpense::whereBetween('date', [ //@phpstan-ignore-line
+            now()->subMonth(12)->startOfMonth(), //@phpstan-ignore-line
+            now()->endOfMonth(),
+        ])
+                        ->orderBy('date')
+                        ->get()->groupBy(function ($date) {
+                            return Carbon::parse($date->date)->format('Y/m'); // Agrupa por ano e mês
+                        })->map(function ($month) {
+                            return $month->sum('value'); // Soma os valores do mês
+                        });
 
         return [
             'datasets' => [
@@ -82,12 +84,12 @@ class SalesGraphic extends ChartWidget
                 ],
                 [
                     'label'           => __('Expenses'),
-                    'data'            => $expenses->map(fn (TrendValue $value) => $value->aggregate),
+                    'data'            => $expenses->map(fn ($value) => $value),
                     'backgroundColor' => '#fa0808',
                     'borderColor'     => '#f89c7c',
                 ],
             ],
-            'labels' => $sale->map(fn (TrendValue $value) => $value->date),
+            'labels' => $sale->map(fn (TrendValue $value) => Carbon::parse($value->date)->format('Y/m')),
         ];
     }
 
