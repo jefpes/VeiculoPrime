@@ -323,7 +323,7 @@ class Contracts
         }
     }
 
-    public static function setExenpenseValues(TemplateProcessor $template, ?int $expense_id): void
+    public static function setExpenseValues(TemplateProcessor $template, ?int $expense_id): void
     {
         if ($expense_id === null) {
             return;
@@ -428,6 +428,9 @@ class Contracts
 
         //Substitui os placeholders com os dados das parcelas
         self::setInstallmentsValues($template, $installment->sale->id ?? null);
+
+        //Substitui os placeholders com os dados das despesas
+        self::setExpensesValues($template, $installment->sale->vehicle->id ?? null);
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
