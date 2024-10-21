@@ -329,15 +329,20 @@ class Contracts
             return;
         }
 
-        $expense = VehicleExpense::with('user', 'vehicle.model', 'vehicle.model.type', 'vehicle.model.brand')->find($expense_id);
+        $expense = VehicleExpense::find($expense_id);//@phpstan-ignore-line
+
+        if ($expense === null) {
+            return;
+        }
 
         //Substitui os placeholders com os dados da parcela
         $template->setValues([
-            "despesa_data"           => Tools::dateFormat($expense->date), //@phpstan-ignore-line
-            "despesa_descricao"      => Tools::spellDate($expense->description), //@phpstan-ignore-line
-            "despesa_valor"          => number_format($expense->value, 2, ',', '.'), //@phpstan-ignore-line
-            "despesa_valor_extenso"  => Tools::spellNumber($expense->value), //@phpstan-ignore-line
-            "despesa_valor_dinheiro" => Tools::spellMonetary($expense->value), //@phpstan-ignore-line
+            "despesa_data"           => Tools::dateFormat($expense->date),
+            "despesa_data_extenso"   => Tools::spellDate($expense->date),
+            "despesa_descricao"      => $expense->description,
+            "despesa_valor"          => number_format($expense->value, 2, ',', '.'),
+            "despesa_valor_extenso"  => Tools::spellNumber($expense->value),
+            "despesa_valor_dinheiro" => Tools::spellMonetary($expense->value),
         ]);
     }
 
@@ -353,8 +358,15 @@ class Contracts
             return;
         }
 
+        $descriptions = '';
+
+        foreach ($expenses as $expense) {
+            $descriptions .= $expense->description . "\n";
+        }
+
         //Substitui os placeholders com os dados das parcelas
         $template->setValues([
+            "despesa_descricoes"          => $descriptions,
             'quantidade_despesas'         => $expenses->count(),
             'quantidade_despesas_extenso' => Tools::spellNumber($expenses->count()),
             "despesa_total"               => number_format($expenses->sum('value'), 2, ',', '.'),
@@ -382,6 +394,9 @@ class Contracts
 
         //Substitui os placeholders com os dados das parcelas
         self::setInstallmentsValues($template, $sale->id ?? null);
+
+        //Substitui os placeholders com os dados das despesas
+        self::setExpensesValues($template, $sale->vehicle->id ?? null);
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
