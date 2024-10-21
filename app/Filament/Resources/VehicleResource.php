@@ -6,9 +6,10 @@ use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
+use App\Helpers\Contracts;
 use App\Models\Vehicle;
 use Carbon\Carbon;
-use Filament\Forms\Components\{DatePicker, Section, Select, TextInput, Textarea};
+use Filament\Forms\Components\{DatePicker, FileUpload, Section, Select, TextInput, Textarea};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
@@ -16,6 +17,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
 {
@@ -43,11 +45,12 @@ class VehicleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
+                    Select::make('user_id')
+                        ->label('Buyer')
+                        ->relationship('user', 'name'),
                     DatePicker::make('purchase_date')
                         ->required(),
-                    TextInput::make('fipe_price')
-                        ->prefix('R$')
-                        ->numeric(),
+                    MoneyInput::make('fipe_price'),
                     MoneyInput::make('purchase_price')
                         ->required(),
                     MoneyInput::make('sale_price')
@@ -243,6 +246,32 @@ class VehicleResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()->visible(fn ($record) => !$record->sold_date),
+                Tables\Actions\Action::make('contract')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Contract'))
+                    ->label('Contract')
+                    ->translateLabel()
+                    ->icon('heroicon-o-document')
+                    ->iconSize('md')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('contract')
+                            ->label('Contract')
+                            ->panelAspectRatio('2:1')
+                            ->storeFiles(false)
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            ]),
+                    ])
+                    ->action(function (array $data, Vehicle $vehicle) {
+
+                        $template = new TemplateProcessor($data['contract']->getRealPath());
+
+                        $caminho = Contracts::generatePurchaseContract($template, $vehicle);
+
+                        return response()->download($caminho)->deleteFileAfterSend(true);
+                    }),
             ]);
     }
 

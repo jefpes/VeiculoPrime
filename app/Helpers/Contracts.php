@@ -26,38 +26,38 @@ class Contracts
 
         if ($user->employee !== null) { //@phpstan-ignore-line
             $template->setValues([
-                'usuario_nome'                     => $user->name ?? 'Valor não especificado',
-                'usuario_nome_completo'            => $user->employee->name ?? 'Valor não especificado',
-                'usuario_genero'                   => $user->employee->gender ?? 'Valor não especificado',
-                'usuario_email'                    => $user->email ?? 'Valor não especificado',
-                'usuario_telefone_1'               => $user->employee->phone_one ?? 'Valor não especificado',
-                'usuario_telefone_2'               => $user->employee->phone_two ?? 'Valor não especificado',
-                'usuario_salario'                  => number_format($user->employee->salary, 2, ',', '.'),
-                'usuario_salario_extenso'          => Tools::spellNumber($user->employee->salary),
-                'usuario_salario_dinheiro'         => Tools::spellMonetary($user->employee->salary),
-                'usuario_rg'                       => $user->employee->rg ?? 'Valor não especificado',
-                'usuario_cpf'                      => $user->employee->cpf ?? 'Valor não especificado',
-                'usuario_data_nascimento'          => Tools::dateFormat($user->employee->birth_date),
-                'usuario_data_nascimento_extenso'  => Tools::spellDate($user->employee->birth_date),
-                'usuario_pai'                      => $user->employee->father ?? 'Valor não especificado',
-                'usuario_mae'                      => $user->employee->mother ?? 'Valor não especificado',
-                'usuario_estado_civil'             => $user->employee->marital_status ?? 'Valor não especificado',
-                'usuario_conjuje'                  => $user->employee->spouse ?? 'Valor não especificado',
-                'usuario_data_contratacao'         => Tools::dateFormat($user->employee->hiring_date),
-                'usuario_data_contratacao_extenso' => Tools::spellDate($user->employee->hiring_date),
-                'usuario_data_demissao'            => Tools::dateFormat($user->employee->resignation_date),
-                'usuario_data_demissao_extenso'    => Tools::spellDate($user->employee->resignation_date),
+                'ucv_nome'                     => $user->name ?? 'Valor não especificado',
+                'ucv_nome_completo'            => $user->employee->name ?? 'Valor não especificado',
+                'ucv_genero'                   => $user->employee->gender ?? 'Valor não especificado',
+                'ucv_email'                    => $user->email ?? 'Valor não especificado',
+                'ucv_telefone_1'               => $user->employee->phone_one ?? 'Valor não especificado',
+                'ucv_telefone_2'               => $user->employee->phone_two ?? 'Valor não especificado',
+                'ucv_salario'                  => number_format($user->employee->salary, 2, ',', '.'),
+                'ucv_salario_extenso'          => Tools::spellNumber($user->employee->salary),
+                'ucv_salario_dinheiro'         => Tools::spellMonetary($user->employee->salary),
+                'ucv_rg'                       => $user->employee->rg ?? 'Valor não especificado',
+                'ucv_cpf'                      => $user->employee->cpf ?? 'Valor não especificado',
+                'ucv_data_nascimento'          => Tools::dateFormat($user->employee->birth_date),
+                'ucv_data_nascimento_extenso'  => Tools::spellDate($user->employee->birth_date),
+                'ucv_pai'                      => $user->employee->father ?? 'Valor não especificado',
+                'ucv_mae'                      => $user->employee->mother ?? 'Valor não especificado',
+                'ucv_estado_civil'             => $user->employee->marital_status ?? 'Valor não especificado',
+                'ucv_conjuje'                  => $user->employee->spouse ?? 'Valor não especificado',
+                'ucv_data_contratacao'         => Tools::dateFormat($user->employee->hiring_date),
+                'ucv_data_contratacao_extenso' => Tools::spellDate($user->employee->hiring_date),
+                'ucv_data_demissao'            => Tools::dateFormat($user->employee->resignation_date),
+                'ucv_data_demissao_extenso'    => Tools::spellDate($user->employee->resignation_date),
             ]);
 
             //Substitui os placeholders com os dados do endereco do usuario
             $template->setValues([
-                'usuario_endereco_cep'         => $user->employee->address->zip_code ?? 'Valor não especificado',
-                'usuario_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
-                'usuario_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
-                'usuario_endereco_bairro'      => $user->employee->address->neighborhood ?? 'Valor não especificado',
-                'usuario_endereco_cidade'      => $user->employee->address->city->name ?? 'Valor não especificado',
-                'usuario_endereco_estado'      => $user->employee->address->state ?? 'Valor não especificado',
-                'usuario_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
+                'ucv_endereco_cep'         => $user->employee->address->zip_code ?? 'Valor não especificado',
+                'ucv_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
+                'ucv_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
+                'ucv_endereco_bairro'      => $user->employee->address->neighborhood ?? 'Valor não especificado',
+                'ucv_endereco_cidade'      => $user->employee->address->city->name ?? 'Valor não especificado',
+                'ucv_endereco_estado'      => $user->employee->address->state ?? 'Valor não especificado',
+                'ucv_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
             ]);
         }
     }
@@ -375,10 +375,33 @@ class Contracts
         ]);
     }
 
-    public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
+    public static function generatePurchaseContract(TemplateProcessor $template, Vehicle $vehicle): string
     {
         // Substitui os placeholders com os dados do usuario
         self::setUserValues($template);
+
+        //Substitui os placeholders com os dados do veiculo
+        self::setVehicleValues($template, $vehicle->id ?? null);
+
+        //Substitui os placeholders com os dados do fornecedor
+        self::setSupplierValues($template, $vehicle->supplier->id ?? null);
+
+        //Substitui os placeholders com os dados das despesas
+        self::setExpensesValues($template, $vehicle->id ?? null);
+
+        // Salva o contrato preenchido
+        file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
+        $name                      = $vehicle->supplier->name ?? 'Valor não especificado';
+        $caminhoContratoPreenchido = "storage/contracts/Contrato de Compra - {$name}.docx";
+        $template->saveAs($caminhoContratoPreenchido);
+
+        return $caminhoContratoPreenchido;
+    }
+
+    public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
+    {
+        // Substitui os placeholders com os dados do usuario
+        self::setUserValues($template, $sale->user_id ?? null);
 
         // Substitui os placeholders com os dados do cliente
         self::setClientValues($template, $sale->client->id ?? null);
