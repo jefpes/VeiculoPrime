@@ -185,11 +185,11 @@ class Cards extends BaseWidget
     }
 
     /**
-     * Retorna o total de despesas e também as despesas por tipo de veículo,
-     * com a opção de aplicar filtros de tempo.
-     *
-     * @return array{total_expenses: float, expenses_by_type: array<int, array{type: string, total_expenses: float}>}
-     */
+ * Retorna o total de despesas e também as despesas por tipo de veículo,
+ * com a opção de aplicar filtros de tempo.
+ *
+ * @return array{total_expenses: float, expenses_by_type: array<int, array{type: string, total_expenses: float}>}
+ */
     private function totalExpensesByType(): array
     {
         // Obter todos os tipos de veículos
@@ -203,14 +203,16 @@ class Cards extends BaseWidget
 
         // Iterar sobre cada tipo de veículo
         foreach ($types as $type) {
-            // Obter as despesas para os veículos vendidos de cada tipo
+            // Obter as despesas para os veículos de cada tipo
             $expenses = Vehicle::query() //@phpstan-ignore-line
-                ->when($this->filters['start_date'], fn ($query) => $query->where('sold_date', '>', $this->filters['start_date']))
-                ->when($this->filters['end_date'], fn ($query) => $query->where('sold_date', '<', $this->filters['end_date']))
-                ->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $type['id']))
-                ->with('expenses') // Carregar as despesas relacionadas aos veículos
+                ->with(['expenses' => function ($query) {
+                    // Filtrar as despesas por data
+                    $query->when($this->filters['start_date'], fn ($query) => $query->where('date', '>=', $this->filters['start_date']))
+                          ->when($this->filters['end_date'], fn ($query) => $query->where('date', '<=', $this->filters['end_date']));
+                }])
+                ->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $type['id'])) // Filtro pelo tipo de veículo
                 ->get()
-                ->flatMap(fn ($vehicle) => $vehicle->expenses) //@phpstan-ignore-line Acessar as despesas de cada veículo
+                ->flatMap(fn ($vehicle) => $vehicle->expenses) //@phpstan-ignore-line
                 ->sum('value'); // Somar os valores das despesas
 
             // Acumular o total de todas as despesas
