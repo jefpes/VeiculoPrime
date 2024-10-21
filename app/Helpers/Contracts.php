@@ -378,7 +378,7 @@ class Contracts
     public static function generatePurchaseContract(TemplateProcessor $template, Vehicle $vehicle): string
     {
         // Substitui os placeholders com os dados do usuario
-        self::setUserValues($template);
+        self::setUserValues($template, $vehicle->user_id ?? null);
 
         //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $vehicle->id ?? null);
