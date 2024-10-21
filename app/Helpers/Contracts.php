@@ -3,16 +3,22 @@
 namespace App\Helpers;
 
 use App\Models\Vehicle;
-use App\Models\{Client, PaymentInstallments, Sale, Supplier, User};
+use App\Models\{Client, PaymentInstallments, Sale, Supplier, User, VehicleExpense};
 use Illuminate\Support\Facades\{Auth, Storage};
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
 {
-    public static function setUserValues(TemplateProcessor $template): void
+    public static function setUserValues(TemplateProcessor $template, ?int $user_id = null): void
     {
         // Substitui os placeholders com os dados do usuario
-        $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
+        if ($user_id !== null) {
+            $user = User::with('employee', 'employee.address')->find($user_id);
+        }
+
+        if ($user_id === null) {
+            $user = User::with('employee', 'employee.address')->find(Auth::user()->id); //@phpstan-ignore-line
+        }
 
         if ($user === null) {
             return;
@@ -315,6 +321,46 @@ class Contracts
                 "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($installments[$i]->surcharge),
             ]);
         }
+    }
+
+    public static function setExenpenseValues(TemplateProcessor $template, ?int $expense_id): void
+    {
+        if ($expense_id === null) {
+            return;
+        }
+
+        $expense = VehicleExpense::with('user', 'vehicle.model', 'vehicle.model.type', 'vehicle.model.brand')->find($expense_id);
+
+        //Substitui os placeholders com os dados da parcela
+        $template->setValues([
+            "despesa_data"           => Tools::dateFormat($expense->date), //@phpstan-ignore-line
+            "despesa_descricao"      => Tools::spellDate($expense->description), //@phpstan-ignore-line
+            "despesa_valor"          => number_format($expense->value, 2, ',', '.'), //@phpstan-ignore-line
+            "despesa_valor_extenso"  => Tools::spellNumber($expense->value), //@phpstan-ignore-line
+            "despesa_valor_dinheiro" => Tools::spellMonetary($expense->value), //@phpstan-ignore-line
+        ]);
+    }
+
+    public static function setExpensesValues(TemplateProcessor $template, ?int $vehicle_id): void
+    {
+        if ($vehicle_id === null) {
+            return;
+        }
+
+        $expenses = VehicleExpense::where('vehicle_id', $vehicle_id)->orderBy('date')->get(); //@phpstan-ignore-line
+
+        if ($expenses->first() === null) {
+            return;
+        }
+
+        //Substitui os placeholders com os dados das parcelas
+        $template->setValues([
+            'quantidade_despesas'         => $expenses->count(),
+            'quantidade_despesas_extenso' => Tools::spellNumber($expenses->count()),
+            "despesa_total"               => number_format($expenses->sum('value'), 2, ',', '.'),
+            "despesa_total_extenso"       => Tools::spellNumber($expenses->sum('value')),
+            "despesa_total_dinheiro"      => Tools::spellMonetary($expenses->sum('value')),
+        ]);
     }
 
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
