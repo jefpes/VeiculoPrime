@@ -271,7 +271,7 @@ class VehicleResource extends Resource
                         $caminho = Contracts::generatePurchaseContract($template, $vehicle);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    }),
+                    })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()),
             ]);
     }
 

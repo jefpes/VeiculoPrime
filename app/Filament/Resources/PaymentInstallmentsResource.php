@@ -5,18 +5,22 @@ namespace App\Filament\Resources;
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentsResource\{Pages};
 use App\Forms\Components\MoneyInput;
+use App\Helpers\Contracts;
 use App\Models\PaymentInstallments;
 use Carbon\Carbon;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\{DatePicker, Select};
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class PaymentInstallmentsResource extends Resource
 {
@@ -89,11 +93,23 @@ class PaymentInstallmentsResource extends Resource
                     ->money('BRL'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'PENDENTE'    => 'info',
-                        'REEMBOLSADO' => 'warning',
-                        'CANCELADO'   => 'danger',
-                        default       => 'success',
+                    ->color(function (string $state, $record): string|array {
+                        // Se o status for 'PENDENTE', verificar se há parcelas em atraso
+                        if ($state === 'PENDENTE') {
+                            if ($record->due_date < now() && $record->status === 'PENDENTE') {
+                                return 'danger';
+                            }
+
+                            // Caso não haja parcelas em atraso, manter a cor 'info'
+                            return 'info';
+                        }
+
+                        // Verificar os demais estados
+                        return match ($state) {
+                            'REEMBOLSADO' => 'warning',
+                            'CANCELADO'   => Color::hex('#fe0000'),
+                            default       => 'success',
+                        };
                     }),
                 Tables\Columns\TextColumn::make('payment_date')
                     ->date()
@@ -174,6 +190,31 @@ class PaymentInstallmentsResource extends Resource
                             ->success()
                             ->title(__('Installment refunded'))
                             ->send();
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+                Tables\Actions\Action::make('receipt')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Receipt'))
+                    ->label('Receipt')
+                    ->translateLabel()
+                    ->icon('heroicon-o-document')
+                    ->iconSize('md')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('receipt')
+                            ->label('Contract')
+                            ->panelAspectRatio('2:1')
+                            ->storeFiles(false)
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            ]),
+                    ])
+                    ->action(function (array $data, PaymentInstallments $installment) {
+
+                        $template = new TemplateProcessor($data['receipt']->getRealPath());
+
+                        $caminho = Contracts::generateReceiptContract($template, $installment);
+
+                        return response()->download($caminho)->deleteFileAfterSend(true);
                     })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
             ])
             ->filters([
