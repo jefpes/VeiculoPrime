@@ -97,9 +97,17 @@ class EmployeeResource extends Resource
                         ->maxLength(255),
                     Forms\Components\Select::make('city_id')
                         ->relationship('city', 'name')
+                        ->optionsLimit(5)
                         ->searchable()
-                        ->preload()
-                        ->required(),
+                        ->required()
+                        ->editOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                        ])
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                        ]),
                     Forms\Components\Select::make('state')
                         ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [
                             $status->value => $status->value,
