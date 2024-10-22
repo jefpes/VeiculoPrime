@@ -159,7 +159,7 @@ class EmployeeResource extends Resource
                     ->label('CPF')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('birth_date')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('father')

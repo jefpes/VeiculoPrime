@@ -181,6 +181,22 @@ class SupplierResource extends Resource
                                 return  $record->phone_one;
                             })
                             ->label('Phone'),
+                        Tables\Columns\TextColumn::make('rg')
+                            ->label('RG')
+                            ->searchable()
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        Tables\Columns\TextColumn::make('birth_date')
+                            ->date('d/m/Y')
+                            ->sortable()
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        Tables\Columns\TextColumn::make('father')
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        Tables\Columns\TextColumn::make('mother')
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        Tables\Columns\TextColumn::make('marital_status')
+                            ->toggleable(isToggledHiddenByDefault: true),
+                        Tables\Columns\TextColumn::make('spouse')
+                            ->toggleable(isToggledHiddenByDefault: true),
                     ])
                     ->filters([
                         //
