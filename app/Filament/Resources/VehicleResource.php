@@ -122,6 +122,7 @@ class VehicleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('employee.name')
+                    ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('plate')

@@ -51,11 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $q->where('name', 'like', "%{$val}%");
     }
 
-    public function scopeLoged(Builder $q): Builder
-    {
-        return $q->where('id', '!=', auth()->user()->id); //@phpstan-ignore-line
-    }
-
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class)->with('abilities'); //@phpstan-ignore-line

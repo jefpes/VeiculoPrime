@@ -48,8 +48,9 @@ class UserResource extends Resource
                     CheckboxList::make('roles')
                         ->relationship('roles', 'name')
                         ->options(Role::query()->orderBy('id')->pluck('name', 'id')->toArray())
-                        ->gridDirection('column'),
-                ]),
+                        ->gridDirection('row')
+                        ->bulkToggleable(),
+                ])->label(null),
             ]);
     }
 
