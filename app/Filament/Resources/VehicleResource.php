@@ -7,7 +7,7 @@ use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManage
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
-use App\Models\Vehicle;
+use App\Models\{Employee, Supplier, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Section, Select, TextInput, Textarea};
 use Filament\Forms\Form;
@@ -45,9 +45,11 @@ class VehicleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
-                    Select::make('user_id')
+                    Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('user', 'name'),
+                        ->options(Employee::whereNull('resignation_date')->pluck('name', 'id')) //@phpstan-ignore-line
+                        ->optionsLimit(5)
+                        ->searchable(),
                     DatePicker::make('purchase_date')
                         ->required(),
                     MoneyInput::make('fipe_price'),
@@ -59,7 +61,10 @@ class VehicleResource extends Resource
                     Select::make('vehicle_model_id')
                         ->relationship('model', 'name'),
                     Select::make('supplier_id')
-                        ->relationship('supplier', 'name'),
+                        ->label('Supplier')
+                        ->options(Supplier::pluck('name', 'id')) //@phpstan-ignore-line
+                        ->optionsLimit(5)
+                        ->searchable(),
                     TextInput::make('year_one')
                         ->required()
                         ->label('Year'),
@@ -116,6 +121,9 @@ class VehicleResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('employee.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
                 TextColumn::make('plate')
                     ->searchable(),
                 TextColumn::make('model.name')

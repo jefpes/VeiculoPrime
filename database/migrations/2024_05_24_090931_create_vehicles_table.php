@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\User;
-use App\Models\{Brand, Supplier, Vehicle, VehicleModel, VehicleType};
+use App\Models\{Brand, Employee, Supplier, Vehicle, VehicleModel, VehicleType};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -34,7 +33,7 @@ return new class () extends Migration {
 
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->nullable()->constrained(table: 'users', column: 'id');
+            $table->foreignIdFor(Employee::class)->nullable()->constrained(table: 'employees', column: 'id');
             $table->date('purchase_date');
             $table->decimal('fipe_price', places: 2)->nullable()->default(null);
             $table->decimal('purchase_price', places: 2);

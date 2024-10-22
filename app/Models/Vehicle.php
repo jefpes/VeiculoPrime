@@ -35,8 +35,8 @@ class Vehicle extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function user(): BelongsTo
+    public function employee(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Employee::class);
     }
 }
