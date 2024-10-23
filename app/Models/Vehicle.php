@@ -71,6 +71,11 @@ class Vehicle extends Model
         return $this->hasMany(Sale::class);
     }
 
+    /**
+     * Get the vehicle expenses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function expenses(): HasMany
     {
         return $this->hasMany(VehicleExpense::class);

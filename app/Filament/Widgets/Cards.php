@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Vehicle;
-use App\Models\{Sale, VehicleType};
+use App\Models\{Sale, VehicleExpense, VehicleType};
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -129,7 +129,7 @@ class Cards extends BaseWidget
                 $purchasePrice = $vehicle->purchase_price ?? 0;
 
                 // Calcular as despesas associadas ao veículo
-                $expenses = $vehicle->expenses()->query()->sum('value'); // Assumindo que o relacionamento `expenses` existe no modelo Vehicle
+                $expenses = VehicleExpense::query()->where('vehicle_id', $vehicle->id)->get()->sum('value'); // Assumindo que existe uma relação de `expenses` no modelo Vehicle
 
                 // Calcular o lucro (venda - (custo de compra + despesas))
                 $profit = $salePrice - ($purchasePrice + $expenses);
@@ -169,7 +169,7 @@ class Cards extends BaseWidget
             $purchasePrice = $vehicle->purchase_price ?? 0;
 
             // Total de despesas associadas ao veículo
-            $expenses = $vehicle->expenses()->query()->sum('value'); // Assumindo que existe uma relação de `expenses` no modelo Vehicle
+            $expenses = VehicleExpense::query()->where('vehicle_id', $vehicle->id)->get()->sum('value'); // Assumindo que existe uma relação de `expenses` no modelo Vehicle
 
             // Preço de venda do veículo
             $salePrice = $sale->total;
