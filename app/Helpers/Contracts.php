@@ -24,7 +24,7 @@ class Contracts
             return;
         }
 
-        if ($user->employee !== null) { //@phpstan-ignore-line
+        if ($user->employee !== null) {
             $template->setValues([
                 'ucv_nome'                     => $user->name ?? 'Valor não especificado',
                 'ucv_nome_completo'            => $user->employee->name ?? 'Valor não especificado',
@@ -43,8 +43,8 @@ class Contracts
                 'ucv_mae'                      => $user->employee->mother ?? 'Valor não especificado',
                 'ucv_estado_civil'             => $user->employee->marital_status ?? 'Valor não especificado',
                 'ucv_conjuje'                  => $user->employee->spouse ?? 'Valor não especificado',
-                'ucv_data_contratacao'         => Tools::dateFormat($user->employee->hiring_date),
-                'ucv_data_contratacao_extenso' => Tools::spellDate($user->employee->hiring_date),
+                'ucv_data_contratacao'         => Tools::dateFormat($user->employee->admission_date),
+                'ucv_data_contratacao_extenso' => Tools::spellDate($user->employee->admission_date),
                 'ucv_data_demissao'            => Tools::dateFormat($user->employee->resignation_date),
                 'ucv_data_demissao_extenso'    => Tools::spellDate($user->employee->resignation_date),
             ]);
@@ -80,8 +80,8 @@ class Contracts
             'cliente_estado_civil'               => $client->marital_status ?? 'Valor não especificado',
             'cliente_telefone_1'                 => $client->phone_one ?? 'Valor não especificado',
             'cliente_telefone_2'                 => $client->phone_two ?? 'Valor não especificado',
-            'cliente_data_de_nascimento'         => Tools::dateFormat($client->birth_date), //@phpstan-ignore-line
-            'cliente_data_de_nascimento_extenso' => Tools::spellDate($client->birth_date), //@phpstan-ignore-line
+            'cliente_data_de_nascimento'         => Tools::dateFormat($client->birth_date),
+            'cliente_data_de_nascimento_extenso' => Tools::spellDate($client->birth_date),
             'cliente_pai'                        => $client->father ?? 'Valor não especificado',
             'cliente_telefone_pai'               => $client->father_phone ?? 'Valor não especificado',
             'cliente_mae'                        => $client->mother ?? 'Valor não especificado',

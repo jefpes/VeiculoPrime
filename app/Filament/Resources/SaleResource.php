@@ -80,7 +80,7 @@ class SaleResource extends Resource
                         ->options(function () {
                             return \App\Models\Client::all()->mapWithKeys(function ($client) {
                                 return [
-                                    $client->id => "{$client->name} - {$client->client_id}", //@phpstan-ignore-line
+                                    $client->id => "{$client->name} - {$client->client_id}",
                                 ];
                             });
                         })

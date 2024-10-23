@@ -77,7 +77,7 @@ class EmployeeResource extends Resource
                         ),
                     Forms\Components\TextInput::make('spouse')
                         ->maxLength(255),
-                    Forms\Components\DatePicker::make('hiring_date')->required(),
+                    Forms\Components\DatePicker::make('admission_date')->required(),
                     Forms\Components\DatePicker::make('resignation_date'),
                 ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
                 Section::make(__('Address'))->relationship('address')->schema([
@@ -170,12 +170,12 @@ class EmployeeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('spouse')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('hiring_date')
-                    ->date()
+                Tables\Columns\TextColumn::make('admission_date')
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('resignation_date')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

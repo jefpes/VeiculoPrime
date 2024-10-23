@@ -29,6 +29,7 @@ class ClientFactory extends Factory
             'client_id'            => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
             'rg'                   => $clientType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
             'marital_status'       => $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
+            'spouse'               => $this->faker->optional()->name,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'           => $clientType === 'Física' ? $this->faker->date() : null,

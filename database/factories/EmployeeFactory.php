@@ -34,7 +34,7 @@ class EmployeeFactory extends Factory
             'father'           => $this->faker->optional()->name('male'),
             'mother'           => $this->faker->name('female'),
             'spouse'           => $this->faker->optional()->name,
-            'hiring_date'      => $this->faker->date(),
+            'admission_date'   => $this->faker->date(),
             'resignation_date' => $this->faker->optional()->date(),
         ];
     }

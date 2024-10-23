@@ -10,6 +10,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
+/**
+ * @property Role $roles
+ * @property Employee $employee
+ * @property Collection $abilities
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
@@ -53,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class)->with('abilities'); //@phpstan-ignore-line
+        return $this->belongsToMany(Role::class);
     }
 
     public function employee(): BelongsTo

@@ -286,7 +286,7 @@ class PaymentInstallmentsResource extends Resource
                             ->options(function () {
                                 return \App\Models\Client::all()->mapWithKeys(function ($client) {
                                     return [
-                                        $client->id => "{$client->name}", //@phpstan-ignore-line
+                                        $client->id => "{$client->name}",
                                     ];
                                 });
                             }),

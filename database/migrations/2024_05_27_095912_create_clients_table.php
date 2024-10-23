@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->string('client_type');
             $table->string('client_id')->unique();
             $table->string('marital_status')->nullable();
+            $table->string('spouse')->nullable();
             $table->string('phone_one', 20)->nullable();
             $table->string('phone_two', 20)->nullable();
             $table->date('birth_date')->nullable();

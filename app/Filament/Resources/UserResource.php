@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -47,7 +48,12 @@ class UserResource extends Resource
                 Fieldset::make('Roles')->schema([
                     CheckboxList::make('roles')
                         ->relationship('roles', 'name')
-                        ->options(Role::query()->orderBy('id')->pluck('name', 'id')->toArray())
+                        ->options(
+                            Role::query()
+                                ->where('hierarchy', '>=', Auth::user()->roles->min('hierarchy')) //@phpstan-ignore-line
+                                ->orderBy('id')
+                                ->pluck('name', 'id')
+                        )
                         ->gridDirection('row')
                         ->bulkToggleable(),
                 ])->label(null),
@@ -84,7 +90,6 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                // Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ]);
     }
