@@ -3,8 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\{Pages};
+use App\Models\Ability;
 use App\Models\{Role, User};
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -61,6 +63,55 @@ class RoleResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('abilities')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Abilities'))
+                    ->modalWidth('full')
+                    ->modalDescription(null)
+                    ->modalIcon(null)
+                    ->label('Abilities')
+                    ->translateLabel()
+                    ->icon('heroicon-o-shield-check')
+                    ->iconSize('md')
+                    ->color('success')
+                    ->fillForm(function ($record) {
+                        $abilities = Role::find($record->id)->abilities->pluck('id')->toArray(); //@phpstan-ignore-line
+
+                        return [
+                            'abilities' => $abilities,
+                        ];
+                    })
+                    ->form([
+                        Forms\Components\ToggleButtons::make('abilities')
+                            ->options(
+                                function () {
+                                    // Carregar as habilidades com o id e nome
+                                    $abilities = Ability::query()->orderBy('id')->pluck('name', 'id')->toArray();
+
+                                    // Traduzir os nomes das habilidades usando os arquivos de tradução
+                                    return collect($abilities)->mapWithKeys(function ($name, $id) {
+                                        // Retornar a chave como o id e o valor como o nome traduzido
+                                        return [$id => __($name)];
+                                    })->toArray();
+                                }
+                            )
+                            ->multiple()
+                            ->gridDirection('row')
+                            ->columns([
+                                'sm'  => 3,
+                                'xl'  => 6,
+                                '2xl' => 8,
+                            ]),
+                    ])
+                    ->action(function (array $data, Role $role) {
+                        $role->abilities()->sync($data['abilities']);
+                    })
+                    ->after(function () {
+                        Notification::make()
+                            ->success()
+                            ->title(__('Abilities updated'))
+                            ->send();
+                    })->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line,
                 Tables\Actions\EditAction::make()->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line
                 Tables\Actions\DeleteAction::make()->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line
             ]);

@@ -40,6 +40,11 @@ enum Permission: string
     case SUPPLIER_UPDATE        = 'supplier_update';
     case SUPPLIER_DELETE        = 'supplier_delete';
     case SUPPLIER_PHOTO_DELETE  = 'supplier_photo_delete';
+    case EMPLOYEE_CREATE        = 'employee_create';
+    case EMPLOYEE_READ          = 'employee_read';
+    case EMPLOYEE_UPDATE        = 'employee_update';
+    case EMPLOYEE_DELETE        = 'employee_delete';
+    case EMPLOYEE_PHOTO_DELETE  = 'employee_photo_delete';
     case SALE_CREATE            = 'sale_create';
     case SALE_READ              = 'sale_read';
     case SALE_CANCEL            = 'sale_cancel';
@@ -51,9 +56,4 @@ enum Permission: string
     case VEHICLE_EXPENSE_READ   = 'vehicle_expense_read';
     case VEHICLE_EXPENSE_UPDATE = 'vehicle_expense_update';
     case VEHICLE_EXPENSE_DELETE = 'vehicle_expense_delete';
-    case EMPLOYEE_CREATE        = 'employee_create';
-    case EMPLOYEE_READ          = 'employee_read';
-    case EMPLOYEE_UPDATE        = 'employee_update';
-    case EMPLOYEE_DELETE        = 'employee_delete';
-    case EMPLOYEE_PHOTO_DELETE  = 'employee_photo_delete';
 }
