@@ -56,8 +56,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // $h_user_loged = $this->roles()->pluck('hierarchy')->max();
         // $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
-        $h_user_loged = $this->roles()->query()->pluck('hierarchy')->max();
-        $h_user_param = (User::withTrashed()->find($id)->roles()->query()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
+        $h_user_loged = collect($this->roles)->pluck('hierarchy')->max();
+        $h_user_param = (collect(User::withTrashed()->find($id)->roles)->pluck('hierarchy')->max() ?? $h_user_loged + 1);
 
         return $h_user_loged <= $h_user_param;
     }
