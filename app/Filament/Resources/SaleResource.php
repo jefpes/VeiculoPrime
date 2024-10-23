@@ -64,12 +64,12 @@ class SaleResource extends Resource
                             }
 
                             return $query->get()->mapWithKeys(function (Vehicle $vehicle) {
-                                $price = $vehicle->promotional_price ?? $vehicle->sale_price;  //@phpstan-ignore-line
+                                $price = $vehicle->promotional_price ?? $vehicle->sale_price;
                                 $price = number_format($price, 2, ',', '.');
                                 $price = "R$ {$price}";
 
                                 return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})",  //@phpstan-ignore-line
+                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})",
                                 ];
                             });
                         })
@@ -352,7 +352,7 @@ class SaleResource extends Resource
                             ->options(function () {
                                 return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
                                     return [
-                                        $model->id => "{$model->name}", //@phpstan-ignore-line
+                                        $model->id => "{$model->name}",
                                     ];
                                 });
                             }),
@@ -413,8 +413,8 @@ class SaleResource extends Resource
                                 [
                                     'sale'          => $sale,
                                     'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
-                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'), //@phpstan-ignore-line
-                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'), //@phpstan-ignore-line
+                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
+                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
                                 ]
                             )
                         );

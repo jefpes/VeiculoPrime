@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Class EmployeePhoto
+ *
+ * @property \App\Models\Supplier $supplier
+ *
+ * @method \App\Models\Supplier supplier()
+ *
+ * @property int $id
+ * @property int $supplier_id
+ * @property string $path
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
+
 class SupplierPhoto extends Model
 {
     use HasFactory;

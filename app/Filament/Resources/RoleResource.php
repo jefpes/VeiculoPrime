@@ -104,7 +104,7 @@ class RoleResource extends Resource
                             ]),
                     ])
                     ->action(function (array $data, Role $role) {
-                        $role->abilities()->sync($data['abilities']);
+                        $role->abilities()->sync($data['abilities']); //@phpstan-ignore-line
                     })
                     ->after(function () {
                         Notification::make()

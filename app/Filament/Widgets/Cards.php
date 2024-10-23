@@ -120,16 +120,16 @@ class Cards extends BaseWidget
 
             foreach ($sales as $sale) {
                 // Obter o veículo associado à venda
-                $vehicle = $sale->vehicle; //@phpstan-ignore-line
+                $vehicle = $sale->vehicle;
 
                 // Calcular o valor da venda
-                $salePrice = $sale->total; //@phpstan-ignore-line
+                $salePrice = $sale->total;
 
                 // Obter o preço de compra do veículo
                 $purchasePrice = $vehicle->purchase_price ?? 0;
 
                 // Calcular as despesas associadas ao veículo
-                $expenses = $vehicle->expenses()->sum('value'); // Assumindo que o relacionamento `expenses` existe no modelo Vehicle
+                $expenses = $vehicle->expenses()->query()->sum('value'); // Assumindo que o relacionamento `expenses` existe no modelo Vehicle
 
                 // Calcular o lucro (venda - (custo de compra + despesas))
                 $profit = $salePrice - ($purchasePrice + $expenses);
@@ -163,16 +163,16 @@ class Cards extends BaseWidget
 
         foreach ($sales as $sale) {
             // Obter o veículo relacionado à venda
-            $vehicle = $sale->vehicle; //@phpstan-ignore-line
+            $vehicle = $sale->vehicle;
 
             // Preço de compra do veículo
             $purchasePrice = $vehicle->purchase_price ?? 0;
 
             // Total de despesas associadas ao veículo
-            $expenses = $vehicle->expenses()->sum('value'); // Assumindo que existe uma relação de `expenses` no modelo Vehicle
+            $expenses = $vehicle->expenses()->query()->sum('value'); // Assumindo que existe uma relação de `expenses` no modelo Vehicle
 
             // Preço de venda do veículo
-            $salePrice = $sale->total; //@phpstan-ignore-line
+            $salePrice = $sale->total;
 
             // Calcular o lucro
             $profit = $salePrice - ($purchasePrice + $expenses);

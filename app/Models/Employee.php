@@ -8,9 +8,14 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
 /**
  * Class Employee
- * @property EmployeeAddress $address
- * @property Company $company
- * @property EmployeePhoto $photos
+ *
+ * @property \App\Models\EmployeeAddress $address
+ * @property \App\Models\Company $company
+ * @property \App\Models\EmployeePhoto $photos
+ *
+ * @method \App\Models\EmployeeAddress address()
+ * @method \App\Models\EmployeePhoto photos()
+ * @method \App\Models\Company company()
  *
  * @property int $id
  * @property string $name

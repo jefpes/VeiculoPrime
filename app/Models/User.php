@@ -11,9 +11,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
 /**
- * @property Role $roles
- * @property Employee $employee
+ * @property \App\Models\Role $roles
+ * @property \App\Models\Employee $employee
  * @property Collection $abilities
+ *
+ * @method \App\Models\Role roles()
+ * @method \App\Models\Employee employee()
+ * @method Collection abilities()
+ *
  * @property int $id
  * @property string $name
  * @property string $email
@@ -49,8 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hierarchy(int $id): bool
     {
-        $h_user_loged = $this->roles()->pluck('hierarchy')->max();
-        $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
+        // $h_user_loged = $this->roles()->pluck('hierarchy')->max();
+        // $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
+        $h_user_loged = $this->roles()->query()->pluck('hierarchy')->max();
+        $h_user_param = (User::withTrashed()->find($id)->roles()->query()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
 
         return $h_user_loged <= $h_user_param;
     }

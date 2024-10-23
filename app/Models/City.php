@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read Client $clients
- * @property-read Employee $employees
- * @property-read Supplier $suppliers
- * @property-read int $id
- * @property-read string $name
+ * @property \App\Models\Client $clients
+ * @property \App\Models\Employee $employees
+ * @property \App\Models\Supplier $suppliers
+ * @method \App\Models\Client clients()
+ * @method \App\Models\Employee employees()
+ * @method \App\Models\Supplier suppliers()
+ * @property int $id
+ * @property string $name
  */
 class City extends Model
 {

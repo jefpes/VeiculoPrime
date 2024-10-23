@@ -29,6 +29,7 @@ class SupplierFactory extends Factory
             'supplier_id'          => $supplierType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
             'rg'                   => $supplierType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
             'marital_status'       => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
+            'spouse'               => $this->faker->optional()->name,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'           => $this->faker->date(),

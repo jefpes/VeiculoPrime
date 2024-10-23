@@ -45,7 +45,7 @@ class VehicleExpenseResource extends Resource
                         ->options(function () {
                             return Vehicle::get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
                                 return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})", //@phpstan-ignore-line
+                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})",
                                 ];
                             });
                         })
@@ -65,7 +65,7 @@ class VehicleExpenseResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('vehicle')
-                    ->getStateUsing(fn (VehicleExpense $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name) //@phpstan-ignore-line
+                    ->getStateUsing(fn (VehicleExpense $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
@@ -136,7 +136,7 @@ class VehicleExpenseResource extends Resource
                             ->options(function () {
                                 return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
                                     return [
-                                        $model->id => "{$model->name}", //@phpstan-ignore-line
+                                        $model->id => "{$model->name}",
                                     ];
                                 });
                             }),

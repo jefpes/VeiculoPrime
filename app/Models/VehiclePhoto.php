@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Class VehiclePhoto
+ *
+ * @property \App\Models\Vehicle $vehicle
+ *
+ * @method \App\Models\Vehicle vehicle()
+ *
+ * @property int $id
+ * @property int $vehicle_id
+ * @property string $path
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class VehiclePhoto extends Model
 {
     use HasFactory;

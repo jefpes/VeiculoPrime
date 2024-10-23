@@ -67,7 +67,7 @@ class InstallmentsRelationManager extends RelationManager
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
                     ->fillForm(fn (PaymentInstallments $record): array => [
-                        'value'        => $record->value, // @phpstan-ignore-line
+                        'value'        => $record->value,
                         'payment_date' => now(),
                     ])
                     ->form([
@@ -84,7 +84,7 @@ class InstallmentsRelationManager extends RelationManager
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PAGO',
-                            'discount'       => $data['payment_value'] < $installment->value ? ($installment->value - $data['payment_value']) : 0, //@phpstan-ignore-line
+                            'discount'       => $data['payment_value'] < $installment->value ? ($installment->value - $data['payment_value']) : 0,
                             'surcharge'      => $data['payment_value'] > $installment->value ? ($data['payment_value'] - $installment->value) : 0,
                             'payment_date'   => $data['payment_date'],
                             'payment_value'  => $data['payment_value'],
@@ -92,7 +92,7 @@ class InstallmentsRelationManager extends RelationManager
                         ]);
 
                         if ($installment->sale->paymentInstallments->where('status', 'PENDENTE')->isEmpty()) { //@phpstan-ignore-line
-                            $installment->sale->update(['status' => 'PAGO']); //@phpstan-ignore-line
+                            $installment->sale->update(['status' => 'PAGO']);
                         }
 
                     })->after(function () {
@@ -100,7 +100,7 @@ class InstallmentsRelationManager extends RelationManager
                             ->success()
                             ->title(__('Installment received'))
                             ->send();
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PENDENTE'), //@phpstan-ignore-line
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PENDENTE'),
                 Tables\Actions\Action::make('refund')
                     ->translateLabel()
                     ->icon('heroicon-o-receipt-refund')
@@ -118,14 +118,14 @@ class InstallmentsRelationManager extends RelationManager
                         ]);
 
                         if ($installment->sale->status === 'PAGO') { //@phpstan-ignore-line
-                            $installment->sale->update(['status' => 'PENDENTE']); //@phpstan-ignore-line
+                            $installment->sale->update(['status' => 'PENDENTE']);
                         }
                     })->after(function () {
                         Notification::make()
                             ->success()
                             ->title(__('Installment refunded'))
                             ->send();
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
                 Tables\Actions\Action::make('receipt')
                     ->requiresConfirmation()
                     ->modalHeading(__('Receipt'))
@@ -150,7 +150,7 @@ class InstallmentsRelationManager extends RelationManager
                         $caminho = Contracts::generateReceiptContract($template, $installment);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'), //@phpstan-ignore-line
+                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
             ]);
     }
 }

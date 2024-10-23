@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read VehicleModel $models
- * @property-read int $id
- * @property-read string $name
+ * @property \App\Models\VehicleModel $models
+ * @method \App\Models\VehicleModel models()
+ * @property int $id
+ * @property string $name
  */
 class Brand extends Model
 {

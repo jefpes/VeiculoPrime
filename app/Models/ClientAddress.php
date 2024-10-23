@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class ClientAddress
  *
+ * @property \App\Models\Client $client
+ * @property \App\Models\City $city
+ *
  * @method \App\Models\Client client()
- * @property City $city
+ * @method \App\Models\City city()
  * @property int $id
  * @property int $employee_id
  * @property int $city_id

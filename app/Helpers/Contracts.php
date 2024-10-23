@@ -115,32 +115,32 @@ class Contracts
 
         //Substitui os placeholders com os dados do veiculo
         $template->setValues([
-            'data_compra'           => Tools::dateFormat($vehicle->purchase_date), //@phpstan-ignore-line
-            'data_compra_extenso'   => Tools::spellDate($vehicle->purchase_date), //@phpstan-ignore-line
-            'preco_fipe'            => number_format($vehicle->fipe_price, 2, ',', '.'), //@phpstan-ignore-line
-            'preco_fipe_extenso'    => Tools::spellNumber($vehicle->fipe_price), //@phpstan-ignore-line
-            'preco_fipe_dinheiro'   => Tools::spellMonetary($vehicle->fipe_price), //@phpstan-ignore-line
-            'preco_compra'          => number_format($vehicle->purchase_price, 2, ',', '.'), //@phpstan-ignore-line
-            'preco_compra_extenso'  => Tools::spellNumber($vehicle->purchase_price), //@phpstan-ignore-line
-            'preco_compra_dinheiro' => Tools::spellMonetary($vehicle->purchase_price), //@phpstan-ignore-line
-            'preco_venda'           => number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.'), //@phpstan-ignore-line
-            'preco_venda_extenso'   => Tools::spellNumber($vehicle->promotional_price ?? $vehicle->sale_price), //@phpstan-ignore-line
-            'preco_venda_dinheiro'  => Tools::spellMonetary($vehicle->promotional_price ?? $vehicle->sale_price), //@phpstan-ignore-line
+            'data_compra'           => Tools::dateFormat($vehicle->purchase_date),
+            'data_compra_extenso'   => Tools::spellDate($vehicle->purchase_date),
+            'preco_fipe'            => number_format($vehicle->fipe_price, 2, ',', '.'),
+            'preco_fipe_extenso'    => Tools::spellNumber($vehicle->fipe_price),
+            'preco_fipe_dinheiro'   => Tools::spellMonetary($vehicle->fipe_price),
+            'preco_compra'          => number_format($vehicle->purchase_price, 2, ',', '.'),
+            'preco_compra_extenso'  => Tools::spellNumber($vehicle->purchase_price),
+            'preco_compra_dinheiro' => Tools::spellMonetary($vehicle->purchase_price),
+            'preco_venda'           => number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.'),
+            'preco_venda_extenso'   => Tools::spellNumber($vehicle->promotional_price ?? $vehicle->sale_price),
+            'preco_venda_dinheiro'  => Tools::spellMonetary($vehicle->promotional_price ?? $vehicle->sale_price),
             'modelo'                => $vehicle->model->name ?? 'Valor não especificado',
             'tipo'                  => $vehicle->model->type->name ?? 'Valor não especificado',
             'marca'                 => $vehicle->model->brand->name ?? 'Valor não especificado',
             'ano_um'                => $vehicle->year_one ?? 'Valor não especificado',
             'ano_dois'              => $vehicle->year_two ?? 'Valor não especificado',
-            'km'                    => number_format($vehicle->km, 0, '', '.'), //@phpstan-ignore-line
-            'km_extenso'            => Tools::spellNumber($vehicle->km), //@phpstan-ignore-line
+            'km'                    => number_format($vehicle->km, 0, '', '.'),
+            'km_extenso'            => Tools::spellNumber($vehicle->km),
             'combustivel'           => $vehicle->fuel ?? 'Valor não especificado',
             'motor_potencia'        => $vehicle->engine_power ?? 'Valor não especificado',
             'direcao'               => $vehicle->steering ?? 'Valor não especificado',
             'transmissao'           => $vehicle->transmission ?? 'Valor não especificado',
             'portas'                => $vehicle->doors ?? 'Valor não especificado',
-            'portas_extenso'        => Tools::spellNumber($vehicle->doors), //@phpstan-ignore-line
+            'portas_extenso'        => Tools::spellNumber($vehicle->doors),
             'lugares'               => $vehicle->seats ?? 'Valor não especificado',
-            'lugares_extenso'       => Tools::spellNumber($vehicle->seats), //@phpstan-ignore-line
+            'lugares_extenso'       => Tools::spellNumber($vehicle->seats),
             'tracao'                => $vehicle->traction ?? 'Valor não especificado',
             'cor'                   => $vehicle->color ?? 'Valor não especificado',
             'placa'                 => $vehicle->plate ?? 'Valor não especificado',
@@ -169,8 +169,8 @@ class Contracts
             'fornecedor_estado_civil'               => $supplier->marital_status ?? 'Valor não especificado',
             'fornecedor_telefone_1'                 => $supplier->phone_one ?? 'Valor não especificado',
             'fornecedor_telefone_2'                 => $supplier->phone_two ?? 'Valor não especificado',
-            'fornecedor_data_de_nascimento'         => Tools::dateFormat($supplier->birth_date), //@phpstan-ignore-line
-            'fornecedor_data_de_nascimento_extenso' => Tools::spellDate($supplier->birth_date), //@phpstan-ignore-line
+            'fornecedor_data_de_nascimento'         => Tools::dateFormat($supplier->birth_date),
+            'fornecedor_data_de_nascimento_extenso' => Tools::spellDate($supplier->birth_date),
             'fornecedor_pai'                        => $supplier->father ?? 'Valor não especificado',
             'fornecedor_telefone_pai'               => $supplier->father_phone ?? 'Valor não especificado',
             'fornecedor_mae'                        => $supplier->mother ?? 'Valor não especificado',
@@ -423,7 +423,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx"; //@phpstan-ignore-line
+        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx";
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;
@@ -457,7 +457,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx"; //@phpstan-ignore-line
+        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx";
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;

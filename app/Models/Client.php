@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
-use Illuminate\Database\Eloquent\{Collection, Model};
+use Illuminate\Database\Eloquent\{Model};
 
 /**
  * Class Client
- * @property Collection $address
- * @property Collection $photos
+ * @property \App\Models\ClientAddress $address
+ * @property \App\Models\ClientPhoto $photos
+ *
+ * @method \App\Models\ClientAddress address()
+ * @method \App\Models\ClientPhoto photos()
  *
  * @property int $id
  * @property string $name
