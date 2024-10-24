@@ -79,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function abilities(): Collection
     {
-        return $this->roles->map->abilities->flatten()->pluck('name'); //@phpstan-ignore-line
+        return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+    }
+
+    public function hasAbility(string $ability): bool
+    {
+        return $this->abilities()->contains($ability);
     }
 }
