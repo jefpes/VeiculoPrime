@@ -4,7 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\{Pages};
 use App\Models\Ability;
-use App\Models\{Role, User};
+use App\Models\{Role};
+use App\Policies\RolePolicy;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -63,7 +64,7 @@ class RoleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('abilities')
+                Tables\Actions\Action::make('add-abilities')
                     ->requiresConfirmation()
                     ->modalHeading(__('Abilities'))
                     ->modalWidth('full')
@@ -111,9 +112,10 @@ class RoleResource extends Resource
                             ->success()
                             ->title(__('Abilities updated'))
                             ->send();
-                    })->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line,
-                Tables\Actions\EditAction::make()->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line
-                Tables\Actions\DeleteAction::make()->visible(fn ($record) => $record->hierarchy >= User::with('roles')->find(Auth::user()->id)->roles->min('hierarchy')), //@phpstan-ignore-line
+                    })
+                    ->authorize('addAbilities', RolePolicy::class),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

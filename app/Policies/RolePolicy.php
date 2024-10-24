@@ -28,7 +28,6 @@ class RolePolicy
     public function create(User $user): bool
     {
         return $user->abilities()->contains('admin');
-        //
     }
 
     /**
@@ -36,6 +35,10 @@ class RolePolicy
      */
     public function update(User $user, Role $role): bool
     {
+        if ($role->hierarchy < collect($user->roles)->min('hierarchy')) {
+            return false;
+        }
+
         return $user->abilities()->contains('admin');
     }
 
@@ -44,11 +47,19 @@ class RolePolicy
      */
     public function delete(User $user, Role $role): bool
     {
+        if ($role->hierarchy < collect($user->roles)->min('hierarchy')) {
+            return false;
+        }
+
         return $user->abilities()->contains('admin');
     }
 
-    public function abilities(User $user, Role $role): bool
+    public function addAbilities(User $user, Role $role): bool
     {
+        if ($role->hierarchy < collect($user->roles)->min('hierarchy')) {
+            return false;
+        }
+
         return $user->abilities()->contains('admin');
     }
 }
