@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\User;
 
 class UserPolicy
@@ -11,7 +12,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->abilities()->contains('user_read');
+        return $user->hasAbility(Permission::USER_READ->value);
     }
 
     /**
@@ -19,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->abilities()->contains('user_read');
+        return $user->hasAbility(Permission::USER_READ->value);
     }
 
     /**
@@ -27,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->abilities()->contains('user_create');
+        return $user->hasAbility(Permission::USER_CREATE->value);
     }
 
     /**
@@ -39,7 +40,7 @@ class UserPolicy
             return false;
         }
 
-        return $user->abilities()->contains('user_update');
+        return $user->hasAbility(Permission::USER_UPDATE->value);
     }
 
     /**
@@ -55,7 +56,7 @@ class UserPolicy
             return false;
         }
 
-        return $user->abilities()->contains('user_delete');
+        return $user->hasAbility(Permission::USER_DELETE->value);
     }
 
     /**
@@ -71,6 +72,6 @@ class UserPolicy
             return false;
         }
 
-        return $user->abilities()->contains('user_delete');
+        return $user->hasAbility(Permission::USER_DELETE->value);
     }
 }

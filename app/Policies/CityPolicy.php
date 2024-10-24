@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\{City, User};
 
 class CityPolicy
@@ -11,7 +12,7 @@ class CityPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->abilities()->contains('city_read');
+        return $user->hasAbility(Permission::CITY_READ->value);
     }
 
     /**
@@ -19,7 +20,7 @@ class CityPolicy
      */
     public function view(User $user, City $city): bool
     {
-        return $user->abilities()->contains('city_read');
+        return $user->hasAbility(Permission::CITY_READ->value);
     }
 
     /**
@@ -27,7 +28,7 @@ class CityPolicy
      */
     public function create(User $user): bool
     {
-        return $user->abilities()->contains('city_create');
+        return $user->hasAbility(Permission::CITY_CREATE->value);
     }
 
     /**
@@ -35,7 +36,7 @@ class CityPolicy
      */
     public function update(User $user, City $city): bool
     {
-        return $user->abilities()->contains('city_update');
+        return $user->hasAbility(Permission::CITY_UPDATE->value);
     }
 
     /**
@@ -43,7 +44,7 @@ class CityPolicy
      */
     public function delete(User $user, City $city): bool
     {
-        return $user->abilities()->contains('city_delete');
+        return $user->hasAbility(Permission::CITY_DELETE->value);
     }
 
     /**
@@ -51,7 +52,7 @@ class CityPolicy
      */
     public function restore(User $user, City $city): bool
     {
-        return $user->abilities()->contains('city_delete');
+        return $user->hasAbility(Permission::CITY_DELETE->value);
     }
 
     /**
@@ -59,6 +60,6 @@ class CityPolicy
      */
     public function forceDelete(User $user, City $city): bool
     {
-        return $user->abilities()->contains('city_delete');
+        return $user->hasAbility(Permission::CITY_DELETE->value);
     }
 }

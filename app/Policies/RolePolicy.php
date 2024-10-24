@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\{Role, User};
 
 class RolePolicy
@@ -11,7 +12,7 @@ class RolePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 
     /**
@@ -19,7 +20,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role): bool
     {
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 
     /**
@@ -27,7 +28,7 @@ class RolePolicy
      */
     public function create(User $user): bool
     {
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 
     /**
@@ -39,7 +40,7 @@ class RolePolicy
             return false;
         }
 
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 
     /**
@@ -51,7 +52,7 @@ class RolePolicy
             return false;
         }
 
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 
     public function addAbilities(User $user, Role $role): bool
@@ -60,6 +61,6 @@ class RolePolicy
             return false;
         }
 
-        return $user->abilities()->contains('admin');
+        return $user->hasAbility(Permission::ADMIN->value);
     }
 }
