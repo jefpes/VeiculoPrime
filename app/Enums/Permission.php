@@ -46,6 +46,7 @@ enum Permission: string
     case EMPLOYEE_DELETE        = 'employee_delete';
     case EMPLOYEE_PHOTO_DELETE  = 'employee_photo_delete';
     case SALE_CREATE            = 'sale_create';
+    case SALE_UPDATE            = 'sale_update';
     case SALE_READ              = 'sale_read';
     case SALE_CANCEL            = 'sale_cancel';
     case INSTALLMENT_READ       = 'installment_read';

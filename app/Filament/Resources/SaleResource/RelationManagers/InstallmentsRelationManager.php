@@ -117,7 +117,7 @@ class InstallmentsRelationManager extends RelationManager
                             'payment_method' => null,
                         ]);
 
-                        if ($installment->sale->status === 'PAGO') { //@phpstan-ignore-line
+                        if ($installment->sale->status === 'PAGO') {
                             $installment->sale->update(['status' => 'PENDENTE']);
                         }
                     })->after(function () {

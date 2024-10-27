@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property int $client_id
  * @property \Illuminate\Support\Carbon $date_sale
  * @property \Illuminate\Support\Carbon $date_payment
+ * @property string $status
  * @property float $discount
  * @property float $surcharge
  * @property float $down_payment

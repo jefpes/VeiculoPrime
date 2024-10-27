@@ -381,9 +381,9 @@ class SaleResource extends Resource
                     }),
             ], layout: FiltersLayout::Modal)
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->hidden(fn (Sale $sale) => $sale->status === 'REEMBOLSADO' || $sale->status === 'CANCELADO'), //@phpstan-ignore-line
+                Tables\Actions\EditAction::make(),
                 Action::make('sale_cancel')
+                    ->authorize('saleCancel')
                     ->requiresConfirmation()
                     ->modalHeading(__('Cancel sale'))
                     ->modalDescription(function (Sale $sale) {
