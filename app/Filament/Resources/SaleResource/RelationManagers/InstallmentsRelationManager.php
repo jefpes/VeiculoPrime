@@ -59,6 +59,7 @@ class InstallmentsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('receive')
+                    // ->authorize('receive')
                     ->translateLabel()
                     ->icon('heroicon-o-banknotes')
                     ->slideOver()

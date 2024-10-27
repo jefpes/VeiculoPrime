@@ -50,4 +50,12 @@ class SalePolicy
     {
         return $user->hasAbility(Permission::SALE_CANCEL->value);
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function receive(User $user, Sale $sale): bool
+    {
+        return $user->hasAbility(Permission::PAYMENT_RECEIVE->value);
+    }
 }
