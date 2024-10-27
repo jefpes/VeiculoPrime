@@ -133,6 +133,7 @@ class PaymentInstallmentsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('receive')
+                    ->authorize('receive')
                     ->translateLabel()
                     ->icon('heroicon-o-banknotes')
                     ->slideOver()
@@ -169,8 +170,9 @@ class PaymentInstallmentsResource extends Resource
                             ->success()
                             ->title(__('Installment received'))
                             ->send();
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PENDENTE'),
+                    }),
                 Tables\Actions\Action::make('refund')
+                    ->authorize('refund')
                     ->translateLabel()
                     ->icon('heroicon-o-receipt-refund')
                     ->color('danger')
@@ -190,8 +192,9 @@ class PaymentInstallmentsResource extends Resource
                             ->success()
                             ->title(__('Installment refunded'))
                             ->send();
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
+                    }),
                 Tables\Actions\Action::make('receipt')
+                    ->authorize('receipt')
                     ->requiresConfirmation()
                     ->modalHeading(__('Receipt'))
                     ->label('Receipt')
@@ -215,7 +218,7 @@ class PaymentInstallmentsResource extends Resource
                         $caminho = Contracts::generateReceiptContract($template, $installment);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    })->visible(fn (PaymentInstallments $installment): bool => $installment->status === 'PAGO'),
+                    }),
             ])
             ->filters([
                 Filter::make('date_sale')
