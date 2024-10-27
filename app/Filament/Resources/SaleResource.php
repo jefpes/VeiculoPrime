@@ -237,7 +237,7 @@ class SaleResource extends Resource
 
                             // Se houver parcelas em atraso, retornar 'danger'
                             if ($hasLateInstallments) {
-                                return 'danger';
+                                return Color::hex('#b600ff');
                             }
 
                             // Caso não haja parcelas em atraso, manter a cor 'info'
@@ -247,7 +247,7 @@ class SaleResource extends Resource
                         // Verificar os demais estados
                         return match ($state) {
                             'REEMBOLSADO' => 'warning',
-                            'CANCELADO'   => Color::hex('#fe0000'),
+                            'CANCELADO'   => 'danger',
                             default       => 'success',
                         };
                     }),

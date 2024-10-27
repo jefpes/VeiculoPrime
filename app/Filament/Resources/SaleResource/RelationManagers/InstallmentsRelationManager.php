@@ -35,7 +35,7 @@ class InstallmentsRelationManager extends RelationManager
                         // Se o status for 'PENDENTE', verificar se há parcelas em atraso
                         if ($state === 'PENDENTE') {
                             if ($record->due_date < now() && $record->status === 'PENDENTE') {
-                                return 'danger';
+                                return Color::hex('#b600ff');
                             }
 
                             // Caso não haja parcelas em atraso, manter a cor 'info'
@@ -45,7 +45,7 @@ class InstallmentsRelationManager extends RelationManager
                         // Verificar os demais estados
                         return match ($state) {
                             'REEMBOLSADO' => 'warning',
-                            'CANCELADO'   => Color::hex('#fe0000'),
+                            'CANCELADO'   => 'danger',
                             default       => 'success',
                         };
                     }),
