@@ -37,7 +37,7 @@ enum Permission: string
     case CLIENT_READ            = 'client_read';
     case CLIENT_UPDATE          = 'client_update';
     case CLIENT_DELETE          = 'client_delete';
-    case CLIENT_PHOTO_CREATE    = 'client_photo_crate';
+    case CLIENT_PHOTO_CREATE    = 'client_photo_create';
     case CLIENT_PHOTO_READ      = 'client_photo_read';
     case CLIENT_PHOTO_UPDATE    = 'client_photo_update';
     case CLIENT_PHOTO_DELETE    = 'client_photo_delete';
