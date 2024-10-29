@@ -3,9 +3,9 @@
 namespace App\Policies;
 
 use App\Enums\Permission;
-use App\Models\{PaymentInstallments, User};
+use App\Models\{PaymentInstallment, User};
 
-class PaymentInstallmentsPolicy
+class PaymentInstallmentPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -18,7 +18,7 @@ class PaymentInstallmentsPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, PaymentInstallments $paymentInstallments): bool
+    public function view(User $user, PaymentInstallment $paymentInstallment): bool
     {
         return $user->hasAbility(Permission::INSTALLMENT_READ->value);
     }
@@ -26,9 +26,9 @@ class PaymentInstallmentsPolicy
     /**
      * Determine whether the user can receive payment.
      */
-    public function receive(User $user, PaymentInstallments $paymentInstallments): bool
+    public function receive(User $user, PaymentInstallment $paymentInstallment): bool
     {
-        if ($paymentInstallments->status !== 'PENDENTE') {
+        if ($paymentInstallment->status !== 'PENDENTE') {
             return false;
         }
 
@@ -38,9 +38,9 @@ class PaymentInstallmentsPolicy
     /**
      * Determine whether the user can refund payment.
      */
-    public function refund(User $user, PaymentInstallments $paymentInstallments): bool
+    public function refund(User $user, PaymentInstallment $paymentInstallment): bool
     {
-        if ($paymentInstallments->status !== 'PAGO') {
+        if ($paymentInstallment->status !== 'PAGO') {
             return false;
         }
 
@@ -50,9 +50,9 @@ class PaymentInstallmentsPolicy
     /**
      * Determine whether the user can payment receipt.
      */
-    public function receipt(User $user, PaymentInstallments $paymentInstallments): bool
+    public function receipt(User $user, PaymentInstallment $paymentInstallment): bool
     {
-        if ($paymentInstallments->status !== 'PAGO') {
+        if ($paymentInstallment->status !== 'PAGO') {
             return false;
         }
 

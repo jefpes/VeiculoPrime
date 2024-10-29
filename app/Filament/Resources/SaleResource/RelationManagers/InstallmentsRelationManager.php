@@ -5,7 +5,7 @@ namespace App\Filament\Resources\SaleResource\RelationManagers;
 use App\Enums\PaymentMethod;
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
-use App\Models\{PaymentInstallments};
+use App\Models\{PaymentInstallment};
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -67,7 +67,7 @@ class InstallmentsRelationManager extends RelationManager
                     ->modalHeading(__('Receive installment'))
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
-                    ->fillForm(fn (PaymentInstallments $record): array => [
+                    ->fillForm(fn (PaymentInstallment $record): array => [
                         'value'        => $record->value,
                         'payment_date' => now(),
                     ])
@@ -81,7 +81,7 @@ class InstallmentsRelationManager extends RelationManager
                             ->required(),
                         MoneyInput::make('payment_value')->required(),
                         Forms\Components\DatePicker::make('payment_date')->required(),
-                    ])->action(function (PaymentInstallments $installment, array $data) {
+                    ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PAGO',
@@ -108,7 +108,7 @@ class InstallmentsRelationManager extends RelationManager
                     ->icon('heroicon-o-receipt-refund')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(function (PaymentInstallments $installment) {
+                    ->action(function (PaymentInstallment $installment) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PENDENTE',
@@ -146,7 +146,7 @@ class InstallmentsRelationManager extends RelationManager
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                             ]),
                     ])
-                    ->action(function (array $data, PaymentInstallments $installment) {
+                    ->action(function (array $data, PaymentInstallment $installment) {
 
                         $template = new TemplateProcessor($data['receipt']->getRealPath());
 

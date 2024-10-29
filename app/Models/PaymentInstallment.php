@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class PaymentInstallments extends Model
+class PaymentInstallment extends Model
 {
     use HasFactory;
 

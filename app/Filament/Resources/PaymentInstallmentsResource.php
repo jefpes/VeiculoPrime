@@ -6,7 +6,7 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentsResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
-use App\Models\PaymentInstallments;
+use App\Models\PaymentInstallment;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\{DatePicker, Select};
@@ -24,7 +24,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class PaymentInstallmentsResource extends Resource
 {
-    protected static ?string $model = PaymentInstallments::class;
+    protected static ?string $model = PaymentInstallment::class;
 
     protected static ?int $navigationSort = 1;
 
@@ -141,7 +141,7 @@ class PaymentInstallmentsResource extends Resource
                     ->modalHeading(__('Receive installment'))
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
-                    ->fillForm(fn (PaymentInstallments $record): array => [
+                    ->fillForm(fn (PaymentInstallment $record): array => [
                         'value'        => $record->value,
                         'payment_date' => now(),
                     ])
@@ -155,7 +155,7 @@ class PaymentInstallmentsResource extends Resource
                             ->required(),
                         MoneyInput::make('payment_value')->required(),
                         Forms\Components\DatePicker::make('payment_date')->required(),
-                    ])->action(function (PaymentInstallments $installment, array $data) {
+                    ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PAGO',
@@ -177,7 +177,7 @@ class PaymentInstallmentsResource extends Resource
                     ->icon('heroicon-o-receipt-refund')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->action(function (PaymentInstallments $installment) {
+                    ->action(function (PaymentInstallment $installment) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PENDENTE',
@@ -211,7 +211,7 @@ class PaymentInstallmentsResource extends Resource
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                             ]),
                     ])
-                    ->action(function (array $data, PaymentInstallments $installment) {
+                    ->action(function (array $data, PaymentInstallment $installment) {
 
                         $template = new TemplateProcessor($data['receipt']->getRealPath());
 

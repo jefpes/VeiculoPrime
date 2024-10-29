@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Vehicle;
-use App\Models\{Client, PaymentInstallments, Sale, Supplier, User, VehicleExpense};
+use App\Models\{Client, PaymentInstallment, Sale, Supplier, User, VehicleExpense};
 use Illuminate\Support\Facades\{Auth, Storage};
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -238,7 +238,7 @@ class Contracts
             return;
         }
 
-        $installment = PaymentInstallments::find($installment_id); //@phpstan-ignore-line
+        $installment = PaymentInstallment::find($installment_id); //@phpstan-ignore-line
 
         $sale = Sale::with('paymentInstallments')->find($installment->sale_id);
 
@@ -285,7 +285,7 @@ class Contracts
             return;
         }
 
-        $installments = PaymentInstallments::where('sale_id', $sale_id)->orderBy('due_date')->get(); //@phpstan-ignore-line
+        $installments = PaymentInstallment::where('sale_id', $sale_id)->orderBy('due_date')->get(); //@phpstan-ignore-line
 
         if ($installments->first() === null) {
             return;
@@ -429,7 +429,7 @@ class Contracts
         return $caminhoContratoPreenchido;
     }
 
-    public static function generateReceiptContract(TemplateProcessor $template, PaymentInstallments $installment): string
+    public static function generateReceiptContract(TemplateProcessor $template, PaymentInstallment $installment): string
     {
         // Substitui os placeholders com os dados do usuario
         self::setUserValues($template);

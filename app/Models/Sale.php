@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\User $user
  * @property \App\Models\Vehicle $vehicle
  * @property \App\Models\Client $client
- * @property \App\Models\PaymentInstallments $paymentInstallments
+ * @property \App\Models\PaymentInstallment $paymentInstallments
  *
  * @method \App\Models\User user()
  * @method \App\Models\Vehicle vehicle()
  * @method \App\Models\Client client()
- * @method \App\Models\PaymentInstallments paymentInstallments()
+ * @method \App\Models\PaymentInstallment paymentInstallments()
  *
  * @property int $id
  * @property int $user_id
@@ -57,6 +57,6 @@ class Sale extends Model
 
     public function paymentInstallments(): HasMany
     {
-        return $this->hasMany(PaymentInstallments::class);
+        return $this->hasMany(PaymentInstallment::class);
     }
 }
