@@ -216,9 +216,10 @@ class SaleResource extends Resource
                     ->label('Seller')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('vehicle.model.name')
-                    ->sortable()
-                    ->toggleable(),
+                Tables\Columns\TextColumn::make('vehicle')
+                    ->getStateUsing(fn (Sale $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('client.name')
                     ->sortable()
                     ->searchable(),
