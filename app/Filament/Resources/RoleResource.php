@@ -87,7 +87,7 @@ class RoleResource extends Resource
                             ->options(
                                 function () {
                                     // Carregar as habilidades com o id e nome
-                                    $abilities = Ability::query()->orderBy('id')->pluck('name', 'id')->toArray();
+                                    $abilities = Ability::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
                                     // Traduzir os nomes das habilidades usando os arquivos de tradução
                                     return collect($abilities)->mapWithKeys(function ($name, $id) {
@@ -97,7 +97,7 @@ class RoleResource extends Resource
                                 }
                             )
                             ->multiple()
-                            ->gridDirection('row')
+                            ->gridDirection('column')
                             ->columns([
                                 'sm'  => 3,
                                 'xl'  => 6,
