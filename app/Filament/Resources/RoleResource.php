@@ -97,7 +97,6 @@ class RoleResource extends Resource
                                 }
                             )
                             ->multiple()
-                            ->gridDirection('column')
                             ->columns([
                                 'sm'  => 3,
                                 'xl'  => 6,
