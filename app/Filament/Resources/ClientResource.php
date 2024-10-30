@@ -19,6 +19,8 @@ class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
 
+    protected static ?int $navigationSort = 5;
+
     public static function getNavigationGroup(): ?string
     {
         return __('People');
@@ -138,6 +140,10 @@ class ClientResource extends Resource
                                 ->required(),
                         ])
                         ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required(),
+                        ])
+                        ->manageOptionForm([
                             Forms\Components\TextInput::make('name')
                                 ->required(),
                         ]),

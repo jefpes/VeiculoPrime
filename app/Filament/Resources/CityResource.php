@@ -14,6 +14,8 @@ class CityResource extends Resource
 {
     protected static ?string $model = City::class;
 
+    protected static ?int $navigationSort = 4;
+
     public static function getModelLabel(): string
     {
         return __('Cities');

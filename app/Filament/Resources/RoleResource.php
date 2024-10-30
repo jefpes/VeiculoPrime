@@ -17,6 +17,23 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
+    protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Role');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Roles');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

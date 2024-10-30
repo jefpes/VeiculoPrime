@@ -11,6 +11,8 @@ class Dashboard extends FilamentDashboard
 {
     use HasFiltersForm;
 
+    protected static ?int $navigationSort = 1;
+
     public function filtersForm(Forms\Form $form): Forms\Form
     {
         return $form->schema([

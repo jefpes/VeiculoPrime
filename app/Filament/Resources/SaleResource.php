@@ -28,7 +28,7 @@ class SaleResource extends Resource
 {
     protected static ?string $model = Sale::class;
 
-    protected static ?int $navigationSort = 0;
+    protected static ?int $navigationSort = 13;
 
     public static function getNavigationGroup(): ?string
     {

@@ -15,9 +15,21 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
+
     public static function getModelLabel(): string
     {
         return __('User');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Users');
     }
 
     public static function form(Form $form): Form

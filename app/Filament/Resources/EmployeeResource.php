@@ -18,6 +18,8 @@ class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
+    protected static ?int $navigationSort = 6;
+
     public static function getNavigationGroup(): ?string
     {
         return __('People');

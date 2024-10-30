@@ -15,7 +15,7 @@ class VehicleModelResource extends Resource
 {
     protected static ?string $model = VehicleModel::class;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 10;
 
     public static function getNavigationGroup(): ?string
     {
