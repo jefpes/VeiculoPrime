@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PaymentInstallmentsResource\Pages;
+namespace App\Filament\Resources\PaymentInstallmentResource\Pages;
 
 use App\Filament\Resources\PaymentInstallmentResource;
 use App\Models\PaymentInstallment;

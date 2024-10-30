@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
-use App\Filament\Resources\PaymentInstallmentsResource\{Pages};
+use App\Filament\Resources\PaymentInstallmentResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
 use App\Models\PaymentInstallment;
