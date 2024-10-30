@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\TemplateProcessor;
 
-class PaymentInstallmentsResource extends Resource
+class PaymentInstallmentResource extends Resource
 {
     protected static ?string $model = PaymentInstallment::class;
 

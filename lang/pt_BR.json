@@ -672,6 +672,7 @@
     "supplier_photo_delete": "Apagar Foto do Fornecedor",
     "sale_create": "Criar Venda",
     "sale_read": "Ver Venda",
+    "sale_update": "Atualizar Venda",
     "sale_cancel": "Cancelar Venda",
     "payment_receive": "Receber Pagamento",
     "payment_undo": "Desfazer Pagamento",

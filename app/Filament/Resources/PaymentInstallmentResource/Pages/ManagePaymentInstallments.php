@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\PaymentInstallmentsResource\Pages;
 
-use App\Filament\Resources\PaymentInstallmentsResource;
+use App\Filament\Resources\PaymentInstallmentResource;
 use App\Models\PaymentInstallment;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ManageRecords;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ManagePaymentInstallments extends ManageRecords
 {
-    protected static string $resource = PaymentInstallmentsResource::class;
+    protected static string $resource = PaymentInstallmentResource::class;
 
     public function getDefaultActiveTab(): string | int | null
     {
