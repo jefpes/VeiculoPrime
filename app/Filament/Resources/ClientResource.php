@@ -142,10 +142,6 @@ class ClientResource extends Resource
                         ->createOptionForm([
                             Forms\Components\TextInput::make('name')
                                 ->required(),
-                        ])
-                        ->manageOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
                         ]),
                     Forms\Components\Select::make('state')
                         ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [
