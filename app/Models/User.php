@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property \App\Models\Role $roles
@@ -23,8 +25,9 @@ use Illuminate\Support\Collection;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $avatar_url
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasAvatar
 {
     use HasFactory;
     use Notifiable;
@@ -50,6 +53,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 
     public function hierarchy(int $id): bool
