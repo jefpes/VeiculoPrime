@@ -18,15 +18,21 @@ class ClientFactory extends Factory
      */
     public function definition(): array
     {
+        // Gera o tipo de contribuinte
+        $clientType = $this->faker->randomElement(['Física', 'Jurídica']);
+        $gender     = $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
+
         return [
-            'name'                 => $this->faker->name,
-            'gender'               => $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())),
-            'rg'                   => $this->faker->unique()->numerify('##.###.###-#'),
-            'cpf'                  => $this->faker->unique()->numerify('###.###.###-##'),
-            'marital_status'       => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
+            'name'                 => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'gender'               => $gender,
+            'client_type'          => $clientType, // Define o tipo de contribuinte
+            'client_id'            => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
+            'rg'                   => $clientType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
+            'marital_status'       => $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
+            'spouse'               => $this->faker->optional()->name,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
-            'birth_date'           => $this->faker->date(),
+            'birth_date'           => $clientType === 'Física' ? $this->faker->date() : null,
             'father'               => $this->faker->optional()->name('male'),
             'father_phone'         => $this->faker->optional()->numerify('(##) #####-####'),
             'mother'               => $this->faker->name('female'),
@@ -39,6 +45,11 @@ class ClientFactory extends Factory
         ];
     }
 
+    /**
+     * Create a client with an address.
+     *
+     * @return static
+     */
     public function withAddress()
     {
         return $this->afterCreating(function (Client $client) {

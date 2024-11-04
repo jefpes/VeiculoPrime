@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property \App\Models\VehicleModel $models
+ * @method \App\Models\VehicleModel models()
+ * @property int $id
+ * @property string $name
+ */
 class Brand extends Model
 {
     use HasFactory;
@@ -13,10 +19,5 @@ class Brand extends Model
     public function models(): HasMany
     {
         return $this->hasMany(VehicleModel::class);
-    }
-
-    public function vehicles(): HasMany
-    {
-        return $this->hasMany(Vehicle::class);
     }
 }

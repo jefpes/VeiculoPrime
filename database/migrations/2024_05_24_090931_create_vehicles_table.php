@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Brand, Supplier, Vehicle, VehicleModel, VehicleType};
+use App\Models\{Brand, Employee, Supplier, Vehicle, VehicleModel, VehicleType};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -33,15 +33,16 @@ return new class () extends Migration {
 
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Employee::class)->nullable()->constrained(table: 'employees', column: 'id');
+            $table->foreignIdFor(VehicleModel::class)->constrained(table: 'vehicle_models', column: 'id');
+            $table->foreignIdFor(Supplier::class)->nullable()->constrained(table: 'suppliers', column: 'id');
             $table->date('purchase_date');
             $table->decimal('fipe_price', places: 2)->nullable()->default(null);
             $table->decimal('purchase_price', places: 2);
             $table->decimal('sale_price', places: 2);
             $table->decimal('promotional_price', places: 2)->nullable()->default(null);
-            $table->foreignIdFor(VehicleModel::class)->constrained(table: 'vehicle_models', column: 'id');
-            $table->foreignIdFor(Supplier::class)->nullable()->constrained(table: 'suppliers', column: 'id');
-            $table->year('year_one');
-            $table->year('year_two');
+            $table->string('year_one');
+            $table->string('year_two');
             $table->integer('km');
             $table->string('fuel');
             $table->string('engine_power');
@@ -64,9 +65,6 @@ return new class () extends Migration {
         Schema::create('vehicle_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
-            $table->string('photo_name', 255);
-            $table->string('format', 5);
-            $table->string('full_path', 255);
             $table->string('path', 255);
             $table->timestamps();
         });

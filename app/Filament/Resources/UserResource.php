@@ -3,19 +3,33 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\{Pages};
-use App\Models\User;
+use App\Models\{Role, User};
+use Filament\Forms\Components\{CheckboxList, Fieldset};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
+
     public static function getModelLabel(): string
     {
         return __('User');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Users');
     }
 
     public static function form(Form $form): Form
@@ -43,6 +57,18 @@ class UserResource extends Resource
                     ->requiredWith('password')
                     ->dehydrated(false)
                     ->maxLength(8),
+                Fieldset::make('Roles')->schema([
+                    CheckboxList::make('roles')
+                        ->relationship('roles', 'name')
+                        ->options(
+                            Role::query()
+                                ->where('hierarchy', '>=', Auth::user()->roles->min('hierarchy')) //@phpstan-ignore-line
+                                ->orderBy('id')
+                                ->pluck('name', 'id')
+                        )
+                        ->gridDirection('row')
+                        ->bulkToggleable(),
+                ])->label(null),
             ]);
     }
 
@@ -76,15 +102,7 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
             ]);
     }
 

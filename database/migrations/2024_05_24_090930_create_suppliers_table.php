@@ -15,12 +15,14 @@ return new class () extends Migration {
             $table->id();
             $table->string('name');
             $table->string('gender');
-            $table->string('rg', 20)->unique();
-            $table->string('cpf', 20)->unique();
-            $table->string('marital_status');
-            $table->string('phone_one', 20);
+            $table->string('rg', 20)->unique()->nullable();
+            $table->string('supplier_type');
+            $table->string('supplier_id')->unique();
+            $table->string('marital_status')->nullable();
+            $table->string('spouse')->nullable();
+            $table->string('phone_one', 20)->nullable();
             $table->string('phone_two', 20)->nullable();
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
             $table->string('father_phone', 20)->nullable();
             $table->string('mother')->nullable();
@@ -41,7 +43,7 @@ return new class () extends Migration {
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->foreignIdFor(City::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(City::class)->constrained();
             $table->string('state');
             $table->string('complement')->nullable();
             $table->timestamps();
@@ -50,9 +52,6 @@ return new class () extends Migration {
         Schema::create('supplier_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete();
-            $table->string('photo_name', 255);
-            $table->string('format', 5);
-            $table->string('full_path', 255);
             $table->string('path', 255);
             $table->timestamps();
         });

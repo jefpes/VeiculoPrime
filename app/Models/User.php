@@ -10,6 +10,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
+/**
+ * @property \App\Models\Role $roles
+ * @property \App\Models\Employee $employee
+ * @property Collection $abilities
+ *
+ * @method \App\Models\Role roles()
+ * @method \App\Models\Employee employee()
+ * @method Collection abilities()
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
@@ -40,8 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hierarchy(int $id): bool
     {
-        $h_user_loged = $this->roles()->pluck('hierarchy')->max();
-        $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
+        // $h_user_loged = $this->roles()->pluck('hierarchy')->max();
+        // $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
+        $h_user_loged = collect($this->roles)->pluck('hierarchy')->max();
+        $h_user_param = (collect(User::withTrashed()->find($id)->roles)->pluck('hierarchy')->max() ?? $h_user_loged + 1);
 
         return $h_user_loged <= $h_user_param;
     }
@@ -51,14 +67,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $q->where('name', 'like', "%{$val}%");
     }
 
-    public function scopeLoged(Builder $q): Builder
-    {
-        return $q->where('id', '!=', auth()->user()->id); //@phpstan-ignore-line
-    }
-
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class)->with('abilities'); //@phpstan-ignore-line
+        return $this->belongsToMany(Role::class);
     }
 
     public function employee(): BelongsTo
@@ -68,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function abilities(): Collection
     {
-        return $this->roles->map->abilities->flatten()->pluck('name'); //@phpstan-ignore-line
+        return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+    }
+
+    public function hasAbility(string $ability): bool
+    {
+        return $this->abilities()->contains($ability);
     }
 }

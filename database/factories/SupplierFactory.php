@@ -18,12 +18,18 @@ class SupplierFactory extends Factory
      */
     public function definition(): array
     {
+        // Gera o tipo de contribuinte
+        $supplierType = $this->faker->randomElement(['Física', 'Jurídica']);
+        $gender       = $supplierType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
+
         return [
-            'name'                 => $this->faker->name,
-            'gender'               => $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())),
-            'rg'                   => $this->faker->unique()->numerify('##.###.###-#'),
-            'cpf'                  => $this->faker->unique()->numerify('###.###.###-##'),
+            'name'                 => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'gender'               => $gender,
+            'supplier_type'        => $supplierType, // Define o tipo de contribuinte
+            'supplier_id'          => $supplierType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
+            'rg'                   => $supplierType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
             'marital_status'       => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
+            'spouse'               => $this->faker->optional()->name,
             'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'           => $this->faker->date(),

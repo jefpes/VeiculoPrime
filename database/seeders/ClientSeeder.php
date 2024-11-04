@@ -18,12 +18,12 @@ class ClientSeeder extends Seeder
 
             $folder = "client_photos";
 
-            $client->photos()->create([
-                'photo_name' => $photo,
-                'format'     => 'webp',
-                'full_path'  => base_path("storage/app/$folder/$photo"),
-                'path'       => "storage/$folder/$photo",
-            ]);
+            // Desabilitar eventos para a criação da foto
+            \App\Models\ClientPhoto::withoutEvents(function () use ($client, $folder, $photo) {
+                $client->photos()->create([
+                    'path' => "$folder/$photo",
+                ]);
+            });
         }
     }
 }

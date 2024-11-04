@@ -26,7 +26,7 @@ return new class () extends Migration {
             $table->string('mother');
             $table->string('marital_status');
             $table->string('spouse')->nullable();
-            $table->date('hiring_date');
+            $table->date('admission_date');
             $table->date('resignation_date')->nullable();
             $table->timestamps();
         });
@@ -38,7 +38,7 @@ return new class () extends Migration {
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->foreignIdFor(City::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(City::class)->constrained();
             $table->string('state');
             $table->string('complement')->nullable();
             $table->timestamps();
@@ -47,10 +47,7 @@ return new class () extends Migration {
         Schema::create('employee_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Employee::class)->constrained()->cascadeOnDelete();
-            $table->string('photo_name', 255);
-            $table->string('format', 5);
-            $table->string('full_path', 255);
-            $table->string('path', 255);
+            $table->string('path');
             $table->timestamps();
         });
 

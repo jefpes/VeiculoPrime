@@ -5,25 +5,30 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\VehicleTypeResource\{Pages};
 use App\Models\VehicleType;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\{Builder, SoftDeletingScope};
 
 class VehicleTypeResource extends Resource
 {
     protected static ?string $model = VehicleType::class;
 
-    protected static ?string $navigationGroup = 'Vehicle';
+    protected static ?int $navigationSort = 8;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Vehicle');
+    }
 
     public static function getModelLabel(): string
     {
-        return __('Vehicle Types');
+        return __('Type');
     }
 
-    public static function getNavigationBadge(): ?string
+    public static function getPluralModelLabel(): string
     {
-        return static::getModel()::count();
+        return __('Types');
     }
 
     public static function form(Form $form): Form
@@ -32,7 +37,9 @@ class VehicleTypeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -42,21 +49,31 @@ class VehicleTypeResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                ->action(function ($record) {
+                    if ($record->models->count() > 0) {
+                        Notification::make()
+                            ->danger()
+                            ->title(__('Type is in use'))
+                            ->body(__('Type is in use by vehicles'))
+                            ->send();
+
+                        return;
+                    }
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('Type deleted successfully'))
+                        ->send();
+
+                    $record->delete();
+                }),
             ]);
     }
 
@@ -65,13 +82,5 @@ class VehicleTypeResource extends Resource
         return [
             'index' => Pages\ManageVehicleTypes::route('/'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
     }
 }

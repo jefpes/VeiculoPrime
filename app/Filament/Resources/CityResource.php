@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CityResource\{Pages};
 use App\Models\City;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -12,6 +13,8 @@ use Filament\{Forms, Tables};
 class CityResource extends Resource
 {
     protected static ?string $model = City::class;
+
+    protected static ?int $navigationSort = 4;
 
     public static function getModelLabel(): string
     {
@@ -33,30 +36,33 @@ class CityResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->translateLabel()
+                    ->translateLabel()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                ->translateLabel()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                ->translateLabel()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($record) {
+                        if ($record->clients->count() > 0 || $record->suppliers->count() > 0 || $record->employees->count() > 0) {
+                            Notification::make()
+                                ->danger()
+                                ->title(__('City cannot be deleted'))
+                                ->body(__('City is associated with clients, suppliers and employees'))
+                                ->send();
+
+                            return;
+                        }
+
+                        Notification::make()
+                            ->success()
+                            ->title(__('City deleted successfully'))
+                            ->send();
+
+                        $record->delete();
+                    }),
             ]);
     }
 
