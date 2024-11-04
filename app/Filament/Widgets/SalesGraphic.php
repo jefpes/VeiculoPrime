@@ -10,7 +10,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class SalesGraphic extends ChartWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 5;
 
     protected static ?string $pollingInterval = '30s';
 
