@@ -2,15 +2,24 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Vehicle;
-use App\Models\{VehicleType};
+use App\Enums\Permission;
+use App\Models\{User, Vehicle, VehicleType};
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseCards extends BaseWidget
 {
     use InteractsWithPageFilters;
+
+    public static function canView(): bool
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user->hasAbility(Permission::VEHICLE_READ->value);
+    }
 
     protected static ?string $pollingInterval = '30s';
 
