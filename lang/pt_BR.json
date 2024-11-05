@@ -690,7 +690,6 @@
     "vehicle_expense_read": "Ver Despesa",
     "vehicle_expense_update": "Atualizar Despesa",
     "vehicle_expense_delete": "Apagar Despesa",
-
     "Edit Role": "Editar Função",
     "Management": "Gerenciamento",
     "User Created": "Usuário Criado",
@@ -706,5 +705,4 @@
     "New": "Novo",
     "This action is unauthorized." : "Esta ação é não autorizada.",
     "Back": "Voltar"
-
 }

@@ -2,15 +2,25 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\{Sale, Vehicle, VehicleExpense};
+use App\Enums\Permission;
+use App\Models\{Sale, User, Vehicle, VehicleExpense};
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\{Trend, TrendValue};
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class SalesGraphic extends ChartWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 5;
+
+    public static function canView(): bool
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return ($user->hasAbility(Permission::VEHICLE_EXPENSE_READ->value) && $user->hasAbility(Permission::VEHICLE_READ->value) && $user->hasAbility(Permission::SALE_READ->value));
+    }
 
     protected static ?string $pollingInterval = '30s';
 
