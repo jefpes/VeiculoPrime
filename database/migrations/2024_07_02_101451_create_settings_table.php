@@ -11,10 +11,16 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('company', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Employee::class)->nullable();
-            $table->string('name');
+            $table->foreignIdFor(Employee::class, 'employee_id')->nullable();
+            $table->string('primary_color')->nullable();
+            $table->string('secondary_color')->nullable();
+            $table->string('tertiary_color')->nullable();
+            $table->string('quaternary_color')->nullable();
+            $table->string('quinary_color')->nullable();
+            $table->string('senary_color')->nullable();
+            $table->string('name')->nullable();
             $table->string('cnpj')->nullable();
             $table->date('opened_in')->nullable();
             $table->string('address')->nullable();
@@ -22,6 +28,7 @@ return new class () extends Migration {
             $table->string('phone')->nullable();
             $table->string('email')->unique();
             $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
             $table->string('x')->nullable();
             $table->string('instagram')->nullable();
             $table->string('facebook')->nullable();

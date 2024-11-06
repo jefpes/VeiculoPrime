@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\Settings;
 use Filament\Forms\Components\Field;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
@@ -38,7 +39,12 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'danger'  => (Settings::query()->first()->tertiary_color ?? Color::Rose),
+                'gray'    => (Settings::query()->first()->primary_color ?? Color::Gray),
+                'info'    => (Settings::query()->first()->quaternary_color ?? Color::Blue),
+                'primary' => (Settings::query()->first()->secondary_color ?? Color::Indigo),
+                'success' => (Settings::query()->first()->quinary_color ?? Color::Green),
+                'warning' => (Settings::query()->first()->senary_color ?? Color::Yellow),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

@@ -4,14 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class CompanySeeder extends Seeder
+class SettingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        \App\Models\Company::create([
+        \App\Models\Settings::create([
             'name'      => 'Motor Market',
             'opened_in' => '2021-07-02',
             'cnpj'      => '99.999.999/9999-99',
