@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
                     $field->translateLabel();
                 });
             })
-            ->topNavigation()
+            ->topNavigation(Settings::query()->first()->navigation_mode)
             ->sidebarFullyCollapsibleOnDesktop()
             ->default()
             ->id('admin')

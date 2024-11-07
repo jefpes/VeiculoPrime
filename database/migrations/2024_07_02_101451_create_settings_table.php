@@ -20,6 +20,7 @@ return new class () extends Migration {
             $table->string('quaternary_color')->nullable();
             $table->string('quinary_color')->nullable();
             $table->string('senary_color')->nullable();
+            $table->boolean('navigation_mode')->default(false);
             $table->string('name')->nullable();
             $table->string('cnpj')->nullable();
             $table->date('opened_in')->nullable();
