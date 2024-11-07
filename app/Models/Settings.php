@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 
 /**
  * Class Settings
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * @property string|null $quinary_color
  * @property string|null $senary_color
  * @property bool $navigation_mode
- * @property string|null $name
+ * @property string|null $font
  *
  */
 
@@ -37,8 +37,8 @@ class Settings extends Model
         ];
     }
 
-    public function ceo(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(Employee::class);
+        return $this->belongsTo(User::class);
     }
 }

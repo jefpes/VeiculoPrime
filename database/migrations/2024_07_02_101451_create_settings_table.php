@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Employee;
+use App\Models\{User};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,29 +13,15 @@ return new class () extends Migration {
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Employee::class, 'employee_id')->nullable();
+            $table->foreignIdFor(User::class, 'user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('primary_color')->nullable();
             $table->string('secondary_color')->nullable();
             $table->string('tertiary_color')->nullable();
             $table->string('quaternary_color')->nullable();
             $table->string('quinary_color')->nullable();
             $table->string('senary_color')->nullable();
-            $table->boolean('navigation_mode')->default(false);
-            $table->string('name')->nullable();
-            $table->string('cnpj')->nullable();
-            $table->date('opened_in')->nullable();
-            $table->string('address')->nullable();
-            $table->string('about')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('email')->unique();
-            $table->string('logo')->nullable();
-            $table->string('favicon')->nullable();
-            $table->string('x')->nullable();
-            $table->string('instagram')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('youtube')->nullable();
-            $table->string('whatsapp')->nullable();
+            $table->string('font')->nullable();
+            $table->boolean('navigation_mode')->default(true);
             $table->timestamps();
         });
     }
@@ -45,6 +31,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('company');
+        Schema::dropIfExists('settings');
     }
 };

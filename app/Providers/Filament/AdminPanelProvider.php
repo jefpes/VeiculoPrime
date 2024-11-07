@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\Settings;
 use Filament\Forms\Components\Field;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
@@ -32,20 +31,21 @@ class AdminPanelProvider extends PanelProvider
                     $field->translateLabel();
                 });
             })
-            ->topNavigation(Settings::query()->first()->navigation_mode)
+            ->topNavigation(Auth::user()->settings->navigation_mode) //@phpstan-ignore-line
             ->sidebarFullyCollapsibleOnDesktop()
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->colors([
-                'danger'  => (Settings::query()->first()->tertiary_color ?? Color::Rose),
-                'gray'    => (Settings::query()->first()->primary_color ?? Color::Gray),
-                'info'    => (Settings::query()->first()->quaternary_color ?? Color::Blue),
-                'primary' => (Settings::query()->first()->secondary_color ?? Color::Indigo),
-                'success' => (Settings::query()->first()->quinary_color ?? Color::Green),
-                'warning' => (Settings::query()->first()->senary_color ?? Color::Yellow),
+                'danger'  => (Auth::user()->settings->tertiary_color ?? Color::Rose),
+                'gray'    => (Auth::user()->settings->primary_color ?? Color::Gray),
+                'info'    => (Auth::user()->settings->quaternary_color ?? Color::Blue),
+                'primary' => (Auth::user()->settings->secondary_color ?? Color::Indigo),
+                'success' => (Auth::user()->settings->quinary_color ?? Color::Green),
+                'warning' => (Auth::user()->settings->senary_color ?? Color::Yellow),
             ])
+            ->font((Auth::user()->settings->font ?? 'sans'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
