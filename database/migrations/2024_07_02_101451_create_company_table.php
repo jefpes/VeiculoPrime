@@ -21,7 +21,7 @@ return new class () extends Migration {
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->foreignIdFor(City::class)->constrained();
+            $table->foreignIdFor(City::class, 'city_id')->constrained();
             $table->string('state');
             $table->string('complement')->nullable();
             $table->string('about')->nullable();

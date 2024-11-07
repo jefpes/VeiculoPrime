@@ -35,4 +35,9 @@ class City extends Model
         return $this->hasMany(SupplierAddress::class);
     }
 
+    public function company(): HasMany
+    {
+        return $this->hasMany(Company::class);
+    }
+
 }
