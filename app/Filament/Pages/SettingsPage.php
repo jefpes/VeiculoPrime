@@ -2,7 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\Font;
 use App\Models\Settings;
 use Filament\Forms\{Form};
 use Filament\Pages\Page;
@@ -47,12 +46,19 @@ class SettingsPage extends Page
                     Forms\Components\Grid::make()->schema([
                         Forms\Components\Select::make('font')
                         ->allowHtml()
-                        ->options(
-                            collect(Font::cases())
-                                ->mapWithKeys(static fn ($case) => [
-                                    $case->value => "<span style='font-family:{$case->getLabel()}'>{$case->getLabel()}</span>",
-                                ]),
-                        )
+                        ->options([
+                            'Times New Roman' => "<span style='font-family:Times New Roman, Times, serif'>Times New Roman</span>",
+                            'Roboto'          => "<span style='font-family:Roboto, sans-serif'>Roboto</span>",
+                            'Arial'           => "<span style='font-family:Arial, sans-serif'>Arial</span>",
+                            'Courier New'     => "<span style='font-family:Courier New, Courier, monospace'>Courier New</span>",
+                            'Georgia'         => "<span style='font-family:Georgia, serif'>Georgia</span>",
+                            'Lucida Console'  => "<span style='font-family:Lucida Console, Monaco, monospace'>Lucida Console</span>",
+                            'Tahoma'          => "<span style='font-family:Tahoma, Geneva, sans-serif'>Tahoma</span>",
+                            'Trebuchet MS'    => "<span style='font-family:Trebuchet MS, sans-serif'>Trebuchet MS</span>",
+                            'Verdana'         => "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
+                            'Open Sans'       => "<span style='font-family:Open Sans, sans-serif'>Open Sans</span>",
+                            'Inter'           => "<span style='font-family:Inter, sans-serif'>Inter</span>",
+                        ])
                         ->native(false),
                         Forms\Components\Select::make('navigation_mode')
                             ->label(__('Navigation mode'))
@@ -85,5 +91,6 @@ class SettingsPage extends Page
     public function save(): void
     {
         Settings::query()->whereUserId(Auth::id())->update($this->form->getState()); //@phpstan-ignore-line
+        redirect(request()->header('Referer'));
     }
 }

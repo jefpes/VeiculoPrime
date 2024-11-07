@@ -2,11 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Forms\Components\Field;
+use App\Http\Middleware\FilamentSettings;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
-use Filament\Support\Colors\Color;
-use Filament\Tables\Columns\Column;
 use Filament\{Panel, PanelProvider};
 use Illuminate\Cookie\Middleware\{AddQueuedCookiesToResponse, EncryptCookies};
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -22,30 +20,10 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->bootUsing(function () {
-                Field::configureUsing(function (Field $field) {
-                    $field->translateLabel();
-                });
-
-                Column::configureUsing(function (Column $field) {
-                    $field->translateLabel();
-                });
-            })
-            ->topNavigation(Auth::user()->settings->navigation_mode) //@phpstan-ignore-line
-            ->sidebarFullyCollapsibleOnDesktop()
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
-            ->colors([
-                'danger'  => (Auth::user()->settings->tertiary_color ?? Color::Rose),
-                'gray'    => (Auth::user()->settings->primary_color ?? Color::Gray),
-                'info'    => (Auth::user()->settings->quaternary_color ?? Color::Blue),
-                'primary' => (Auth::user()->settings->secondary_color ?? Color::Indigo),
-                'success' => (Auth::user()->settings->quinary_color ?? Color::Green),
-                'warning' => (Auth::user()->settings->senary_color ?? Color::Yellow),
-            ])
-            ->font((Auth::user()->settings->font ?? 'sans'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
@@ -74,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                FilamentSettings::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
