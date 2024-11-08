@@ -2,16 +2,25 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\States;
+use App\Enums\{Permission, States};
 use App\Models\{City, Company};
 use Filament\Forms\{Form};
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyPage extends Page
 {
     protected static string $view = 'filament.pages.company-page';
+
+    public static function canAccess(): bool
+    {
+        /** @var User $user */
+        $user = Auth::user(); //@phpstan-ignore-line
+
+        return $user->hasAbility(Permission::ADMIN->value); //@phpstan-ignore-line
+    }
 
     protected static ?int $navigationSort = 4;
 
