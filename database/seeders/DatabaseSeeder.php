@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\Permission;
-use App\Models\{Ability, User};
+use App\Models\{Ability, Settings, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => Str::random(10),
         ]);
 
+        Settings::create(['user_id' => $user->id]);
+
         // Criar a role 'master'
         $role = $user->roles()->create([
             'name'      => 'master',
@@ -43,6 +45,8 @@ class DatabaseSeeder extends Seeder
             'password'          => Hash::make('admin'),
             'remember_token'    => Str::random(10),
         ]);
+
+        Settings::create(['user_id' => $user->id]);
 
         $role = $user->roles()->create([
             'name'      => 'admin',

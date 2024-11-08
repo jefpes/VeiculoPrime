@@ -1,2 +1,11 @@
+# Ignora tudo dentro de storage
 *
+
+# Não ignora o próprio arquivo .gitignore
 !.gitignore
+
+# Não ignora as pastas favicon e logo, nem seu conteúdo
+!favico/
+!favico/**
+!logo/
+!logo/**

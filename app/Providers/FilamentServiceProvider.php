@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\MaxWidth;
+use Filament\Tables\Columns\Column;
 use Filament\{Actions, Forms, Infolists, Pages, Tables};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
@@ -81,6 +83,14 @@ class FilamentServiceProvider extends ServiceProvider
                 ->limit(50)
                 ->wrap()
                 ->timezone(config('app.local_timezone'))
+        );
+
+        Field::configureUsing(
+            fn (Field $field) => $field->translateLabel()
+        );
+
+        Column::configureUsing(
+            fn (Column $column) => $column->translateLabel()
         );
 
         Tables\Filters\SelectFilter::configureUsing(
