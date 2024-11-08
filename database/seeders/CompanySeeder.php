@@ -20,7 +20,7 @@ class CompanySeeder extends Seeder
             'number'       => '123',
             'neighborhood' => 'Bairro das Rosas',
             'city_id'      => 1,
-            'state'        => 'CE',
+            'state'        => 'Ceará',
             'about'        => 'Somos uma empresa de venda de veículos, na qual presamos pela qualidade e satisfação do cliente.',
             'phone'        => '(85) 99999-9999',
             'email'        => 'google@gmail.com',
