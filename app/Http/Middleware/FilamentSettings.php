@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Company;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
@@ -31,7 +32,11 @@ class FilamentSettings
         Filament::getPanel()
             ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
             ->sidebarFullyCollapsibleOnDesktop()
-            ->font(Auth::user()->settings->font ?? 'Inter');
+            ->font(Auth::user()->settings->font ?? 'Inter')
+            ->brandLogo(asset(Company::query()->first()->logo))
+            ->brandLogoHeight(fn () => Auth::check() ? '3rem' : '6rem')
+            ->brandName(Company::query()->first()->name)
+            ->favicon(asset(Company::query()->first()->favicon));
 
         return $next($request);
     }
