@@ -121,22 +121,28 @@ class CompanyPage extends Page
                     Forms\Components\Section::make([
                         Forms\Components\TextInput::make('whatsapp')
                             ->label('Whatsapp')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-whatsapp'),
                         Forms\Components\TextInput::make('x')
                             ->label('X')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-twitter'),
                         Forms\Components\TextInput::make('instagram')
                             ->label('Instagram')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-instagram'),
                         Forms\Components\TextInput::make('facebook')
                             ->label('Facebook')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-facebook'),
                         Forms\Components\TextInput::make('linkedin')
                             ->label('Linkedin')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-linkedin'),
                         Forms\Components\TextInput::make('youtube')
                             ->label('Youtube')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->prefixIcon('icon-youtube'),
                     ]),
                 ]),
             ])
