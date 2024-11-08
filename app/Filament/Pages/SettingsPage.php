@@ -61,7 +61,7 @@ class SettingsPage extends Page
                         ])
                         ->native(false),
                         Forms\Components\Select::make('navigation_mode')
-                            ->label(__('Navigation mode'))
+                            ->label(__('Navigation bar'))
                             ->options([
                                 false => __('Sidebar'),
                                 true  => __('Topbar'),
