@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Company
@@ -55,5 +56,22 @@ class Company extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    protected static function booted()
+    {
+        static::updating(function (Company $company) {
+            $logoToDelete = $company->getOriginal('logo');
+
+            if ($company->isDirty('logo') && $company->logo !== null) {
+                Storage::delete("public/$logoToDelete");
+            }
+
+            $faviconToDelete = $company->getOriginal('favicon');
+
+            if ($company->isDirty('favicon') && $company->favicon !== null) {
+                Storage::delete("public/$faviconToDelete");
+            }
+        });
     }
 }

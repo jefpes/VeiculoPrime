@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\FilamentSettings;
+use App\Models\Company;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
 use Filament\{Panel, PanelProvider};
@@ -24,6 +25,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(asset(Company::query()->first()->logo))
+            ->brandLogoHeight(fn () => Auth::check() ? '3rem' : '6rem')
+            ->brandName(Company::query()->first()->name)
+            ->favicon(asset(Company::query()->first()->favicon))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
