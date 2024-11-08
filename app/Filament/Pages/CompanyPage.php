@@ -84,52 +84,60 @@ class CompanyPage extends Page
                         ->rows(3)
                         ->columnSpanFull(),
                 ])->columns(3),
-                Forms\Components\Section::make([
-                    Forms\Components\TextInput::make('zip_code')
-                    ->required()
-                    ->mask('99999-999'),
-                    Forms\Components\Select::make('state')
-                        ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [$status->value => $status->value, ])->toArray())
+                Forms\Components\Split::make([
+                    Forms\Components\Section::make([
+                        Forms\Components\TextInput::make('zip_code')
                         ->required()
-                        ->searchable()
-                        ->preload(),
-                    Forms\Components\Select::make('city_id')
-                        ->label('City')
-                        ->options(City::query()->pluck('name', 'id')->toArray())
-                        ->optionsLimit(5)
-                        ->searchable()
-                        ->required(),
-                    Forms\Components\TextInput::make('neighborhood')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('street')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('number')
-                        ->integer()
-                        ->minValue(0),
-                    Forms\Components\Textarea::make('complement')
+                        ->mask('99999-999'),
+                        Forms\Components\Select::make('state')
+                            ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [$status->value => $status->value, ])->toArray())
+                            ->required()
+                            ->searchable()
+                            ->preload(),
+                        Forms\Components\Select::make('city_id')
+                            ->label('City')
+                            ->options(City::query()->pluck('name', 'id')->toArray())
+                            ->optionsLimit(5)
+                            ->searchable()
+                            ->required(),
+                        Forms\Components\TextInput::make('neighborhood')
+                            ->required()
                             ->maxLength(255),
-                ]),
-                Forms\Components\Section::make([
-                    Forms\Components\TextInput::make('whatsapp')
-                        ->label('Whatsapp')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('x')
-                        ->label('X')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('instagram')
-                        ->label('Instagram')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('facebook')
-                        ->label('Facebook')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('linkedin')
-                        ->label('Linkedin')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('youtube')
-                        ->label('Youtube')
-                        ->maxLength(255),
+                        Forms\Components\Grid::make()
+                            ->columns(5)
+                            ->schema([
+                                Forms\Components\TextInput::make('street')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->columnSpan(4),
+                                Forms\Components\TextInput::make('number')
+                                    ->integer()
+                                    ->minValue(0),
+                            ]),
+                        Forms\Components\Textarea::make('complement')
+                                ->maxLength(255)
+                                ->rows(1),
+                    ]),
+                    Forms\Components\Section::make([
+                        Forms\Components\TextInput::make('whatsapp')
+                            ->label('Whatsapp')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('x')
+                            ->label('X')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('instagram')
+                            ->label('Instagram')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('facebook')
+                            ->label('Facebook')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('linkedin')
+                            ->label('Linkedin')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('youtube')
+                            ->label('Youtube')
+                            ->maxLength(255),
+                    ]),
                 ]),
             ])
             ->statePath('data');
