@@ -45,33 +45,45 @@ class CompanyPage extends Page
                 Forms\Components\Section::make([
                     Forms\Components\TextInput::make('name')
                         ->label('Name')
-                        ->maxLength(50),
+                        ->maxLength(50)
+                        ->columnSpan(2),
                     Forms\Components\TextInput::make('cnpj')
                         ->label('CNPJ')
                         ->mask('99.999.999/9999-99')
                         ->rules(['required', 'size:18']),
                     Forms\Components\DatePicker::make('opened_in')
                         ->label('Opened in'),
-                    Forms\Components\Textarea::make('about')
-                        ->label('About'),
                     Forms\Components\TextInput::make('phone')
                         ->label('Phone')
-                        ->maxLength(20),
+                        ->mask('(99) 9999-9999')
+                        ->maxLength(20)
+                        ->prefixIcon('heroicon-m-phone'),
                     Forms\Components\TextInput::make('email')
                         ->label('Email')
                         ->email()
                         ->required()
                         ->unique(ignoreRecord:true)
-                        ->maxLength(255),
-                    Forms\Components\FileUpload::make('logo')
-                        ->label('Logo')
-                        ->image()
-                        ->directory('logo'),
-                    Forms\Components\FileUpload::make('favicon')
-                        ->label('Favicon')
-                        ->image()
-                        ->directory('favicon'),
-                ]),
+                        ->maxLength(255)
+                        ->prefixIcon('heroicon-m-envelope'),
+                    Forms\Components\Grid::make()
+                        ->schema([
+                            Forms\Components\FileUpload::make('logo')
+                                ->label('Logo')
+                                ->image()
+                                ->directory('logo'),
+                            Forms\Components\FileUpload::make('favicon')
+                                ->label('Favicon')
+                                ->image()
+                                ->directory('favicon'),
+                        ])
+                        ->columns(2)
+                        ->columnSpanFull(),
+                    Forms\Components\Textarea::make('about')
+                        ->label('About')
+                        ->maxLength(255)
+                        ->rows(3)
+                        ->columnSpanFull(),
+                ])->columns(3),
                 Forms\Components\Section::make([
                     Forms\Components\TextInput::make('zip_code')
                     ->required()
@@ -94,7 +106,7 @@ class CompanyPage extends Page
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('number')
-                        ->numeric()
+                        ->integer()
                         ->minValue(0),
                     Forms\Components\Textarea::make('complement')
                             ->maxLength(255),
