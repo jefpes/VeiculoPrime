@@ -43,15 +43,15 @@ class SupplierResource extends Resource
             Section::make('Dados Pessoais')->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255),
-                Forms\Components\Select::make('gender')
-                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
-                    ->options(Genders::class),
                 Forms\Components\ToggleButtons::make('supplier_type')
                     ->rule('required')
                     ->inline()
                     ->label('Tipo de Pessoa')
                     ->options(PersonType::class)
                     ->live(),
+                Forms\Components\Select::make('gender')
+                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
+                    ->options(Genders::class),
                 Forms\Components\TextInput::make('supplier_id')
                         ->label(fn (Forms\Get $get): string => match ($get('supplier_type')) {
                             'Física'   => 'CPF',
@@ -94,49 +94,57 @@ class SupplierResource extends Resource
                     ->columnSpanFull(),
             ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
 
-            Section::make(__('Affiliates'))->schema([
-                Forms\Components\TextInput::make('father')
-                            ->maxLength(255),
-                PhoneInput::make('father_phone')
-                            ->label('Father Phone'),
-                Forms\Components\TextInput::make('mother')
-                            ->maxLength(255),
-                PhoneInput::make('mother_phone')
-                            ->label('Mother Phone'),
-                Forms\Components\TextInput::make('affiliated_one')
-                            ->label('Affiliated (1)')
-                            ->maxLength(255),
-                PhoneInput::make('affiliated_one_phone')
-                            ->label('Affiliated Phone (1)'),
-                Forms\Components\TextInput::make('affiliated_two')
-                            ->label('Affiliated (2)')
-                            ->maxLength(255),
-                PhoneInput::make('affiliated_two_phone')
-                            ->label('Affiliated Phone (2)'),
-            ])->columns(['sm' => 1, 'md' => 2]),
+            Forms\Components\Split::make([
+                Section::make(__('Address'))->relationship('address')->columns(['md' => 2, 1])->schema([
+                    Forms\Components\TextInput::make('zip_code')
+                        ->required()
+                        ->mask('99999-999'),
+                    Forms\Components\TextInput::make('state')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('city')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('neighborhood')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\Grid::make()
+                        ->columns(5)
+                        ->schema([
+                            Forms\Components\TextInput::make('street')
+                                ->required()
+                                ->maxLength(255)
+                                ->columnSpan(4),
+                            Forms\Components\TextInput::make('number')
+                                ->minValue(0),
+                        ]),
+                    Forms\Components\Textarea::make('complement')
+                            ->maxLength(255)
+                            ->rows(1)
+                            ->columnSpanFull(),
+                ]),
 
-            Section::make(__('Address'))->relationship('address')->schema([
-                Forms\Components\TextInput::make('zip_code')
-                    ->required()
-                    ->mask('99999-999'),
-                Forms\Components\TextInput::make('street')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('number')
-                    ->numeric()
-                    ->minValue(0),
-                Forms\Components\TextInput::make('complement')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('neighborhood')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('city')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('state')
-                    ->required()
-                    ->maxLength(255),
-            ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4]),
+                Section::make(__('Affiliates'))->schema([
+                    Forms\Components\TextInput::make('father')
+                        ->maxLength(255),
+                    PhoneInput::make('father_phone')
+                        ->label('Father Phone'),
+                    Forms\Components\TextInput::make('mother')
+                        ->maxLength(255),
+                    PhoneInput::make('mother_phone')
+                        ->label('Mother Phone'),
+                    Forms\Components\TextInput::make('affiliated_one')
+                        ->label('Affiliated (1)')
+                        ->maxLength(255),
+                    PhoneInput::make('affiliated_one_phone')
+                        ->label('Affiliated Phone (1)'),
+                    Forms\Components\TextInput::make('affiliated_two')
+                        ->label('Affiliated (2)')
+                        ->maxLength(255),
+                    PhoneInput::make('affiliated_two_phone')
+                        ->label('Affiliated Phone (2)'),
+                ])->columns(['sm' => 1, 'md' => 2]),
+            ])->from('xl')->columnSpanFull(),
         ]);
     }
 

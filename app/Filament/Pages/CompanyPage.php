@@ -119,7 +119,6 @@ class CompanyPage extends Page
                                     ->maxLength(255)
                                     ->columnSpan(4),
                                 Forms\Components\TextInput::make('number')
-                                    ->integer()
                                     ->minValue(0),
                             ]),
                         Forms\Components\Textarea::make('complement')
@@ -152,7 +151,7 @@ class CompanyPage extends Page
                             ->maxLength(255)
                             ->prefixIcon('icon-youtube'),
                     ]),
-                ]),
+                ])->from('xl'),
             ])
             ->statePath('data');
     }
