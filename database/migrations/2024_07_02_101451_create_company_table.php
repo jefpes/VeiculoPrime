@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{City, Employee};
+use App\Models\{Employee};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,12 +21,12 @@ return new class () extends Migration {
             $table->string('street');
             $table->string('number');
             $table->string('neighborhood');
-            $table->foreignIdFor(City::class, 'city_id')->constrained();
+            $table->string('city');
             $table->string('state');
             $table->string('complement')->nullable();
             $table->string('about')->nullable();
             $table->string('phone')->nullable();
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('logo')->nullable();
             $table->string('favicon')->nullable();
             $table->string('x')->nullable();

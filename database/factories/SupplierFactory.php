@@ -48,7 +48,11 @@ class SupplierFactory extends Factory
     public function withAddress()
     {
         return $this->afterCreating(function (Supplier $supplier) {
-            SupplierAddress::factory()->create(['supplier_id' => $supplier->id]);
+            // Cria um endereço usando o AddressFactory e associa ao Client
+            SupplierAddress::create(array_merge(
+                AddressFactory::new()->definition(),
+                ['supplier_id' => $supplier->id]
+            ));
         });
     }
 }

@@ -29,10 +29,6 @@ enum Permission: string
     case VEHICLE_PHOTO_READ     = 'vehicle_photo_read';
     case VEHICLE_PHOTO_UPDATE   = 'vehicle_photo_update';
     case VEHICLE_PHOTO_DELETE   = 'vehicle_photo_delete';
-    case CITY_CREATE            = 'city_create';
-    case CITY_READ              = 'city_read';
-    case CITY_UPDATE            = 'city_update';
-    case CITY_DELETE            = 'city_delete';
     case CLIENT_CREATE          = 'client_create';
     case CLIENT_READ            = 'client_read';
     case CLIENT_UPDATE          = 'client_update';

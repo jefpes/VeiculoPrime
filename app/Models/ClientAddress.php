@@ -10,13 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class ClientAddress
  *
  * @property \App\Models\Client $client
- * @property \App\Models\City $city
  *
  * @method \App\Models\Client client()
- * @method \App\Models\City city()
  * @property int $id
  * @property int $employee_id
- * @property int $city_id
+ * @property string $city
  * @property string $street
  * @property string $number
  * @property string $complement
@@ -32,10 +30,5 @@ class ClientAddress extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
-    }
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
     }
 }

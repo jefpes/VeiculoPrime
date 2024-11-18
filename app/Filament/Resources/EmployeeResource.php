@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\{Genders, MaritalStatus, States};
+use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Resources\EmployeeResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\EmployeeResource\{Pages};
 use App\Forms\Components\{MoneyInput, PhoneInput};
@@ -97,26 +97,12 @@ class EmployeeResource extends Resource
                     Forms\Components\TextInput::make('neighborhood')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\Select::make('city_id')
-                        ->relationship('city', 'name')
-                        ->optionsLimit(5)
-                        ->searchable()
+                    Forms\Components\TextInput::make('city')
                         ->required()
-                        ->editOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ])
-                        ->createOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ]),
-                    Forms\Components\Select::make('state')
-                        ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [
-                            $status->value => $status->value,
-                        ])->toArray())
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('state')
                         ->required()
-                        ->searchable()
-                        ->preload(),
+                        ->maxLength(255),
                 ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4]),
             ]);
     }

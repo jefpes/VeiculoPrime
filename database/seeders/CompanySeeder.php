@@ -19,7 +19,7 @@ class CompanySeeder extends Seeder
             'street'       => 'Rua das Flores',
             'number'       => '123',
             'neighborhood' => 'Bairro das Rosas',
-            'city_id'      => 1,
+            'city'         => "Cidade",
             'state'        => 'Ceará',
             'about'        => 'Somos uma empresa de venda de veículos, na qual presamos pela qualidade e satisfação do cliente.',
             'phone'        => '(85) 99999-9999',

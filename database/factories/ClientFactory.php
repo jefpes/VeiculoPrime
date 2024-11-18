@@ -45,15 +45,14 @@ class ClientFactory extends Factory
         ];
     }
 
-    /**
-     * Create a client with an address.
-     *
-     * @return static
-     */
     public function withAddress()
     {
         return $this->afterCreating(function (Client $client) {
-            ClientAddress::factory()->create(['client_id' => $client->id]);
+            // Cria um endereço usando o AddressFactory e associa ao Client
+            ClientAddress::create(array_merge(
+                AddressFactory::new()->definition(),
+                ['client_id' => $client->id]
+            ));
         });
     }
 }

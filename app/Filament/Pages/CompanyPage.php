@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\{Permission, States};
-use App\Models\{City, Company};
+use App\Enums\{Permission};
+use App\Models\{Company};
 use Filament\Forms\{Form};
 use Filament\Pages\Page;
 use Filament\{Forms};
@@ -100,19 +100,14 @@ class CompanyPage extends Page
                 Forms\Components\Split::make([
                     Forms\Components\Section::make([
                         Forms\Components\TextInput::make('zip_code')
-                        ->required()
-                        ->mask('99999-999'),
-                        Forms\Components\Select::make('state')
-                            ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [$status->value => $status->value, ])->toArray())
                             ->required()
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\Select::make('city_id')
-                            ->label('City')
-                            ->options(City::query()->pluck('name', 'id')->toArray())
-                            ->optionsLimit(5)
-                            ->searchable()
-                            ->required(),
+                            ->mask('99999-999'),
+                        Forms\Components\TextInput::make('state')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('city')
+                            ->required()
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('neighborhood')
                             ->required()
                             ->maxLength(255),

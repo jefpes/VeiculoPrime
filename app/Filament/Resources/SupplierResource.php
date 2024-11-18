@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\PersonType;
-use App\Enums\{Genders, MaritalStatus, States};
+use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Resources\SupplierResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\SupplierResource\{Pages};
 use App\Forms\Components\PhoneInput;
@@ -117,39 +117,25 @@ class SupplierResource extends Resource
 
             Section::make(__('Address'))->relationship('address')->schema([
                 Forms\Components\TextInput::make('zip_code')
-                            ->required()
-                            ->mask('99999-999'),
+                    ->required()
+                    ->mask('99999-999'),
                 Forms\Components\TextInput::make('street')
-                            ->required()
-                            ->maxLength(255),
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('number')
-                            ->numeric()
-                            ->minValue(0),
+                    ->numeric()
+                    ->minValue(0),
                 Forms\Components\TextInput::make('complement')
-                            ->maxLength(255),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('neighborhood')
-                            ->required()
-                            ->maxLength(255),
-                Forms\Components\Select::make('city_id')
-                        ->relationship('city', 'name')
-                        ->optionsLimit(5)
-                        ->searchable()
-                        ->required()
-                        ->editOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ])
-                        ->createOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ]),
-                Forms\Components\Select::make('state')
-                            ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [
-                                $status->value => $status->value,
-                            ])->toArray())
-                            ->required()
-                            ->searchable()
-                            ->preload(),
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('city')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('state')
+                    ->required()
+                    ->maxLength(255),
             ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4]),
         ]);
     }
