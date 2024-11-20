@@ -6,6 +6,7 @@ use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Resources\EmployeeResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\EmployeeResource\{Pages};
 use App\Forms\Components\{MoneyInput, PhoneInput};
+use App\Helpers\AddressForm;
 use App\Models\Employee;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\{Grid};
@@ -89,34 +90,7 @@ class EmployeeResource extends Resource
                         ]),
 
                         Tab::make('Endereço')->schema([
-                            Grid::make()->relationship('address')->columns(['md' => 2, 1])->schema([
-                                Forms\Components\TextInput::make('zip_code')
-                                    ->required()
-                                    ->mask('99999-999'),
-                                Forms\Components\TextInput::make('state')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('city')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('neighborhood')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\Grid::make()
-                                    ->columns(5)
-                                    ->schema([
-                                        Forms\Components\TextInput::make('street')
-                                            ->required()
-                                            ->maxLength(255)
-                                            ->columnSpan(4),
-                                        Forms\Components\TextInput::make('number')
-                                            ->minValue(0),
-                                    ]),
-                                Forms\Components\Textarea::make('complement')
-                                        ->maxLength(255)
-                                        ->rows(1)
-                                        ->columnSpanFull(),
-                            ]),
+                            AddressForm::setAddressFields(),
                         ]),
                     ]),
             ]);
