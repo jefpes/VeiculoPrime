@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{City, Supplier};
+use App\Models\{Supplier};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -39,12 +39,12 @@ return new class () extends Migration {
         Schema::create('supplier_addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Supplier::class)->constrained()->cascadeOnDelete();
-            $table->string('zip_code');
-            $table->string('street');
-            $table->string('number');
-            $table->string('neighborhood');
-            $table->foreignIdFor(City::class)->constrained();
-            $table->string('state');
+            $table->string('zip_code')->nullable();
+            $table->string('street')->nullable();
+            $table->string('number')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('complement')->nullable();
             $table->timestamps();
         });

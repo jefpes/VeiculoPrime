@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Settings;
 use Filament\Forms\{Form};
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
@@ -20,7 +21,15 @@ class SettingsPage extends Page
 
     public function mount(): void
     {
-        $this->form->fill(Auth::user()->settings->toArray()); //@phpstan-ignore-line
+        if (Auth::user()->settings === null) {//@phpstan-ignore-line
+            Settings::query()->create(['user_id' => Auth::id()]);
+        }
+
+        try {
+            $this->form->fill(Auth::user()->settings->toArray()); //@phpstan-ignore-line
+        } catch (\Throwable) {
+            redirect(request()->header('Referer'));
+        }
     }
 
     public static function getNavigationGroup(): ?string
@@ -42,7 +51,7 @@ class SettingsPage extends Page
     {
         return $form
             ->schema([
-                Forms\Components\Section::make()->schema([
+                Forms\Components\Section::make(__('Theme'))->schema([
                     Forms\Components\Grid::make()->schema([
                         Forms\Components\Select::make('font')
                         ->allowHtml()
@@ -91,6 +100,7 @@ class SettingsPage extends Page
     public function save(): void
     {
         Settings::query()->whereUserId(Auth::id())->update($this->form->getState()); //@phpstan-ignore-line
+        Notification::make()->body(__('Theme updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
         redirect(request()->header('Referer'));
     }
 }

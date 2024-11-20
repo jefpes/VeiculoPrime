@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Storage;
  *
  * @property \App\Models\Employee $ceo
  * @method \App\Models\Employee ceo()
- * @property \App\Models\City $city
- * @method \App\Models\City city()
  *
  * @property int $id
  * @property int|null $employee_id
@@ -24,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $street
  * @property string $number
  * @property string $neighborhood
- * @property int $city_id
+ * @property string $city
  * @property string $state
  * @property string|null $complement
  * @property string|null $about
@@ -51,11 +49,6 @@ class Company extends Model
     public function ceo(): HasOne
     {
         return $this->hasOne(Employee::class);
-    }
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
     }
 
     protected static function booted()

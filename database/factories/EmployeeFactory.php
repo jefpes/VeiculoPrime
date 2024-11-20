@@ -42,7 +42,11 @@ class EmployeeFactory extends Factory
     public function withAddress()
     {
         return $this->afterCreating(function (Employee $employee) {
-            EmployeeAddress::factory()->create(['employee_id' => $employee->id]);
+            // Cria um endereço usando o AddressFactory e associa ao Client
+            EmployeeAddress::create(array_merge(
+                AddressFactory::new()->definition(),
+                ['employee_id' => $employee->id]
+            ));
         });
     }
 }

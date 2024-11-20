@@ -10,14 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class SupplierAddress
  *
  * @property \App\Models\Supplier $supplier
- * @property \App\Models\City $city
  *
  * @method \App\Models\Supplier supplier()
- * @method \App\Models\City city()
  *
  * @property int $id
  * @property int $supplier_id
- * @property int $city_id
+ * @property string $city
  * @property string $address
  * @property string $neighborhood
  * @property string $zip_code
@@ -34,10 +32,5 @@ class SupplierAddress extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
-    }
-
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
     }
 }

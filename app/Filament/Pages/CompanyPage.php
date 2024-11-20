@@ -2,9 +2,12 @@
 
 namespace App\Filament\Pages;
 
-use App\Enums\{Permission, States};
-use App\Models\{City, Company};
+use App\Enums\{Permission};
+use App\Helpers\AddressForm;
+use App\Models\{Company};
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\{Form};
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
@@ -51,87 +54,57 @@ class CompanyPage extends Page
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
-                    Forms\Components\TextInput::make('name')
-                        ->label('Name')
-                        ->maxLength(50)
-                        ->columnSpan(2),
-                    Forms\Components\TextInput::make('cnpj')
-                        ->label('CNPJ')
-                        ->mask('99.999.999/9999-99')
-                        ->rules(['required', 'size:18']),
-                    Forms\Components\DatePicker::make('opened_in')
-                        ->label('Opened in'),
-                    Forms\Components\TextInput::make('phone')
-                        ->label('Phone')
-                        ->mask('(99) 9999-9999')
-                        ->maxLength(20)
-                        ->prefixIcon('heroicon-m-phone'),
-                    Forms\Components\TextInput::make('email')
-                        ->label('Email')
-                        ->email()
-                        ->required()
-                        ->unique(ignoreRecord:true)
-                        ->maxLength(255)
-                        ->prefixIcon('heroicon-m-envelope'),
-                    Forms\Components\Grid::make()
-                        ->schema([
-                            Forms\Components\FileUpload::make('logo')
-                                ->label('Logo')
-                                ->image()
-                                ->preserveFilenames()
-                                ->directory('logo')
-                                ->required(),
-                            Forms\Components\FileUpload::make('favicon')
-                                ->label('Favicon')
-                                ->image()
-                                ->preserveFilenames()
-                                ->directory('favicon')
-                                ->required(),
-                        ])
-                        ->columns(2)
-                        ->columnSpanFull(),
-                    Forms\Components\Textarea::make('about')
-                        ->label('About')
-                        ->maxLength(255)
-                        ->rows(3)
-                        ->columnSpanFull(),
-                ])->columns(3),
-                Forms\Components\Split::make([
-                    Forms\Components\Section::make([
-                        Forms\Components\TextInput::make('zip_code')
-                        ->required()
-                        ->mask('99999-999'),
-                        Forms\Components\Select::make('state')
-                            ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [$status->value => $status->value, ])->toArray())
+                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                    Tab::make('Dados')->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Name')
+                            ->maxLength(50)
+                            ->columnSpan(2),
+                        Forms\Components\TextInput::make('cnpj')
+                            ->label('CNPJ')
+                            ->mask('99.999.999/9999-99')
+                            ->rules(['required', 'size:18']),
+                        Forms\Components\DatePicker::make('opened_in')
+                            ->label('Opened in'),
+                        Forms\Components\TextInput::make('phone')
+                            ->label('Phone')
+                            ->mask('(99) 9999-9999')
+                            ->maxLength(20)
+                            ->prefixIcon('heroicon-m-phone'),
+                        Forms\Components\TextInput::make('email')
+                            ->label('Email')
+                            ->email()
                             ->required()
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\Select::make('city_id')
-                            ->label('City')
-                            ->options(City::query()->pluck('name', 'id')->toArray())
-                            ->optionsLimit(5)
-                            ->searchable()
-                            ->required(),
-                        Forms\Components\TextInput::make('neighborhood')
-                            ->required()
-                            ->maxLength(255),
+                            ->unique(ignoreRecord:true)
+                            ->maxLength(255)
+                            ->prefixIcon('heroicon-m-envelope'),
                         Forms\Components\Grid::make()
-                            ->columns(5)
                             ->schema([
-                                Forms\Components\TextInput::make('street')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->columnSpan(4),
-                                Forms\Components\TextInput::make('number')
-                                    ->integer()
-                                    ->minValue(0),
-                            ]),
-                        Forms\Components\Textarea::make('complement')
-                                ->maxLength(255)
-                                ->rows(1),
+                                Forms\Components\FileUpload::make('logo')
+                                    ->label('Logo')
+                                    ->image()
+                                    ->preserveFilenames()
+                                    ->directory('logo')
+                                    ->required(),
+                                Forms\Components\FileUpload::make('favicon')
+                                    ->label('Favicon')
+                                    ->image()
+                                    ->preserveFilenames()
+                                    ->directory('favicon')
+                                    ->required(),
+                            ])
+                            ->columns(2)
+                            ->columnSpanFull(),
+                        Forms\Components\Textarea::make('about')
+                            ->label('About')
+                            ->maxLength(255)
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ])->columns(3),
+                    Tab::make('Endereço')->schema([
+                        AddressForm::setAddressFields(false),
                     ]),
-                    Forms\Components\Section::make([
+                    Tab::make('Redes Sociais')->schema([
                         Forms\Components\TextInput::make('whatsapp')
                             ->label('Whatsapp')
                             ->maxLength(255)
@@ -156,7 +129,7 @@ class CompanyPage extends Page
                             ->label('Youtube')
                             ->maxLength(255)
                             ->prefixIcon('icon-youtube'),
-                    ]),
+                    ])->columns(2),
                 ]),
             ])
             ->statePath('data');
@@ -165,5 +138,6 @@ class CompanyPage extends Page
     public function save(): void
     {
         Company::query()->first()->update($this->form->getState()); //@phpstan-ignore-line
+        Notification::make()->body(__('Company updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
     }
 }

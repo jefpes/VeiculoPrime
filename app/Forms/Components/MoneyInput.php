@@ -12,9 +12,12 @@ class MoneyInput extends TextInput
     {
         parent::setUp();
 
-        $this->prefix('R$');
-        $this->type('number');
-        $this->step('0.01');
-        $this->minValue(0);
+        $this->prefix('R$')
+            ->minValue(0)
+            ->extraAlpineAttributes([
+                'x-mask:dynamic' => '$money($input, ".", "")',
+            ])->extraInputAttributes([
+                'style' => 'letter-spacing: 0.2em;',
+            ]);
     }
 }

@@ -3,12 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Enums\PersonType;
-use App\Enums\{Genders, MaritalStatus, States};
+use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Resources\ClientResource\{Pages};
 use App\Forms\Components\PhoneInput;
+use App\Helpers\AddressForm;
 use App\Models\Client;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -40,117 +40,86 @@ class ClientResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Dados Pessoais')->schema([
-                    Forms\Components\TextInput::make('name')
-                        ->maxLength(255),
-                    Forms\Components\Select::make('gender')
-                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
-                        ->options(Genders::class),
-                    Forms\Components\ToggleButtons::make('client_type')
-                        ->rule('required')
-                        ->inline()
-                        ->label('Tipo de Pessoa')
-                        ->options(PersonType::class)
-                        ->live(),
-                    Forms\Components\TextInput::make('client_id')
-                            ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
-                                'Física'   => 'CPF',
-                                'Jurídica' => 'CNPJ',
-                                default    => 'CPF',
+                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                    Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->maxLength(255),
+                        Forms\Components\ToggleButtons::make('client_type')
+                            ->rule('required')
+                            ->inline()
+                            ->label('Tipo de Pessoa')
+                            ->options(PersonType::class)
+                            ->live(),
+                        Forms\Components\Select::make('gender')
+                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                            ->options(Genders::class),
+                        Forms\Components\TextInput::make('client_id')
+                                ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
+                                    'Física'   => 'CPF',
+                                    'Jurídica' => 'CNPJ',
+                                    default    => 'CPF',
+                                })
+                            ->required()
+                            ->mask(fn (Forms\Get $get): string => match ($get('client_type')) {
+                                'Física'   => '999.999.999-99',
+                                'Jurídica' => '99.999.999/9999-99',
+                                default    => '999.999.999-99',
                             })
-                        ->required()
-                        ->mask(fn (Forms\Get $get): string => match ($get('client_type')) {
-                            'Física'   => '999.999.999-99',
-                            'Jurídica' => '99.999.999/9999-99',
-                            default    => '999.999.999-99',
-                        })
-                        ->length(fn (Forms\Get $get): int => match ($get('client_type')) {
-                            'Física'   => 14,
-                            'Jurídica' => 18,
-                            default    => 14,
-                        }),
-                    Forms\Components\TextInput::make('rg')
-                        ->label('RG')
-                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
-                        ->mask('99999999999999999999')
-                        ->maxLength(20),
-                    Forms\Components\Select::make('marital_status')
-                        ->label('Marital Status')
-                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
-                        ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
-                    PhoneInput::make('phone_one')
-                        ->label('Phone (1)')
-                        ->required(),
-                    PhoneInput::make('phone_two')
-                        ->label('Phone (2)'),
-                    Forms\Components\DatePicker::make('birth_date')
-                        ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
-                        ->label('Birth Date')
-                        ->required(fn (Forms\Get $get): bool => $get('client_type') === 'Física'),
-                    Forms\Components\Textarea::make('description')
-                        ->maxLength(255)
-                        ->columnSpanFull(),
-                ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
+                            ->length(fn (Forms\Get $get): int => match ($get('client_type')) {
+                                'Física'   => 14,
+                                'Jurídica' => 18,
+                                default    => 14,
+                            }),
+                        Forms\Components\TextInput::make('rg')
+                            ->label('RG')
+                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                            ->mask('99999999999999999999')
+                            ->maxLength(20),
+                        Forms\Components\Select::make('marital_status')
+                            ->label('Marital Status')
+                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                            ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
+                                $status->value => $status->value,
+                            ])->toArray()),
+                        PhoneInput::make('phone_one')
+                            ->label('Phone (1)')
+                            ->required(),
+                        PhoneInput::make('phone_two')
+                            ->label('Phone (2)'),
+                        Forms\Components\DatePicker::make('birth_date')
+                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                            ->label('Birth Date')
+                            ->required(fn (Forms\Get $get): bool => $get('client_type') === 'Física'),
+                        Forms\Components\Textarea::make('description')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                    ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
 
-                Section::make(__('Affiliates'))->schema([
-                    Forms\Components\TextInput::make('father')
-                        ->maxLength(255),
-                    PhoneInput::make('father_phone')
-                        ->label('Father Phone'),
-                    Forms\Components\TextInput::make('mother')
-                        ->maxLength(255),
-                    PhoneInput::make('mother_phone')
-                        ->label('Mother Phone'),
-                    Forms\Components\TextInput::make('affiliated_one')
-                        ->label('Affiliated (1)')
-                        ->maxLength(255),
-                    PhoneInput::make('affiliated_one_phone')
-                        ->label('Affiliated Phone (1)'),
-                    Forms\Components\TextInput::make('affiliated_two')
-                        ->label('Affiliated (2)')
-                        ->maxLength(255),
-                    PhoneInput::make('affiliated_two_phone')
-                        ->label('Affiliated Phone (2)'),
-                ])->columns(['sm' => 1, 'md' => 2]),
+                    Forms\Components\Tabs\Tab::make(__('Address'))->columns(['md' => 2, 1])->schema([
+                        AddressForm::setAddressFields(),
+                    ]),
 
-                Section::make(__('Address'))->relationship('address')->schema([
-                    Forms\Components\TextInput::make('zip_code')
-                        ->required()
-                        ->mask('99999-999'),
-                    Forms\Components\TextInput::make('street')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('number')
-                        ->numeric()
-                        ->minValue(0),
-                    Forms\Components\TextInput::make('complement')
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('neighborhood')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\Select::make('city_id')
-                        ->relationship('city', 'name')
-                        ->optionsLimit(5)
-                        ->searchable()
-                        ->required()
-                        ->editOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ])
-                        ->createOptionForm([
-                            Forms\Components\TextInput::make('name')
-                                ->required(),
-                        ]),
-                    Forms\Components\Select::make('state')
-                        ->options(collect(States::cases())->mapWithKeys(fn (States $status) => [
-                            $status->value => $status->value,
-                        ])->toArray())
-                        ->required()
-                        ->optionsLimit(5)
-                        ->searchable(),
-                ])->columns(['sm' => 1, 'md' => 3, 'lg' => 4]),
+                    Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
+                        Forms\Components\TextInput::make('father')
+                            ->maxLength(255),
+                        PhoneInput::make('father_phone')
+                            ->label('Father Phone'),
+                        Forms\Components\TextInput::make('mother')
+                            ->maxLength(255),
+                        PhoneInput::make('mother_phone')
+                            ->label('Mother Phone'),
+                        Forms\Components\TextInput::make('affiliated_one')
+                            ->label('Affiliated (1)')
+                            ->maxLength(255),
+                        PhoneInput::make('affiliated_one_phone')
+                            ->label('Affiliated Phone (1)'),
+                        Forms\Components\TextInput::make('affiliated_two')
+                            ->label('Affiliated (2)')
+                            ->maxLength(255),
+                        PhoneInput::make('affiliated_two_phone')
+                            ->label('Affiliated Phone (2)'),
+                    ])->columns(['sm' => 1, 'md' => 2]),
+                ]),
             ]);
     }
 
