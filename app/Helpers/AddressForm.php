@@ -10,14 +10,7 @@ class AddressForm
     public static function setAddressFields(?bool $relation = true): Component
     {
         $component = Grid::make()->columns(['md' => 2, 1])->schema([
-            ZipCode::make('zip_code')->viaCep(setFields: [
-                'state'        => 'estado',
-                'city'         => 'localidade',
-                'neighborhood' => 'bairro',
-                'street'       => 'logradouro',
-                'number'       => 'numero',
-                'complement'   => 'complemento',
-            ]),
+            ZipCode::make('zip_code'),
             TextInput::make('state')
                 ->required()
                 ->maxLength(255),

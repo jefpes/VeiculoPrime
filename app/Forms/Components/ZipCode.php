@@ -50,4 +50,23 @@ class ZipCode extends TextInput
 
         return $this;
     }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->viaCep(setFields: [
+            'state'        => 'estado',
+            'city'         => 'localidade',
+            'neighborhood' => 'bairro',
+            'street'       => 'logradouro',
+            'number'       => 'numero',
+            'complement'   => 'complemento',
+            'uf'           => 'uf',
+            'region'       => 'regiao',
+            'ibge'         => 'ibge',
+            'ddd'          => 'ddd',
+            'siafi'        => 'siafi',
+        ]);
+    }
 }

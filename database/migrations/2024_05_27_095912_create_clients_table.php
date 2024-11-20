@@ -39,12 +39,12 @@ return new class () extends Migration {
         Schema::create('client_addresses', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
-            $table->string('zip_code');
-            $table->string('street');
-            $table->string('number');
-            $table->string('neighborhood');
-            $table->string('city');
-            $table->string('state');
+            $table->string('zip_code')->nullable();
+            $table->string('street')->nullable();
+            $table->string('number')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('complement')->nullable();
             $table->timestamps();
         });
