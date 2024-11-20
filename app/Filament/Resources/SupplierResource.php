@@ -7,8 +7,8 @@ use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Resources\SupplierResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Resources\SupplierResource\{Pages};
 use App\Forms\Components\PhoneInput;
+use App\Helpers\AddressForm;
 use App\Models\{Supplier};
-use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -40,91 +40,64 @@ class SupplierResource extends Resource
     {
 
         return $form->schema([
-            Section::make('Dados Pessoais')->schema([
-                Forms\Components\TextInput::make('name')
-                    ->maxLength(255),
-                Forms\Components\ToggleButtons::make('supplier_type')
-                    ->rule('required')
-                    ->inline()
-                    ->label('Tipo de Pessoa')
-                    ->options(PersonType::class)
-                    ->live(),
-                Forms\Components\Select::make('gender')
-                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
-                    ->options(Genders::class),
-                Forms\Components\TextInput::make('supplier_id')
-                        ->label(fn (Forms\Get $get): string => match ($get('supplier_type')) {
-                            'Física'   => 'CPF',
-                            'Jurídica' => 'CNPJ',
-                            default    => 'CPF',
+            Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->maxLength(255),
+                    Forms\Components\ToggleButtons::make('supplier_type')
+                        ->rule('required')
+                        ->inline()
+                        ->label('Tipo de Pessoa')
+                        ->options(PersonType::class)
+                        ->live(),
+                    Forms\Components\Select::make('gender')
+                        ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
+                        ->options(Genders::class),
+                    Forms\Components\TextInput::make('supplier_id')
+                            ->label(fn (Forms\Get $get): string => match ($get('supplier_type')) {
+                                'Física'   => 'CPF',
+                                'Jurídica' => 'CNPJ',
+                                default    => 'CPF',
+                            })
+                        ->required()
+                        ->mask(fn (Forms\Get $get): string => match ($get('supplier_type')) {
+                            'Física'   => '999.999.999-99',
+                            'Jurídica' => '99.999.999/9999-99',
+                            default    => '999.999.999-99',
                         })
-                    ->required()
-                    ->mask(fn (Forms\Get $get): string => match ($get('supplier_type')) {
-                        'Física'   => '999.999.999-99',
-                        'Jurídica' => '99.999.999/9999-99',
-                        default    => '999.999.999-99',
-                    })
-                    ->length(fn (Forms\Get $get): int => match ($get('supplier_type')) {
-                        'Física'   => 14,
-                        'Jurídica' => 18,
-                        default    => 14,
-                    }),
-                Forms\Components\TextInput::make('rg')
-                    ->label('RG')
-                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
-                    ->mask('99999999999999999999')
-                    ->maxLength(20),
-                Forms\Components\Select::make('marital_status')
-                    ->label('Marital Status')
-                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
-                    ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
-                        $status->value => $status->value,
-                    ])->toArray()),
-                PhoneInput::make('phone_one')
-                    ->label('Phone (1)')
-                    ->required(),
-                PhoneInput::make('phone_two')
-                    ->label('Phone (2)'),
-                Forms\Components\DatePicker::make('birth_date')
-                    ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
-                    ->label('Birth Date')
-                    ->required(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física'),
-                Forms\Components\Textarea::make('description')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-            ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
-
-            Forms\Components\Split::make([
-                Section::make(__('Address'))->relationship('address')->columns(['md' => 2, 1])->schema([
-                    Forms\Components\TextInput::make('zip_code')
-                        ->required()
-                        ->mask('99999-999'),
-                    Forms\Components\TextInput::make('state')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('city')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make('neighborhood')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\Grid::make()
-                        ->columns(5)
-                        ->schema([
-                            Forms\Components\TextInput::make('street')
-                                ->required()
-                                ->maxLength(255)
-                                ->columnSpan(4),
-                            Forms\Components\TextInput::make('number')
-                                ->minValue(0),
-                        ]),
-                    Forms\Components\Textarea::make('complement')
-                            ->maxLength(255)
-                            ->rows(1)
-                            ->columnSpanFull(),
+                        ->length(fn (Forms\Get $get): int => match ($get('supplier_type')) {
+                            'Física'   => 14,
+                            'Jurídica' => 18,
+                            default    => 14,
+                        }),
+                    Forms\Components\TextInput::make('rg')
+                        ->label('RG')
+                        ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
+                        ->mask('99999999999999999999')
+                        ->maxLength(20),
+                    Forms\Components\Select::make('marital_status')
+                        ->label('Marital Status')
+                        ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
+                        ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
+                            $status->value => $status->value,
+                        ])->toArray()),
+                    PhoneInput::make('phone_one')
+                        ->label('Phone (1)')
+                        ->required(),
+                    PhoneInput::make('phone_two')
+                        ->label('Phone (2)'),
+                    Forms\Components\DatePicker::make('birth_date')
+                        ->visible(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física')
+                        ->label('Birth Date')
+                        ->required(fn (Forms\Get $get): bool => $get('supplier_type') === 'Física'),
+                    Forms\Components\Textarea::make('description')
+                        ->maxLength(255)
+                        ->columnSpanFull(),
                 ]),
-
-                Section::make(__('Affiliates'))->schema([
+                Forms\Components\Tabs\Tab::make('Endereço')->schema([
+                    AddressForm::setAddressFields(),
+                ]),
+                Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
                     Forms\Components\TextInput::make('father')
                         ->maxLength(255),
                     PhoneInput::make('father_phone')
@@ -144,7 +117,7 @@ class SupplierResource extends Resource
                     PhoneInput::make('affiliated_two_phone')
                         ->label('Affiliated Phone (2)'),
                 ])->columns(['sm' => 1, 'md' => 2]),
-            ])->from('xl')->columnSpanFull(),
+            ]),
         ]);
     }
 

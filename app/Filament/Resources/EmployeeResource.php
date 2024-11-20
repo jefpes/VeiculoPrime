@@ -8,7 +8,6 @@ use App\Filament\Resources\EmployeeResource\{Pages};
 use App\Forms\Components\{MoneyInput, PhoneInput};
 use App\Helpers\AddressForm;
 use App\Models\Employee;
-use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -41,58 +40,56 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('tabs')->columnSpanFull()
-                    ->tabs([
-                        Tab::make('Dados Pessoais')->schema([
-                            Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\Select::make('gender')
-                                    ->required()
-                                    ->options(Genders::class),
-                                Forms\Components\TextInput::make('email')
-                                    ->email()
-                                    ->maxLength(255),
-                                PhoneInput::make('phone_one')->required(),
-                                PhoneInput::make('phone_two'),
-                                MoneyInput::make('salary')
-                                    ->required()
-                                    ->numeric(),
-                                Forms\Components\TextInput::make('rg')
-                                    ->label('RG')
-                                    ->mask('99999999999999999999')
-                                    ->maxLength(20),
-                                Forms\Components\TextInput::make('cpf')
-                                    ->label('CPF')
-                                    ->mask('999.999.999-99')
-                                    ->required()
-                                    ->maxLength(20),
-                                Forms\Components\DatePicker::make('birth_date')
-                                    ->required(),
-                                Forms\Components\TextInput::make('father')
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('mother')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\Select::make('marital_status')
-                                    ->required()
-                                    ->options(
-                                        collect(MaritalStatus::cases())
-                                        ->mapWithKeys(fn (MaritalStatus $type) => [$type->value => ucfirst($type->value)])
-                                    ->toArray()
-                                    ),
-                                Forms\Components\TextInput::make('spouse')
-                                    ->maxLength(255),
-                                Forms\Components\DatePicker::make('admission_date')->required(),
-                                Forms\Components\DatePicker::make('resignation_date'),
-                            ]),
-                        ]),
-
-                        Tab::make('endereco')->schema([
-                            AddressForm::setAddressFields(false),
+                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                    Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
+                        Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
+                            Forms\Components\TextInput::make('name')
+                                ->required()
+                                ->maxLength(255),
+                            Forms\Components\Select::make('gender')
+                                ->required()
+                                ->options(Genders::class),
+                            Forms\Components\TextInput::make('email')
+                                ->email()
+                                ->maxLength(255),
+                            PhoneInput::make('phone_one')->required(),
+                            PhoneInput::make('phone_two'),
+                            MoneyInput::make('salary')
+                                ->required()
+                                ->numeric(),
+                            Forms\Components\TextInput::make('rg')
+                                ->label('RG')
+                                ->mask('99999999999999999999')
+                                ->maxLength(20),
+                            Forms\Components\TextInput::make('cpf')
+                                ->label('CPF')
+                                ->mask('999.999.999-99')
+                                ->required()
+                                ->maxLength(20),
+                            Forms\Components\DatePicker::make('birth_date')
+                                ->required(),
+                            Forms\Components\TextInput::make('father')
+                                ->maxLength(255),
+                            Forms\Components\TextInput::make('mother')
+                                ->required()
+                                ->maxLength(255),
+                            Forms\Components\Select::make('marital_status')
+                                ->required()
+                                ->options(
+                                    collect(MaritalStatus::cases())
+                                    ->mapWithKeys(fn (MaritalStatus $type) => [$type->value => ucfirst($type->value)])
+                                ->toArray()
+                                ),
+                            Forms\Components\TextInput::make('spouse')
+                                ->maxLength(255),
+                            Forms\Components\DatePicker::make('admission_date')->required(),
+                            Forms\Components\DatePicker::make('resignation_date'),
                         ]),
                     ]),
+                    Forms\Components\Tabs\Tab::make('Endereço')->schema([
+                        AddressForm::setAddressFields(),
+                    ]),
+                ]),
             ]);
     }
 
