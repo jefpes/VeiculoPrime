@@ -4,9 +4,9 @@ namespace App\Filament\Pages;
 
 use App\Models\Settings;
 use Filament\Forms\{Form};
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
-use Filament\Notifications\Notification;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +21,15 @@ class SettingsPage extends Page
 
     public function mount(): void
     {
-        $this->form->fill(Auth::user()->settings->toArray()); //@phpstan-ignore-line
+        if (Auth::user()->settings === null) {//@phpstan-ignore-line
+            Settings::query()->create(['user_id' => Auth::id()]);
+        }
+
+        try {
+            $this->form->fill(Auth::user()->settings->toArray()); //@phpstan-ignore-line
+        } catch (\Throwable) {
+            redirect(request()->header('Referer'));
+        }
     }
 
     public static function getNavigationGroup(): ?string
