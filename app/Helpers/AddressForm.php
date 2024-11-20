@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Forms\Components\ZipCode;
 use Filament\Forms\Components\{Component, Grid, TextInput, Textarea};
 
 class AddressForm
@@ -10,9 +11,14 @@ class AddressForm
     {
         return
         Grid::make()->relationship('address')->columns(['md' => 2, 1])->schema([
-            TextInput::make('zip_code')
-                ->required()
-                ->mask('99999-999'),
+            ZipCode::make('zip_code')->viaCep(setFields: [
+                'state'        => 'estado',
+                'city'         => 'localidade',
+                'neighborhood' => 'bairro',
+                'street'       => 'logradouro',
+                'number'       => 'numero',
+                'complement'   => 'complemento',
+            ]),
             TextInput::make('state')
                 ->required()
                 ->maxLength(255),
