@@ -89,8 +89,8 @@ class EmployeeResource extends Resource
                             ]),
                         ]),
 
-                        Tab::make('Endereço')->schema([
-                            AddressForm::setAddressFields(),
+                        Tab::make('endereco')->schema([
+                            AddressForm::setAddressFields(false),
                         ]),
                     ]),
             ]);
