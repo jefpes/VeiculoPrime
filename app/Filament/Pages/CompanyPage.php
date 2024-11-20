@@ -7,6 +7,7 @@ use App\Helpers\AddressForm;
 use App\Models\{Company};
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\{Form};
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
@@ -128,7 +129,7 @@ class CompanyPage extends Page
                             ->label('Youtube')
                             ->maxLength(255)
                             ->prefixIcon('icon-youtube'),
-                    ]),
+                    ])->columns(2),
                 ]),
             ])
             ->statePath('data');
@@ -137,5 +138,6 @@ class CompanyPage extends Page
     public function save(): void
     {
         Company::query()->first()->update($this->form->getState()); //@phpstan-ignore-line
+        Notification::make()->body(__('Company updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
     }
 }

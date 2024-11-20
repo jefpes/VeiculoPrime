@@ -6,10 +6,11 @@ use App\Models\Settings;
 use Filament\Forms\{Form};
 use Filament\Pages\Page;
 use Filament\{Forms};
+use Filament\Notifications\Notification;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 
-class SettingsPage extends Page
+class ThemePage extends Page
 {
     protected static string $view = 'filament.pages.settings';
 
@@ -30,12 +31,12 @@ class SettingsPage extends Page
 
     public static function getNavigationLabel(): string
     {
-        return __('Settings');
+        return __('Theme');
     }
 
     public function getTitle(): string | Htmlable
     {
-        return __('Settings');
+        return __('Theme');
     }
 
     public function form(Form $form): Form
@@ -91,6 +92,7 @@ class SettingsPage extends Page
     public function save(): void
     {
         Settings::query()->whereUserId(Auth::id())->update($this->form->getState()); //@phpstan-ignore-line
+        Notification::make()->body(__('Theme updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
         redirect(request()->header('Referer'));
     }
 }
