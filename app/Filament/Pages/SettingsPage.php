@@ -10,7 +10,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 
-class ThemePage extends Page
+class SettingsPage extends Page
 {
     protected static string $view = 'filament.pages.settings';
 
@@ -31,19 +31,19 @@ class ThemePage extends Page
 
     public static function getNavigationLabel(): string
     {
-        return __('Theme');
+        return __('Settings');
     }
 
     public function getTitle(): string | Htmlable
     {
-        return __('Theme');
+        return __('Settings');
     }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make()->schema([
+                Forms\Components\Section::make(__('Theme'))->schema([
                     Forms\Components\Grid::make()->schema([
                         Forms\Components\Select::make('font')
                         ->allowHtml()
