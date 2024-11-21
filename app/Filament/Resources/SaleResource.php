@@ -10,11 +10,12 @@ use App\Helpers\Contracts;
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\{FileUpload, Section, Select, ToggleButtons};
+use Filament\Forms\Components\{FileUpload, Group, Section, Select, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\Summarizers\{Count, Sum};
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -262,35 +263,45 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('discount')
                     ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('surcharge')
                     ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('down_payment')
                     ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('number_installments')
                     ->label('Installments')
                     ->numeric(),
                 Tables\Columns\TextColumn::make('reimbursement')
                     ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('date_cancel')
                     ->date('d/m/Y')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label('Date Cancel')
+                    ->summarize(Count::make()),
                 Tables\Columns\TextColumn::make('total')
                     ->money('BRL')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Sum::make()->money('BRL')),
             ])
+            ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
                 Filter::make('date_sale')
                     ->form([
-                        DatePicker::make('sale_date_initial')->label('Sale Date After'),
-                        DatePicker::make('sale_date_final')->label('Sale Date Before'),
+                        Group::make([
+                            DatePicker::make('sale_date_initial')->label('Sale Date After'),
+                            DatePicker::make('sale_date_final')->label('Sale Date Before'),
+                        ])->columns(2),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
@@ -308,6 +319,69 @@ class SaleResource extends Resource
 
                         return $indicators;
                     }),
+                Filter::make('plate')
+                    ->form([
+                        Forms\Components\TextInput::make('plate')
+                            ->label('Plate')
+                            ->mask('aaa-9*99'),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->whereHas('vehicle', function ($query) use ($data) {
+                                $query->where('plate', 'like', "%{$data['plate']}%");
+                            });
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['plate'] ?? null) {
+                            $indicators[] = __('Plate') . ': ' . $data['plate'];
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('seller')->form([
+                    Select::make('seller')
+                        ->searchable()
+                        ->options(function () {
+                            return \App\Models\User::all()->mapWithKeys(function ($user) {
+                                return [
+                                    $user->id => $user->name,
+                                ];
+                            });
+                        }),
+                ])->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                })->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['seller'] ?? null) {
+                        $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('client')->form([
+                    Select::make('client')
+                        ->searchable()
+                        ->options(function () {
+                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
+                                return [
+                                    $client->id => $client->name,
+                                ];
+                            });
+                        }),
+                ])->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
+                })->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['client'] ?? null) {
+                        $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
+                    }
+
+                    return $indicators;
+                }),
                 Filter::make('payment_method')
                     ->form([
                         Forms\Components\Select::make('payment_method')

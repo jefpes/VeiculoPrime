@@ -62,7 +62,7 @@ class VehicleResource extends Resource
                         ->relationship('model', 'name'),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->options(Supplier::pluck('name', 'id')) //@phpstan-ignore-line
+                        ->options(Supplier::query()->pluck('name', 'id'))
                         ->optionsLimit(5)
                         ->searchable(),
                     TextInput::make('year_one')
