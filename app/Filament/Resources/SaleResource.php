@@ -255,7 +255,8 @@ class SaleResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('date_sale')
                     ->date('d/m/Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Count::make()),
                 Tables\Columns\TextColumn::make('date_payment')
                     ->date('d/m/Y')
                     ->sortable()
