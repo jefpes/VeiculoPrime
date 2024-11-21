@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\{Pages};
-use App\Models\{Role, User};
+use App\Models\{Employee, Role, User};
 use Filament\Forms\Components\{CheckboxList, Fieldset};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -37,7 +37,16 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('employee_id')
-                    ->relationship('employee', 'name'),
+                    ->label('Employee')
+                    ->options(function (string $operation, $record) {
+                        if ($operation === 'create') {
+                            return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->pluck('name', 'id');
+                        }
+
+                        return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->orWhere('id', $record->employee_id)->pluck('name', 'id');
+                    })
+                    ->optionsLimit(5)
+                    ->searchable(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),

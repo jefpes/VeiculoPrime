@@ -139,6 +139,7 @@ class VehicleResource extends Resource
                     ->getStateUsing(function ($record) {
                         return  $record->year_one . '/' . $record->year_two;
                     })
+                    ->sortable(['year_one', 'year_two'])
                     ->label('Year'),
                 TextColumn::make('km')
                     ->numeric()

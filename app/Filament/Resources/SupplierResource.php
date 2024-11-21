@@ -125,55 +125,55 @@ class SupplierResource extends Resource
     {
 
         return $table
-                    ->columns([
-                        Tables\Columns\TextColumn::make('name')
-                            ->searchable()
-                            ->sortable(),
-                        Tables\Columns\TextColumn::make('gender')
-                            ->badge()
-                            ->color(fn (string $state): string|array => match ($state) {
-                                'MASCULINO' => 'info',
-                                'FEMININO'  => Color::hex('#ff00b2'),
-                                default     => 'success',
-                            })
-                            ->searchable(),
-                        Tables\Columns\TextColumn::make('supplier_id')
-                            ->label('CPF/CNPJ')
-                            ->copyable()
-                            ->searchable(),
-                        Tables\Columns\TextColumn::make('phones')
-                            ->getStateUsing(function ($record) {
-                                if ($record->phone_two !== null) {
-                                    return  $record->phone_one . ' | ' . $record->phone_two;
-                                }
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('gender')
+                    ->badge()
+                    ->color(fn (string $state): string|array => match ($state) {
+                        'MASCULINO' => 'info',
+                        'FEMININO'  => Color::hex('#ff00b2'),
+                        default     => 'success',
+                    })
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('supplier_id')
+                    ->label('CPF/CNPJ')
+                    ->copyable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phones')
+                    ->getStateUsing(function ($record) {
+                        if ($record->phone_two !== null) {
+                            return  $record->phone_one . ' | ' . $record->phone_two;
+                        }
 
-                                return  $record->phone_one;
-                            })
-                            ->label('Phone'),
-                        Tables\Columns\TextColumn::make('rg')
-                            ->label('RG')
-                            ->searchable()
-                            ->toggleable(isToggledHiddenByDefault: true),
-                        Tables\Columns\TextColumn::make('birth_date')
-                            ->date('d/m/Y')
-                            ->sortable()
-                            ->toggleable(isToggledHiddenByDefault: true),
-                        Tables\Columns\TextColumn::make('father')
-                            ->toggleable(isToggledHiddenByDefault: true),
-                        Tables\Columns\TextColumn::make('mother')
-                            ->toggleable(isToggledHiddenByDefault: true),
-                        Tables\Columns\TextColumn::make('marital_status')
-                            ->toggleable(isToggledHiddenByDefault: true),
-                        Tables\Columns\TextColumn::make('spouse')
-                            ->toggleable(isToggledHiddenByDefault: true),
-                    ])
-                    ->filters([
-                        //
-                    ])
-                    ->actions([
-                        Tables\Actions\ViewAction::make(),
-                        Tables\Actions\EditAction::make(),
-                    ]);
+                        return  $record->phone_one;
+                    })
+                    ->label('Phone'),
+                Tables\Columns\TextColumn::make('rg')
+                    ->label('RG')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('birth_date')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('father')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('mother')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('marital_status')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('spouse')
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+            ]);
 
     }
 

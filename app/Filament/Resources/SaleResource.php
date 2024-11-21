@@ -219,8 +219,7 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('vehicle')
                     ->getStateUsing(fn (Sale $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('client.name')
                     ->sortable()
                     ->searchable(),

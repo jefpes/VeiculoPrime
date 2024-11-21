@@ -42,7 +42,13 @@ class FilamentServiceProvider extends ServiceProvider
         Actions\Action::configureUsing(
             fn (Actions\Action $action) => $action
                 ->modalWidth(MaxWidth::Medium)
+                ->translateLabel()
                 ->closeModalByClickingAway(false)
+        );
+
+        Tables\Actions\Action::configureUsing(
+            fn (Tables\Actions\Action $action) => $action
+                ->translateLabel()
         );
 
         Actions\CreateAction::configureUsing(
