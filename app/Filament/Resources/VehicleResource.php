@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
 use Filament\Forms\{Form, Get};
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\Summarizers\{Count, Sum};
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -121,6 +122,9 @@ class VehicleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                return $query->with('employee', 'model', 'supplier');
+            })
             ->columns([
                 TextColumn::make('employee.name')
                     ->label('Buyer')
@@ -135,8 +139,7 @@ class VehicleResource extends Resource
                     ->getStateUsing(function ($record) {
                         return  $record->year_one . '/' . $record->year_two;
                     })
-                    ->label('Year')
-                    ->sortable(),
+                    ->label('Year'),
                 TextColumn::make('km')
                     ->numeric()
                     ->sortable()
@@ -144,22 +147,27 @@ class VehicleResource extends Resource
                 TextColumn::make('purchase_date')
                     ->date('d/m/Y')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Count::make()),
                 TextColumn::make('fipe_price')
                     ->label('FIPE')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('purchase_price')
                     ->sortable()
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('sale_price')
                     ->sortable()
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('promotional_price')
                     ->sortable()
                     ->money('BRL')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('model.name')
                     ->sortable(),
                 TextColumn::make('supplier.name')
