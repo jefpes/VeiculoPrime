@@ -198,33 +198,16 @@ class VehicleResource extends Resource
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
-                Filter::make('purchase_date')
-                ->form([
+                Filter::make('filter')->form([
+                    // Filtro de Datas de Compra
                     Group::make([
                         DatePicker::make('purchase_date_initial')
                             ->label('Purchase Date After'),
                         DatePicker::make('purchase_date_final')
                             ->label('Purchase Date Before'),
                     ])->columns(['sm' => 1, 'md' => 2]),
-                ])->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
-                        ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value));
-                })->indicateUsing(function (array $data): array {
-                    $indicators = [];
 
-                    if ($data['purchase_date_initial'] ?? null) {
-                        $indicators[] = __('Purchase Date After: ') . Carbon::parse($data['purchase_date_initial'])->format('d/m/Y');
-                    }
-
-                    if ($data['purchase_date_final'] ?? null) {
-                        $indicators[] = __('Purchase Date Before: ') . Carbon::parse($data['purchase_date_final'])->format('d/m/Y');
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('year_one')
-                ->form([
+                    // Filtro de Ano
                     Select::make('year_one')
                         ->label('After Year')
                         ->options(function () {
@@ -235,88 +218,100 @@ class VehicleResource extends Resource
                                 ->pluck('year_one', 'year_one')
                                 ->toArray();
                         }),
-                ])
-                ->query(
-                    fn (Builder $query, array $data) => $query->when($data['year_one'], fn ($query, $value) => $query->where('year_one', '>=', $value))
-                )->indicateUsing(function (array $data): array {
-                    $indicators = [];
 
-                    if ($data['year_one'] ?? null) {
-                        $indicators[] = __('After Year') . ': ' . $data['year_one'];
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('types')->form([
+                    // Filtro de Tipo de Veículo
                     Select::make('type')
                         ->label('Type')
-                        ->live()
-                        ->options(VehicleType::all()->pluck('name', 'id')),
-                ])->query(
-                    fn (Builder $query, array $data) => $query->when($data['type'], fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $value)))
-                )->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                        ->options(VehicleType::all()->pluck('name', 'id'))
+                        ->live(),
 
-                    if ($data['type'] ?? null) {
-                        $indicators[] = __('Type') . ': ' . VehicleType::query()->find($data['type'])->name;
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('brands')->form([
+                    // Filtro de Marca
                     Select::make('brand')
                         ->label('Brand')
-                        ->live()
                         ->options(Brand::all()->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5)
-                        ->preload(),
-                ])->query(
-                    fn (Builder $query, array $data) => $query->when($data['brand'], fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $value)))
-                )->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                        ->preload()
+                        ->live(),
 
-                    if ($data['brand'] ?? null) {
-                        $indicators[] = __('Brand') . ': ' . Brand::query()->find($data['brand'])->name;
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('model')->form([
+                    // Filtro de Modelo
                     Select::make('model')
                         ->label('Model')
-                        ->live()
                         ->options(function (Get $get) {
                             return VehicleModel::query()
                                 ->orderBy('name')
+                                ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
+                                ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
                                 ->pluck('name', 'id')
                                 ->toArray();
                         })
-                        // ->options(VehicleModel::all()->pluck('name', 'id'))
                         ->searchable()
-                        ->optionsLimit(5),
-                ])->query(
-                    fn (Builder $query, array $data) => $query->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
-                )->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                        ->optionsLimit(5)
+                        ->live(),
 
-                    if ($data['model'] ?? null) {
-                        $indicators[] = __('Model') . ': ' . Vehicle::query()->find($data['model'])->model->name;
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('supplier')->form([
+                    // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
                         ->options(Supplier::all()->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5),
-                ])->query(
-                    fn (Builder $query, array $data) => $query->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
-                )->indicateUsing(function (array $data): array {
+                ])->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        // Aplica o filtro de data de compra
+                        ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
+                        ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value))
+
+                        // Aplica o filtro de ano
+                        ->when($data['year_one'], fn ($query, $value) => $query->where('year_one', '>=', $value))
+
+                        // Aplica o filtro de tipo
+                        ->when(
+                            $data['type'],
+                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $value))
+                        )
+
+                        // Aplica o filtro de marca
+                        ->when(
+                            $data['brand'],
+                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $value))
+                        )
+
+                        // Aplica o filtro de modelo
+                        ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+
+                        // Aplica o filtro de fornecedor
+                        ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value));
+                })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
+                    // Indicadores para as datas de compra
+                    if ($data['purchase_date_initial'] ?? null) {
+                        $indicators[] = __('Purchase Date After: ') . Carbon::parse($data['purchase_date_initial'])->format('d/m/Y');
+                    }
+
+                    if ($data['purchase_date_final'] ?? null) {
+                        $indicators[] = __('Purchase Date Before: ') . Carbon::parse($data['purchase_date_final'])->format('d/m/Y');
+                    }
+
+                    // Indicador para o ano
+                    if ($data['year_one'] ?? null) {
+                        $indicators[] = __('After Year') . ': ' . $data['year_one'];
+                    }
+
+                    // Indicadores para tipo, marca e modelo
+                    if ($data['type'] ?? null) {
+                        $indicators[] = __('Type') . ': ' . VehicleType::query()->find($data['type'])->name;
+                    }
+
+                    if ($data['brand'] ?? null) {
+                        $indicators[] = __('Brand') . ': ' . Brand::query()->find($data['brand'])->name;
+                    }
+
+                    if ($data['model'] ?? null) {
+                        $indicators[] = __('Model') . ': ' . VehicleModel::query()->find($data['model'])->name;
+                    }
+
+                    // Indicador para o fornecedor
                     if ($data['supplier'] ?? null) {
                         $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;
                     }
@@ -324,6 +319,7 @@ class VehicleResource extends Resource
                     return $indicators;
                 }),
             ])
+
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
