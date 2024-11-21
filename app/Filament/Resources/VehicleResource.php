@@ -7,10 +7,11 @@ use App\Filament\Resources\VehicleResource\RelationManagers\PhotosRelationManage
 use App\Filament\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
-use App\Models\{Employee, Supplier, Vehicle};
+use App\Models\{Brand, VehicleType};
+use App\Models\{Employee, Supplier, Vehicle, VehicleModel};
 use Carbon\Carbon;
-use Filament\Forms\Components\{DatePicker, FileUpload, Section, Select, TextInput, Textarea};
-use Filament\Forms\Form;
+use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
+use Filament\Forms\{Form, Get};
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -195,13 +196,16 @@ class VehicleResource extends Resource
                 TextColumn::make('annotation')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
                 Filter::make('purchase_date')
                 ->form([
-                    DatePicker::make('purchase_date_initial')
-                        ->label('Purchase Date After'),
-                    DatePicker::make('purchase_date_final')
-                        ->label('Purchase Date Before'),
+                    Group::make([
+                        DatePicker::make('purchase_date_initial')
+                            ->label('Purchase Date After'),
+                        DatePicker::make('purchase_date_final')
+                            ->label('Purchase Date Before'),
+                    ])->columns(['sm' => 1, 'md' => 2]),
                 ])->query(function (Builder $query, array $data): Builder {
                     return $query
                         ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
@@ -239,6 +243,82 @@ class VehicleResource extends Resource
 
                     if ($data['year_one'] ?? null) {
                         $indicators[] = __('After Year') . ': ' . $data['year_one'];
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('types')->form([
+                    Select::make('type')
+                        ->label('Type')
+                        ->live()
+                        ->options(VehicleType::all()->pluck('name', 'id')),
+                ])->query(
+                    fn (Builder $query, array $data) => $query->when($data['type'], fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $value)))
+                )->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['type'] ?? null) {
+                        $indicators[] = __('Type') . ': ' . VehicleType::query()->find($data['type'])->name;
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('brands')->form([
+                    Select::make('brand')
+                        ->label('Brand')
+                        ->live()
+                        ->options(Brand::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->optionsLimit(5)
+                        ->preload(),
+                ])->query(
+                    fn (Builder $query, array $data) => $query->when($data['brand'], fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $value)))
+                )->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['brand'] ?? null) {
+                        $indicators[] = __('Brand') . ': ' . Brand::query()->find($data['brand'])->name;
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('model')->form([
+                    Select::make('model')
+                        ->label('Model')
+                        ->live()
+                        ->options(function (Get $get) {
+                            return VehicleModel::query()
+                                ->orderBy('name')
+                                ->pluck('name', 'id')
+                                ->toArray();
+                        })
+                        // ->options(VehicleModel::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->optionsLimit(5),
+                ])->query(
+                    fn (Builder $query, array $data) => $query->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+                )->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['model'] ?? null) {
+                        $indicators[] = __('Model') . ': ' . Vehicle::query()->find($data['model'])->model->name;
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('supplier')->form([
+                    Select::make('supplier')
+                        ->label('Supplier')
+                        ->options(Supplier::all()->pluck('name', 'id'))
+                        ->searchable()
+                        ->optionsLimit(5),
+                ])->query(
+                    fn (Builder $query, array $data) => $query->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
+                )->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['supplier'] ?? null) {
+                        $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;
                     }
 
                     return $indicators;
