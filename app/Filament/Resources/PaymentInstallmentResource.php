@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentResource\{Pages};
-use App\Forms\Components\MoneyInput;
+use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\Contracts;
 use App\Models\PaymentInstallment;
 use Carbon\Carbon;
@@ -118,12 +118,7 @@ class PaymentInstallmentResource extends Resource
                         'payment_date'  => now(),
                     ])
                     ->form([
-                        Forms\Components\Select::make('payment_method')
-                            ->options(
-                                collect(PaymentMethod::cases())
-                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                            )
-                            ->required(),
+                        SelectPaymentMethod::make('payment_method')->required(),
                         Group::make([
                             MoneyInput::make('value')->readOnly(),
                             MoneyInput::make('discount'),
