@@ -40,12 +40,12 @@ class CreateSale extends CreateRecord
     {
         Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
 
-        if ($this->record->number_installments > 1) { //@phpstan-ignore-line
+        if ($this->record->number_installments > 0) { //@phpstan-ignore-line
             if (PaymentInstallment::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
                 PaymentInstallment::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
 
-            for ($i = 0; $i < $this->record->number_installments; $i++) {
+            for ($i = 0; $i <= $this->record->number_installments; $i++) {
                 if ($i > 0) {
                     $this->dataInstallments['first_installment'] = $this->dataInstallments['first_installment']->addMonthNoOverflow(1);
                 }

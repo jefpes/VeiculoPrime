@@ -16,7 +16,6 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -56,7 +55,11 @@ class SaleResource extends Resource
                         ->relationship('user', 'name')
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
-                        ->relationship('vehicle', 'id')
+                        ->label('Vehicle')
+                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                            self::updateInstallmentValues($set, $get);
+                        })
+                        ->live()
                         ->options(function ($record) {
                             $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
 
@@ -97,21 +100,8 @@ class SaleResource extends Resource
                     MoneyInput::make('discount')
                         ->label('Desconto')
                         ->live(debounce: 1000)
-                        ->hidden(fn ($get) => $get('discount_surcharge') === 'interest')
-                        ->required(fn (Forms\Get $get) => $get('discount_surcharge') === 'discount')
                         ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $interest     = $get('interest') !== "" ? $get('interest') : 0;
-                            $total        = $vehiclePrice + $interest - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
+                            self::updateInstallmentValues($set, $get);
                         }),
                     ToggleButtons::make('payment_type')
                         ->options([
@@ -121,12 +111,7 @@ class SaleResource extends Resource
                         ->label('Type')
                         ->live()
                         ->inline()
-                        ->required()
-                        ->afterStateUpdated(function (Forms\Set $set) {
-                            $set('number_installments', 1);
-                            $set('first_installment_date', now()->addMonth(1)->format('Y-m-d')); //@phpstan-ignore-line
-                        }),
-
+                        ->required(),
                     MoneyInput::make('total')->readOnly(),
                 ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
                 Section::make(__('Installments'))
@@ -150,8 +135,7 @@ class SaleResource extends Resource
                             ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
                             ->numeric()
                             ->live(debounce: 1000)
-                            ->default(1)
-                            ->minValue(1)
+                            ->minValue(0)
                             ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                                 self::updateInstallmentValues($set, $get);
                             }),
@@ -165,29 +149,50 @@ class SaleResource extends Resource
 
     public static function updateInstallmentValues(Forms\Set $set, Forms\Get $get): void
     {
-        $total              = $get('total') ?? 0;
-        $downPayment        = $get('down_payment') !== "" ? $get('down_payment') : 0;
-        $interestRate       = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
-        $numberInstallments = $get('number_installments') === '' ? 1 : $get('number_installments');
+        // Obtém os valores de entrada com valores padrão (0) quando vazio
+        $total        = $get('total') ?? 0;
+        $downPayment  = $get('down_payment') !== "" ? $get('down_payment') : 0;
+        $interestRate = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
 
-        // Calcula o valor principal após a entrada
+        // Garante que o número de parcelas seja no mínimo 1
+        $numberInstallments = $get('number_installments') !== "" ? max((int) $get('number_installments'), 1) : 1;
+
+        // Obtém o preço do veículo
+        $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
+        $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
+
+        // Aplica desconto, se houver
+        $discount = $get('discount') !== "" ? $get('discount') : 0;
+        $interest = $get('interest') !== "" ? $get('interest') : 0;
+
+        // Calcula o total
+        $total = $vehiclePrice + $interest - $discount;
+        $set('total', $total);
+
+        // Se o pagamento for parcelado, calcula o valor da parcela
+        if ($get('payment_type') === 'on_time') {
+            $installmentValue = ($total - $downPayment) / $numberInstallments;
+            $set('installment_value', round($installmentValue, 2)); // Arredonda para 2 casas decimais
+        }
+
+        // Calcula o principal após o pagamento inicial (entrada)
         $principal = $total - $downPayment;
 
         // Verifica se os juros são 0%
         if ($interestRate == 0) {
-            // Sem juros, cálculo simples
-            $installmentValue  = round($principal / $numberInstallments, 2);
-            $totalWithInterest = $principal;
-            $interest          = 0;
+            // Sem juros: cálculo simples
+            $installmentValue  = round($principal / $numberInstallments, 2);  // Cálculo simples da parcela
+            $totalWithInterest = $principal;  // Total sem juros
+            $interest          = 0;  // Sem juros
         } else {
-            // Calcula com juros compostos
+            // Com juros compostos: chama o método para calcular os juros compostos
             $result            = Tools::calculateCompoundInterest($principal, $interestRate, $numberInstallments);
             $installmentValue  = $result['installment'];
             $totalWithInterest = $result['total'];
-            $interest          = round($totalWithInterest - $principal, 2);
+            $interest          = round($totalWithInterest - $principal, 2);  // Valor dos juros
         }
 
-        // Atualiza os campos
+        // Atualiza os campos do formulário
         $set('installment_value', $installmentValue);
         $set('interest', $interest);
         $set('total_with_interest', $totalWithInterest);
@@ -281,132 +286,42 @@ class SaleResource extends Resource
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
-                Filter::make('date_sale')
+                Filter::make('filter')
                     ->form([
                         Group::make([
                             DatePicker::make('sale_date_initial')->label('Sale Date After'),
                             DatePicker::make('sale_date_final')->label('Sale Date Before'),
                         ])->columns(2),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
-                            ->when($data['sale_date_final'], fn ($query, $value) => $query->where('date_sale', '<=', $value));
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['sale_date_initial'] ?? null) {
-                            $indicators[] = __('Sale Date After') . ': ' . Carbon::parse($data['sale_date_initial'])->format('d/m/Y');
-                        }
-
-                        if ($data['sale_date_final'] ?? null) {
-                            $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
-                        }
-
-                        return $indicators;
-                    }),
-                Filter::make('plate')
-                    ->form([
                         Forms\Components\TextInput::make('plate')
-                            ->label('Plate')
-                            ->mask('aaa-9*99'),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->whereHas('vehicle', function ($query) use ($data) {
-                                $query->where('plate', 'like', "%{$data['plate']}%");
-                            });
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['plate'] ?? null) {
-                            $indicators[] = __('Plate') . ': ' . $data['plate'];
-                        }
-
-                        return $indicators;
-                    }),
-                Filter::make('seller')->form([
-                    Select::make('seller')
-                        ->searchable()
-                        ->options(function () {
-                            return \App\Models\User::all()->mapWithKeys(function ($user) {
-                                return [
-                                    $user->id => $user->name,
-                                ];
-                            });
-                        }),
-                ])->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
-                })->indicateUsing(function (array $data): array {
-                    $indicators = [];
-
-                    if ($data['seller'] ?? null) {
-                        $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('client')->form([
-                    Select::make('client')
-                        ->searchable()
-                        ->options(function () {
-                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                return [
-                                    $client->id => $client->name,
-                                ];
-                            });
-                        }),
-                ])->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
-                })->indicateUsing(function (array $data): array {
-                    $indicators = [];
-
-                    if ($data['client'] ?? null) {
-                        $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
-                    }
-
-                    return $indicators;
-                }),
-                Filter::make('payment_method')
-                    ->form([
+                            ->label('Plate'),
+                        Select::make('seller')
+                            ->searchable()
+                            ->options(function () {
+                                return \App\Models\User::all()->mapWithKeys(function ($user) {
+                                    return [
+                                        $user->id => $user->name,
+                                    ];
+                                });
+                            }),
+                        Select::make('client')
+                            ->searchable()
+                            ->options(function () {
+                                return \App\Models\Client::all()->mapWithKeys(function ($client) {
+                                    return [
+                                        $client->id => $client->name,
+                                    ];
+                                });
+                            }),
                         Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        ),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['payment_method'] ?? null) {
-                            $indicators[] = __('Payment Method') . ': ' . $data['payment_method'];
-                        }
-
-                        return $indicators;
-                    }),
-                Filter::make('status')
-                    ->form([
+                            ->options(
+                                collect(PaymentMethod::cases())
+                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
+                            ),
                         Forms\Components\Select::make('status')
-                        ->options(
-                            collect(StatusPayments::cases())
-                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
-                        ),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['status'] ?? null) {
-                            $indicators[] = __('Status') . ': ' . $data['status'];
-                        }
-
-                        return $indicators;
-                    }),
-                Filter::make('model')
-                    ->form([
+                            ->options(
+                                collect(StatusPayments::cases())
+                                    ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
+                            ),
                         Select::make('model')
                             ->searchable()
                             ->options(function () {
@@ -418,8 +333,19 @@ class SaleResource extends Resource
                             }),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
+                        $query
+                            ->when(!empty($data['sale_date_initial']), fn ($query, $value) => $query->where('date_sale', '>=', $value))
+                            ->when(!empty($data['sale_date_final']), fn ($query, $value) => $query->where('date_sale', '<=', $value))
+                            ->when(!empty($data['plate']), fn ($query, $value) => $query->whereHas('vehicle', function ($query) use ($value) {
+                                $query->where('plate', 'like', "%{$value}%");
+                            }))
+                            ->when(!empty($data['seller']), fn ($query, $value) => $query->where('user_id', $value))
+                            ->when(!empty($data['client']), fn ($query, $value) => $query->where('client_id', $value))
+                            ->when(!empty($data['payment_method']), fn ($query, $value) => $query->where('payment_method', $value))
+                            ->when(!empty($data['status']), fn ($query, $value) => $query->where('status', $value));
+
                         if (!empty($data['model'])) {
-                            return $query->whereHas('vehicle', function ($query) use ($data) {
+                            $query->whereHas('vehicle', function ($query) use ($data) {
                                 $query->where('vehicle_model_id', $data['model']);
                             });
                         }
@@ -428,6 +354,34 @@ class SaleResource extends Resource
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
+
+                        if (!empty($data['sale_date_initial'])) {
+                            $indicators[] = __('Sale Date After') . ': ' . Carbon::parse($data['sale_date_initial'])->format('d/m/Y');
+                        }
+
+                        if (!empty($data['sale_date_final'])) {
+                            $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
+                        }
+
+                        if (!empty($data['plate'])) {
+                            $indicators[] = __('Plate') . ': ' . $data['plate'];
+                        }
+
+                        if (!empty($data['seller'])) {
+                            $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
+                        }
+
+                        if (!empty($data['client'])) {
+                            $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
+                        }
+
+                        if (!empty($data['payment_method'])) {
+                            $indicators[] = __('Payment Method') . ': ' . $data['payment_method'];
+                        }
+
+                        if (!empty($data['status'])) {
+                            $indicators[] = __('Status') . ': ' . $data['status'];
+                        }
 
                         if (!empty($data['model'])) {
                             $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
@@ -439,7 +393,8 @@ class SaleResource extends Resource
 
                         return $indicators;
                     }),
-            ], layout: FiltersLayout::Modal)
+            ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Action::make('sale_cancel')
