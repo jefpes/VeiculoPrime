@@ -20,6 +20,9 @@ return new class () extends Migration {
             $table->decimal('value', 10, 2);
             $table->string('status');
             $table->date('payment_date')->nullable();
+            $table->decimal('late_fee', 10, 2)->nullable();
+            $table->decimal('interest_rate', 10, 2)->nullable();
+            $table->decimal('interest', 10, 2)->nullable();
             $table->decimal('payment_value', 10, 2)->nullable();
             $table->string('payment_method')->nullable();
             $table->decimal('discount', 10, 2)->nullable();
