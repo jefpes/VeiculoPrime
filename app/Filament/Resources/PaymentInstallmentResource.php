@@ -9,8 +9,7 @@ use App\Helpers\Contracts;
 use App\Models\PaymentInstallment;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\{DatePicker, Select};
-use Filament\Forms\Form;
+use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -41,35 +40,6 @@ class PaymentInstallmentResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return __('Installments');
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
-                Forms\Components\Select::make('sale_id')
-                    ->relationship('sale', 'id')
-                    ->required(),
-                Forms\Components\DatePicker::make('due_date')
-                    ->required(),
-                Forms\Components\TextInput::make('value')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('payment_date'),
-                Forms\Components\TextInput::make('payment_value')
-                    ->numeric(),
-                Forms\Components\TextInput::make('payment_method')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('discount')
-                    ->numeric(),
-                Forms\Components\TextInput::make('surcharge')
-                    ->numeric(),
-            ]);
     }
 
     public static function table(Table $table): Table
@@ -143,25 +113,41 @@ class PaymentInstallmentResource extends Resource
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
                     ->fillForm(fn (PaymentInstallment $record): array => [
-                        'value'        => $record->value,
-                        'payment_date' => now(),
+                        'value'         => $record->value,
+                        'payment_value' => $record->value,
+                        'payment_date'  => now(),
                     ])
                     ->form([
-                        MoneyInput::make('value')->readOnly(),
                         Forms\Components\Select::make('payment_method')
                             ->options(
                                 collect(PaymentMethod::cases())
                                     ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
                             )
                             ->required(),
-                        MoneyInput::make('payment_value')->required(),
+                        Group::make([
+                            MoneyInput::make('value')->readOnly(),
+                            MoneyInput::make('discount'),
+                        ])->columns(2),
+                        Group::make([
+                            MoneyInput::make('late_fee'),
+                            MoneyInput::make('interest_rate')
+                                ->prefix(null)
+                                ->suffix('%')
+                                ->live(debounce: 1000),
+                        ])->columns(2),
+                        Group::make([
+                            MoneyInput::make('interest')->readOnly(),
+                            MoneyInput::make('payment_value')->readOnly(),
+                        ])->columns(2),
                         Forms\Components\DatePicker::make('payment_date')->required(),
                     ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PAGO',
                             'discount'       => $data['payment_value'] < $installment->value ? ($installment->value - $data['payment_value']) : 0,
-                            'surcharge'      => $data['payment_value'] > $installment->value ? ($data['payment_value'] - $installment->value) : 0,
+                            'late_fee'       => $data['late_fee'],
+                            'interest_rate'  => $data['interest_rate'],
+                            'interest'       => $data['interest'],
                             'payment_date'   => $data['payment_date'],
                             'payment_value'  => $data['payment_value'],
                             'payment_method' => $data['payment_method'],
@@ -183,7 +169,9 @@ class PaymentInstallmentResource extends Resource
                             'user_id'        => Auth::id(),
                             'status'         => 'PENDENTE',
                             'discount'       => null,
-                            'surcharge'      => null,
+                            'late_fee'       => null,
+                            'interest_rate'  => null,
+                            'interest'       => null,
                             'payment_date'   => null,
                             'payment_value'  => null,
                             'payment_method' => null,

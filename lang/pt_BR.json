@@ -219,6 +219,7 @@
     "Employee is the CEO, it is not possible to delete him, determine another CEO and try again": "Funcionário é o CEO, não é possível excluí-lo, determine outro CEO e tente novamente",
     "Total with interest": "Total com juros",
     "Interest rate": "Taxa de juros",
+    "Late fee": "Multa por atraso",
     "Supplier": "Fornecedor",
     "Total Down Payment": "Total de Entrada",
     "Total Discount": "Total de Desconto",
