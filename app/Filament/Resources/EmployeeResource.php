@@ -114,7 +114,7 @@ class EmployeeResource extends Resource
                     ->copyable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('phoness')
+                Tables\Columns\TextColumn::make('phone')
                     ->getStateUsing(function ($record) {
                         if ($record->phone_two !== null) {
                             return  $record->phone_one . ' | ' . $record->phone_two;
