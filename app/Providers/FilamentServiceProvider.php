@@ -66,7 +66,7 @@ class FilamentServiceProvider extends ServiceProvider
         );
 
         Tables\Table::configureUsing(
-            fn (Tables\Table $table) => $table->filtersFormWidth('md')
+            fn (Tables\Table $table) => $table->filtersFormWidth('md')->recordUrl(null)->recordAction(null)
         );
 
         Tables\Actions\Action::configureUsing(
