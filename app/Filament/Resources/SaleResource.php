@@ -119,7 +119,6 @@ class SaleResource extends Resource
                     ->columns(['sm' => 2, 'md' => 4])
                     ->schema([
                         MoneyInput::make('down_payment')
-                            ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
                             ->live(debounce: 1000)
                             ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                                 self::updateInstallmentValues($set, $get);

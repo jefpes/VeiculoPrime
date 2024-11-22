@@ -45,7 +45,7 @@ class CreateSale extends CreateRecord
                 PaymentInstallment::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
 
-            for ($i = 0; $i <= $this->record->number_installments; $i++) {
+            for ($i = 0; $i < $this->record->number_installments; $i++) {
                 if ($i > 0) {
                     $this->dataInstallments['first_installment'] = $this->dataInstallments['first_installment']->addMonthNoOverflow(1);
                 }
