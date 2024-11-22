@@ -125,6 +125,7 @@ class SupplierResource extends Resource
     {
 
         return $table
+            ->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()

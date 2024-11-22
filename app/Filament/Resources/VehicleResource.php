@@ -122,6 +122,7 @@ class VehicleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
                 return $query->with('employee', 'model', 'supplier');
             })

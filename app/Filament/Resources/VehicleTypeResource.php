@@ -46,6 +46,7 @@ class VehicleTypeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
