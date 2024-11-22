@@ -20,13 +20,15 @@ return new class () extends Migration {
             $table->string('status');
             $table->date('date_sale');
             $table->date('date_payment')->nullable();
+            $table->decimal('interest_rate', 10, 2)->default(0);
             $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('surcharge', 10, 2)->default(0);
+            $table->decimal('interest', 10, 2)->default(0);
             $table->decimal('down_payment', 10, 2)->default(0);
             $table->integer('number_installments')->default(1);
             $table->decimal('reimbursement', 10, 2)->nullable();
             $table->date('date_cancel')->nullable();
             $table->decimal('total', 10, 2);
+            $table->decimal('total_with_interest', 10, 2)->nullable();
 
             $table->timestamps();
         });

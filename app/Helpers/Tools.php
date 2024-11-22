@@ -7,6 +7,37 @@ use Illuminate\Support\Number;
 
 class Tools
 {
+    /**
+     * Calcula o valor da parcela com juros compostos.
+     *
+     * @param float|null $principal Valor principal (sem juros)
+     * @param float $rate Taxa de juros em porcentagem
+     * @param int $months Número de parcelas
+     * @return array<string, float> Um array com 'total' e 'installment' com valores numéricos (float)
+     */
+    public static function calculateCompoundInterest(?float $principal, float $rate, int $months): array
+    {
+        if ($principal === null || $months <= 0) {
+            return ['total' => 0.0, 'installment' => 0.0];
+        }
+
+        // Caso a taxa de juros seja 0%, retorna parcelas sem juros
+        if ($rate == 0 || $rate == null) {
+            $installment = $principal / $months;
+            $total       = $principal;
+        } else {
+            $rate = $rate / 100; // Converte a taxa de juros para decimal
+            // Cálculo do valor da parcela com juros compostos
+            $installment = ($principal * $rate * pow(1 + $rate, $months)) / (pow(1 + $rate, $months) - 1);
+            $total       = $installment * $months;
+        }
+
+        return [
+            'total'       => round($total, 2),           // Valor total pago com juros (ou sem, caso a taxa seja 0)
+            'installment' => round($installment, 2), // Valor da parcela
+        ];
+    }
+
     public static function spellMonetary(?float $value): string
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão

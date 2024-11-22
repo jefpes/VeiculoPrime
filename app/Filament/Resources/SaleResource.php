@@ -6,11 +6,11 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Helpers\Contracts;
+use App\Helpers\{Contracts, Tools};
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\{FileUpload, Group, Section, Select, ToggleButtons};
+use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -94,42 +94,17 @@ class SaleResource extends Resource
                         ->required(),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
-                    ToggleButtons::make('discount_surcharge')
-                        ->options([
-                            'surcharge' => 'Acréscimo',
-                            'discount'  => 'Desconto',
-                        ])
-                        ->label('Type')
-                        ->live()
-                        ->inline()
-                        ->required()
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $set('surcharge', 0); // Define surcharge como null
-                            $set('discount', 0); // Define discount como null
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        }),
                     MoneyInput::make('discount')
                         ->label('Desconto')
                         ->live(debounce: 1000)
-                        ->hidden(fn ($get) => $get('discount_surcharge') === 'surcharge')
+                        ->hidden(fn ($get) => $get('discount_surcharge') === 'interest')
                         ->required(fn (Forms\Get $get) => $get('discount_surcharge') === 'discount')
                         ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                             $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
                             $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
                             $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
+                            $interest     = $get('interest') !== "" ? $get('interest') : 0;
+                            $total        = $vehiclePrice + $interest - $discount;
                             $set('total', $total);
 
                             if ($get('payment_type') === 'on_time') {
@@ -138,27 +113,6 @@ class SaleResource extends Resource
                                 $set('installment_value', $installmentValue);
                             }
                         }),
-                    MoneyInput::make('surcharge')
-                        ->label('Acréscimo')
-                        ->live(debounce: 1000)
-                        ->hidden(fn ($get) => $get('discount_surcharge') === 'discount')
-                        ->required(fn (Forms\Get $get) => $get('discount_surcharge') === 'surcharge')
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        }),
-                    MoneyInput::make('total')
-                        ->readOnly(),
                     ToggleButtons::make('payment_type')
                         ->options([
                             'in_sight' => 'À vista',
@@ -166,46 +120,77 @@ class SaleResource extends Resource
                         ])
                         ->label('Type')
                         ->live()
-                        ->required()
                         ->inline()
+                        ->required()
                         ->afterStateUpdated(function (Forms\Set $set) {
                             $set('number_installments', 1);
                             $set('first_installment_date', now()->addMonth(1)->format('Y-m-d')); //@phpstan-ignore-line
                         }),
+
+                    MoneyInput::make('total')->readOnly(),
                 ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
-                Section::make(__('Installments'))->visible(
-                    fn (Forms\Get $get) => $get('payment_type') === 'on_time'
-                )->schema([
-                    MoneyInput::make('down_payment')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
-                        ->live(debounce: 1000)
-                        ->afterStateUpdated(
-                            function (Forms\Set $set, Forms\Get $get) {
-                                $total            = $get('total');
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        ),
-                    Forms\Components\TextInput::make('number_installments')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
-                        ->numeric()
-                        ->live(debounce: 1000)
-                        ->default(1)
-                        ->minValue(1)
-                        ->afterStateUpdated(
-                            function (Forms\Set $set, Forms\Get $get) {
-                                $total            = $get('total');
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        ),
-                    MoneyInput::make('installment_value')->readOnly(),
-                    Forms\Components\DatePicker::make('first_installment')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time'),
-                ])->columns(['sm' => 2, 'md' => 4]),
+                Section::make(__('Installments'))
+                    ->visible(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                    ->columns(['sm' => 2, 'md' => 4])
+                    ->schema([
+                        MoneyInput::make('down_payment')
+                            ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                            ->live(debounce: 1000)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        MoneyInput::make('interest_rate')
+                            ->prefix(null)
+                            ->suffix('%')
+                            ->live(debounce: 1000)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        TextInput::make('number_installments')
+                            ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                            ->numeric()
+                            ->live(debounce: 1000)
+                            ->default(1)
+                            ->minValue(1)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        MoneyInput::make('installment_value')->readOnly(),
+                        DatePicker::make('first_installment')->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time'),
+                        MoneyInput::make('interest')->readOnly(),
+                        MoneyInput::make('total_with_interest')->readOnly(),
+                    ]),
             ]);
+    }
+
+    public static function updateInstallmentValues(Forms\Set $set, Forms\Get $get): void
+    {
+        $total              = $get('total') ?? 0;
+        $downPayment        = $get('down_payment') !== "" ? $get('down_payment') : 0;
+        $interestRate       = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
+        $numberInstallments = $get('number_installments') === '' ? 1 : $get('number_installments');
+
+        // Calcula o valor principal após a entrada
+        $principal = $total - $downPayment;
+
+        // Verifica se os juros são 0%
+        if ($interestRate == 0) {
+            // Sem juros, cálculo simples
+            $installmentValue  = round($principal / $numberInstallments, 2);
+            $totalWithInterest = $principal;
+            $interest          = 0;
+        } else {
+            // Calcula com juros compostos
+            $result            = Tools::calculateCompoundInterest($principal, $interestRate, $numberInstallments);
+            $installmentValue  = $result['installment'];
+            $totalWithInterest = $result['total'];
+            $interest          = round($totalWithInterest - $principal, 2);
+        }
+
+        // Atualiza os campos
+        $set('installment_value', $installmentValue);
+        $set('interest', $interest);
+        $set('total_with_interest', $totalWithInterest);
     }
 
     public static function table(Table $table): Table
@@ -265,7 +250,7 @@ class SaleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
-                Tables\Columns\TextColumn::make('surcharge')
+                Tables\Columns\TextColumn::make('interest')
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -472,8 +457,8 @@ class SaleResource extends Resource
                                 @if ($sale->discount > 0)
                                     <p>Desconto: R$ {{ number_format($sale->discount, 2, ",", ".") }} </p>
                                 @endif
-                                @if ($sale->surcharge > 0)
-                                    <p>Acrescimo: R$ {{ number_format($sale->surcharge, 2, ",", ".") }} </p>
+                                @if ($sale->interest > 0)
+                                    <p>Acrescimo: R$ {{ number_format($sale->interest, 2, ",", ".") }} </p>
                                 @endif
                                 @if ($sale->down_payment > 0)
                                     <p>Entrada: R$ {{ number_format($sale->down_payment, 2, ",", ".") }} </p>
