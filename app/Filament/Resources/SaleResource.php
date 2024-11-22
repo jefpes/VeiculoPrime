@@ -154,7 +154,7 @@ class SaleResource extends Resource
         $interestRate = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
 
         // Garante que o número de parcelas seja no mínimo 1
-        $numberInstallments = $get('number_installments') !== "" ? max((int) $get('number_installments'), 1) : 1;
+        $numberInstallments = $get('number_installments') != "" ? max((int) $get('number_installments'), 1) : 1;
 
         // Obtém o preço do veículo
         $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
@@ -165,7 +165,7 @@ class SaleResource extends Resource
         $interest = $get('interest') !== "" ? $get('interest') : 0;
 
         // Calcula o total
-        $total = $vehiclePrice + $interest - $discount;
+        $total = $vehiclePrice - $discount;
         $set('total', $total);
 
         // Se o pagamento for parcelado, calcula o valor da parcela
@@ -187,14 +187,14 @@ class SaleResource extends Resource
             // Com juros compostos: chama o método para calcular os juros compostos
             $result            = Tools::calculateCompoundInterest($principal, $interestRate, $numberInstallments);
             $installmentValue  = $result['installment'];
-            $totalWithInterest = $result['total'];
+            $totalWithInterest = $result['total'];  // Total com juros
             $interest          = round($totalWithInterest - $principal, 2);  // Valor dos juros
         }
 
         // Atualiza os campos do formulário
         $set('installment_value', $installmentValue);
         $set('interest', $interest);
-        $set('total_with_interest', $totalWithInterest);
+        $set('total_with_interest', ($totalWithInterest + $downPayment));
     }
 
     public static function table(Table $table): Table
