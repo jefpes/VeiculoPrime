@@ -292,8 +292,6 @@ class SaleResource extends Resource
                             DatePicker::make('sale_date_initial')->label('Sale Date After'),
                             DatePicker::make('sale_date_final')->label('Sale Date Before'),
                         ])->columns(2),
-                        Forms\Components\TextInput::make('plate')
-                            ->label('Plate'),
                         Select::make('seller')
                             ->searchable()
                             ->options(function () {
@@ -336,9 +334,6 @@ class SaleResource extends Resource
                         $query
                             ->when(!empty($data['sale_date_initial']), fn ($query, $value) => $query->where('date_sale', '>=', $value))
                             ->when(!empty($data['sale_date_final']), fn ($query, $value) => $query->where('date_sale', '<=', $value))
-                            ->when(!empty($data['plate']), fn ($query, $value) => $query->whereHas('vehicle', function ($query) use ($value) {
-                                $query->where('plate', 'like', "%{$value}%");
-                            }))
                             ->when(!empty($data['seller']), fn ($query, $value) => $query->where('user_id', $value))
                             ->when(!empty($data['client']), fn ($query, $value) => $query->where('client_id', $value))
                             ->when(!empty($data['payment_method']), fn ($query, $value) => $query->where('payment_method', $value))
@@ -361,10 +356,6 @@ class SaleResource extends Resource
 
                         if (!empty($data['sale_date_final'])) {
                             $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
-                        }
-
-                        if (!empty($data['plate'])) {
-                            $indicators[] = __('Plate') . ': ' . $data['plate'];
                         }
 
                         if (!empty($data['seller'])) {
