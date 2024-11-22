@@ -6,6 +6,7 @@ use Filament\Forms\Components\Field;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Columns\Summarizers\{Count, Sum};
 use Filament\{Actions, Forms, Infolists, Pages, Tables};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
@@ -17,6 +18,14 @@ class FilamentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Sum::configureUsing(
+            fn (Sum $sum) => $sum->translateLabel()
+        );
+
+        Count::configureUsing(
+            fn (Count $sum) => $sum->translateLabel()
+        );
+
         Pages\Page::$reportValidationErrorUsing = function (ValidationException $exception): void {
             Notification::make()
                 ->title($exception->getMessage())
@@ -33,7 +42,13 @@ class FilamentServiceProvider extends ServiceProvider
         Actions\Action::configureUsing(
             fn (Actions\Action $action) => $action
                 ->modalWidth(MaxWidth::Medium)
+                ->translateLabel()
                 ->closeModalByClickingAway(false)
+        );
+
+        Tables\Actions\Action::configureUsing(
+            fn (Tables\Actions\Action $action) => $action
+                ->translateLabel()
         );
 
         Actions\CreateAction::configureUsing(
@@ -51,7 +66,7 @@ class FilamentServiceProvider extends ServiceProvider
         );
 
         Tables\Table::configureUsing(
-            fn (Tables\Table $table) => $table->filtersFormWidth('md')
+            fn (Tables\Table $table) => $table->filtersFormWidth('md')->recordUrl(null)->recordAction(null)
         );
 
         Tables\Actions\Action::configureUsing(

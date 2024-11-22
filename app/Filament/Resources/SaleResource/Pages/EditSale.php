@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\SaleResource\Pages;
 
 use App\Filament\Resources\SaleResource;
-use App\Models\{PaymentInstallments, Vehicle};
+use App\Models\{PaymentInstallment, Vehicle};
 use Carbon\Carbon;
 use Filament\Resources\Pages\EditRecord;
 
@@ -21,7 +21,7 @@ class EditSale extends EditRecord
         $data['discount'] > 0 ? $data['discount_surcharge']              = 'discount' : $data['discount_surcharge'] = 'surcharge';
         $data['number_installments'] > 1 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
         $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
-        $data['number_installments'] > 1 ? $data['first_installment']    = PaymentInstallments::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
+        $data['number_installments'] > 1 ? $data['first_installment']    = PaymentInstallment::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
 
         return $data;
     }
@@ -40,7 +40,7 @@ class EditSale extends EditRecord
             $data['status']              = 'PAGO';
             $data['down_payment']        = 0;
             $data['date_payment']        = $data['date_sale'];
-            PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
+            PaymentInstallment::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
         }
 
         if ($data['payment_type'] === 'on_time') {
@@ -52,7 +52,7 @@ class EditSale extends EditRecord
         }
 
         if ($this->getRecord()->number_installments > 1 && $this->data['number_installments'] == 1) { //@phpstan-ignore-line
-            PaymentInstallments::where('sale_id', $this->getRecord()->id)->delete();//@phpstan-ignore-line
+            PaymentInstallment::where('sale_id', $this->getRecord()->id)->delete();//@phpstan-ignore-line
         }
 
         unset($data['installment_value']);
@@ -68,8 +68,8 @@ class EditSale extends EditRecord
         Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
 
         if ($this->record->number_installments > 1) { //@phpstan-ignore-line
-            if (PaymentInstallments::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
-                PaymentInstallments::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
+            if (PaymentInstallment::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
+                PaymentInstallment::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
 
             for ($i = 0; $i < $this->record->number_installments; $i++) { //@phpstan-ignore-line
@@ -85,7 +85,7 @@ class EditSale extends EditRecord
                     'status'   => 'PENDENTE',
                 ];
 
-                PaymentInstallments::create($installmentData); //@phpstan-ignore-line
+                PaymentInstallment::create($installmentData); //@phpstan-ignore-line
             }
         }
 

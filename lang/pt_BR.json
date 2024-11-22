@@ -219,6 +219,12 @@
     "Employee is the CEO, it is not possible to delete him, determine another CEO and try again": "Funcionário é o CEO, não é possível excluí-lo, determine outro CEO e tente novamente",
 
     "Supplier": "Fornecedor",
+    "Total Down Payment": "Total de Entrada",
+    "Total Discount": "Total de Desconto",
+    "Total Surcharge": "Total de Acréscimo",
+    "Total Canceled": "Total de Cancelado",
+    "Date Cancel": "Data de Cancelamento",
+    "Rehire": "Recontratar",
     "Suppliers": "Fornecedores",
     "Edit Supplier": "Editar Fornecedor",
     "Supplier Not Deleted": "Fornecedor Não Excluído",

@@ -63,6 +63,10 @@ class VehicleExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
+            ->modifyQueryUsing(function (Builder $query) {
+                return $query->orderBy('date', 'desc');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('vehicle')
                     ->getStateUsing(fn (VehicleExpense $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
@@ -82,88 +86,78 @@ class VehicleExpenseResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Filter::make('date_expense')
-                    ->form([
-                        Group::make([
-                            DatePicker::make('expense_date_initial')->label('Expense date after')->default(now()->subMonth()->format('Y-m-d')),
-                            DatePicker::make('expense_date_final')->label('Expense date before')->default(now()->format('Y-m-d')),
-                        ])->columns(2),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['expense_date_initial'], fn ($query, $value) => $query->where('date', '>=', $value))
-                            ->when($data['expense_date_final'], fn ($query, $value) => $query->where('date', '<=', $value));
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
+                Filter::make('filter')
+        ->form([
+            Group::make([
+                // Date filters
+                DatePicker::make('expense_date_initial')->label('Expense date after'),
+                DatePicker::make('expense_date_final')->label('Expense date before'),
+            ])->columns(2),
 
-                        if ($data['expense_date_initial'] ?? null) {
-                            $indicators[] = __('Expense date after') . ': ' . Carbon::parse($data['expense_date_initial'])->format('d/m/Y');
-                        }
+            Group::make([
+                // Value filters
+                MoneyInput::make('value_expense_min')->label('Value expense min'),
+                MoneyInput::make('value_expense_max')->label('Value expense max'),
+            ])->columns(2),
 
-                        if ($data['expense_date_final'] ?? null) {
-                            $indicators[] = __('Expense date before') . ': ' . Carbon::parse($data['expense_date_final'])->format('d/m/Y');
-                        }
+            // Model filter
+            Select::make('model')
+                ->label('Vehicle model')
+                ->searchable()
+                ->options(fn () => \App\Models\VehicleModel::all()->mapWithKeys(fn ($model) => [
+                    $model->id => "{$model->name}",
+                ])),
+        ])
+        ->query(function (Builder $query, array $data): Builder {
+            // Filtering by dates
+            $query->when($data['expense_date_initial'], fn ($query, $value) => $query->where('date', '>=', $value))
+                  ->when($data['expense_date_final'], fn ($query, $value) => $query->where('date', '<=', $value));
 
-                        return $indicators;
-                    }),
-                Filter::make('value_expense')
-                    ->form([
-                        Group::make([
-                            MoneyInput::make('value_expense_min')->label('Value expense min'),
-                            MoneyInput::make('value_expense_max')->label('Value expense max'),
-                        ])->columns(2),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['value_expense_min'], fn ($query, $value) => $query->where('value', '>=', $value))
-                            ->when($data['value_expense_max'], fn ($query, $value) => $query->where('value', '<=', $value));
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
+            // Filtering by values
+            $query->when($data['value_expense_min'], fn ($query, $value) => $query->where('value', '>=', $value))
+                  ->when($data['value_expense_max'], fn ($query, $value) => $query->where('value', '<=', $value));
 
-                        if ($data['value_expense_min'] ?? null) {
-                            $indicators[] = __('Value expense min') . ': ' . number_format($data['value_expense_min'], 2, ',', '');
-                        }
+            // Filtering by model
+            if (!empty($data['model'])) {
+                $query->whereHas('vehicle', fn ($query) => $query->where('vehicle_model_id', $data['model']));
+            }
 
-                        if ($data['value_expense_max'] ?? null) {
-                            $indicators[] = __('Value expense max') . ': ' . number_format($data['value_expense_max'], 2, ',', '');
-                        }
+            return $query;
+        })
+        ->indicateUsing(function (array $data): array {
+            $indicators = [];
 
-                        return $indicators;
-                    }),
-                Filter::make('model')
-                    ->form([
-                        Select::make('model')
-                            ->label('Vehicle model')
-                            ->searchable()
-                            ->options(function () {
-                                return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
-                                    return [
-                                        $model->id => "{$model->name}",
-                                    ];
-                                });
-                            }),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        if (!empty($data['model'])) {
-                            return $query->whereHas('vehicle', function ($query) use ($data) {
-                                $query->where('vehicle_model_id', $data['model']);
-                            });
-                        }
+            // Indicators for date filters
+            if ($data['expense_date_initial'] ?? null) {
+                $indicators[] = __('Expense date after') . ': ' . Carbon::parse($data['expense_date_initial'])->format('d/m/Y');
+            }
 
-                        return $query;
-                    })
-                    ->indicateUsing(function (array $data): array {
-                        $indicators = [];
+            if ($data['expense_date_final'] ?? null) {
+                $indicators[] = __('Expense date before') . ': ' . Carbon::parse($data['expense_date_final'])->format('d/m/Y');
+            }
 
-                        if (!empty($data['model'])) {
-                            $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
+            // Indicators for value filters
+            if ($data['value_expense_min'] ?? null) {
+                $indicators[] = __('Value expense min') . ': ' . number_format($data['value_expense_min'], 2, ',', '');
+            }
 
-                            if ($modelName) {
-                                $indicators[] = __('Model') . ': ' . $modelName;
-                            }
-                        }
+            if ($data['value_expense_max'] ?? null) {
+                $indicators[] = __('Value expense max') . ': ' . number_format($data['value_expense_max'], 2, ',', '');
+            }
 
-                        return $indicators;
-                    }),
+            // Indicator for model filter
+            if (!empty($data['model'])) {
+                $modelName = \App\Models\VehicleModel::query()->find($data['model'])->name ?? null;
+
+                if ($modelName) {
+                    $indicators[] = __('Model') . ': ' . $modelName;
+                }
+            }
+
+            return $indicators;
+        }),
             ])
+
             ->actions([
                 Tables\Actions\EditAction::make()->after(
                     function ($record) {

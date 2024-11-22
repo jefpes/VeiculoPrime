@@ -96,6 +96,7 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
@@ -107,11 +108,13 @@ class EmployeeResource extends Resource
                         'FEMININO'  => Color::hex('#ff00b2'),
                         default     => 'success',
                     })
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('email')
                     ->copyable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('phones')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('phone')
                     ->getStateUsing(function ($record) {
                         if ($record->phone_two !== null) {
                             return  $record->phone_one . ' | ' . $record->phone_two;
@@ -119,7 +122,9 @@ class EmployeeResource extends Resource
 
                         return  $record->phone_one;
                     })
-                    ->label('Phone'),
+                    ->wrap(false)
+                    ->label('Phone')
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('salary')
                     ->numeric()
                     ->sortable()
@@ -159,6 +164,50 @@ class EmployeeResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('dismiss')
+                    ->label('Dismiss')
+                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                    ->color('danger')
+                    ->authorize('delete')
+                    ->authorize(function (Employee $employee) {
+                        return $employee->resignation_date === null;
+                    })
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\DatePicker::make('resignation_date')
+                            ->label('Resignation Date'),
+                    ])
+                    ->action(function (Employee $employee, array $data) {
+                        if ($employee->user() !== null) {
+                            $employee->user()->delete();
+                        }
+                        $employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                    }),
+                Tables\Actions\Action::make('rehire')
+                    ->label('Rehire')
+                    ->icon('heroicon-o-arrow-left-end-on-rectangle')
+                    ->color('warning')
+                    ->authorize('delete')
+                    ->authorize(function (Employee $employee) {
+                        return $employee->resignation_date !== null;
+                    })
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\DatePicker::make('admission_date')
+                            ->label('Admission Date'),
+                    ])
+                    ->action(function (Employee $employee, array $data) {
+                        if ($employee->user() !== null) {
+                            $employee->user()->restore(); //@phpstan-ignore-line
+                        }
+
+                        if ($data['admission_date'] === null) {
+                            $employee->update(['resignation_date' => null]);
+
+                            return;
+                        }
+                        $employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);//@phpstan-ignore-line
+                    }),
             ]);
     }
 
