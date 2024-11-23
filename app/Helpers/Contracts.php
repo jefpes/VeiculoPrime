@@ -210,12 +210,14 @@ class Contracts
             'data_venda_extenso'        => Tools::spellDate($sale->date_sale),
             'data_pagamento'            => Tools::dateFormat($sale->date_payment),
             'data_pagamento_extenso'    => Tools::spellDate($sale->date_payment),
+            'taxa_juros'                => number_format($sale->interest_rate, 2, ',', '.') . '%',
+            'taxa_juros_extenso'        => Tools::spellNumber($sale->interest_rate),
             'desconto'                  => number_format($sale->discount, 2, ',', '.'),
             'desconto_extenso'          => Tools::spellNumber($sale->discount),
             'desconto_dinheiro'         => Tools::spellMonetary($sale->discount),
-            'acrescimo'                 => number_format($sale->surcharge, 2, ',', '.'),
-            'acrescimo_extenso'         => Tools::spellNumber($sale->surcharge),
-            'acrescimo_dinheiro'        => Tools::spellMonetary($sale->surcharge),
+            'juros'                     => number_format($sale->interest, 2, ',', '.'),
+            'juros_extenso'             => Tools::spellNumber($sale->interest),
+            'juros_dinheiro'            => Tools::spellMonetary($sale->interest),
             'entrada'                   => number_format($sale->down_payment, 2, ',', '.'),
             'entrada_extenso'           => Tools::spellNumber($sale->down_payment),
             'entrada_dinheiro'          => Tools::spellMonetary($sale->down_payment),
@@ -229,6 +231,9 @@ class Contracts
             'total'                     => number_format($sale->total, 2, ',', '.'),
             'total_extenso'             => Tools::spellNumber($sale->total),
             'total_dinheiro'            => Tools::spellMonetary($sale->total),
+            'total_com_juros'           => number_format($sale->total_with_interest, 2, ',', '.'),
+            'total_com_juros_extenso'   => Tools::spellNumber($sale->total_with_interest),
+            'total_com_juros_dinheiro'  => Tools::spellMonetary($sale->total_with_interest),
         ]);
     }
 
@@ -266,6 +271,14 @@ class Contracts
             "parcela_status"                   => $installment->status ?? 'Valor não especificado',
             "parcela_data_pagamento"           => Tools::dateFormat($installment->payment_date),
             "parcela_data_pagamento_extenso"   => Tools::spellDate($installment->payment_date),
+            "parcela_multa"                    => number_format($installment->late_fee, 2, ',', '.'),
+            "parcela_multa_extenso"            => Tools::spellNumber($installment->late_fee),
+            "parcela_multa_dinheiro"           => Tools::spellMonetary($installment->late_fee),
+            "parcela_taxa_juros"               => number_format($installment->interest, 2, ',', '.') . '%',
+            "parcela_taxa_juros_extenso"       => Tools::spellNumber($installment->interest),
+            "parcela_juros"                    => number_format($installment->interest, 2, ',', '.'),
+            "parcela_juros_extenso"            => Tools::spellNumber($installment->interest),
+            "parcela_juros_dinheiro"           => Tools::spellMonetary($installment->interest),
             "parcela_valor_pagamento"          => number_format($installment->payment_value, 2, ',', '.'),
             "parcela_valor_pagamento_extenso"  => Tools::spellNumber($installment->payment_value),
             "parcela_valor_pagamento_dinheiro" => Tools::spellMonetary($installment->payment_value),
@@ -273,9 +286,6 @@ class Contracts
             "parcela_desconto"                 => number_format($installment->discount, 2, ',', '.'),
             "parcela_desconto_extenso"         => Tools::spellNumber($installment->discount),
             "parcela_desconto_dinheiro"        => Tools::spellMonetary($installment->discount),
-            "parcela_acrescimo"                => number_format($installment->surcharge, 2, ',', '.'),
-            "parcela_acrescimo_extenso"        => Tools::spellNumber($installment->surcharge),
-            "parcela_acrescimo_dinheiro"       => Tools::spellMonetary($installment->surcharge),
         ]);
     }
 
