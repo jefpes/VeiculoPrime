@@ -207,7 +207,8 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('vehicle')
                     ->getStateUsing(fn (Sale $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
-                    ->numeric(),
+                    ->numeric()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('client.name')
                     ->sortable()
                     ->searchable(),
@@ -243,7 +244,8 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('date_sale')
                     ->date('d/m/Y')
                     ->sortable()
-                    ->summarize(Count::make()),
+                    ->summarize(Count::make())
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_payment')
                     ->date('d/m/Y')
                     ->sortable()
@@ -330,8 +332,7 @@ class SaleResource extends Resource
                             });
                         }),
                 ])->query(function ($query, array $data) {
-                    return $query
-                        ->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                    return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
