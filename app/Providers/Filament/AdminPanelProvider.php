@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Http\Middleware\FilamentSettings;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
+use Filament\Support\Enums\MaxWidth;
 use Filament\{Panel, PanelProvider};
 use Illuminate\Cookie\Middleware\{AddQueuedCookiesToResponse, EncryptCookies};
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -57,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->spa();
+            ->spa()
+            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge);
     }
 }
