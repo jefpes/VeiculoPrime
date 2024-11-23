@@ -296,40 +296,113 @@ class SaleResource extends Resource
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
-                Filter::make('filter')
+                Filter::make('date_sale')
                     ->form([
                         Group::make([
-                            DatePicker::make('sale_date_initial')->label('Sale Date After')->live(debounce: 1000),
+                            DatePicker::make('sale_date_initial')->label('Sale Date After'),
                             DatePicker::make('sale_date_final')->label('Sale Date Before'),
                         ])->columns(2),
-                        Select::make('seller')
-                            ->searchable()
-                            ->options(function () {
-                                return \App\Models\User::all()->mapWithKeys(function ($user) {
-                                    return [
-                                        $user->id => $user->name,
-                                    ];
-                                });
-                            }),
-                        Select::make('client')
-                            ->searchable()
-                            ->options(function () {
-                                return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                    return [
-                                        $client->id => $client->name,
-                                    ];
-                                });
-                            }),
+                    ])->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
+                            ->when($data['sale_date_final'], fn ($query, $value) => $query->where('date_sale', '<=', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['sale_date_initial'] ?? null) {
+                            $indicators[] = __('Sale Date After') . ': ' . Carbon::parse($data['sale_date_initial'])->format('d/m/Y');
+                        }
+
+                        if ($data['sale_date_final'] ?? null) {
+                            $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('seller')->form([
+                    Select::make('seller')
+                        ->searchable()
+                        ->options(function () {
+                            return \App\Models\User::all()->mapWithKeys(function ($user) {
+                                return [
+                                    $user->id => $user->name,
+                                ];
+                            });
+                        }),
+                ])->query(function ($query, array $data) {
+                    return $query
+                        ->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                })->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['seller'] ?? null) {
+                        $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('client')->form([
+                    Select::make('client')
+                        ->searchable()
+                        ->options(function () {
+                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
+                                return [
+                                    $client->id => $client->name,
+                                ];
+                            });
+                        }),
+                ])->query(function ($query, array $data) {
+                    return $query
+                        ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
+                })->indicateUsing(function (array $data): array {
+                    $indicators = [];
+
+                    if ($data['client'] ?? null) {
+                        $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
+                    }
+
+                    return $indicators;
+                }),
+                Filter::make('payment_method')
+                    ->form([
                         Forms\Components\Select::make('payment_method')
-                            ->options(
-                                collect(PaymentMethod::cases())
-                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                            ),
+                        ->options(
+                            collect(PaymentMethod::cases())
+                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
+                        ),
+                    ])->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['payment_method'] ?? null) {
+                            $indicators[] = __('Payment Method') . ': ' . $data['payment_method'];
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('status')
+                    ->form([
                         Forms\Components\Select::make('status')
-                            ->options(
-                                collect(StatusPayments::cases())
-                                    ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
-                            ),
+                        ->options(
+                            collect(StatusPayments::cases())
+                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
+                        ),
+                    ])->query(function ($query, array $data) {
+                        return $query
+                            ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['status'] ?? null) {
+                            $indicators[] = __('Status') . ': ' . $data['status'];
+                        }
+
+                        return $indicators;
+                    }),
+                Filter::make('model')
+                    ->form([
                         Select::make('model')
                             ->searchable()
                             ->options(function () {
@@ -341,16 +414,8 @@ class SaleResource extends Resource
                             }),
                     ])
                     ->query(function ($query, array $data) {
-                        $query
-                            ->when(!empty($data['sale_date_initial']), fn ($query, $value) => $query->where('date_sale', '>=', $value))
-                            ->when(!empty($data['sale_date_final']), fn ($query, $value) => $query->where('date_sale', '<=', $value))
-                            ->when(!empty($data['seller']), fn ($query, $value) => $query->where('user_id', $value))
-                            ->when(!empty($data['client']), fn ($query, $value) => $query->where('client_id', $value))
-                            ->when(!empty($data['payment_method']), fn ($query, $value) => $query->where('payment_method', $value))
-                            ->when(!empty($data['status']), fn ($query, $value) => $query->where('status', $value));
-
                         if (!empty($data['model'])) {
-                            $query->whereHas('vehicle', function ($query) use ($data) {
+                            return $query->whereHas('vehicle', function ($query) use ($data) {
                                 $query->where('vehicle_model_id', $data['model']);
                             });
                         }
@@ -359,30 +424,6 @@ class SaleResource extends Resource
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
-
-                        if (!empty($data['sale_date_initial'])) {
-                            $indicators[] = __('Sale Date After') . ': ' . Carbon::parse($data['sale_date_initial'])->format('d/m/Y');
-                        }
-
-                        if (!empty($data['sale_date_final'])) {
-                            $indicators[] = __('Sale Date Before') . ': ' . Carbon::parse($data['sale_date_final'])->format('d/m/Y');
-                        }
-
-                        if (!empty($data['seller'])) {
-                            $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
-                        }
-
-                        if (!empty($data['client'])) {
-                            $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
-                        }
-
-                        if (!empty($data['payment_method'])) {
-                            $indicators[] = __('Payment Method') . ': ' . $data['payment_method'];
-                        }
-
-                        if (!empty($data['status'])) {
-                            $indicators[] = __('Status') . ': ' . $data['status'];
-                        }
 
                         if (!empty($data['model'])) {
                             $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
