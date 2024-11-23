@@ -272,7 +272,9 @@ class SaleResource extends Resource
                     ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('number_installments')
                     ->label('Installments')
-                    ->numeric(),
+                    ->numeric()
+                    ->summarize(Sum::make())
+                    ->summarize(Average::make()),
                 Tables\Columns\TextColumn::make('reimbursement')
                     ->money('BRL')
                     ->sortable()
