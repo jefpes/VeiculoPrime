@@ -15,12 +15,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\Summarizers\{Average, Count, Sum};
+use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\{Blade};
+use Illuminate\Support\Facades\{Blade, DB};
 use Illuminate\Support\HtmlString;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -286,11 +285,14 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('total')
                     ->money('BRL')
                     ->sortable()
-                    ->summarize(Sum::make()->money('BRL')),
-                Tables\Columns\TextColumn::make('total_with_interest')
-                    ->money('BRL')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->getStateUsing(fn (Sale $record) => $record->total_with_interest ?? $record->total)
+                    ->summarize(
+                        Summarizer::make()->using(function ($query) {
+                            return $query->sum(DB::raw('COALESCE(total_with_interest, total)'));
+                        })
+                        ->money('BRL')
+                        ->label('Total')
+                    ),
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
@@ -338,7 +340,7 @@ class SaleResource extends Resource
                                 });
                             }),
                     ])
-                    ->query(function (Builder $query, array $data): Builder {
+                    ->query(function ($query, array $data) {
                         $query
                             ->when(!empty($data['sale_date_initial']), fn ($query, $value) => $query->where('date_sale', '>=', $value))
                             ->when(!empty($data['sale_date_final']), fn ($query, $value) => $query->where('date_sale', '<=', $value))
