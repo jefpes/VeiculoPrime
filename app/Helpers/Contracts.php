@@ -319,6 +319,14 @@ class Contracts
                 "parcela_" . ($i + 1) . "_status"                   => $installments[$i]->status ?? 'Valor não especificado',
                 "parcela_" . ($i + 1) . "_data_pagamento"           => Tools::dateFormat($installments[$i]->payment_date),
                 "parcela_" . ($i + 1) . "_data_pagamento_extenso"   => Tools::spellDate($installments[$i]->payment_date),
+                "parcela_" . ($i + 1) . "_multa"                    => number_format($installments[$i]->late_fee, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_multa_extenso"            => Tools::spellNumber($installments[$i]->late_fee),
+                "parcela_" . ($i + 1) . "_multa_dinheiro"           => Tools::spellMonetary($installments[$i]->late_fee),
+                "parcela_" . ($i + 1) . "_taxa_juros"               => number_format($installments[$i]->interest_rate, 2, ',', '.') . '%',
+                "parcela_" . ($i + 1) . "_taxa_juros_extenso"       => Tools::spellNumber($installments[$i]->interest_rate),
+                "parcela_" . ($i + 1) . "_juros"                    => number_format($installments[$i]->interest, 2, ',', '.'),
+                "parcela_" . ($i + 1) . "_juros_extenso"            => Tools::spellNumber($installments[$i]->interest),
+                "parcela_" . ($i + 1) . "_juros_dinheiro"           => Tools::spellMonetary($installments[$i]->interest),
                 "parcela_" . ($i + 1) . "_valor_pagamento"          => number_format($installments[$i]->payment_value, 2, ',', '.'),
                 "parcela_" . ($i + 1) . "_valor_pagamento_extenso"  => Tools::spellNumber($installments[$i]->payment_value),
                 "parcela_" . ($i + 1) . "_valor_pagamento_dinheiro" => Tools::spellMonetary($installments[$i]->payment_value),
@@ -326,9 +334,6 @@ class Contracts
                 "parcela_" . ($i + 1) . "_desconto"                 => number_format($installments[$i]->discount, 2, ',', '.'),
                 "parcela_" . ($i + 1) . "_desconto_extenso"         => Tools::spellNumber($installments[$i]->discount),
                 "parcela_" . ($i + 1) . "_desconto_dinheiro"        => Tools::spellMonetary($installments[$i]->discount),
-                "parcela_" . ($i + 1) . "_acrescimo"                => number_format($installments[$i]->surcharge, 2, ',', '.'),
-                "parcela_" . ($i + 1) . "_acrescimo_extenso"        => Tools::spellNumber($installments[$i]->surcharge),
-                "parcela_" . ($i + 1) . "_acrescimo_dinheiro"       => Tools::spellMonetary($installments[$i]->surcharge),
             ]);
         }
     }
