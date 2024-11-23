@@ -14,6 +14,7 @@ use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Tables\Columns\Summarizers\{Average, Sum};
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -92,7 +93,8 @@ class PaymentInstallmentResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sale.client.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('due_date')
                     ->date()
                     ->sortable()
@@ -100,7 +102,8 @@ class PaymentInstallmentResource extends Resource
                 Tables\Columns\TextColumn::make('value')
                     ->numeric()
                     ->sortable()
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(function (string $state, $record): string|array {
@@ -125,21 +128,35 @@ class PaymentInstallmentResource extends Resource
                     ->date()
                     ->sortable()
                     ->date('d/m/Y'),
-                Tables\Columns\TextColumn::make('payment_value')
+                Tables\Columns\TextColumn::make('late_fee')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('interest_rate')
                     ->numeric()
                     ->sortable()
-                    ->money('BRL'),
+                    ->suffix('%')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Average::make()->suffix('%')),
+                Tables\Columns\TextColumn::make('interest')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('payment_value')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('discount')
-                    ->numeric()
+                    ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('surcharge')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
             ])
             ->actions([
                 Tables\Actions\Action::make('receive')

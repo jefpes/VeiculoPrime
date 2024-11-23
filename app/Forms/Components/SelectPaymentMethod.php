@@ -12,8 +12,7 @@ class SelectPaymentMethod extends Select
         parent::setUp();
 
         $this->options(
-            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
+            collect(PaymentMethod::cases())->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
         );
     }
 }
