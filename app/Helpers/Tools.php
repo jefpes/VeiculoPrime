@@ -75,6 +75,37 @@ class Tools
         return "$reaisExtenso $reaisText e $centavosExtenso $centavosText";
     }
 
+    public static function spellPercentage(?float $value): string
+    {
+        // Verifica se o valor é nulo e retorna uma mensagem padrão
+        if (is_null($value)) {
+            return 'Porcentagem não especificada';
+        }
+
+        // Verifica se o número é inteiro (não possui parte decimal)
+        if (floor($value) == $value) {
+            // Converte a parte inteira para texto em português
+            $parteInteiraTexto = Number::spell((int)$value, locale: 'br');
+
+            // Retorna o valor com "por cento" para inteiros
+            return "$parteInteiraTexto por cento";
+        }
+
+        // Caso contrário, separa a parte inteira e a parte decimal
+        $parteInteira = floor($value); // Parte inteira do valor
+        $parteDecimal = round(($value - $parteInteira) * 100); // Parte decimal, máximo de duas casas
+
+        // Converte a parte inteira para texto em português
+        $parteInteiraTexto = Number::spell($parteInteira, locale: 'br');
+
+        // Parte decimal como texto, com dígitos separados (ex: 3 -> "zero três")
+        $parteDecimalTexto = str_split(str_pad((string)$parteDecimal, 2, '0', STR_PAD_LEFT)); // Converte para string antes de usar str_pad
+        $parteDecimalTexto = implode(' ', array_map(fn ($d) => Number::spell((int) $d, locale: 'br'), $parteDecimalTexto));
+
+        // Combina a parte inteira e decimal com a palavra "porcento"
+        return "$parteInteiraTexto vírgula $parteDecimalTexto porcento";
+    }
+
     public static function spellNumber(?float $value): string
     {
 

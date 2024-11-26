@@ -27,12 +27,14 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \Illuminate\Support\Carbon $date_payment
  * @property string $status
  * @property float $discount
- * @property float $surcharge
+ * @property float|null $interest
+ * @property float $interest_rate
  * @property float $down_payment
  * @property int $number_installments
  * @property float $reimbursement
  * @property \Illuminate\Support\Carbon $date_cancel
  * @property float $total
+ * @property float|null $total_with_interest
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */

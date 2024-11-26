@@ -55,7 +55,7 @@ class Contracts
                 'ucv_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
                 'ucv_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
                 'ucv_endereco_bairro'      => $user->employee->address->neighborhood ?? 'Valor não especificado',
-                'ucv_endereco_cidade'      => $user->employee->address->name ?? 'Valor não especificado',
+                'ucv_endereco_cidade'      => $user->employee->address->city ?? 'Valor não especificado',
                 'ucv_endereco_estado'      => $user->employee->address->state ?? 'Valor não especificado',
                 'ucv_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
             ]);
@@ -68,7 +68,7 @@ class Contracts
             return;
         }
 
-        $client = Client::with('address', 'address.city')->find($clientId);
+        $client = Client::with('address')->find($clientId);
 
         // Substitui os placeholders com os dados do cliente
         $template->setValues([
@@ -99,7 +99,7 @@ class Contracts
             'cliente_endereco_rua'         => $client->address->street ?? 'Valor não especificado',
             'cliente_endereco_numero'      => $client->address->number ?? 'Valor não especificado',
             'cliente_endereco_bairro'      => $client->address->neighborhood ?? 'Valor não especificado',
-            'cliente_endereco_cidade'      => $client->address->name ?? 'Valor não especificado',
+            'cliente_endereco_cidade'      => $client->address->city ?? 'Valor não especificado',
             'cliente_endereco_estado'      => $client->address->state ?? 'Valor não especificado',
             'cliente_endereco_complemento' => $client->address->complement ?? 'Valor não especificado',
         ]);
@@ -157,7 +157,7 @@ class Contracts
             return;
         }
 
-        $supplier = Supplier::with('address', 'address.city')->find($supplier_id);
+        $supplier = Supplier::with('address')->find($supplier_id);
 
         //Substitui os placeholders com os dados do fornecedor
         $template->setValues([
@@ -188,7 +188,7 @@ class Contracts
             'fornecedor_endereco_rua'         => $supplier->address->street ?? 'Valor não especificado',
             'fornecedor_endereco_numero'      => $supplier->address->number ?? 'Valor não especificado',
             'fornecedor_endereco_bairro'      => $supplier->address->neighborhood ?? 'Valor não especificado',
-            'fornecedor_endereco_cidade'      => $supplier->address->name ?? 'Valor não especificado',
+            'fornecedor_endereco_cidade'      => $supplier->address->city ?? 'Valor não especificado',
             'fornecedor_endereco_estado'      => $supplier->address->state ?? 'Valor não especificado',
             'fornecedor_endereco_complemento' => $supplier->address->complement ?? 'Valor não especificado',
         ]);
@@ -211,7 +211,7 @@ class Contracts
             'data_pagamento'            => Tools::dateFormat($sale->date_payment),
             'data_pagamento_extenso'    => Tools::spellDate($sale->date_payment),
             'taxa_juros'                => number_format($sale->interest_rate, 2, ',', '.') . '%',
-            'taxa_juros_extenso'        => Tools::spellNumber($sale->interest_rate),
+            'taxa_juros_extenso'        => Tools::spellPercentage($sale->interest_rate),
             'desconto'                  => number_format($sale->discount, 2, ',', '.'),
             'desconto_extenso'          => Tools::spellNumber($sale->discount),
             'desconto_dinheiro'         => Tools::spellMonetary($sale->discount),
@@ -274,8 +274,8 @@ class Contracts
             "parcela_multa"                    => number_format($installment->late_fee, 2, ',', '.'),
             "parcela_multa_extenso"            => Tools::spellNumber($installment->late_fee),
             "parcela_multa_dinheiro"           => Tools::spellMonetary($installment->late_fee),
-            "parcela_taxa_juros"               => number_format($installment->interest, 2, ',', '.') . '%',
-            "parcela_taxa_juros_extenso"       => Tools::spellNumber($installment->interest),
+            "parcela_taxa_juros"               => number_format($installment->interest_rate, 2, ',', '.') . '%',
+            "parcela_taxa_juros_extenso"       => Tools::spellPercentage($installment->interest_rate),
             "parcela_juros"                    => number_format($installment->interest, 2, ',', '.'),
             "parcela_juros_extenso"            => Tools::spellNumber($installment->interest),
             "parcela_juros_dinheiro"           => Tools::spellMonetary($installment->interest),
@@ -323,7 +323,7 @@ class Contracts
                 "parcela_" . ($i + 1) . "_multa_extenso"            => Tools::spellNumber($installments[$i]->late_fee),
                 "parcela_" . ($i + 1) . "_multa_dinheiro"           => Tools::spellMonetary($installments[$i]->late_fee),
                 "parcela_" . ($i + 1) . "_taxa_juros"               => number_format($installments[$i]->interest_rate, 2, ',', '.') . '%',
-                "parcela_" . ($i + 1) . "_taxa_juros_extenso"       => Tools::spellNumber($installments[$i]->interest_rate),
+                "parcela_" . ($i + 1) . "_taxa_juros_extenso"       => Tools::spellPercentage($installments[$i]->interest_rate),
                 "parcela_" . ($i + 1) . "_juros"                    => number_format($installments[$i]->interest, 2, ',', '.'),
                 "parcela_" . ($i + 1) . "_juros_extenso"            => Tools::spellNumber($installments[$i]->interest),
                 "parcela_" . ($i + 1) . "_juros_dinheiro"           => Tools::spellMonetary($installments[$i]->interest),

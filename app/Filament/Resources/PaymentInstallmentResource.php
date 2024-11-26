@@ -6,7 +6,7 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentResource\{Pages};
 use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\Contracts;
-use App\Models\PaymentInstallment;
+use App\Models\{Company, PaymentInstallment};
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\{DatePicker, Group, Select};
@@ -75,7 +75,11 @@ class PaymentInstallmentResource extends Resource
         $interest = $initialValue * pow((1 + ($interestRate / 100)), $daysLate) - $initialValue;
 
         // Calcula o valor total de pagamento
-        $paymentValue = $initialValue + $interest + $lateFee - ($get('discount') ?: 0);
+        $paymentValue = $initialValue + $interest - ($get('discount') ?: 0);
+
+        if ($daysLate > 0) {
+            $paymentValue = $paymentValue + $lateFee;
+        }
 
         // Atualiza os valores dos campos reativos
         $set('interest', round($interest, 2));
@@ -173,6 +177,8 @@ class PaymentInstallmentResource extends Resource
                         'payment_value' => $record->value,
                         'due_date'      => $record->due_date,
                         'payment_date'  => now(),
+                        'late_fee'      => Company::query()->first()->late_fee,
+                        'interest_rate' => Company::query()->first()->interest_rate_installment,
                     ])
                     ->form([
                         SelectPaymentMethod::make('payment_method')->required(),
