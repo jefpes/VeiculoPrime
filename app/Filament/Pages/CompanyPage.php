@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\{Permission};
+use App\Forms\Components\MoneyInput;
 use App\Helpers\AddressForm;
 use App\Models\{Company};
 use Filament\Forms\Components\Tabs\Tab;
@@ -130,6 +131,17 @@ class CompanyPage extends Page
                             ->maxLength(255)
                             ->prefixIcon('icon-youtube'),
                     ])->columns(2),
+                    Tab::make('Configuration')->schema([
+                        MoneyInput::make('interest_rate_sale')
+                            ->label('Interest rate sales')
+                            ->prefix(null)
+                            ->suffix('%'),
+                        MoneyInput::make('interest_rate_installment')
+                            ->label('Interest rate installment')
+                            ->prefix(null)
+                            ->suffix('%'),
+                        MoneyInput::make('late_fee')->label('Late fee'),
+                    ])->columns(3),
                 ]),
             ])
             ->statePath('data');
