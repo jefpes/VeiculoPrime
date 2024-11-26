@@ -21,10 +21,12 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  * @property float $value
  * @property string $status
  * @property \Illuminate\Support\Carbon $payment_date
- * @property float $payment_value
  * @property string $payment_method
- * @property float $discount
- * @property float $surcharge
+ * @property float|null $discount
+ * @property float|null $interest
+ * @property float|null $interest_rate
+ * @property float|null $late_fee
+ * @property float $payment_value
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */

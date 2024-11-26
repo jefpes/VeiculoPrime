@@ -18,10 +18,9 @@ class EditSale extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $this->oldVehicleId                                              = $data['vehicle_id'];
-        $data['discount'] > 0 ? $data['discount_surcharge']              = 'discount' : $data['discount_surcharge'] = 'surcharge';
-        $data['number_installments'] > 1 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
+        $data['number_installments'] > 0 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
         $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
-        $data['number_installments'] > 1 ? $data['first_installment']    = PaymentInstallment::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
+        $data['number_installments'] > 0 ? $data['first_installment']    = PaymentInstallment::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
 
         return $data;
     }
@@ -32,19 +31,21 @@ class EditSale extends EditRecord
             Vehicle::where('id', $this->oldVehicleId)->update(['sold_date' => null]); //@phpstan-ignore-line
             Vehicle::where('id', $data['vehicle_id'])->update(['sold_date' => $data['date_sale']]); //@phpstan-ignore-line
         }
-        $data['surcharge'] = $data['discount_surcharge'] === 'discount' ? 0 : $data['surcharge'];
-        $data['discount']  = $data['discount_surcharge'] === 'surcharge' ? 0 : $data['discount'];
 
         if ($data['payment_type'] === 'in_sight') {
-            $data['number_installments'] = 1;
             $data['status']              = 'PAGO';
-            $data['down_payment']        = 0;
+            $data['down_payment']        = null;
+            $data['interest_rate']       = null;
+            $data['interest']            = null;
+            $data['total_with_interest'] = null;
+            $data['number_installments'] = null;
             $data['date_payment']        = $data['date_sale'];
             PaymentInstallment::where('sale_id', $this->getRecord()->id)->delete(); //@phpstan-ignore-line
         }
 
         if ($data['payment_type'] === 'on_time') {
             $data['status']         = 'PENDENTE';
+            $data['date_payment']   = null;
             $this->dataInstallments = array_merge($this->dataInstallments, [
                 'installment_value' => $data['installment_value'],
                 'first_installment' => Carbon::parse($data['first_installment']),
@@ -67,7 +68,7 @@ class EditSale extends EditRecord
     {
         Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
 
-        if ($this->record->number_installments > 1) { //@phpstan-ignore-line
+        if ($this->record->number_installments > 0) { //@phpstan-ignore-line
             if (PaymentInstallment::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
                 PaymentInstallment::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }
@@ -88,6 +89,5 @@ class EditSale extends EditRecord
                 PaymentInstallment::create($installmentData); //@phpstan-ignore-line
             }
         }
-
     }
 }

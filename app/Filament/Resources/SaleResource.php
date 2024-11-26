@@ -6,22 +6,20 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Helpers\Contracts;
+use App\Helpers\{Contracts, Tools};
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\{FileUpload, Group, Section, Select, ToggleButtons};
+use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Columns\Summarizers\{Count, Sum};
-use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\{Blade};
+use Illuminate\Support\Facades\{Blade, DB};
 use Illuminate\Support\HtmlString;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -56,7 +54,11 @@ class SaleResource extends Resource
                         ->relationship('user', 'name')
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
-                        ->relationship('vehicle', 'id')
+                        ->label('Vehicle')
+                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                            self::updateInstallmentValues($set, $get);
+                        })
+                        ->live()
                         ->options(function ($record) {
                             $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
 
@@ -94,71 +96,12 @@ class SaleResource extends Resource
                         ->required(),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
-                    ToggleButtons::make('discount_surcharge')
-                        ->options([
-                            'surcharge' => 'Acréscimo',
-                            'discount'  => 'Desconto',
-                        ])
-                        ->label('Type')
-                        ->live()
-                        ->inline()
-                        ->required()
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $set('surcharge', 0); // Define surcharge como null
-                            $set('discount', 0); // Define discount como null
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        }),
                     MoneyInput::make('discount')
                         ->label('Desconto')
                         ->live(debounce: 1000)
-                        ->hidden(fn ($get) => $get('discount_surcharge') === 'surcharge')
-                        ->required(fn (Forms\Get $get) => $get('discount_surcharge') === 'discount')
                         ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
+                            self::updateInstallmentValues($set, $get);
                         }),
-                    MoneyInput::make('surcharge')
-                        ->label('Acréscimo')
-                        ->live(debounce: 1000)
-                        ->hidden(fn ($get) => $get('discount_surcharge') === 'discount')
-                        ->required(fn (Forms\Get $get) => $get('discount_surcharge') === 'surcharge')
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-                            $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-                            $discount     = $get('discount') !== "" ? $get('discount') : 0;
-                            $surcharge    = $get('surcharge') !== "" ? $get('surcharge') : 0;
-                            $total        = $vehiclePrice + $surcharge - $discount;
-                            $set('total', $total);
-
-                            if ($get('payment_type') === 'on_time') {
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        }),
-                    MoneyInput::make('total')
-                        ->readOnly(),
                     ToggleButtons::make('payment_type')
                         ->options([
                             'in_sight' => 'À vista',
@@ -166,46 +109,91 @@ class SaleResource extends Resource
                         ])
                         ->label('Type')
                         ->live()
-                        ->required()
                         ->inline()
-                        ->afterStateUpdated(function (Forms\Set $set) {
-                            $set('number_installments', 1);
-                            $set('first_installment_date', now()->addMonth(1)->format('Y-m-d')); //@phpstan-ignore-line
-                        }),
+                        ->required(),
+                    MoneyInput::make('total')->readOnly(),
                 ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
-                Section::make(__('Installments'))->visible(
-                    fn (Forms\Get $get) => $get('payment_type') === 'on_time'
-                )->schema([
-                    MoneyInput::make('down_payment')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
-                        ->live(debounce: 1000)
-                        ->afterStateUpdated(
-                            function (Forms\Set $set, Forms\Get $get) {
-                                $total            = $get('total');
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        ),
-                    Forms\Components\TextInput::make('number_installments')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
-                        ->numeric()
-                        ->live(debounce: 1000)
-                        ->default(1)
-                        ->minValue(1)
-                        ->afterStateUpdated(
-                            function (Forms\Set $set, Forms\Get $get) {
-                                $total            = $get('total');
-                                $downPayment      = $get('down_payment') !== "" ? $get('down_payment') : 0;
-                                $installmentValue = ($total - $downPayment) / ($get('number_installments') === '' ? 1 : $get('number_installments'));
-                                $set('installment_value', $installmentValue);
-                            }
-                        ),
-                    MoneyInput::make('installment_value')->readOnly(),
-                    Forms\Components\DatePicker::make('first_installment')
-                        ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time'),
-                ])->columns(['sm' => 2, 'md' => 4]),
+                Section::make(__('Installments'))
+                    ->visible(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                    ->columns(['sm' => 2, 'md' => 4])
+                    ->schema([
+                        MoneyInput::make('down_payment')
+                            ->live(debounce: 1000)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        MoneyInput::make('interest_rate')
+                            ->prefix(null)
+                            ->suffix('%')
+                            ->live(debounce: 1000)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        TextInput::make('number_installments')
+                            ->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
+                            ->numeric()
+                            ->live(debounce: 1000)
+                            ->minValue(0)
+                            ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
+                                self::updateInstallmentValues($set, $get);
+                            }),
+                        MoneyInput::make('installment_value')->readOnly(),
+                        DatePicker::make('first_installment')->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time'),
+                        MoneyInput::make('interest')->readOnly(),
+                        MoneyInput::make('total_with_interest')->readOnly(),
+                    ]),
             ]);
+    }
+
+    public static function updateInstallmentValues(Forms\Set $set, Forms\Get $get): void
+    {
+        // Obtém os valores de entrada com valores padrão (0) quando vazio
+        $total        = $get('total') ?? 0;
+        $downPayment  = $get('down_payment') !== "" ? $get('down_payment') : 0;
+        $interestRate = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
+
+        // Garante que o número de parcelas seja no mínimo 1
+        $numberInstallments = $get('number_installments') != "" ? max((int) $get('number_installments'), 1) : 1;
+
+        // Obtém o preço do veículo
+        $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
+        $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
+
+        // Aplica desconto, se houver
+        $discount = $get('discount') !== "" ? $get('discount') : 0;
+        $interest = $get('interest') !== "" ? $get('interest') : 0;
+
+        // Calcula o total
+        $total = $vehiclePrice - $discount;
+        $set('total', $total);
+
+        // Se o pagamento for parcelado, calcula o valor da parcela
+        if ($get('payment_type') === 'on_time') {
+            $installmentValue = ($total - $downPayment) / $numberInstallments;
+            $set('installment_value', round($installmentValue, 2)); // Arredonda para 2 casas decimais
+        }
+
+        // Calcula o principal após o pagamento inicial (entrada)
+        $principal = $total - $downPayment;
+
+        // Verifica se os juros são 0%
+        if ($interestRate == 0) {
+            // Sem juros: cálculo simples
+            $installmentValue  = round($principal / $numberInstallments, 2);  // Cálculo simples da parcela
+            $totalWithInterest = $principal;  // Total sem juros
+            $interest          = 0;  // Sem juros
+        } else {
+            // Com juros compostos: chama o método para calcular os juros compostos
+            $result            = Tools::calculateCompoundInterest($principal, $interestRate, $numberInstallments);
+            $installmentValue  = $result['installment'];
+            $totalWithInterest = $result['total'];  // Total com juros
+            $interest          = round($totalWithInterest - $principal, 2);  // Valor dos juros
+        }
+
+        // Atualiza os campos do formulário
+        $set('installment_value', $installmentValue);
+        $set('interest', $interest);
+        $set('total_with_interest', ($totalWithInterest + $downPayment));
     }
 
     public static function table(Table $table): Table
@@ -219,7 +207,8 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('vehicle')
                     ->getStateUsing(fn (Sale $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
-                    ->numeric(),
+                    ->numeric()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('client.name')
                     ->sortable()
                     ->searchable(),
@@ -255,7 +244,8 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('date_sale')
                     ->date('d/m/Y')
                     ->sortable()
-                    ->summarize(Count::make()),
+                    ->summarize(Count::make())
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_payment')
                     ->date('d/m/Y')
                     ->sortable()
@@ -265,11 +255,16 @@ class SaleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
-                Tables\Columns\TextColumn::make('surcharge')
+                Tables\Columns\TextColumn::make('interest')
                     ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('interest_rate')
+                    ->suffix('%')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Average::make()->suffix('%')),
                 Tables\Columns\TextColumn::make('down_payment')
                     ->money('BRL')
                     ->sortable()
@@ -277,7 +272,9 @@ class SaleResource extends Resource
                     ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('number_installments')
                     ->label('Installments')
-                    ->numeric(),
+                    ->numeric()
+                    ->summarize(Sum::make())
+                    ->summarize(Average::make()),
                 Tables\Columns\TextColumn::make('reimbursement')
                     ->money('BRL')
                     ->sortable()
@@ -292,7 +289,14 @@ class SaleResource extends Resource
                 Tables\Columns\TextColumn::make('total')
                     ->money('BRL')
                     ->sortable()
-                    ->summarize(Sum::make()->money('BRL')),
+                    ->getStateUsing(fn (Sale $record) => $record->total_with_interest ?? $record->total)
+                    ->summarize(
+                        Summarizer::make()->using(function ($query) {
+                            return $query->sum(DB::raw('COALESCE(total_with_interest, total)'));
+                        })
+                        ->money('BRL')
+                        ->label('Total')
+                    ),
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
             ->filters([
@@ -302,7 +306,7 @@ class SaleResource extends Resource
                             DatePicker::make('sale_date_initial')->label('Sale Date After'),
                             DatePicker::make('sale_date_final')->label('Sale Date Before'),
                         ])->columns(2),
-                    ])->query(function (Builder $query, array $data): Builder {
+                    ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
                             ->when($data['sale_date_final'], fn ($query, $value) => $query->where('date_sale', '<=', $value));
@@ -319,25 +323,6 @@ class SaleResource extends Resource
 
                         return $indicators;
                     }),
-                Filter::make('plate')
-                    ->form([
-                        Forms\Components\TextInput::make('plate')
-                            ->label('Plate')
-                            ->mask('aaa-9*99'),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->whereHas('vehicle', function ($query) use ($data) {
-                                $query->where('plate', 'like', "%{$data['plate']}%");
-                            });
-                    })->indicateUsing(function (array $data): array {
-                        $indicators = [];
-
-                        if ($data['plate'] ?? null) {
-                            $indicators[] = __('Plate') . ': ' . $data['plate'];
-                        }
-
-                        return $indicators;
-                    }),
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
@@ -348,9 +333,8 @@ class SaleResource extends Resource
                                 ];
                             });
                         }),
-                ])->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                ])->query(function ($query, array $data) {
+                    return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
@@ -370,7 +354,7 @@ class SaleResource extends Resource
                                 ];
                             });
                         }),
-                ])->query(function (Builder $query, array $data): Builder {
+                ])->query(function ($query, array $data) {
                     return $query
                         ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
                 })->indicateUsing(function (array $data): array {
@@ -389,7 +373,7 @@ class SaleResource extends Resource
                             collect(PaymentMethod::cases())
                                 ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
                         ),
-                    ])->query(function (Builder $query, array $data): Builder {
+                    ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
                     })->indicateUsing(function (array $data): array {
@@ -408,7 +392,7 @@ class SaleResource extends Resource
                             collect(StatusPayments::cases())
                                 ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
                         ),
-                    ])->query(function (Builder $query, array $data): Builder {
+                    ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
                     })->indicateUsing(function (array $data): array {
@@ -432,7 +416,7 @@ class SaleResource extends Resource
                                 });
                             }),
                     ])
-                    ->query(function (Builder $query, array $data): Builder {
+                    ->query(function ($query, array $data) {
                         if (!empty($data['model'])) {
                             return $query->whereHas('vehicle', function ($query) use ($data) {
                                 $query->where('vehicle_model_id', $data['model']);
@@ -454,17 +438,17 @@ class SaleResource extends Resource
 
                         return $indicators;
                     }),
-            ], layout: FiltersLayout::Modal)
+            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Action::make('sale_cancel')
-                    ->authorize('saleCancel')
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Cancel sale'))
-                    ->modalDescription(function (Sale $sale) {
-                        return new HtmlString(
-                            Blade::render(
-                                '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
+                                        ->authorize('saleCancel')
+                                        ->requiresConfirmation()
+                                        ->modalHeading(__('Cancel sale'))
+                                        ->modalDescription(function (Sale $sale) {
+                                            return new HtmlString(
+                                                Blade::render(
+                                                    '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
                                 <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
                                 <p>Data da venda: {{ $dateSale }}</p>
                                 <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
@@ -472,8 +456,8 @@ class SaleResource extends Resource
                                 @if ($sale->discount > 0)
                                     <p>Desconto: R$ {{ number_format($sale->discount, 2, ",", ".") }} </p>
                                 @endif
-                                @if ($sale->surcharge > 0)
-                                    <p>Acrescimo: R$ {{ number_format($sale->surcharge, 2, ",", ".") }} </p>
+                                @if ($sale->interest > 0)
+                                    <p>Acrescimo: R$ {{ number_format($sale->interest, 2, ",", ".") }} </p>
                                 @endif
                                 @if ($sale->down_payment > 0)
                                     <p>Entrada: R$ {{ number_format($sale->down_payment, 2, ",", ".") }} </p>
@@ -485,60 +469,60 @@ class SaleResource extends Resource
                                     <p>Valor das parcelas pago: R$ {{ number_format($sale->paymentInstallments->where("status", "PAGO")->sum("value"), 2, ",", ".") }} </p>
                                 @endif
                                     <p>Total recebido: R$ {{ number_format(($sale->paymentInstallments->where("status", "PAGO")->sum("value") ?? 0)+($sale->down_payment ?? 0), 2, ",", ".") }} </p>',
-                                [
-                                    'sale'          => $sale,
-                                    'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
-                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
-                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
-                                ]
-                            )
-                        );
+                                                    [
+                                                        'sale'          => $sale,
+                                                        'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
+                                                        'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
+                                                        'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
+                                                    ]
+                                                )
+                                            );
 
-                    })
-                    ->label('Cancel')
-                    ->translateLabel()
-                    ->icon('heroicon-o-x-circle')
-                    ->iconSize('md')
-                    ->color('danger')
-                    ->form([
-                        MoneyInput::make('reimbursement')
-                            ->label('Reimbursement')
-                            ->live(debounce: 500),
-                    ])
-                    ->action(function (Sale $sale, array $data) {
-                        $sale->update([
-                            'date_cancel'   => Carbon::now()->format('Y-m-d'),
-                            'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
-                            'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
-                        ]);
+                                        })
+                                        ->label('Cancel')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-x-circle')
+                                        ->iconSize('md')
+                                        ->color('danger')
+                                        ->form([
+                                            MoneyInput::make('reimbursement')
+                                                ->label('Reimbursement')
+                                                ->live(debounce: 500),
+                                        ])
+                                        ->action(function (Sale $sale, array $data) {
+                                            $sale->update([
+                                                'date_cancel'   => Carbon::now()->format('Y-m-d'),
+                                                'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
+                                                'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
+                                            ]);
 
-                        Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
-                    }),
+                                            Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
+                                        }),
                 Action::make('contract')
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Contract'))
-                    ->label('Contract')
-                    ->translateLabel()
-                    ->icon('heroicon-o-document')
-                    ->iconSize('md')
-                    ->color('info')
-                    ->form([
-                        FileUpload::make('contract')
-                            ->label('Contract')
-                            ->panelAspectRatio('2:1')
-                            ->storeFiles(false)
-                            ->acceptedFileTypes([
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            ]),
-                    ])
-                    ->action(function (array $data, Sale $sale) {
+                                        ->requiresConfirmation()
+                                        ->modalHeading(__('Contract'))
+                                        ->label('Contract')
+                                        ->translateLabel()
+                                        ->icon('heroicon-o-document')
+                                        ->iconSize('md')
+                                        ->color('info')
+                                        ->form([
+                                            FileUpload::make('contract')
+                                                ->label('Contract')
+                                                ->panelAspectRatio('2:1')
+                                                ->storeFiles(false)
+                                                ->acceptedFileTypes([
+                                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                                ]),
+                                        ])
+                                        ->action(function (array $data, Sale $sale) {
 
-                        $template = new TemplateProcessor($data['contract']->getRealPath());
+                                            $template = new TemplateProcessor($data['contract']->getRealPath());
 
-                        $caminho = Contracts::generateSaleContract($template, $sale);
+                                            $caminho = Contracts::generateSaleContract($template, $sale);
 
-                        return response()->download($caminho)->deleteFileAfterSend(true);
-                    }),
+                                            return response()->download($caminho)->deleteFileAfterSend(true);
+                                        }),
             ]);
     }
 

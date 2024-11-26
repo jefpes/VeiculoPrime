@@ -15,14 +15,9 @@ class CreateSale extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['surcharge'] = $data['discount_surcharge'] === 'discount' ? 0 : $data['surcharge'];
-        $data['discount']  = $data['discount_surcharge'] === 'surcharge' ? 0 : $data['discount'];
-
         if ($data['payment_type'] === 'in_sight') {
-            $data['number_installments'] = 1;
-            $data['status']              = 'PAGO';
-            $data['down_payment']        = 0;
-            $data['date_payment']        = $data['date_sale'];
+            $data['status']       = 'PAGO';
+            $data['date_payment'] = $data['date_sale'];
         }
 
         if ($data['payment_type'] === 'on_time') {
@@ -45,7 +40,7 @@ class CreateSale extends CreateRecord
     {
         Vehicle::where('id', $this->record->vehicle_id)->update(['sold_date' => $this->record->date_sale]); //@phpstan-ignore-line
 
-        if ($this->record->number_installments > 1) { //@phpstan-ignore-line
+        if ($this->record->number_installments > 0) { //@phpstan-ignore-line
             if (PaymentInstallment::where('sale_id', $this->record->id) !== null) { //@phpstan-ignore-line
                 PaymentInstallment::where('sale_id', $this->record->id)->delete(); //@phpstan-ignore-line
             }

@@ -4,16 +4,17 @@ namespace App\Filament\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\PaymentInstallmentResource\{Pages};
-use App\Forms\Components\MoneyInput;
+use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\Contracts;
-use App\Models\PaymentInstallment;
+use App\Models\{Company, PaymentInstallment};
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\{DatePicker, Select};
-use Filament\Forms\Form;
+use Filament\Forms\Components\{DatePicker, Group, Select};
+use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Tables\Columns\Summarizers\{Average, Sum};
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -43,33 +44,46 @@ class PaymentInstallmentResource extends Resource
         return __('Installments');
     }
 
-    public static function form(Form $form): Form
+    public static function updatePaymentValue(Set $set, Get $get): void
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
-                Forms\Components\Select::make('sale_id')
-                    ->relationship('sale', 'id')
-                    ->required(),
-                Forms\Components\DatePicker::make('due_date')
-                    ->required(),
-                Forms\Components\TextInput::make('value')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('payment_date'),
-                Forms\Components\TextInput::make('payment_value')
-                    ->numeric(),
-                Forms\Components\TextInput::make('payment_method')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('discount')
-                    ->numeric(),
-                Forms\Components\TextInput::make('surcharge')
-                    ->numeric(),
-            ]);
+        $initialValue = $get('value');
+        $lateFee      = $get('late_fee') ?: 0;
+        $interestRate = $get('interest_rate') ?: 0;
+
+        // Converta due_date e payment_date para instâncias de Carbon
+        $dueDate     = $get('due_date') ? Carbon::parse($get('due_date')) : null;
+        $paymentDate = $get('payment_date') ? Carbon::parse($get('payment_date')) : null;
+
+        // Verifique se as datas estão válidas
+        if (!$dueDate || !$paymentDate) {
+            // Se as datas não forem válidas, defina interest e payment_value como 0
+            $set('interest', 0);
+            $set('payment_value', $initialValue);
+
+            return;
+        }
+
+        // Calcula a diferença de dias entre a data de vencimento e a data de pagamento
+        $daysLate = $dueDate->diffInDays($paymentDate, false); // `false` para considerar valores negativos
+
+        // Se for pagamento antecipado (daysLate negativo), zera o daysLate
+        if ($daysLate < 0) {
+            $daysLate = 0;
+        }
+
+        // Juros composto diário: Valor inicial * (1 + taxa de juros / 100) ^ dias
+        $interest = $initialValue * pow((1 + ($interestRate / 100)), $daysLate) - $initialValue;
+
+        // Calcula o valor total de pagamento
+        $paymentValue = $initialValue + $interest - ($get('discount') ?: 0);
+
+        if ($daysLate > 0) {
+            $paymentValue = $paymentValue + $lateFee;
+        }
+
+        // Atualiza os valores dos campos reativos
+        $set('interest', round($interest, 2));
+        $set('payment_value', round($paymentValue, 2));
     }
 
     public static function table(Table $table): Table
@@ -83,7 +97,8 @@ class PaymentInstallmentResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sale.client.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('due_date')
                     ->date()
                     ->sortable()
@@ -91,7 +106,8 @@ class PaymentInstallmentResource extends Resource
                 Tables\Columns\TextColumn::make('value')
                     ->numeric()
                     ->sortable()
-                    ->money('BRL'),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(function (string $state, $record): string|array {
@@ -116,21 +132,35 @@ class PaymentInstallmentResource extends Resource
                     ->date()
                     ->sortable()
                     ->date('d/m/Y'),
-                Tables\Columns\TextColumn::make('payment_value')
+                Tables\Columns\TextColumn::make('late_fee')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('interest_rate')
                     ->numeric()
                     ->sortable()
-                    ->money('BRL'),
+                    ->suffix('%')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Average::make()->suffix('%')),
+                Tables\Columns\TextColumn::make('interest')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('payment_value')
+                    ->sortable()
+                    ->money('BRL')
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('discount')
-                    ->numeric()
+                    ->money('BRL')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('surcharge')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->summarize(Sum::make()->money('BRL')),
             ])
             ->actions([
                 Tables\Actions\Action::make('receive')
@@ -143,25 +173,47 @@ class PaymentInstallmentResource extends Resource
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
                     ->fillForm(fn (PaymentInstallment $record): array => [
-                        'value'        => $record->value,
-                        'payment_date' => now(),
+                        'value'         => $record->value,
+                        'payment_value' => $record->value,
+                        'due_date'      => $record->due_date,
+                        'payment_date'  => now(),
+                        'late_fee'      => Company::query()->first()->late_fee,
+                        'interest_rate' => Company::query()->first()->interest_rate_installment,
                     ])
                     ->form([
-                        MoneyInput::make('value')->readOnly(),
-                        Forms\Components\Select::make('payment_method')
-                            ->options(
-                                collect(PaymentMethod::cases())
-                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                            )
-                            ->required(),
-                        MoneyInput::make('payment_value')->required(),
-                        Forms\Components\DatePicker::make('payment_date')->required(),
+                        SelectPaymentMethod::make('payment_method')->required(),
+                        Forms\Components\DatePicker::make('due_date')->readOnly(),
+                        Group::make([
+                            MoneyInput::make('value')->readOnly(),
+                            MoneyInput::make('discount')
+                                ->live(debounce: 1000)
+                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                        ])->columns(2),
+                        Group::make([
+                            MoneyInput::make('late_fee')
+                                ->live(debounce: 1000)
+                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                            MoneyInput::make('interest_rate')
+                                ->prefix(null)
+                                ->suffix('%')
+                                ->live(debounce: 1000)
+                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                        ])->columns(2),
+                        Group::make([
+                            MoneyInput::make('interest')->readOnly(),
+                            MoneyInput::make('payment_value')->readOnly(),
+                        ])->columns(2),
+                        Forms\Components\DatePicker::make('payment_date')->required()
+                            ->live(debounce: 1000)
+                            ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
                     ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
                             'user_id'        => Auth::id(),
                             'status'         => 'PAGO',
-                            'discount'       => $data['payment_value'] < $installment->value ? ($installment->value - $data['payment_value']) : 0,
-                            'surcharge'      => $data['payment_value'] > $installment->value ? ($data['payment_value'] - $installment->value) : 0,
+                            'discount'       => $data['discount'],
+                            'late_fee'       => $data['late_fee'],
+                            'interest_rate'  => $data['interest_rate'],
+                            'interest'       => $data['interest'],
                             'payment_date'   => $data['payment_date'],
                             'payment_value'  => $data['payment_value'],
                             'payment_method' => $data['payment_method'],
@@ -183,7 +235,9 @@ class PaymentInstallmentResource extends Resource
                             'user_id'        => Auth::id(),
                             'status'         => 'PENDENTE',
                             'discount'       => null,
-                            'surcharge'      => null,
+                            'late_fee'       => null,
+                            'interest_rate'  => null,
+                            'interest'       => null,
                             'payment_date'   => null,
                             'payment_value'  => null,
                             'payment_method' => null,

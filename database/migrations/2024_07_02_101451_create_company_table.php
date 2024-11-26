@@ -35,6 +35,10 @@ return new class () extends Migration {
             $table->string('linkedin')->nullable();
             $table->string('youtube')->nullable();
             $table->string('whatsapp')->nullable();
+            $table->decimal('interest_rate_sale', 10, 2)->nullable();
+            $table->decimal('interest_rate_installment', 10, 2)->nullable();
+            $table->decimal('late_fee', 10, 2)->nullable();
+
             $table->timestamps();
         });
     }

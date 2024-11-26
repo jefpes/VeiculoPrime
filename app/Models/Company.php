@@ -36,6 +36,9 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $linkedin
  * @property string|null $youtube
  * @property string|null $whatsapp
+ * @property float|null $interest_rate_sale
+ * @property float|null $interest_rate_installment
+ * @property float|null $late_fee
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
