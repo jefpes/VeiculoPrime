@@ -20,10 +20,16 @@
           <div class="p-6">
             <div class="mt-6 space-y-4">
               <!-- Botão Limpar Filtros -->
-              <button wire:click="clearFilters"
-                class="flex items-center space-x-2 w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200">
-                <span>{{ __('Clear Filter') }}</span>
-              </button>
+                <div class="flex gap-x-2">
+                    <button wire:click="clearFilters"
+                        class="flex-1 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                        <span>{{ __('Clear Filters') }}</span>
+                    </button>
+                    <button @click="showFilters = false"
+                        class="flex-0 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                        <span>{{ __('Close') }}</span>
+                    </button>
+                </div>
               <div >
                 <x-select wire:model.live="vehicle_type_id" class="w-full" label="Type">
                   <option value="">{{ __('All') }}</option>
