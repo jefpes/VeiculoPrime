@@ -10,7 +10,7 @@ class Navigation extends Component
 {
     public function render(): View
     {
-        return view('livewire.home.navigation', ['company' => Company::query()->find(1)]);
+        return view('livewire.home.navigation', ['company' => Company::query()->first()]);
     }
 
 }
