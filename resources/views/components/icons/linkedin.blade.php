@@ -1,4 +1,5 @@
-<svg viewBox="0 0 256 256">
+<svg viewBox="0 0 256 256"
+{{ $attributes->merge([ 'class' => 'w-7 h-7']) }}>
   <g fill="none">
     <rect width="256" height="256" fill="#fff" rx="60" />
     <rect width="256" height="256" fill="#0a66c2" rx="60" />
