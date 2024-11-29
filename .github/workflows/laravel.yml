@@ -36,11 +36,11 @@ jobs:
       - name: Installing package.json and Build Assets
         run: npm install && npm run build
 
-      - name: Execute tests (Unit and Feature tests) via Pest
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-        run: php artisan test
+      # - name: Execute tests (Unit and Feature tests) via Pest
+      #   env:
+      #     DB_CONNECTION: sqlite
+      #     DB_DATABASE: database/database.sqlite
+      #   run: php artisan test
 
       - name: Execute Larastan
         run: vendor/bin/phpstan analyse

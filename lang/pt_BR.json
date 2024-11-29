@@ -1,5 +1,6 @@
 {
     "(and :count more error)": "(e mais :count erro)",
+    "Details": "Detalhes",
     "Sold date": "Data de venda",
     "Sale price": "Preço de venda",
     "Promotional price": "Preço promocional",
@@ -33,6 +34,7 @@
     "Value expense min": "Valor despesa min",
     "Value expense max": "Valor despesa max",
     "Type is in use": "Tipo está em uso",
+    "Clear Filters": "Limpar Filtros",
     "Type is in use by vehicles": "Tipo está em uso por veículos",
     "Type deleted successfully": "Tipo excluído com sucesso",
     "Model is in use": "Modelo está em uso",

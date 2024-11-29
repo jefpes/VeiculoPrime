@@ -131,7 +131,7 @@ class CompanyPage extends Page
                             ->maxLength(255)
                             ->prefixIcon('icon-youtube'),
                     ])->columns(2),
-                    Tab::make('Configuration')->schema([
+                    Tab::make('Taxas')->schema([
                         MoneyInput::make('interest_rate_sale')
                             ->label('Interest rate sales')
                             ->prefix(null)

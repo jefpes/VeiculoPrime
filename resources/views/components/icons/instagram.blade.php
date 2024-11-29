@@ -1,4 +1,5 @@
-<svg  viewBox="0 0 256 256">
+<svg  viewBox="0 0 256 256"
+{{ $attributes->merge([ 'class' => 'w-7 h-7']) }}>
   <g fill="none">
     <rect width="256" height="256" fill="url(#skillIconsInstagram0)" rx="60" />
     <rect width="256" height="256" fill="url(#skillIconsInstagram1)" rx="60" />
