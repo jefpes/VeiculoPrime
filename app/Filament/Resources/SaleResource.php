@@ -6,7 +6,7 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Resources\SaleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Helpers\{Contracts, Tools};
+use App\Helpers\{Contracts};
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -184,7 +184,7 @@ class SaleResource extends Resource
             $interest          = 0;  // Sem juros
         } else {
             // Com juros compostos: chama o método para calcular os juros compostos
-            $result            = Tools::calculateCompoundInterest($principal, $interestRate, $numberInstallments);
+            $result            = calculate_compound_interest($principal, $interestRate, $numberInstallments);
             $installmentValue  = $result['installment'];
             $totalWithInterest = $result['total'];  // Total com juros
             $interest          = round($totalWithInterest - $principal, 2);  // Valor dos juros
