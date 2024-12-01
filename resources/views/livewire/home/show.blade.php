@@ -31,9 +31,9 @@
                     @foreach ($vehicle->photos as $index => $photo)
                     <div class="w-full flex-shrink-0">
                         <div class="aspect-w-16 aspect-h-9">
-                            <img src="{{ asset($photo->path) }}" alt="{{ $vehicle->model->name }}"
+                            <img src="{{ image_path($photo->path) }}" alt="{{ $vehicle->model->name }}"
                                 class="object-fill w-full cursor-pointer md:max-h-[50vh] h-[60vh]"
-                                @click="activeImage = '{{ asset($photo->path) }}'">
+                                @click="activeImage = '{{ image_path($photo->path) }}'">
                         </div>
                     </div>
                     @endforeach

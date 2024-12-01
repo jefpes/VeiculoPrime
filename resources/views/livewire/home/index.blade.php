@@ -97,7 +97,7 @@
       <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <a href="{{ route('show.v', $v->id) }}" class="block">
           <div class="h-56 w-full">
-            <img src="{{ asset($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+            <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
           </div>
           <div class="p-4 space-y-4">
             <div class="flex justify-between items-center">
