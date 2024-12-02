@@ -11,16 +11,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex flex-col min-h-screen bg-gray-100 text-gray-900" style="{{ App\Models\Company::first()->font_family }}">
-    <header class="bg-gray-200 shadow-md">
+<body class="flex flex-col min-h-screen" style="{{ $company->font_family . '; background-color:' . $company->body_bg_color . '; color:' . $company->font_color }}">
+    <header class="shadow-md" style="{{ 'background-color:' . $company->nav_color }}">
         <livewire:home.navigation />
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8 ">
+    <main class="flex-grow container mx-auto px-4 py-8">
         {{ $slot }}
     </main>
 
-    <footer class="bg-gray-200 shadow-md mt-auto">
+    <footer class="shadow-md mt-auto" style="{{ 'background-color:' . $company->footer_color }}">
         <livewire:home.footer />
     </footer>
 

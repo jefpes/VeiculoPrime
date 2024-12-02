@@ -142,7 +142,7 @@ class CompanyPage extends Page
                         MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
                     Tab::make('Home Page')->schema([
-                        Forms\Components\Select::make('font')
+                        Forms\Components\Select::make('font_family')
                         ->allowHtml()
                         ->options([
                             "font-family:Times New Roman, Times, serif"     => "<span style='font-family:Times New Roman, Times, serif'>Times New Roman</span>",
@@ -162,6 +162,8 @@ class CompanyPage extends Page
                             ->label('Font color'),
                         Forms\Components\ColorPicker::make('body_bg_color')
                             ->label('Body background color'),
+                        Forms\Components\ColorPicker::make('card_color')
+                            ->label('Card background color'),
                         Forms\Components\ColorPicker::make('nav_color')
                             ->label('Heading background color'),
                         Forms\Components\ColorPicker::make('footer_color')

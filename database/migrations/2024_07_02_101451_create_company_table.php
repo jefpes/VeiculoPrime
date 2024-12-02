@@ -42,6 +42,7 @@ return new class () extends Migration {
             $table->string('font_family')->nullable();
             $table->string('font_color')->nullable();
             $table->string('body_bg_color')->nullable();
+            $table->string('card_color')->nullable();
             $table->string('nav_color')->nullable();
             $table->string('footer_color')->nullable();
             $table->string('link_color')->nullable();

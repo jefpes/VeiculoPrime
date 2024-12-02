@@ -94,7 +94,7 @@
   <!-- Lista de veículos -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @foreach ($this->vehicles as $v)
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color }}">
         <a href="{{ route('show.v', $v->id) }}" class="block">
           <div class="h-56 w-full">
             <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
