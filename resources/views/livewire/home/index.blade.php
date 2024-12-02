@@ -99,7 +99,7 @@
           <div class="h-56 w-full">
             <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
           </div>
-          <div class="py-2 px-4 space-y-2">
+          <div class="py-2 px-3 space-y-2">
             <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
