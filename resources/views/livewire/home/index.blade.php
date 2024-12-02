@@ -99,7 +99,7 @@
           <div class="h-56 w-full">
             <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
           </div>
-          <div class="p-4 space-y-4">
+          <div class="p-2 space-y-2">
             <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
@@ -119,19 +119,19 @@
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <p class="text-gray-500">{{ __('Brand') }}</p>
+                <p class="text-gray-500 font-semibold">{{ __('Brand') }}</p>
                 <p class="font-medium">{{ $v->model->brand->name }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('Year') }}</p>
+                <p class="text-gray-500 font-semibold">{{ __('Year') }}</p>
                 <p class="font-medium">{{ $v->year_one.'/'.$v->year_two }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('KM') }}</p>
+                <p class="text-gray-500 font-semibold">{{ __('KM') }}</p>
                 <p class="font-medium">{{ number_format($v->km, 0, ',', '.') }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('Fuel') }}</p>
+                <p class="text-gray-500 font-semibold">{{ __('Fuel') }}</p>
                 <p class="font-medium">{{ $v->fuel }}</p>
               </div>
             </div>

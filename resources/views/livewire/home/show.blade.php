@@ -40,16 +40,14 @@
                 </div>
                 <button @click="currentSlide = (currentSlide - 1 + slides) % slides"
                     class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r hidden md:block">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
                         </path>
                     </svg>
                 </button>
                 <button @click="currentSlide = (currentSlide + 1) % slides"
                     class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-l hidden md:block">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </button>
@@ -85,49 +83,49 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <p class="text-gray-500">{{ __('Model') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Model') }}</p>
                     <p class="font-medium">{{ $vehicle->model->name }} {{ $vehicle->engine_power }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-500">{{ __('Fuel') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Fuel') }}</p>
                     <p class="font-medium">{{ $vehicle->fuel }}</p>
                 </div>
                 @if ($vehicle->steering)
                 <div>
-                    <p class="text-gray-500">{{ __('Steering') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Steering') }}</p>
                     <p class="font-medium">{{ $vehicle->steering }}</p>
                 </div>
                 @endif
                 @if ($vehicle->transmission)
                 <div>
-                    <p class="text-gray-500">{{ __('Transmission') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Transmission') }}</p>
                     <p class="font-medium">{{ $vehicle->transmission }}</p>
                 </div>
                 @endif
                 @if ($vehicle->traction)
                 <div>
-                    <p class="text-gray-500">{{ __('Traction') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Traction') }}</p>
                     <p class="font-medium">{{ $vehicle->traction }}</p>
                 </div>
                 @endif
                 @if ($vehicle->doors)
                 <div>
-                    <p class="text-gray-500">{{ __('Doors') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Doors') }}</p>
                     <p class="font-medium">{{ $vehicle->doors }}</p>
                 </div>
                 @endif
                 @if ($vehicle->seats)
                 <div>
-                    <p class="text-gray-500">{{ __('Seats') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Seats') }}</p>
                     <p class="font-medium">{{ $vehicle->seats }}</p>
                 </div>
                 @endif
                 <div>
-                    <p class="text-gray-500">{{ __('Year') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('Year') }}</p>
                     <p class="font-medium">{{ $vehicle->year_one.'/'.$vehicle->year_two }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-500">{{ __('KM') }}</p>
+                    <p class="text-gray-500 font-semibold">{{ __('KM') }}</p>
                     <p class="font-medium">{{ number_format($vehicle->km, 0, ',', '.') }}</p>
                 </div>
             </div>
