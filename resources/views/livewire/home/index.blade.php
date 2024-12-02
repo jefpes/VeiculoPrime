@@ -18,8 +18,8 @@
       <div class="w-screen max-w-md">
         <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
           <div class="p-6">
+            <!-- Botão Limpar Filtros -->
             <div class="mt-6 space-y-4">
-              <!-- Botão Limpar Filtros -->
                 <div class="flex gap-x-2">
                     <button wire:click="clearFilters"
                         class="flex-1 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
@@ -99,7 +99,7 @@
           <div class="h-56 w-full">
             <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
           </div>
-          <div class="p-2 space-y-2">
+          <div class="py-2 px-4 space-y-2">
             <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
