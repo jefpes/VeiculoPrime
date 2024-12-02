@@ -85,14 +85,12 @@ class CompanyPage extends Page
                                     ->label('Logo')
                                     ->image()
                                     ->preserveFilenames()
-                                    ->directory('logo')
-                                    ->required(),
+                                    ->directory('logo'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
                                     ->preserveFilenames()
-                                    ->directory('favicon')
-                                    ->required(),
+                                    ->directory('favicon'),
                             ])
                             ->columns(2)
                             ->columnSpanFull(),
