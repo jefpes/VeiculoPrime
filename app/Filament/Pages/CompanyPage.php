@@ -141,6 +141,40 @@ class CompanyPage extends Page
                             ->suffix('%'),
                         MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
+                    Tab::make('Home Page')->schema([
+                        Forms\Components\Select::make('font')
+                        ->allowHtml()
+                        ->options([
+                            "font-family:Times New Roman, Times, serif"     => "<span style='font-family:Times New Roman, Times, serif'>Times New Roman</span>",
+                            'font-family:Roboto, sans-serif'                => "<span style='font-family:Roboto, sans-serif'>Roboto</span>",
+                            'font-family:Arial, sans-serif'                 => "<span style='font-family:Arial, sans-serif'>Arial</span>",
+                            'font-family:Courier New, Courier, monospace'   => "<span style='font-family:Courier New, Courier, monospace'>Courier New</span>",
+                            'font-family:Georgia, serif'                    => "<span style='font-family:Georgia, serif'>Georgia</span>",
+                            'font-family:Lucida Console, Monaco, monospace' => "<span style='font-family:Lucida Console, Monaco, monospace'>Lucida Console</span>",
+                            'font-family:Tahoma, Geneva, sans-serif'        => "<span style='font-family:Tahoma, Geneva, sans-serif'>Tahoma</span>",
+                            'font-family:Trebuchet MS, sans-serif'          => "<span style='font-family:Trebuchet MS, sans-serif'>Trebuchet MS</span>",
+                            'font-family:Verdana, Geneva, sans-serif'       => "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
+                            'font-family:Open Sans, sans-serif'             => "<span style='font-family:Open Sans, sans-serif'>Open Sans</span>",
+                            'font-family:Inter, sans-serif'                 => "<span style='font-family:Inter, sans-serif'>Inter</span>",
+                        ])
+                        ->native(false),
+                        Forms\Components\ColorPicker::make('font_color')
+                            ->label('Font color'),
+                        Forms\Components\ColorPicker::make('body_bg_color')
+                            ->label('Body background color'),
+                        Forms\Components\ColorPicker::make('nav_color')
+                            ->label('Heading background color'),
+                        Forms\Components\ColorPicker::make('footer_color')
+                            ->label('Footer background color'),
+                        Forms\Components\ColorPicker::make('link_color')
+                            ->label('Link color'),
+                        Forms\Components\ColorPicker::make('btn_1_color')
+                            ->label('Button color 1'),
+                        Forms\Components\ColorPicker::make('btn_2_color')
+                            ->label('Button color 2'),
+                        Forms\Components\ColorPicker::make('btn_3_color')
+                            ->label('Button color 3'),
+                    ])->columns(3),
                 ]),
             ])
             ->statePath('data');
