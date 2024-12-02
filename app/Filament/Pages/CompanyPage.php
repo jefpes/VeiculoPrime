@@ -60,7 +60,8 @@ class CompanyPage extends Page
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->maxLength(50)
-                            ->columnSpan(2),
+                            ->columnSpan(2)
+                            ->required(),
                         Forms\Components\TextInput::make('cnpj')
                             ->label('CNPJ')
                             ->mask('99.999.999/9999-99')
