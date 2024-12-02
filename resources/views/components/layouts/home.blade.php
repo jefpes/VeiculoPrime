@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="flex flex-col min-h-screen bg-gray-100 text-gray-900 font-serif">
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-900">
     <header class="bg-gray-200 shadow-md">
         <livewire:home.navigation />
     </header>

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Columns\Column;
@@ -18,6 +19,10 @@ class FilamentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Tab::configureUsing(
+            fn (Tab $tab) => $tab->translateLabel()
+        );
+
         Sum::configureUsing(
             fn (Sum $sum) => $sum->translateLabel()
         );
