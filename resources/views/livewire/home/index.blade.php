@@ -41,9 +41,9 @@
                 <div class="w-full list-decimal list-inside space-2">
                   @foreach ($this->brands as $b)
                   <div class="inline-flex">
-                    <label class="items-center pr-2">
-                        <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded shadow-sm" style="{{ 'background-color:' . App\Models\Company::query()->first()->btn_1_color }}">
-                        <span class="ms-1 text-sm" style="{{ 'color:' . $company->btn_1_text_color }}">{{ $b->name }}</span>
+                    <label class="items-center pr-2" >
+                        <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded shadow-sm" >
+                        <span class="ms-1 text-sm">{{ $b->name }}</span>
                     </label>
                   </div>
                   @endforeach

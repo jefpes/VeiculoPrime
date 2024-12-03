@@ -103,6 +103,7 @@ class Index extends Component
     public function updatedVehicleTypeId(): void
     {
         $this->reset(['selectedBrands', 'order', 'max_price', 'year_ini', 'year_end']);
+        $this->resetPage();
     }
 
     public function updatedSelectedBrands(): void
@@ -143,5 +144,6 @@ class Index extends Component
             'year_ini',
             'year_end',
         ]);
+        $this->resetPage();
     }
 }
