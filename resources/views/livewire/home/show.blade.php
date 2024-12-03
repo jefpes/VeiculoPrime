@@ -24,7 +24,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="space-y-4">
             <!-- Carrossel personalizado -->
-            <div class="relative overflow-hidden rounded-md" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
+            <div class="relative overflow-hidden md:rounded-md" @touchstart="handleTouchStart" @touchmove="handleTouchMove"
                 @touchend="handleTouchEnd">
                 <div class="flex transition-transform duration-300 ease-in-out"
                     :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="rounded-lg shadow-md p-6 space-y-6" style="{{ 'background-color:' . $company->card_color }}">
+        <div class="md:rounded-lg shadow-md p-6 space-y-6" style="{{ 'background-color:' . $company->card_color }}">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">{{ __('Details') }}</h2>
                 @if($vehicle->promotional_price)
