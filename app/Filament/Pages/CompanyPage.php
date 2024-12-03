@@ -164,6 +164,8 @@ class CompanyPage extends Page
                             ->label('Body background color'),
                         Forms\Components\ColorPicker::make('card_color')
                             ->label('Card background color'),
+                        Forms\Components\ColorPicker::make('card_text_color')
+                            ->label('Card text color'),
                         Forms\Components\ColorPicker::make('nav_color')
                             ->label('Heading background color'),
                         Forms\Components\ColorPicker::make('footer_color')

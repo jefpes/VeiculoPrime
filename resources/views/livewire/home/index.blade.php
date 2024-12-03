@@ -91,7 +91,7 @@
   <!-- Lista de veículos -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @foreach ($this->vehicles as $v)
-      <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color }}">
+      <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
         <a href="{{ route('show.v', $v->id) }}" class="block">
           <div class="h-56 w-full">
             <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
@@ -101,7 +101,7 @@
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
               <div class="text-right">
-                <p class="text-sm text-gray-500 line-through">
+                <p class="text-sm line-through">
                   <x-span-money :money="$v->sale_price" />
                 </p>
                 <p class="text-lg font-bold text-green-600">
@@ -116,19 +116,19 @@
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <p class="text-gray-500 font-semibold">{{ __('Brand') }}</p>
+                <p class="font-bold">{{ __('Brand') }}</p>
                 <p class="font-medium">{{ $v->model->brand->name }}</p>
               </div>
               <div>
-                <p class="text-gray-500 font-semibold">{{ __('Year') }}</p>
+                <p class="font-bold">{{ __('Year') }}</p>
                 <p class="font-medium">{{ $v->year_one.'/'.$v->year_two }}</p>
               </div>
               <div>
-                <p class="text-gray-500 font-semibold">{{ __('KM') }}</p>
+                <p class="font-bold">{{ __('KM') }}</p>
                 <p class="font-medium">{{ number_format($v->km, 0, ',', '.') }}</p>
               </div>
               <div>
-                <p class="text-gray-500 font-semibold">{{ __('Fuel') }}</p>
+                <p class="font-bold">{{ __('Fuel') }}</p>
                 <p class="font-medium">{{ $v->fuel }}</p>
               </div>
             </div>

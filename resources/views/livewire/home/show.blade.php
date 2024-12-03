@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div class="md:rounded-lg shadow-md p-6 space-y-6" style="{{ 'background-color:' . $company->card_color }}">
+        <div class="md:rounded-lg shadow-md p-6 space-y-6" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">{{ __('Details') }}</h2>
                 @if($vehicle->promotional_price)

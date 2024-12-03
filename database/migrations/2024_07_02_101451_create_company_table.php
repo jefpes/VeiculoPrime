@@ -43,6 +43,7 @@ return new class () extends Migration {
             $table->string('font_color')->nullable()->default('black');
             $table->string('body_bg_color')->nullable()->default('white');
             $table->string('card_color')->nullable()->default('white');
+            $table->string('card_text_color')->nullable();
             $table->string('nav_color')->nullable()->default('#dedede');
             $table->string('footer_color')->nullable()->default('#dedede');
             $table->string('link_color')->nullable()->default('green');
