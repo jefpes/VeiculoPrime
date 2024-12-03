@@ -8,7 +8,7 @@ use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, Storage};
 use Symfony\Component\HttpFoundation\Response;
 
 class FilamentSettings
@@ -21,7 +21,7 @@ class FilamentSettings
     public function handle(Request $request, Closure $next): Response
     {
         FilamentColor::register([
-            'danger'  => (Auth::user()->settings->tertiary_color ?? Color::Rose),
+            'danger'  => (Auth::user()->settings->tertiary_color ?? Color::Red),
             'gray'    => (Auth::user()->settings->primary_color ?? Color::Gray),
             'info'    => (Auth::user()->settings->quaternary_color ?? Color::Blue),
             'primary' => (Auth::user()->settings->secondary_color ?? Color::Indigo),
@@ -29,14 +29,26 @@ class FilamentSettings
             'warning' => (Auth::user()->settings->senary_color ?? Color::Yellow),
         ]);
 
+        $company = Company::query()->first();
+        $favicon = $company->favicon ?? 'nao existe';
+        $logo    = $company->logo ?? 'nao existe';
+
         Filament::getPanel()
             ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
             ->sidebarFullyCollapsibleOnDesktop()
             ->font(Auth::user()->settings->font ?? 'Inter')
-            ->brandLogo(asset(Company::query()->first()->logo))
-            ->brandLogoHeight(fn () => Auth::check() ? '3rem' : '6rem')
-            ->brandName(Company::query()->first()->name)
-            ->favicon(asset(Company::query()->first()->favicon));
+            ->brandName($company->name);
+
+        if (Storage::disk('public')->exists($favicon)) {
+            Filament::getPanel()
+                ->favicon(image_path($favicon));
+        }
+
+        if (Storage::disk('public')->exists($logo)) {
+            Filament::getPanel()
+                ->brandLogo(image_path($logo))
+                ->brandLogoHeight(fn () => Auth::check() ? '3rem' : '6rem');
+        }
 
         return $next($request);
     }

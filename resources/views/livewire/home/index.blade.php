@@ -1,11 +1,10 @@
 <div x-data="{ showFilters: false }" class="space-y-8">
   <div class="flex justify-between items-center">
     <h1 class="text-3xl font-bold">{{ $company->name ?? 'Motor Market' }}</h1>
-    <button @click="showFilters = !showFilters"
-      class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200">
+    <x-primary-button @click="showFilters = !showFilters">
       <span>{{ __('Filter') }}</span>
       <x-icons.filter class="w-5 h-5" />
-    </button>
+    </x-primary-button>
   </div>
 
   <!-- Modal de filtros -->
@@ -16,19 +15,17 @@
     <div class="absolute inset-0 bg-gray-500 bg-opacity-75" @click="showFilters = false"></div>
     <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
       <div class="w-screen max-w-md">
-        <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company->body_bg_color }}">
           <div class="p-6">
+            <!-- Botão Limpar Filtros -->
             <div class="mt-6 space-y-4">
-              <!-- Botão Limpar Filtros -->
                 <div class="flex gap-x-2">
-                    <button wire:click="clearFilters"
-                        class="flex-1 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                    <x-danger-button wire:click="clearFilters">
                         <span>{{ __('Clear Filters') }}</span>
-                    </button>
-                    <button @click="showFilters = false"
-                        class="flex-0 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                    </x-danger-button>
+                    <x-secondary-button @click="showFilters = false">
                         <span>{{ __('Close') }}</span>
-                    </button>
+                    </x-secondary-button>
                 </div>
               <div >
                 <x-select wire:model.live="vehicle_type_id" class="w-full" label="Type">
@@ -44,9 +41,9 @@
                 <div class="w-full list-decimal list-inside space-2">
                   @foreach ($this->brands as $b)
                   <div class="inline-flex">
-                    <label class="items-center pr-2">
-                      <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded text-indigo-600 shadow-sm focus:ring-indigo-500">
-                      <span class="ms-1 text-sm">{{ $b->name }}</span>
+                    <label class="items-center pr-2" >
+                        <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded shadow-sm" >
+                        <span class="ms-1 text-sm">{{ $b->name }}</span>
                     </label>
                   </div>
                   @endforeach
@@ -94,17 +91,17 @@
   <!-- Lista de veículos -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @foreach ($this->vehicles as $v)
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
         <a href="{{ route('show.v', $v->id) }}" class="block">
           <div class="h-56 w-full">
-            <img src="{{ asset($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+            <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
           </div>
-          <div class="p-4 space-y-4">
+          <div class="py-2 px-3 space-y-2">
             <div class="flex justify-between items-center">
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
               <div class="text-right">
-                <p class="text-sm text-gray-500 line-through">
+                <p class="text-sm line-through">
                   <x-span-money :money="$v->sale_price" />
                 </p>
                 <p class="text-lg font-bold text-green-600">
@@ -119,19 +116,19 @@
             </div>
             <div class="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <p class="text-gray-500">{{ __('Brand') }}</p>
+                <p class="font-bold">{{ __('Brand') }}</p>
                 <p class="font-medium">{{ $v->model->brand->name }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('Year') }}</p>
+                <p class="font-bold">{{ __('Year') }}</p>
                 <p class="font-medium">{{ $v->year_one.'/'.$v->year_two }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('KM') }}</p>
+                <p class="font-bold">{{ __('KM') }}</p>
                 <p class="font-medium">{{ number_format($v->km, 0, ',', '.') }}</p>
               </div>
               <div>
-                <p class="text-gray-500">{{ __('Fuel') }}</p>
+                <p class="font-bold">{{ __('Fuel') }}</p>
                 <p class="font-medium">{{ $v->fuel }}</p>
               </div>
             </div>

@@ -1,12 +1,22 @@
 <?php
 
-namespace App\Helpers;
-
 use Carbon\Carbon;
 use Illuminate\Support\Number;
 
-class Tools
-{
+if (!function_exists('image_path')) {
+    /**
+     * Generate the storage image path.
+     *
+     * @param string|null $path
+     * @return string
+     */
+    function image_path(?string $path): string
+    {
+        return asset('storage/' . $path);
+    }
+}
+
+if (!function_exists('calculate_compound_interest')) {
     /**
      * Calcula o valor da parcela com juros compostos.
      *
@@ -15,7 +25,7 @@ class Tools
      * @param int $months Número de parcelas
      * @return array<string, float> Um array com 'total' e 'installment' com valores numéricos (float)
      */
-    public static function calculateCompoundInterest(?float $principal, float $rate, int $months): array
+    function calculate_compound_interest(?float $principal, float $rate, int $months): array
     {
         if ($principal === null || $months <= 0) {
             return ['total' => 0.0, 'installment' => 0.0];
@@ -37,8 +47,10 @@ class Tools
             'installment' => round($installment, 2), // Valor da parcela
         ];
     }
+}
 
-    public static function spellMonetary(?float $value): string
+if (!function_exists('spell_monetary')) {
+    function spell_monetary(?float $value): string
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
@@ -74,8 +86,10 @@ class Tools
         // Retorna o valor completo em extenso
         return "$reaisExtenso $reaisText e $centavosExtenso $centavosText";
     }
+}
 
-    public static function spellPercentage(?float $value): string
+if (!function_exists('spell_percentage')) {
+    function spell_percentage(?float $value): string
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
@@ -105,8 +119,10 @@ class Tools
         // Combina a parte inteira e decimal com a palavra "porcento"
         return "$parteInteiraTexto vírgula $parteDecimalTexto porcento";
     }
+}
 
-    public static function spellNumber(?float $value): string
+if (!function_exists('spell_number')) {
+    function spell_number(?float $value): string
     {
 
         // Verifica se o valor é nulo e retorna uma mensagem padrão
@@ -138,8 +154,10 @@ class Tools
 
         return $parteInteiraExtenso;
     }
+}
 
-    public static function dateFormat(?string $value): string
+if (!function_exists('date_format_custom')) {
+    function date_format_custom(?string $value): string
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
@@ -150,8 +168,10 @@ class Tools
 
         return $value;
     }
+}
 
-    public static function spellDate(?string $value, string $locale = 'pt_BR', string $isoFormat = 'LL'): string
+if (!function_exists('spell_date')) {
+    function spell_date(?string $value, string $locale = 'pt_BR', string $isoFormat = 'LL'): string
     {
         // Verifica se o valor é nulo e retorna uma mensagem padrão
         if (is_null($value)) {
@@ -162,5 +182,4 @@ class Tools
 
         return $value;
     }
-
 }

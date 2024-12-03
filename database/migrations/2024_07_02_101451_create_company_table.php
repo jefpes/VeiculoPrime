@@ -39,6 +39,22 @@ return new class () extends Migration {
             $table->decimal('interest_rate_installment', 10, 2)->nullable();
             $table->decimal('late_fee', 10, 2)->nullable();
 
+            $table->string('font_family')->nullable();
+            $table->string('font_color')->nullable()->default('black');
+            $table->string('body_bg_color')->nullable()->default('white');
+            $table->string('card_color')->nullable()->default('white');
+            $table->string('card_text_color')->nullable();
+            $table->string('nav_color')->nullable()->default('#dedede');
+            $table->string('footer_color')->nullable()->default('#dedede');
+            $table->string('link_color')->nullable()->default('green');
+            $table->string('link_text_color')->nullable()->default('white');
+            $table->string('btn_1_color')->nullable()->default('blue');
+            $table->string('btn_1_text_color')->nullable()->default('white');
+            $table->string('btn_2_color')->nullable()->default('red');
+            $table->string('btn_2_text_color')->nullable()->default('white');
+            $table->string('btn_3_color')->nullable()->default('green');
+            $table->string('btn_3_text_color')->nullable()->default('white');
+
             $table->timestamps();
         });
     }
