@@ -137,8 +137,8 @@
 
             @if (false)
             <div class="pt-6 border-t border-gray-200">
-                <button
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                <button style="{{ 'background-color:' . $company->link_color . ';color:' . $company->link_text_color }}"
+                    class="w-full py-2 px-4 rounded-md transition-colors duration-200">
                     {{ __('Contact Seller') }}
                 </button>
             </div>

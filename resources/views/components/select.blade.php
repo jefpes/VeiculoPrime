@@ -3,8 +3,8 @@
   @if ($label)
     <label class="block text-sm font-medium"> {{ __($label) }} </label>
   @endif
-  <select
-    {{ $attributes->merge(['class' => 'p-1 bg-gray-50 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block']) }}>
+  <select style="{{ 'background-color:' . App\Models\Company::query()->first()->btn_1_color . ';color:' . App\Models\Company::query()->first()->btn_1_text_color }}"
+    {{ $attributes->merge(['class' => 'p-1 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block']) }}>
     {{ $slot }}
   </select>
 

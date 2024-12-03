@@ -170,12 +170,20 @@ class CompanyPage extends Page
                             ->label('Footer background color'),
                         Forms\Components\ColorPicker::make('link_color')
                             ->label('Link color'),
+                        Forms\Components\ColorPicker::make('link_text_color')
+                            ->label('Link text color'),
                         Forms\Components\ColorPicker::make('btn_1_color')
                             ->label('Button color 1'),
+                        Forms\Components\ColorPicker::make('btn_1_text_color')
+                            ->label('Button text color 1'),
                         Forms\Components\ColorPicker::make('btn_2_color')
                             ->label('Button color 2'),
+                        Forms\Components\ColorPicker::make('btn_2_text_color')
+                            ->label('Button text color 2'),
                         Forms\Components\ColorPicker::make('btn_3_color')
                             ->label('Button color 3'),
+                        Forms\Components\ColorPicker::make('btn_3_text_color')
+                            ->label('Button text color 3'),
                     ])->columns(3),
                 ]),
             ])

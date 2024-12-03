@@ -1,11 +1,10 @@
 <div x-data="{ showFilters: false }" class="space-y-8">
   <div class="flex justify-between items-center">
     <h1 class="text-3xl font-bold">{{ $company->name ?? 'Motor Market' }}</h1>
-    <button @click="showFilters = !showFilters"
-      class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200">
+    <x-primary-button @click="showFilters = !showFilters">
       <span>{{ __('Filter') }}</span>
       <x-icons.filter class="w-5 h-5" />
-    </button>
+    </x-primary-button>
   </div>
 
   <!-- Modal de filtros -->
@@ -16,19 +15,17 @@
     <div class="absolute inset-0 bg-gray-500 bg-opacity-75" @click="showFilters = false"></div>
     <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
       <div class="w-screen max-w-md">
-        <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company->body_bg_color }}">
           <div class="p-6">
             <!-- Botão Limpar Filtros -->
             <div class="mt-6 space-y-4">
                 <div class="flex gap-x-2">
-                    <button wire:click="clearFilters"
-                        class="flex-1 focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                    <x-danger-button wire:click="clearFilters">
                         <span>{{ __('Clear Filters') }}</span>
-                    </button>
-                    <button @click="showFilters = false"
-                        class="flex-0 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                    </x-danger-button>
+                    <x-secondary-button @click="showFilters = false">
                         <span>{{ __('Close') }}</span>
-                    </button>
+                    </x-secondary-button>
                 </div>
               <div >
                 <x-select wire:model.live="vehicle_type_id" class="w-full" label="Type">
@@ -45,8 +42,8 @@
                   @foreach ($this->brands as $b)
                   <div class="inline-flex">
                     <label class="items-center pr-2">
-                      <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded text-indigo-600 shadow-sm focus:ring-indigo-500">
-                      <span class="ms-1 text-sm">{{ $b->name }}</span>
+                        <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded shadow-sm" style="{{ 'background-color:' . App\Models\Company::query()->first()->btn_1_color }}">
+                        <span class="ms-1 text-sm" style="{{ 'color:' . $company->btn_1_text_color }}">{{ $b->name }}</span>
                     </label>
                   </div>
                   @endforeach

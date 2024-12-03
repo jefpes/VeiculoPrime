@@ -46,9 +46,13 @@ return new class () extends Migration {
             $table->string('nav_color')->nullable();
             $table->string('footer_color')->nullable();
             $table->string('link_color')->nullable();
+            $table->string('link_text_color')->nullable();
             $table->string('btn_1_color')->nullable();
+            $table->string('btn_1_text_color')->nullable();
             $table->string('btn_2_color')->nullable();
+            $table->string('btn_2_text_color')->nullable();
             $table->string('btn_3_color')->nullable();
+            $table->string('btn_3_text_color')->nullable();
 
             $table->timestamps();
         });
