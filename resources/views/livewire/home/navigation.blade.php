@@ -2,7 +2,7 @@
   <div class="flex items-center">
     @if ($company->logo && Storage::disk('public')->exists("$company->logo"))
     <a href="{{ route('home') }}" class="flex items-center">
-      <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name ?? 'Motor Market' }}"
+      <img src="{{ image_path($company->logo) }}" alt="{{ $company->name ?? 'Motor Market' }}"
         class="h-12 w-auto">
     </a>
     @else

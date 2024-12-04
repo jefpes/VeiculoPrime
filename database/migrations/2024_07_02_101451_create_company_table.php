@@ -41,6 +41,7 @@ return new class () extends Migration {
 
             $table->string('font_family')->nullable();
             $table->string('font_color')->nullable()->default('black');
+            $table->string('promo_price_color')->nullable()->default('green');
             $table->string('body_bg_color')->nullable()->default('white');
             $table->string('card_color')->nullable()->default('white');
             $table->string('card_text_color')->nullable();
@@ -54,6 +55,8 @@ return new class () extends Migration {
             $table->string('btn_2_text_color')->nullable()->default('white');
             $table->string('btn_3_color')->nullable()->default('green');
             $table->string('btn_3_text_color')->nullable()->default('white');
+            $table->string('bg_img')->nullable();
+            $table->string('bg_img_opacity')->nullable()->default('0.3');
 
             $table->timestamps();
         });

@@ -13,6 +13,7 @@ use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CompanyPage extends Page
 {
@@ -85,13 +86,13 @@ class CompanyPage extends Page
                                 Forms\Components\FileUpload::make('logo')
                                     ->label('Logo')
                                     ->image()
-                                    ->preserveFilenames()
-                                    ->directory('logo'),
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo.' . $file->getClientOriginalExtension())
+                                    ->directory('company'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
-                                    ->preserveFilenames()
-                                    ->directory('favicon'),
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favico.' . $file->getClientOriginalExtension())
+                                    ->directory('company'),
                             ])
                             ->columns(2)
                             ->columnSpanFull(),
@@ -142,6 +143,27 @@ class CompanyPage extends Page
                         MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
                     Tab::make('Home Page')->schema([
+                        Forms\Components\FileUpload::make('bg_img')
+                                ->label('Backgroud image')
+                                ->image()
+                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
+                                ->directory('company'),
+                        Forms\Components\Select::make('bg_img_opacity')
+                            ->label('Backgroud image opacity')
+                            ->options([
+                                '0'   => '0%',
+                                '0.1' => '10%',
+                                '0.2' => '20%',
+                                '0.3' => '30%',
+                                '0.4' => '40%',
+                                '0.5' => '50%',
+                                '0.6' => '60%',
+                                '0.7' => '70%',
+                                '0.8' => '80%',
+                                '0.9' => '90%',
+                                '1'   => '100%',
+                            ])
+                            ->native(false),
                         Forms\Components\Select::make('font_family')
                         ->allowHtml()
                         ->options([
@@ -160,6 +182,8 @@ class CompanyPage extends Page
                         ->native(false),
                         Forms\Components\ColorPicker::make('font_color')
                             ->label('Font color'),
+                        Forms\Components\ColorPicker::make('promo_price_color')
+                            ->label('Promo price color'),
                         Forms\Components\ColorPicker::make('body_bg_color')
                             ->label('Body background color'),
                         Forms\Components\ColorPicker::make('card_color')
