@@ -143,6 +143,27 @@ class CompanyPage extends Page
                         MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
                     Tab::make('Home Page')->schema([
+                        Forms\Components\FileUpload::make('bg_image')
+                                ->label('Backgroud image')
+                                ->image()
+                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
+                                ->directory('company'),
+                        Forms\Components\Select::make('bg_image_opacity')
+                            ->label('Backgroud image opacity')
+                            ->options([
+                                '0'   => '0%',
+                                '0.1' => '10%',
+                                '0.2' => '20%',
+                                '0.3' => '30%',
+                                '0.4' => '40%',
+                                '0.5' => '50%',
+                                '0.6' => '60%',
+                                '0.7' => '70%',
+                                '0.8' => '80%',
+                                '0.9' => '90%',
+                                '1'   => '100%',
+                            ])
+                            ->native(false),
                         Forms\Components\Select::make('font_family')
                         ->allowHtml()
                         ->options([
@@ -189,12 +210,6 @@ class CompanyPage extends Page
                             ->label('Button color 3'),
                         Forms\Components\ColorPicker::make('btn_3_text_color')
                             ->label('Button text color 3'),
-                        Forms\Components\FileUpload::make('bg_image')
-                                ->label('Backgroud image')
-                                ->columnSpan(2)
-                                ->image()
-                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
-                                ->directory('company'),
                     ])->columns(3),
                 ]),
             ])

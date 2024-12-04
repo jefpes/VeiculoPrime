@@ -56,6 +56,7 @@ return new class () extends Migration {
             $table->string('btn_3_color')->nullable()->default('green');
             $table->string('btn_3_text_color')->nullable()->default('white');
             $table->string('bg_img')->nullable();
+            $table->string('bg_img_opacity')->nullable()->default('0.3');
 
             $table->timestamps();
         });

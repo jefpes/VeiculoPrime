@@ -101,7 +101,7 @@
               <h2 class="text-xl font-semibold">{{ $v->model->name }}</h2>
               @if($v->promotional_price)
               <div class="text-right">
-                <p class="text-sm line-through text-opacity-25">
+                <p class="text-sm line-through" style="opacity: 0.6">
                   <x-span-money :money="$v->sale_price" />
                 </p>
                 <p class="text-lg font-bold" style="{{ 'color:' . $company->promo_price_color }}">
