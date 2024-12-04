@@ -13,6 +13,7 @@ use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CompanyPage extends Page
 {
@@ -85,13 +86,13 @@ class CompanyPage extends Page
                                 Forms\Components\FileUpload::make('logo')
                                     ->label('Logo')
                                     ->image()
-                                    ->preserveFilenames()
-                                    ->directory('logo'),
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo.' . $file->getClientOriginalExtension())
+                                    ->directory('company'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
-                                    ->preserveFilenames()
-                                    ->directory('favicon'),
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favico.' . $file->getClientOriginalExtension())
+                                    ->directory('company'),
                             ])
                             ->columns(2)
                             ->columnSpanFull(),
