@@ -161,6 +161,8 @@ class CompanyPage extends Page
                         ->native(false),
                         Forms\Components\ColorPicker::make('font_color')
                             ->label('Font color'),
+                        Forms\Components\ColorPicker::make('promo_price_color')
+                            ->label('Promo price color'),
                         Forms\Components\ColorPicker::make('body_bg_color')
                             ->label('Body background color'),
                         Forms\Components\ColorPicker::make('card_color')
@@ -187,6 +189,12 @@ class CompanyPage extends Page
                             ->label('Button color 3'),
                         Forms\Components\ColorPicker::make('btn_3_text_color')
                             ->label('Button text color 3'),
+                        Forms\Components\FileUpload::make('bg_image')
+                                ->label('Backgroud image')
+                                ->columnSpan(2)
+                                ->image()
+                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
+                                ->directory('company'),
                     ])->columns(3),
                 ]),
             ])
