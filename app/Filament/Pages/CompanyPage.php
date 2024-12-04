@@ -143,12 +143,12 @@ class CompanyPage extends Page
                         MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
                     Tab::make('Home Page')->schema([
-                        Forms\Components\FileUpload::make('bg_image')
+                        Forms\Components\FileUpload::make('bg_img')
                                 ->label('Backgroud image')
                                 ->image()
                                 ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
                                 ->directory('company'),
-                        Forms\Components\Select::make('bg_image_opacity')
+                        Forms\Components\Select::make('bg_img_opacity')
                             ->label('Backgroud image opacity')
                             ->options([
                                 '0'   => '0%',
