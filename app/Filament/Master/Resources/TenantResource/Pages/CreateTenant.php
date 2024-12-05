@@ -26,8 +26,8 @@ class CreateTenant extends CreateRecord
         $company->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
         $user = User::create([ // @phpstan-ignore-line
-            'name'              => 'admin',
-            'email'             => 'admin@admin.com',
+            'name'              => $this->record->name, // @phpstan-ignore-line
+            'email'             => "admin.{$this->record->name}@admin.com", // @phpstan-ignore-line
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
             'remember_token'    => Str::random(10),

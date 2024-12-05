@@ -14,8 +14,6 @@ class TenantResource extends Resource
 {
     protected static ?string $model = Tenant::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -24,6 +22,7 @@ class TenantResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('domain')
+                    ->unique()
                     ->required()
                     ->maxLength(255)
                     ->live(debounce: 700)
