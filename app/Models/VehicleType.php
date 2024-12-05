@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\{BelongsToTenantTrait, TenantScopeTrait};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -17,11 +15,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class VehicleType extends Model
+class VehicleType extends BaseModel
 {
     use HasFactory;
-    use TenantScopeTrait;
-    use BelongsToTenantTrait;
 
     protected $table = 'vehicle_types';
 

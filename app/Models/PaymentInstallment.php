@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\{BelongsToTenantTrait, TenantScopeTrait};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\{Builder, Model};
+use Illuminate\Database\Eloquent\{Builder};
 
 /**
  * Class PaymentInstallments
@@ -31,11 +30,9 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class PaymentInstallment extends Model
+class PaymentInstallment extends BaseModel
 {
     use HasFactory;
-    use TenantScopeTrait;
-    use BelongsToTenantTrait;
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
