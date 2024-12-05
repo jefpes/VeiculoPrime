@@ -31,7 +31,7 @@ class CheckTenant
             return $next($request);
         }
 
-        if (Auth::user()->tenant->id !== $tenant->id) { //@phpstan-ignore-line
+        if (Auth::user()->tenant?->id !== $tenant->id) { //@phpstan-ignore-line
             Auth::logout();
 
             return redirect('/login')->with('no_access', true);
