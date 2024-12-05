@@ -9,7 +9,8 @@ return new class () extends Migration {
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100)->unique();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->string('name', 100);
             $table->tinyInteger('hierarchy');
             $table->timestamps();
         });

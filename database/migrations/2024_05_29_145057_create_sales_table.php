@@ -13,6 +13,7 @@ return new class () extends Migration {
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(Vehicle::class)->constrained();
             $table->foreignIdFor(Client::class)->constrained();

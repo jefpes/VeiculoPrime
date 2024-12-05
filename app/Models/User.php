@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\TenantScopeTrait;
+use App\Traits\{BelongsToTenantTrait, TenantScopeTrait};
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,6 +34,12 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use Notifiable;
     use SoftDeletes;
     use TenantScopeTrait;
+    use BelongsToTenantTrait;
+
+    /**
+     * @var array<string>
+     */
+    protected $with = ['tenant'];
 
     /**
      * The attributes that should be hidden for serialization.

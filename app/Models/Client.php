@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\{BelongsToTenantTrait, TenantScopeTrait};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 use Illuminate\Database\Eloquent\{Model};
@@ -40,6 +41,8 @@ use Illuminate\Database\Eloquent\{Model};
 class Client extends Model
 {
     use HasFactory;
+    use TenantScopeTrait;
+    use BelongsToTenantTrait;
 
     public function photos(): HasMany
     {

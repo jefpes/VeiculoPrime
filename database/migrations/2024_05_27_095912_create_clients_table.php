@@ -13,6 +13,7 @@ return new class () extends Migration {
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->string('name');
             $table->string('gender');
             $table->string('rg', 20)->unique()->nullable();

@@ -12,12 +12,14 @@ return new class () extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->json('custom_fields')->nullable();
             $table->string('avatar_url')->nullable();
+            $table->unique(['email', 'tenant_id']);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

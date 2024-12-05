@@ -13,18 +13,21 @@ return new class () extends Migration {
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->string('name')->unique();
             $table->timestamps();
         });
 
         Schema::create('vehicle_types', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->string('name')->unique();
             $table->timestamps();
         });
 
         Schema::create('vehicle_models', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(VehicleType::class)->constrained(table: 'vehicle_types', column: 'id');
             $table->foreignIdFor(Brand::class)->constrained();
             $table->string('name')->unique();
@@ -33,6 +36,7 @@ return new class () extends Migration {
 
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(Employee::class)->nullable()->constrained(table: 'employees', column: 'id');
             $table->foreignIdFor(VehicleModel::class)->constrained(table: 'vehicle_models', column: 'id');
             $table->foreignIdFor(Supplier::class)->nullable()->constrained(table: 'suppliers', column: 'id');

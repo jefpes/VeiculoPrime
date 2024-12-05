@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\{BelongsToTenantTrait, TenantScopeTrait};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Builder, Model};
 
@@ -33,6 +34,8 @@ use Illuminate\Database\Eloquent\{Builder, Model};
 class PaymentInstallment extends Model
 {
     use HasFactory;
+    use TenantScopeTrait;
+    use BelongsToTenantTrait;
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
