@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\TenantScopeTrait;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+    use TenantScopeTrait;
 
     /**
      * The attributes that should be hidden for serialization.
