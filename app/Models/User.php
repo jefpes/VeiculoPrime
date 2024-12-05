@@ -106,4 +106,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     {
         return $this->abilities()->contains($ability);
     }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 }
