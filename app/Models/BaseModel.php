@@ -6,6 +6,10 @@ use App\Traits\TenantScopeTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int|null $tenant_id
+ * @property Tenant $tenant
+ */
 class BaseModel extends Model
 {
     use TenantScopeTrait;

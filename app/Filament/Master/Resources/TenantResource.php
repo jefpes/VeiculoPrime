@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\Str;
 
 class TenantResource extends Resource
 {
@@ -19,17 +20,14 @@ class TenantResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('code')
-                    ->required()
-                    ->maxLength(36),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('domain')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
+                    ->maxLength(255)
+                    ->live(debounce: 700)
+                    ->afterStateUpdated(fn ($set, $get) => $set('domain', Str::slug($get('domain')))),
             ]);
     }
 
