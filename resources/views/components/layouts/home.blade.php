@@ -7,19 +7,19 @@ $company = App\Models\Company::first();
 $bodyStyles = [];
 $bgStyles = [];
 if ($company) {
-    if ($company->font_family) {
-        $bodyStyles[] = "{$company->font_family};";
+    if ($company?->font_family) {
+        $bodyStyles[] = "{$company?->font_family};";
     }
-    if ($company->body_bg_color) {
-        $bodyStyles[] = "background-color: {$company->body_bg_color};";
+    if ($company?->body_bg_color) {
+        $bodyStyles[] = "background-color: {$company?->body_bg_color};";
     }
-    if ($company->font_color) {
-        $bodyStyles[] = "color: {$company->font_color};";
+    if ($company?->font_color) {
+        $bodyStyles[] = "color: {$company?->font_color};";
     }
-    if ($company->bg_img) {
-        $bgStyles[] = "background-image: url('" . image_path($company->bg_img) . "');";
+    if ($company?->bg_img) {
+        $bgStyles[] = "background-image: url('" . image_path($company?->bg_img) . "');";
         $bgStyles[] = "background-repeat: repeat;";
-        $bgStyles[] = "opacity: {$company->bg_img_opacity};";
+        $bgStyles[] = "opacity: {$company?->bg_img_opacity};";
     }
 }
 

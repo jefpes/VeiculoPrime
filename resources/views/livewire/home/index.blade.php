@@ -15,7 +15,7 @@
     <div class="absolute inset-0 bg-gray-500 bg-opacity-75" @click="showFilters = false"></div>
     <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
       <div class="w-screen max-w-md">
-        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company->body_bg_color }}">
+        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company?->body_bg_color }}">
           <div class="p-6">
             <!-- Botão Limpar Filtros -->
             <div class="mt-6 space-y-4">
