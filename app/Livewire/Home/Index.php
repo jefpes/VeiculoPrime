@@ -37,7 +37,7 @@ class Index extends Component
     #[Layout('components.layouts.home')]
     public function render(): View
     {
-        return view('livewire.home.index', ['company' => Company::query()->find(1)]);
+        return view('livewire.home.index', ['company' => Company::query()->where('tenant_id', $this->getTenantId())->first()]);
     }
 
     #[Computed()]
@@ -46,10 +46,17 @@ class Index extends Component
         return VehicleType::query()->orderBy('name')->get();
     }
 
+    protected function getTenantId(): int|null
+    {
+        return session()->get('tenant')->id ?? null;
+    }
+
     #[Computed()]
     public function years(): Collection
     {
-        return Vehicle::query()->where('sold_date', null)
+        return Vehicle::query()
+            ->where('tenant_id', $this->getTenantId())
+            ->where('sold_date', null)
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->vehicle_type_id, fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $this->vehicle_type_id)))
             ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
@@ -63,6 +70,7 @@ class Index extends Component
     public function vehicles(): LengthAwarePaginator
     {
         return Vehicle::with('model', 'photos')
+            ->where('tenant_id', $this->getTenantId())
             ->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
@@ -76,7 +84,9 @@ class Index extends Component
     #[Computed()]
     public function prices(): Collection
     {
-        return Vehicle::query()->where('sold_date', null)
+        return Vehicle::query()
+            ->where('tenant_id', $this->getTenantId())
+            ->where('sold_date', null)
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
@@ -90,12 +100,17 @@ class Index extends Component
     #[Computed()]
     public function brands(): Collection
     {
-        return Brand::query()->join('vehicle_models', 'brands.id', '=', 'vehicle_models.brand_id')
-            ->join('vehicles', 'vehicle_models.id', '=', 'vehicles.vehicle_model_id')
-            ->whereNull('vehicles.sold_date')
-            ->when($this->vehicle_type_id, fn ($query) => $query->where('vehicle_models.vehicle_type_id', $this->vehicle_type_id))
-            ->select('brands.*')
-            ->distinct()
+        return Brand::query()
+            ->where('brands.tenant_id', $this->getTenantId()) // Filtra tenant_id
+            ->whereHas('models', function ($query) {
+                $query->whereHas('vehicles', function ($query) {
+                    $query->whereNull('vehicles.sold_date');
+                });
+
+                if ($this->vehicle_type_id) {
+                    $query->where('vehicle_models.vehicle_type_id', $this->vehicle_type_id);
+                }
+            })
             ->orderBy('brands.name')
             ->get();
     }

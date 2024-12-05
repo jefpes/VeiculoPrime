@@ -3,9 +3,9 @@
     <div class="space-y-4">
         <h3 class="text-lg font-semibold">{{ __('About') }}</h3>
         <p>{{ $company->about ?? 'Motor Market is a platform for buying and selling cars.' }}</p>
-        @if($company->address)
+        {{-- @if($company->address)
             <p><span class="font-semibold">{{ __('Address') }}:</span> {{ $company->address }}</p>
-        @endif
+        @endif --}}
         @if($company->cnpj)
             <p><span class="font-semibold">{{ __('CNPJ') }}:</span> {{ $company->cnpj }}</p>
         @endif
