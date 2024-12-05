@@ -14,14 +14,14 @@ return new class () extends Migration {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicle_types', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
         });
 
@@ -30,7 +30,7 @@ return new class () extends Migration {
             $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(VehicleType::class)->constrained(table: 'vehicle_types', column: 'id');
             $table->foreignIdFor(Brand::class)->constrained();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
         });
 
@@ -56,9 +56,9 @@ return new class () extends Migration {
             $table->string('seats')->nullable();
             $table->string('traction')->nullable();
             $table->string('color');
-            $table->string('plate')->unique();
-            $table->string('chassi')->unique();
-            $table->string('renavam')->unique();
+            $table->string('plate');
+            $table->string('chassi');
+            $table->string('renavam');
             $table->date('sold_date')->nullable();
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();
