@@ -53,6 +53,11 @@ class Company extends BaseModel
         return $this->hasOne(Employee::class);
     }
 
+    public function getAddress(): string
+    {
+        return "$this->zip_code, $this->street, $this->street , $this->neighborhood, $this->city - $this->state";
+    }
+
     protected static function booted()
     {
         static::updating(function (Company $company) {
