@@ -37,7 +37,7 @@ class CheckTenant
             return redirect('/login')->with('no_access', true);
         }
 
-        $subdomainUrl = subdomain_url($tenant->prefix_domain, '');
+        $subdomainUrl = subdomain_url($tenant->domain, '');
 
         config(['app.url' => $subdomainUrl]);
 
@@ -50,7 +50,7 @@ class CheckTenant
     {
         list($subdomain) = explode('.', $request->getHost(), 2);
 
-        $tenant = $this->tenant->where('prefix_domain', $subdomain)->first(); //@phpstan-ignore-line
+        $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
         if ($tenant === null) {
             //abort(404);
