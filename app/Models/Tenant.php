@@ -15,7 +15,7 @@ class Tenant extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'include_in_marketplace' => 'boolean',
         ];
     }
 

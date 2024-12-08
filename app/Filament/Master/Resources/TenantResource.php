@@ -40,8 +40,7 @@ class TenantResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('domain')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('include_in_marketplace'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

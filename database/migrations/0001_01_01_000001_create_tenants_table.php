@@ -15,7 +15,8 @@ return new class () extends Migration {
             $table->uuid('code');
             $table->string('name');
             $table->string('domain')->unique();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('include_in_marketplace')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

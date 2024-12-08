@@ -25,12 +25,27 @@ class CheckTenant
 
         $tenant = $this->validTenancyExists($request);
 
+        // Se não há tenant, permite acesso direto.
+        if (is_null($tenant)) {
+            session()->put('is_master', true); // Define que está no modo master.
+
+            return $next($request);
+        }
+
         session()->put('tenant', $tenant);
 
         if (is_null($request->user())) {
             return $next($request);
         }
 
+        // Permitir usuários sem tenant (exceção)
+        if (is_null($request->user()->tenant)) {
+            session()->put('is_master', true); // Usuário sem tenant tratado como master.
+
+            return $next($request);
+        }
+
+        // Verifica se o tenant do usuário logado corresponde ao tenant da sessão
         if (Auth::user()->tenant?->id !== $tenant->id) { //@phpstan-ignore-line
             Auth::logout();
 
@@ -53,8 +68,8 @@ class CheckTenant
         $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
         if ($tenant === null) {
-            //abort(404);
-            session()->put('is_master', true);
+            // Retorna null caso não encontre um tenant válido.
+            return null;
         }
 
         return $tenant;

@@ -19,6 +19,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -88,6 +89,7 @@ class VehicleResource extends Resource
                             $status->value => $status->value,
                         ])->toArray()),
                     Select::make('transmission')
+                        ->required()
                         ->options(collect(TransmissionTypes::cases())->mapWithKeys(fn (TransmissionTypes $status) => [
                             $status->value => $status->value,
                         ])->toArray()),
@@ -127,6 +129,10 @@ class VehicleResource extends Resource
                 return $query->with('employee', 'model', 'supplier');
             })
             ->columns([
+                TextColumn::make('tenant.name')
+                    ->label('Tenant')
+                    ->visible(fn () => Auth::user()->tenant_id === null) //@phpstan-ignore-line
+                    ->sortable(),
                 TextColumn::make('employee.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
