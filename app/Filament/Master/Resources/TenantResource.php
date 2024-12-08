@@ -3,7 +3,7 @@
 namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\TenantResource\{Pages};
-use App\Models\Tenant;
+use App\Models\{Tenant};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -27,6 +27,30 @@ class TenantResource extends Resource
                     ->maxLength(255)
                     ->live(debounce: 700)
                     ->afterStateUpdated(fn ($set, $get) => $set('domain', Str::slug($get('domain')))),
+                Forms\Components\Section::make('User')
+                    ->visible(fn (string $operation): bool => $operation === 'create')
+                    ->schema([
+                        Forms\Components\TextInput::make('user_name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('user_email')
+                            ->unique(table: 'users', column: 'email')
+                            ->email()
+                            ->live()
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('user_password')
+                            ->password()
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->dehydrated(fn (?string $state) => filled($state))
+                            ->confirmed()
+                            ->maxLength(8),
+                        Forms\Components\TextInput::make('user_password_confirmation')
+                            ->password()
+                            ->requiredWith('password')
+                            ->dehydrated(false)
+                            ->maxLength(8),
+                    ]),
             ]);
     }
 

@@ -5,16 +5,30 @@ namespace App\Filament\Master\Resources\TenantResource\Pages;
 use App\Filament\Master\Resources\TenantResource;
 use App\Models\{Ability, Company, Settings, User};
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class CreateTenant extends CreateRecord
 {
     protected static string $resource = TenantResource::class;
 
+    public array $user = []; // @phpstan-ignore-line
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['code'] = Str::uuid();
+
+        $this->user = [
+            'name'              => $data['user_name'],
+            'email'             => $data['user_email'],
+            'email_verified_at' => now(),
+            'password'          => bcrypt($data['user_password']),
+            'remember_token'    => Str::random(10),
+        ];
+
+        unset($data['user_name']);
+        unset($data['user_email']);
+        unset($data['user_password']);
+        unset($data['user_password_confirmation']);
 
         return $data;
     }
@@ -25,13 +39,7 @@ class CreateTenant extends CreateRecord
 
         $company->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
-        $user = User::create([ // @phpstan-ignore-line
-            'name'              => $this->record->name, // @phpstan-ignore-line
-            'email'             => "admin.{$this->record->name}@admin.com", // @phpstan-ignore-line
-            'email_verified_at' => now(),
-            'password'          => Hash::make('admin'),
-            'remember_token'    => Str::random(10),
-        ]);
+        $user = User::create($this->user); // @phpstan-ignore-line
 
         $user->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
