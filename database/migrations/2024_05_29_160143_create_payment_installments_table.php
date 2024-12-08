@@ -13,7 +13,7 @@ return new class () extends Migration {
     {
         Schema::create('payment_installments', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->foreignIdFor(Sale::class)->constrained();
             $table->date('due_date');

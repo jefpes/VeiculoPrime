@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 @php
-$company = App\Models\Company::first();
+$company = App\Models\Company::where('tenant_id', (session()->get('tenant')->id ?? null))->first();
 
 // Construir os estilos dinâmicos
 $bodyStyles = [];
 $bgStyles = [];
 if ($company) {
-    if ($company->font_family) {
-        $bodyStyles[] = "{$company->font_family};";
+    if ($company?->font_family) {
+        $bodyStyles[] = "{$company?->font_family};";
     }
-    if ($company->body_bg_color) {
-        $bodyStyles[] = "background-color: {$company->body_bg_color};";
+    if ($company?->body_bg_color) {
+        $bodyStyles[] = "background-color: {$company?->body_bg_color};";
     }
-    if ($company->font_color) {
-        $bodyStyles[] = "color: {$company->font_color};";
+    if ($company?->font_color) {
+        $bodyStyles[] = "color: {$company?->font_color};";
     }
-    if ($company->bg_img) {
-        $bgStyles[] = "background-image: url('" . image_path($company->bg_img) . "');";
+    if ($company?->bg_img) {
+        $bgStyles[] = "background-image: url('" . image_path($company?->bg_img) . "');";
         $bgStyles[] = "background-repeat: repeat;";
-        $bgStyles[] = "opacity: {$company->bg_img_opacity};";
+        $bgStyles[] = "opacity: {$company?->bg_img_opacity};";
     }
 }
 

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
-use Illuminate\Database\Eloquent\{Model};
 
 /**
  * Class Client
@@ -37,7 +36,7 @@ use Illuminate\Database\Eloquent\{Model};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Client extends Model
+class Client extends BaseModel
 {
     use HasFactory;
 

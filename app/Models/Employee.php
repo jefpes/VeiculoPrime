@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
 /**
@@ -37,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
  * @property \Illuminate\Support\Carbon $updated_at
  */
 
-class Employee extends Model
+class Employee extends BaseModel
 {
     use HasFactory;
 

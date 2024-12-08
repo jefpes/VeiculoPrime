@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{HasOne};
 use Illuminate\Support\Facades\Storage;
 
@@ -43,7 +42,7 @@ use Illuminate\Support\Facades\Storage;
  * @property \Carbon\Carbon $updated_at
  */
 
-class Company extends Model
+class Company extends BaseModel
 {
     use HasFactory;
 
@@ -52,6 +51,11 @@ class Company extends Model
     public function ceo(): HasOne
     {
         return $this->hasOne(Employee::class);
+    }
+
+    public function getAddress(): string
+    {
+        return "$this->zip_code, $this->street, $this->street , $this->neighborhood, $this->city - $this->state";
     }
 
     protected static function booted()

@@ -1,12 +1,12 @@
 <nav class="container mx-auto p-2  flex items-center justify-between ">
   <div class="flex items-center">
     @if ($company->logo && Storage::disk('public')->exists("$company->logo"))
-    <a href="{{ route('home') }}" class="flex items-center">
+    <a href="{{ url('/') }}" class="flex items-center">
       <img src="{{ image_path($company->logo) }}" alt="{{ $company->name ?? 'Motor Market' }}"
         class="h-12 w-auto">
     </a>
     @else
-        <a href="{{ route('home') }}" class="flex items-center text-2xl font-bold text-gray-900">
+        <a href="{{ url('/') }}" class="flex items-center text-2xl font-bold text-gray-900">
             {{ $company->name ?? 'Motor Market' }}
         </a>
     @endif

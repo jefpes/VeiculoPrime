@@ -13,26 +13,30 @@ return new class () extends Migration {
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicle_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicle_models', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(VehicleType::class)->constrained(table: 'vehicle_types', column: 'id');
             $table->foreignIdFor(Brand::class)->constrained();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(Employee::class)->nullable()->constrained(table: 'employees', column: 'id');
             $table->foreignIdFor(VehicleModel::class)->constrained(table: 'vehicle_models', column: 'id');
             $table->foreignIdFor(Supplier::class)->nullable()->constrained(table: 'suppliers', column: 'id');
@@ -52,9 +56,9 @@ return new class () extends Migration {
             $table->string('seats')->nullable();
             $table->string('traction')->nullable();
             $table->string('color');
-            $table->string('plate')->unique();
-            $table->string('chassi')->unique();
-            $table->string('renavam')->unique();
+            $table->string('plate');
+            $table->string('chassi');
+            $table->string('renavam');
             $table->date('sold_date')->nullable();
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();

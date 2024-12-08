@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\{Field, Fieldset};
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Columns\Column;
@@ -25,6 +25,10 @@ class FilamentServiceProvider extends ServiceProvider
 
         Sum::configureUsing(
             fn (Sum $sum) => $sum->translateLabel()
+        );
+
+        Fieldset::configureUsing(
+            fn (Fieldset $fieldset) => $fieldset->translateLabel()
         );
 
         Count::configureUsing(

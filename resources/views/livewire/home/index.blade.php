@@ -15,7 +15,7 @@
     <div class="absolute inset-0 bg-gray-500 bg-opacity-75" @click="showFilters = false"></div>
     <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
       <div class="w-screen max-w-md">
-        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company->body_bg_color }}">
+        <div class="h-full flex flex-col shadow-xl overflow-y-scroll" style="{{ 'background-color:' . $company?->body_bg_color }}">
           <div class="p-6">
             <!-- Botão Limpar Filtros -->
             <div class="mt-6 space-y-4">
@@ -92,9 +92,13 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     @foreach ($this->vehicles as $v)
       <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
-        <a href="{{ route('show.v', $v->id) }}" class="block">
+        <a href="{{ url('/show', $v->id) }}" class="block">
           <div class="h-56 w-full">
-            <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+            @if ($v->photos()->first() && Storage::disk('public')->exists($v->photos()->first()->path))
+                <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+                @else
+                    <x-icons.no-image class="object-fill w-full h-full"/>
+            @endif
           </div>
           <div class="py-2 px-3 space-y-2">
             <div class="flex justify-between items-center">

@@ -24,8 +24,6 @@ class CompanySeeder extends Seeder
             'about'        => 'Somos uma empresa de venda de veículos, na qual presamos pela qualidade e satisfação do cliente.',
             'phone'        => '(85) 99999-9999',
             'email'        => 'google@gmail.com',
-            'logo'         => 'company/logo.png',
-            'favicon'      => 'company/favico.ico',
             'x'            => 'x.com',
             'instagram'    => 'instagram.com',
             'facebook'     => 'facebook.com',

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
 /**
@@ -40,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Supplier extends Model
+class Supplier extends BaseModel
 {
     use HasFactory;
 

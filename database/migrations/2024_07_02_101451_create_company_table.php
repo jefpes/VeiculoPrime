@@ -13,6 +13,7 @@ return new class () extends Migration {
     {
         Schema::create('company', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->foreignIdFor(Employee::class, 'employee_id')->nullable();
             $table->string('name')->nullable();
             $table->string('cnpj')->nullable();

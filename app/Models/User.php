@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\{TenantScopeTrait};
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @method Collection abilities()
  *
  * @property int $id
+ * @property int $tenant_id
  * @property string $name
  * @property string $email
  * @property string $password
@@ -32,6 +34,12 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+    use TenantScopeTrait;
+
+    /**
+     * @var array<string>
+     */
+    protected $with = ['tenant'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -62,8 +70,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
 
     public function hierarchy(int $id): bool
     {
-        // $h_user_loged = $this->roles()->pluck('hierarchy')->max();
-        // $h_user_param = (User::withTrashed()->find($id)->roles()->pluck('hierarchy')->max() ?? $h_user_loged + 1);
         $h_user_loged = collect($this->roles)->pluck('hierarchy')->max();
         $h_user_param = (collect(User::withTrashed()->find($id)->roles)->pluck('hierarchy')->max() ?? $h_user_loged + 1);
 
@@ -98,5 +104,10 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     public function hasAbility(string $ability): bool
     {
         return $this->abilities()->contains($ability);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }
