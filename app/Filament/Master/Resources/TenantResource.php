@@ -104,12 +104,9 @@ class TenantResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                // Tables\Actions\EditAction::make()->authorize(fn () => auth_user()->roles()->min('hierarchy') === 0),
-                // Tables\Actions\DeleteAction::make()->authorize(fn () => auth_user()->roles()->min('hierarchy') === 0),
-                // Tables\Actions\RestoreAction::make()->authorize(fn () => auth_user()->roles()->min('hierarchy') === 0),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\EditAction::make()->authorize(fn () => auth_user()->roles()->query()->min('hierarchy') === 0),
+                Tables\Actions\DeleteAction::make()->authorize(fn () => auth_user()->roles()->query()->min('hierarchy') === 0),
+                Tables\Actions\RestoreAction::make()->authorize(fn () => auth_user()->roles()->query()->min('hierarchy') === 0),
             ]);
     }
 
