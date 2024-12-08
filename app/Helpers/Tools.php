@@ -3,6 +3,15 @@
 use Carbon\Carbon;
 use Illuminate\Support\Number;
 
+if (!function_exists('auth_user')) {
+    function auth_user(): ?\App\Models\User
+    {
+        $user = \App\Models\User::query()->find(Illuminate\Support\Facades\Auth::id());
+
+        return $user;
+    }
+}
+
 if (!function_exists('image_path')) {
     /**
      * Generate the storage image path.

@@ -19,7 +19,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
-use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -131,7 +130,7 @@ class VehicleResource extends Resource
             ->columns([
                 TextColumn::make('tenant.name')
                     ->label('Tenant')
-                    ->visible(fn () => Auth::user()->tenant_id === null) //@phpstan-ignore-line
+                    ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
                 TextColumn::make('employee.name')
                     ->label('Buyer')

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @method Collection abilities()
  *
  * @property int $id
+ * @property int $tenant_id
  * @property string $name
  * @property string $email
  * @property string $password
