@@ -94,7 +94,11 @@
       <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
         <a href="{{ route('show.v', $v->id) }}" class="block">
           <div class="h-56 w-full">
-            <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+            @if ($v->photos()->first() && Storage::disk('public')->exists($v->photos()->first()->path))
+                <img src="{{ image_path($v->photos->first()->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+                @else
+                    <x-icons.no-image class="object-fill w-full h-full"/>
+            @endif
           </div>
           <div class="py-2 px-3 space-y-2">
             <div class="flex justify-between items-center">
