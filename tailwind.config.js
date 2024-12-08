@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-        './app/Filament/**/*.php',
+        './app/Filament/Admin/**/*.php',
+        './app/Filament/Master/**/*.php',
         './app/Livewire/**/*.php',
         './resources/views/**/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
