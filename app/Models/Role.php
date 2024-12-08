@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\{Builder};
  * @method \App\Models\Ability abilities()
  *
  * @property int $id
+ * @property int $tenant_id
  * @property string $name
  * @property int $hierarchy
  * @property \Illuminate\Support\Carbon $created_at
