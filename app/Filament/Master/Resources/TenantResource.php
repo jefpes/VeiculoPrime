@@ -3,6 +3,7 @@
 namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\TenantResource\{Pages};
+use App\Forms\Components\MoneyInput;
 use App\Models\{Tenant};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,38 +19,55 @@ class TenantResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('domain')
-                    ->unique()
-                    ->required()
-                    ->maxLength(255)
-                    ->live(debounce: 700)
-                    ->afterStateUpdated(fn ($set, $get) => $set('domain', Str::slug($get('domain')))),
-                Forms\Components\Section::make('User')
-                    ->visible(fn (string $operation): bool => $operation === 'create')
+                Forms\Components\Section::make()
+                    ->columns(2)
                     ->schema([
-                        Forms\Components\TextInput::make('user_name')
+                        Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('user_email')
-                            ->unique(table: 'users', column: 'email')
-                            ->email()
-                            ->live()
+                        Forms\Components\TextInput::make('domain')
+                            ->unique()
                             ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('user_password')
-                            ->password()
-                            ->required(fn (string $operation): bool => $operation === 'create')
-                            ->dehydrated(fn (?string $state) => filled($state))
-                            ->confirmed()
-                            ->maxLength(8),
-                        Forms\Components\TextInput::make('user_password_confirmation')
-                            ->password()
-                            ->requiredWith('password')
-                            ->dehydrated(false)
-                            ->maxLength(8),
+                            ->maxLength(255)
+                            ->live(debounce: 700)
+                            ->afterStateUpdated(fn ($set, $get) => $set('domain', Str::slug($get('domain')))),
+                        MoneyInput::make('monthly_fee'),
+                        Forms\Components\TextInput::make('due_day')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(28)
+                            ->mask('99'),
+
+                        Forms\Components\Fieldset::make('Master User')
+                            ->columnSpanFull()
+                            ->columns(2)
+                            ->visible(fn (string $operation): bool => $operation === 'create')
+                            ->schema([
+                                Forms\Components\TextInput::make('user_name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('user_email')
+                                    ->label('Email')
+                                    ->unique(table: 'users', column: 'email')
+                                    ->email()
+                                    ->live()
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('user_password')
+                                    ->label('Password')
+                                    ->password()
+                                    ->required(fn (string $operation): bool => $operation === 'create')
+                                    ->dehydrated(fn (?string $state) => filled($state))
+                                    ->confirmed()
+                                    ->maxLength(8),
+                                Forms\Components\TextInput::make('user_password_confirmation')
+                                    ->label('Password Confirmation')
+                                    ->password()
+                                    ->requiredWith('password')
+                                    ->dehydrated(false)
+                                    ->maxLength(8),
+                            ]),
                     ]),
             ]);
     }
@@ -64,6 +82,11 @@ class TenantResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('domain')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('monthly_fee')
+                    ->money('BRL')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('due_day')
+                    ->searchable(),
                 Tables\Columns\ToggleColumn::make('include_in_marketplace'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -77,13 +100,16 @@ class TenantResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->filters([
+                Tables\Filters\TrashedFilter::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ->actions([
+                // Tables\Actions\EditAction::make()->visible(fn () => auth_user()->roles()->min('hierarchy') === 0),
+                // Tables\Actions\DeleteAction::make()->visible(fn () => auth_user()->roles()->min('hierarchy') === 0),
+                // Tables\Actions\RestoreAction::make()->visible(fn () => auth_user()->roles()->min('hierarchy') === 0),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ]);
     }
 

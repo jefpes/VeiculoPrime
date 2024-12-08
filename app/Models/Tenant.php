@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Tenant extends Model
 {
+    use SoftDeletes;
+
     /**
      * Get the attributes that should be cast.
      *

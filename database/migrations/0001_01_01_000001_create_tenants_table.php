@@ -15,6 +15,8 @@ return new class () extends Migration {
             $table->uuid('code');
             $table->string('name');
             $table->string('domain')->unique();
+            $table->decimal('monthly_fee', places: 2)->nullable()->default(null);
+            $table->int('due_day')->nullable()->default(5);
             $table->boolean('include_in_marketplace')->default(true);
             $table->softDeletes();
             $table->timestamps();
