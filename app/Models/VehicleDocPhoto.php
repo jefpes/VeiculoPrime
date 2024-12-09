@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -21,45 +18,16 @@ use Illuminate\Support\Str;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class VehicleDocPhoto extends Model
+class VehicleDocPhoto extends BasePhoto
 {
-    use HasFactory;
-
-    protected static function boot(): void
+    protected function getPhotoDirectory(): string
     {
-        parent::boot();
+        return 'vehicle_doc_photos';
+    }
 
-        static::deleting(function ($photo) {
-            Storage::disk('public')->delete($photo->path);
-        });
-
-        static::saving(function ($photo) {
-            if ($photo->isDirty('path')) {
-                $oldPhoto = $photo->getOriginal('path');
-
-                // Gerando o novo nome do arquivo
-                $newFileName = sprintf(
-                    '%s_%s.%s',
-                    Str::slug($photo->vehicle->plate),
-                    (string) Str::uuid(),
-                    pathinfo($photo->path, PATHINFO_EXTENSION)
-                );
-
-                // Definindo o novo caminho para o arquivo
-                $newFilePath = 'vehicle_doc_photos/' . $newFileName;
-
-                // Movendo o arquivo para o novo caminho
-                Storage::disk('public')->move($photo->path, $newFilePath);
-
-                // Atualizando o caminho no modelo
-                $photo->path = $newFilePath;
-
-                // Deletando a foto antiga se estiver atualizando
-                if ($oldPhoto && $oldPhoto !== $photo->path) {
-                    Storage::disk('public')->delete($oldPhoto);
-                }
-            }
-        });
+    protected function getPhotoNamePrefix(): string
+    {
+        return Str::slug($this->vehicle->plate);
     }
 
     public function vehicle(): BelongsTo
