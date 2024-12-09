@@ -34,6 +34,9 @@ class PhotosRelationManager extends RelationManager
             ->recordTitleAttribute('path')
             ->columns([
                 Tables\Columns\ImageColumn::make('path')->size(200)->label('Foto'),
+                Tables\Columns\ToggleColumn::make('main')->label('Main')->afterStateUpdated(function ($record) {
+                    $record->vehicle->photos()->where('id', '!=', $record->id)->update(['main' => false]);
+                }),
             ])
             ->filters([
                 //

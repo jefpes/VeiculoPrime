@@ -73,6 +73,7 @@ return new class () extends Migration {
             $table->id();
             $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
             $table->string('path', 255);
+            $table->boolean('main')->default(false);
             $table->timestamps();
         });
 
