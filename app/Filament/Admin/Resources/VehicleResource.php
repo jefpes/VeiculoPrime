@@ -106,10 +106,8 @@ class VehicleResource extends Resource
                         ->maxLength(255)
                         ->mask('aaa-9*99'),
                     TextInput::make('chassi')
-                        ->required()
                         ->maxLength(255),
                     TextInput::make('renavam')
-                        ->required()
                         ->maxLength(255),
                     TextInput::make('crv_number')
                         ->label('CRV number')

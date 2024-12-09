@@ -58,8 +58,8 @@ return new class () extends Migration {
             $table->string('traction')->nullable();
             $table->string('color');
             $table->string('plate');
-            $table->string('chassi');
-            $table->string('renavam');
+            $table->string('chassi')->nullable();
+            $table->string('renavam')->nullable();
             $table->string('crv_number')->nullable();
             $table->string('crv_code')->nullable();
             $table->date('sold_date')->nullable();
