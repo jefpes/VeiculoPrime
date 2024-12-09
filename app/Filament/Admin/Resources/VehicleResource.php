@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
-use App\Filament\Admin\Resources\VehicleResource\RelationManagers\PhotosRelationManager;
+use App\Filament\Admin\Resources\VehicleResource\RelationManagers\{DocPhotosRelationManager, PhotosRelationManager};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
@@ -141,11 +141,9 @@ class VehicleResource extends Resource
                 TextColumn::make('model.name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                TextColumn::make('combined_years')
-                    ->getStateUsing(function ($record) {
-                        return  $record->year_one . '/' . $record->year_two;
-                    })
-                    ->sortable(['year_one', 'year_two'])
+                TextColumn::make('full_year')
+                    ->searchable()
+                    ->sortable()
                     ->label('Year'),
                 TextColumn::make('km')
                     ->numeric()
@@ -334,7 +332,6 @@ class VehicleResource extends Resource
                     return $indicators;
                 }),
             ])
-
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -371,6 +368,7 @@ class VehicleResource extends Resource
     {
         return [
             PhotosRelationManager::class,
+            DocPhotosRelationManager::class,
         ];
     }
 

@@ -47,6 +47,7 @@ return new class () extends Migration {
             $table->decimal('promotional_price', places: 2)->nullable()->default(null);
             $table->string('year_one');
             $table->string('year_two');
+            $table->string('full_year')->virtualAs('CONCAT(year_one, "/", year_two)');
             $table->integer('km');
             $table->string('fuel');
             $table->string('engine_power');
@@ -59,8 +60,8 @@ return new class () extends Migration {
             $table->string('plate');
             $table->string('chassi');
             $table->string('renavam');
-            $table->string('crv_number');
-            $table->string('crv_code');
+            $table->string('crv_number')->nullable();
+            $table->string('crv_code')->nullable();
             $table->date('sold_date')->nullable();
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();
