@@ -41,10 +41,10 @@
                 <div class="w-full list-decimal list-inside space-2">
                   @foreach ($this->brands as $b)
                   <div class="inline-flex">
-                    <label class="items-center pr-2" >
-                        <input wire:model.live="selectedBrands" :key="'brand-'.$b->id" type="checkbox" value="{{ $b->id }}" class="rounded shadow-sm" >
-                        <span class="ms-1 text-sm">{{ $b->name }}</span>
-                    </label>
+                    <div class="flex items-center mb-4">
+                        <input id="checkbox-{{ $b->id }}" type="checkbox" wire:model.live="selectedBrands" :key="'brand-'.$b->id" value="{{ $b->id }}" class="w-4 h-4 border-gray-300 rounded focus:ring-2" style="{{ 'color:' . $company?->check_text_color . '; background-color:' . $company?->check_color }}">
+                        <label for="checkbox-{{ $b->id }}" class="ms-2 text-sm font-medium" style="{{ 'color:' . $company?->check_text_color }}">{{ $b->name }}</label>
+                    </div>
                   </div>
                   @endforeach
                 </div>
