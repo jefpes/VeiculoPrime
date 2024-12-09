@@ -6,7 +6,6 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\Model;
 
 class DocPhotosRelationManager extends RelationManager
 {
@@ -35,38 +34,28 @@ class DocPhotosRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('path')
+            ->recordAction(null)
+            ->recordUrl(null)
             ->columns([
-                Tables\Columns\ImageColumn::make('path')->size(200)->label('Foto'),
+                Tables\Columns\Layout\Grid::make()
+                    ->columns(1)
+                    ->schema([
+                        Tables\Columns\Layout\Split::make([
+                            Tables\Columns\Layout\Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    Tables\Columns\ImageColumn::make('path')
+                                        ->label('Foto')
+                                        ->height(300)
+                                        ->width(240)
+                                        ->extraImgAttributes(['class' => 'rounded-md']),
+                                ])->grow(false),
+                        ]),
+                    ])->grow(false),
             ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->modalWidth('2xl')
-                    ->label('Adicionar Fotos')
-                    ->modalHeading('Adicionar Fotos')
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
-
-                        return $data;
-                    })
-                    ->using(function (array $data, PhotosRelationManager $livewire): Model {
-                        $model      = $livewire->getOwnerRecord();
-                        $firstPhoto = $model->photos()->create([ //@phpstan-ignore-line
-                            'path' => $data['path'][0],
-                        ]);
-
-                        // Create additional photos
-                        foreach (array_slice($data['path'], 1) as $path) {
-                            $model->photos()->create([ //@phpstan-ignore-line
-                                'path' => $path,
-                            ]);
-                        }
-
-                        return $firstPhoto;
-                    }),
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

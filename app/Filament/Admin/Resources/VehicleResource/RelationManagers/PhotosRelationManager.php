@@ -32,17 +32,40 @@ class PhotosRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
+            ->recordUrl(null)
             ->columns([
-                Tables\Columns\ImageColumn::make('path')
-                    ->label('Foto')
-                    ->size(200),
-                Tables\Columns\ToggleColumn::make('main')
-                    ->label('Principal')
-                    ->afterStateUpdated(function (Model $record, $state) {
-                        if ($state) {
-                            $record->vehicle->photos()->where('id', '!=', $record->id)->update(['main' => false]); //@phpstan-ignore-line
-                        }
-                    }),
+                Tables\Columns\Layout\Grid::make()
+                    ->columns(1)
+                    ->schema([
+                        Tables\Columns\Layout\Split::make([
+                            Tables\Columns\Layout\Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    Tables\Columns\ImageColumn::make('path')
+                                        ->label('Foto')
+                                        ->height(300)
+                                        ->width(240)
+                                        ->extraImgAttributes(['class' => 'rounded-md']),
+                                ])->grow(false),
+                            Tables\Columns\Layout\Grid::make()
+                            ->columns(1)
+                            ->schema([
+                                Tables\Columns\ToggleColumn::make('main')
+                                    ->extraAttributes(['class' => 'px-4'])
+                                    ->label('Principal')
+                                    ->afterStateUpdated(function (Model $record, $state) {
+                                        if ($state) {
+                                            $record->vehicle->photos()->where('id', '!=', $record->id)->update(['main' => false]); //@phpstan-ignore-line
+                                        }
+                                    }),
+                            ])->grow(false),
+                        ]),
+                    ])->grow(false),
+            ])
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
             ->filters([
                 //
@@ -57,15 +80,15 @@ class PhotosRelationManager extends RelationManager
 
                         return $data;
                     })
-                    ->using(function (array $data, PhotosRelationManager $livewire): Model {
+                    ->using(function (array $data, $livewire): Model {
                         $model      = $livewire->getOwnerRecord();
-                        $firstPhoto = $model->photos()->create([ //@phpstan-ignore-line
+                        $firstPhoto = $model->photos()->create([
                             'path' => $data['path'][0],
                         ]);
 
                         // Create additional photos
                         foreach (array_slice($data['path'], 1) as $path) {
-                            $model->photos()->create([ //@phpstan-ignore-line
+                            $model->photos()->create([
                                 'path' => $path,
                             ]);
                         }
