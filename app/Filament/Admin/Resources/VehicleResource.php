@@ -111,6 +111,12 @@ class VehicleResource extends Resource
                     TextInput::make('renavam')
                         ->required()
                         ->maxLength(255),
+                    TextInput::make('crv_number')
+                        ->label('CRV number')
+                        ->maxLength(20),
+                    TextInput::make('crv_code')
+                        ->label('CRV code')
+                        ->maxLength(20),
                     DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
@@ -198,6 +204,12 @@ class VehicleResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('renavam')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('crv_number')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('crv_code')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sold_date')
