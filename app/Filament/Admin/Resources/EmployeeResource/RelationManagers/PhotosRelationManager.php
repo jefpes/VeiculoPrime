@@ -33,15 +33,20 @@ class PhotosRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('path')
-            ->modelLabel(__('Photo'))
+            ->recordAction(null)
+            ->recordUrl(null)
             ->columns([
-                Tables\Columns\ImageColumn::make('path')
-                    ->label('Photo')
-                    ->size(250),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\ImageColumn::make('path')
+                        ->label('Foto')
+                        ->height(300)
+                        ->width(240)
+                        ->extraImgAttributes(['class' => 'rounded-md']),
+                ])->grow(false),
             ])
-            ->filters([
-                //
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -53,15 +58,15 @@ class PhotosRelationManager extends RelationManager
 
                         return $data;
                     })
-                    ->using(function (array $data, PhotosRelationManager $livewire): Model {
+                    ->using(function (array $data, $livewire): Model {
                         $model      = $livewire->getOwnerRecord();
-                        $firstPhoto = $model->photos()->create([ //@phpstan-ignore-line
+                        $firstPhoto = $model->photos()->create([
                             'path' => $data['path'][0],
                         ]);
 
                         // Create additional photos
                         foreach (array_slice($data['path'], 1) as $path) {
-                            $model->photos()->create([ //@phpstan-ignore-line
+                            $model->photos()->create([
                                 'path' => $path,
                             ]);
                         }

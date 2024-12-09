@@ -67,9 +67,6 @@ class PhotosRelationManager extends RelationManager
                 'md' => 2,
                 'xl' => 3,
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->modalWidth('2xl')

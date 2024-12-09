@@ -6,6 +6,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Database\Eloquent\Model;
 
 class DocPhotosRelationManager extends RelationManager
 {
@@ -37,25 +38,43 @@ class DocPhotosRelationManager extends RelationManager
             ->recordAction(null)
             ->recordUrl(null)
             ->columns([
-                Tables\Columns\Layout\Grid::make()
-                    ->columns(1)
-                    ->schema([
-                        Tables\Columns\Layout\Split::make([
-                            Tables\Columns\Layout\Grid::make()
-                                ->columns(1)
-                                ->schema([
-                                    Tables\Columns\ImageColumn::make('path')
-                                        ->label('Foto')
-                                        ->height(300)
-                                        ->width(240)
-                                        ->extraImgAttributes(['class' => 'rounded-md']),
-                                ])->grow(false),
-                        ]),
-                    ])->grow(false),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\ImageColumn::make('path')
+                        ->label('Foto')
+                        ->height(300)
+                        ->width(240)
+                        ->extraImgAttributes(['class' => 'rounded-md']),
+                ])->grow(false),
             ])
             ->contentGrid([
                 'md' => 2,
                 'xl' => 3,
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->modalWidth('2xl')
+                    ->label('Adicionar Fotos')
+                    ->modalHeading('Adicionar Fotos')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
+
+                        return $data;
+                    })
+                    ->using(function (array $data, $livewire): Model {
+                        $model      = $livewire->getOwnerRecord();
+                        $firstPhoto = $model->docPhotos()->create([
+                            'path' => $data['path'][0],
+                        ]);
+
+                        // Create additional photos
+                        foreach (array_slice($data['path'], 1) as $path) {
+                            $model->docPhotos()->create([
+                                'path' => $path,
+                            ]);
+                        }
+
+                        return $firstPhoto;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
