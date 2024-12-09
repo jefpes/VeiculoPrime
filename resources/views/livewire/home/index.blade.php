@@ -143,6 +143,6 @@
   </div>
 
   <div class="mt-8">
-    {{ $this->vehicles->onEachSide(1)->links() }}
+    {{ $this->vehicles->links('livewire::simple-tailwind') }}
   </div>
 </div>
