@@ -33,47 +33,32 @@ class VehicleDocPhoto extends Model
             Storage::disk('public')->delete($photo->path);
         });
 
-        static::updating(function ($photo) {
-            $oldPhoto = $photo->getOriginal('path');
+        static::saving(function ($photo) {
+            if ($photo->isDirty('path')) {
+                $oldPhoto = $photo->getOriginal('path');
 
-            // Gerando o novo nome do arquivo
-            $newFileName = sprintf(
-                '%s_%s.%s',
-                Str::slug($photo->vehicle->plate),
-                (string) Str::uuid(),
-                pathinfo($photo->path, PATHINFO_EXTENSION)
-            );
+                // Gerando o novo nome do arquivo
+                $newFileName = sprintf(
+                    '%s_%s.%s',
+                    Str::slug($photo->vehicle->plate),
+                    (string) Str::uuid(),
+                    pathinfo($photo->path, PATHINFO_EXTENSION)
+                );
 
-            // Definindo o novo caminho para o arquivo
-            $newFilePath = 'vehicle_doc_photos/' . $newFileName;
+                // Definindo o novo caminho para o arquivo
+                $newFilePath = 'vehicle_doc_photos/' . $newFileName;
 
-            // Movendo o arquivo para o novo caminho
-            Storage::disk('public')->move($photo->path, $newFilePath);
+                // Movendo o arquivo para o novo caminho
+                Storage::disk('public')->move($photo->path, $newFilePath);
 
-            // Atualizando o caminho no modelo sem acionar outro evento de atualização
-            $photo->path = $newFilePath;
+                // Atualizando o caminho no modelo
+                $photo->path = $newFilePath;
 
-            // Deletando a foto antiga
-            Storage::disk('public')->delete($oldPhoto);
-        });
-
-        static::creating(function ($photo) {
-            // Gerando o novo nome do arquivo
-            $newFileName = sprintf(
-                '%s_%s.%s',
-                Str::slug($photo->vehicle->plate),
-                (string) Str::uuid(),
-                pathinfo($photo->path, PATHINFO_EXTENSION)
-            );
-
-            // Definindo o novo caminho para o arquivo
-            $newFilePath = 'vehicle_doc_photos/' . $newFileName;
-
-            // Movendo o arquivo para o novo caminho
-            Storage::disk('public')->move($photo->path, $newFilePath);
-
-            // Atualizando o caminho no modelo sem acionar outro evento de criação
-            $photo->path = $newFilePath;
+                // Deletando a foto antiga se estiver atualizando
+                if ($oldPhoto && $oldPhoto !== $photo->path) {
+                    Storage::disk('public')->delete($oldPhoto);
+                }
+            }
         });
     }
 

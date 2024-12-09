@@ -6,6 +6,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Database\Eloquent\Model;
 
 class PhotosRelationManager extends RelationManager
 {
@@ -19,6 +20,9 @@ class PhotosRelationManager extends RelationManager
             ->schema([
                 Forms\Components\FileUpload::make('path')
                     ->label('Foto')
+                    ->multiple(fn (string $operation): bool => $operation === 'create')
+                    ->maxSize(10240) // 10MB
+                    ->maxFiles(5)
                     ->columnSpanFull()
                     ->directory('client_photos')
                     ->required(),
@@ -39,7 +43,30 @@ class PhotosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->label('Adicionar Foto')->modalHeading('Adicionar Foto'),
+                Tables\Actions\CreateAction::make()
+                    ->modalWidth('2xl')
+                    ->label('Adicionar Fotos')
+                    ->modalHeading('Adicionar Fotos')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
+
+                        return $data;
+                    })
+                    ->using(function (array $data, PhotosRelationManager $livewire): Model {
+                        $model      = $livewire->getOwnerRecord();
+                        $firstPhoto = $model->photos()->create([ //@phpstan-ignore-line
+                            'path' => $data['path'][0],
+                        ]);
+
+                        // Create additional photos
+                        foreach (array_slice($data['path'], 1) as $path) {
+                            $model->photos()->create([ //@phpstan-ignore-line
+                                'path' => $path,
+                            ]);
+                        }
+
+                        return $firstPhoto;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
