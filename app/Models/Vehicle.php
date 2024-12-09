@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  *
  * @property \App\Models\VehicleModel $model
  * @property \App\Models\VehiclePhoto $photos
+ * @property \App\Models\VehicleDocPhoto $docPhotos
  * @property \App\Models\Sale $sale
  * @property \App\Models\VehicleExpense $expenses
  * @property \App\Models\Supplier $supplier
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  *
  * @method \App\Models\VehicleModel model()
  * @method \App\Models\VehiclePhoto photos()
+ * @method \App\Models\VehicleDocPhoto docPhotos()
  * @method \App\Models\Sale sale()
  * @method \App\Models\VehicleExpense expenses()
  * @method \App\Models\Supplier supplier()
@@ -64,6 +66,11 @@ class Vehicle extends BaseModel
     public function photos(): HasMany
     {
         return $this->hasMany(VehiclePhoto::class);
+    }
+
+    public function docPhotos(): HasMany
+    {
+        return $this->hasMany(VehicleDocPhoto::class);
     }
 
     public function sale(): HasMany

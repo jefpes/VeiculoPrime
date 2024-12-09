@@ -59,6 +59,8 @@ return new class () extends Migration {
             $table->string('plate');
             $table->string('chassi');
             $table->string('renavam');
+            $table->string('crv_number');
+            $table->string('crv_code');
             $table->date('sold_date')->nullable();
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();
@@ -67,6 +69,13 @@ return new class () extends Migration {
         });
 
         Schema::create('vehicle_photos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
+            $table->string('path', 255);
+            $table->timestamps();
+        });
+
+        Schema::create('vehicle_doc_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
             $table->string('path', 255);
