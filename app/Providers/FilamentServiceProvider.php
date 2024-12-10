@@ -31,6 +31,9 @@ class FilamentServiceProvider extends ServiceProvider
             fn (Fieldset $fieldset) => $fieldset->translateLabel()
         );
 
+        Forms\Components\Repeater::configureUsing(
+            fn (Forms\Components\Repeater $repeater) => $repeater->translateLabel()
+        );
         Count::configureUsing(
             fn (Count $sum) => $sum->translateLabel()
         );

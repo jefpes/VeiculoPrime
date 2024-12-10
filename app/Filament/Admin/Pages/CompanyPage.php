@@ -103,7 +103,7 @@ class CompanyPage extends Page
                             ->columnSpanFull(),
                     ])->columns(3),
                     Tab::make('Endereço')->schema([
-                        AddressForm::setAddressFields(false),
+                        AddressForm::setAddressFields(),
                     ]),
                     Tab::make('Redes Sociais')->schema([
                         Forms\Components\TextInput::make('whatsapp')

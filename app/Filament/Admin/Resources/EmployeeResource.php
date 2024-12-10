@@ -87,7 +87,12 @@ class EmployeeResource extends Resource
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make('Endereço')->schema([
-                        AddressForm::setAddressFields(),
+                        Forms\Components\Repeater::make('addresses')
+                           ->addActionLabel(__('Add Address'))
+                           ->relationship('addresses')
+                           ->schema([
+                               AddressForm::setAddressFields(),
+                           ]),
                     ]),
                 ]),
             ]);
@@ -218,7 +223,7 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            PhotosRelationManager::class,
+            // PhotosRelationManager::class,
         ];
     }
 

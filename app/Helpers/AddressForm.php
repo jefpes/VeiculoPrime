@@ -7,9 +7,9 @@ use Filament\Forms\Components\{Component, Grid, TextInput, Textarea};
 
 class AddressForm
 {
-    public static function setAddressFields(?bool $relation = true): Component
+    public static function setAddressFields(): Component
     {
-        $component = Grid::make()->columns(['md' => 2, 1])->schema([
+        return Grid::make()->columns(['md' => 2, 1])->schema([
             ZipCode::make('zip_code'),
             TextInput::make('state')
                 ->required()
@@ -35,11 +35,5 @@ class AddressForm
                 ->rows(1)
                 ->columnSpanFull(),
         ]);
-
-        if ($relation) {
-            $component->relationship('address');
-        }
-
-        return $component;
     }
 }
