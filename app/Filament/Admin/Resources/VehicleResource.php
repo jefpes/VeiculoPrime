@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
-use App\Filament\Admin\Resources\VehicleResource\RelationManagers\PhotosRelationManager;
+use App\Filament\Admin\Resources\VehicleResource\RelationManagers\{DocPhotosRelationManager, PhotosRelationManager};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
@@ -106,11 +106,15 @@ class VehicleResource extends Resource
                         ->maxLength(255)
                         ->mask('aaa-9*99'),
                     TextInput::make('chassi')
-                        ->required()
                         ->maxLength(255),
                     TextInput::make('renavam')
-                        ->required()
                         ->maxLength(255),
+                    TextInput::make('crv_number')
+                        ->label('CRV number')
+                        ->maxLength(20),
+                    TextInput::make('crv_code')
+                        ->label('CRV code')
+                        ->maxLength(20),
                     DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
@@ -141,11 +145,9 @@ class VehicleResource extends Resource
                 TextColumn::make('model.name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
-                TextColumn::make('combined_years')
-                    ->getStateUsing(function ($record) {
-                        return  $record->year_one . '/' . $record->year_two;
-                    })
-                    ->sortable(['year_one', 'year_two'])
+                TextColumn::make('full_year')
+                    ->searchable()
+                    ->sortable()
                     ->label('Year'),
                 TextColumn::make('km')
                     ->numeric()
@@ -200,6 +202,12 @@ class VehicleResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('renavam')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('crv_number')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('crv_code')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sold_date')
@@ -334,7 +342,6 @@ class VehicleResource extends Resource
                     return $indicators;
                 }),
             ])
-
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -371,6 +378,7 @@ class VehicleResource extends Resource
     {
         return [
             PhotosRelationManager::class,
+            DocPhotosRelationManager::class,
         ];
     }
 

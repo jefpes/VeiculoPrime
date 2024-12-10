@@ -47,6 +47,7 @@ return new class () extends Migration {
             $table->decimal('promotional_price', places: 2)->nullable()->default(null);
             $table->string('year_one');
             $table->string('year_two');
+            $table->string('full_year')->virtualAs('CONCAT(year_one, "/", year_two)');
             $table->integer('km');
             $table->string('fuel');
             $table->string('engine_power');
@@ -57,8 +58,10 @@ return new class () extends Migration {
             $table->string('traction')->nullable();
             $table->string('color');
             $table->string('plate');
-            $table->string('chassi');
-            $table->string('renavam');
+            $table->string('chassi')->nullable();
+            $table->string('renavam')->nullable();
+            $table->string('crv_number')->nullable();
+            $table->string('crv_code')->nullable();
             $table->date('sold_date')->nullable();
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();
@@ -67,6 +70,14 @@ return new class () extends Migration {
         });
 
         Schema::create('vehicle_photos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
+            $table->string('path', 255);
+            $table->boolean('main')->default(false);
+            $table->timestamps();
+        });
+
+        Schema::create('vehicle_doc_photos', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
             $table->string('path', 255);

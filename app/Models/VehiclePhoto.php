@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -21,64 +18,21 @@ use Illuminate\Support\Str;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class VehiclePhoto extends Model
+class VehiclePhoto extends BasePhoto
 {
-    use HasFactory;
-
-    protected static function boot(): void
+    protected function getPhotoDirectory(): string
     {
-        parent::boot();
+        return 'vehicle_photos';
+    }
 
-        static::deleting(function ($photo) {
-            Storage::disk('public')->delete($photo->path);
-        });
-
-        static::updating(function ($photo) {
-            $oldPhoto = $photo->getOriginal('path');
-
-            // Gerando o novo nome do arquivo
-            $newFileName = sprintf(
-                '%s_%s_%s_%s.%s',
-                Str::slug($photo->vehicle->model->name),
-                $photo->vehicle->year_one,
-                Str::slug($photo->vehicle->color),
-                (string) Str::uuid(),
-                pathinfo($photo->path, PATHINFO_EXTENSION)
-            );
-
-            // Definindo o novo caminho para o arquivo
-            $newFilePath = 'vehicle_photos/' . $newFileName;
-
-            // Movendo o arquivo para o novo caminho
-            Storage::disk('public')->move($photo->path, $newFilePath);
-
-            // Atualizando o caminho no modelo sem acionar outro evento de atualização
-            $photo->path = $newFilePath;
-
-            // Deletando a foto antiga
-            Storage::disk('public')->delete($oldPhoto);
-        });
-
-        static::creating(function ($photo) {
-            // Gerando o novo nome do arquivo
-            $newFileName = sprintf(
-                '%s_%s_%s_%s.%s',
-                Str::slug($photo->vehicle->model->name),
-                $photo->vehicle->year_one,
-                Str::slug($photo->vehicle->color),
-                (string) Str::uuid(),
-                pathinfo($photo->path, PATHINFO_EXTENSION)
-            );
-
-            // Definindo o novo caminho para o arquivo
-            $newFilePath = 'vehicle_photos/' . $newFileName;
-
-            // Movendo o arquivo para o novo caminho
-            Storage::disk('public')->move($photo->path, $newFilePath);
-
-            // Atualizando o caminho no modelo sem acionar outro evento de criação
-            $photo->path = $newFilePath;
-        });
+    protected function getPhotoNamePrefix(): string
+    {
+        return sprintf(
+            '%s_%s_%s',
+            Str::slug($this->vehicle->model->name),
+            $this->vehicle->year_one,
+            Str::slug($this->vehicle->color)
+        );
     }
 
     public function vehicle(): BelongsTo

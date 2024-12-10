@@ -41,21 +41,26 @@ return new class () extends Migration {
             $table->decimal('late_fee', 10, 2)->nullable();
 
             $table->string('font_family')->nullable();
-            $table->string('font_color')->nullable()->default('black');
+            $table->string('font_color')->nullable()->default('white');
             $table->string('promo_price_color')->nullable()->default('green');
-            $table->string('body_bg_color')->nullable()->default('white');
-            $table->string('card_color')->nullable()->default('white');
-            $table->string('card_text_color')->nullable();
-            $table->string('nav_color')->nullable()->default('#dedede');
-            $table->string('footer_color')->nullable()->default('#dedede');
+            $table->string('body_bg_color')->nullable()->default('#64748b');
+            $table->string('card_color')->nullable()->default('#475569');
+            $table->string('card_text_color')->nullable()->default('white');
+            $table->string('nav_color')->nullable()->default('black');
+            $table->string('footer_color')->nullable()->default('black');
+            $table->string('footer_text_color')->nullable()->default('white');
             $table->string('link_color')->nullable()->default('green');
             $table->string('link_text_color')->nullable()->default('white');
-            $table->string('btn_1_color')->nullable()->default('blue');
+            $table->string('btn_1_color')->nullable()->default('#6467f7');
             $table->string('btn_1_text_color')->nullable()->default('white');
-            $table->string('btn_2_color')->nullable()->default('red');
+            $table->string('btn_2_color')->nullable()->default('#e03f3f');
             $table->string('btn_2_text_color')->nullable()->default('white');
-            $table->string('btn_3_color')->nullable()->default('green');
+            $table->string('btn_3_color')->nullable()->default('#50a84f');
             $table->string('btn_3_text_color')->nullable()->default('white');
+            $table->string('select_color')->nullable()->default('#6467f7');
+            $table->string('select_text_color')->nullable()->default('white');
+            $table->string('check_color')->nullable()->default('#6467f7');
+            $table->string('check_text_color')->nullable()->default('white');
             $table->string('bg_img')->nullable();
             $table->string('bg_img_opacity')->nullable()->default('0.3');
 

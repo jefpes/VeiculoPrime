@@ -194,6 +194,8 @@ class CompanyPage extends Page
                             ->label('Heading background color'),
                         Forms\Components\ColorPicker::make('footer_color')
                             ->label('Footer background color'),
+                        Forms\Components\ColorPicker::make('footer_text_color')
+                            ->label('Footer text color'),
                         Forms\Components\ColorPicker::make('link_color')
                             ->label('Link color'),
                         Forms\Components\ColorPicker::make('link_text_color')
@@ -210,6 +212,14 @@ class CompanyPage extends Page
                             ->label('Button color 3'),
                         Forms\Components\ColorPicker::make('btn_3_text_color')
                             ->label('Button text color 3'),
+                        Forms\Components\ColorPicker::make('select_color')
+                            ->label('Select color'),
+                        Forms\Components\ColorPicker::make('select_text_color')
+                            ->label('Select text color'),
+                        Forms\Components\ColorPicker::make('check_color')
+                            ->label('Check color'),
+                        Forms\Components\ColorPicker::make('check_text_color')
+                            ->label('Check text color'),
                     ])->columns(3),
                 ]),
             ])

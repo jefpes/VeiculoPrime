@@ -6,32 +6,32 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
- * Class EmployeePhoto
+ * Class VehicleDocPhoto
  *
- * @property \App\Models\Supplier $supplier
+ * @property \App\Models\Vehicle $vehicle
  *
- * @method \App\Models\Supplier supplier()
+ * @method \App\Models\Vehicle vehicle()
  *
  * @property int $id
- * @property int $supplier_id
+ * @property int $vehicle_id
  * @property string $path
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class SupplierPhoto extends BasePhoto
+class VehicleDocPhoto extends BasePhoto
 {
     protected function getPhotoDirectory(): string
     {
-        return 'supplier_photos';
+        return 'vehicle_doc_photos';
     }
 
     protected function getPhotoNamePrefix(): string
     {
-        return Str::slug($this->supplier->name);
+        return Str::slug($this->vehicle->plate);
     }
 
-    public function supplier(): BelongsTo
+    public function vehicle(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Vehicle::class);
     }
 }

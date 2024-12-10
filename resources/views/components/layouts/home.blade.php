@@ -64,7 +64,7 @@ $bgStyleString = implode(' ', $bgStyles);
     </main>
 
     <footer class="shadow-md mt-auto relative"
-        style="{{ $company && $company->footer_color ? 'background-color: ' . $company->footer_color . ';' : '' }}">
+        style="{{ $company && $company->footer_color ? 'background-color: ' . $company->footer_color . ';' : '' }} . {{ $company && $company->footer_text_color ? '; color: ' . $company->footer_text_color . ';' : '' }}">
         <livewire:home.footer />
     </footer>
 

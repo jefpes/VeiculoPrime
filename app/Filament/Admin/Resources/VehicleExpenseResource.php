@@ -19,11 +19,11 @@ class VehicleExpenseResource extends Resource
 {
     protected static ?string $model = VehicleExpense::class;
 
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 14;
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Vehicle');
+        return __('Financial');
     }
 
     public static function getModelLabel(): string
@@ -72,10 +72,17 @@ class VehicleExpenseResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('vehicle')
-                    ->getStateUsing(fn (VehicleExpense $record) => $record->vehicle->plate . ' - ' . $record->vehicle->model->name)
+                Tables\Columns\TextColumn::make('vehicle.plate')
+                    ->label('Plate')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('vehicle.model.name')
+                    ->label('Model')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable()

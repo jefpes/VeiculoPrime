@@ -2,53 +2,48 @@
 
 namespace App\Filament\Admin\Resources\VehicleResource\RelationManagers;
 
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use App\Tools\BasePhotoRelationManager;
 use Filament\Tables\Table;
-use Filament\{Forms, Tables};
+use Filament\{Tables};
 
-class PhotosRelationManager extends RelationManager
+class PhotosRelationManager extends BasePhotoRelationManager
 {
-    protected static string $relationship = 'photos';
-
-    protected static ?string $label = 'Foto';
-
-    protected static ?string $title = 'Fotos';
-
-    public function form(Form $form): Form
+    protected function getPhotoDirectory(): string
     {
-        return $form
-            ->schema([
-                Forms\Components\FileUpload::make('path')
-                    ->label('Foto')
-                    ->columnSpanFull()
-                    ->required()
-                    ->image()
-                    ->directory('vehicle_photos'),
-            ]);
+        return 'vehicle_photos';
     }
 
     public function table(Table $table): Table
     {
-        return $table
-            ->recordTitleAttribute('path')
+        return parent::table($table)
             ->columns([
-                Tables\Columns\ImageColumn::make('path')->size(200)->label('Foto'),
-            ])
-            ->filters([
-                //
-            ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make()->label('Adicionar Foto')->modalHeading('Adicionar Foto'),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Columns\Layout\Grid::make()
+                    ->columns(1)
+                    ->schema([
+                        Tables\Columns\Layout\Split::make([
+                            Tables\Columns\Layout\Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    Tables\Columns\ImageColumn::make('path')
+                                        ->label('Foto')
+                                        ->height(300)
+                                        ->width(240)
+                                        ->extraImgAttributes(['class' => 'rounded-md']),
+                                ])->grow(false),
+                            Tables\Columns\Layout\Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    Tables\Columns\ToggleColumn::make('main')
+                                        ->extraAttributes(['class' => 'px-4'])
+                                        ->label('Principal')
+                                        ->afterStateUpdated(function ($record, $state) {
+                                            if ($state) {
+                                                $record->vehicle->photos()->where('id', '!=', $record->id)->update(['main' => false]);
+                                            }
+                                        }),
+                                ])->grow(false),
+                        ]),
+                    ])->grow(false),
             ]);
     }
 }

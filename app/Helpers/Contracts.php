@@ -146,6 +146,8 @@ class Contracts
             'placa'                 => $vehicle->plate ?? 'Valor não especificado',
             'chassi'                => $vehicle->chassi ?? 'Valor não especificado',
             'renavam'               => $vehicle->renavam ?? 'Valor não especificado',
+            'numero_crv'            => $vehicle->crv_number ?? 'Valor não especificado',
+            'codigo_crv'            => $vehicle->crv_code ?? 'Valor não especificado',
             'descricao'             => $vehicle->description ?? 'Valor não especificado',
             'anotacao'              => $vehicle->annotation ?? 'Valor não especificado',
         ]);
