@@ -51,13 +51,13 @@ class Contracts
 
             //Substitui os placeholders com os dados do endereco do usuario
             $template->setValues([
-                'ucv_endereco_cep'         => $user->employee->address->zip_code ?? 'Valor não especificado',
-                'ucv_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
-                'ucv_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
-                'ucv_endereco_bairro'      => $user->employee->address->neighborhood ?? 'Valor não especificado',
-                'ucv_endereco_cidade'      => $user->employee->address->city ?? 'Valor não especificado',
-                'ucv_endereco_estado'      => $user->employee->address->state ?? 'Valor não especificado',
-                'ucv_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
+                'ucv_endereco_cep'         => $user->employee->addresses->zip_code ?? 'Valor não especificado',
+                'ucv_endereco_rua'         => $user->employee->addresses->street ?? 'Valor não especificado',
+                'ucv_endereco_numero'      => $user->employee->addresses->number ?? 'Valor não especificado',
+                'ucv_endereco_bairro'      => $user->employee->addresses->neighborhood ?? 'Valor não especificado',
+                'ucv_endereco_cidade'      => $user->employee->addresses->city ?? 'Valor não especificado',
+                'ucv_endereco_estado'      => $user->employee->addresses->state ?? 'Valor não especificado',
+                'ucv_endereco_complemento' => $user->employee->addresses->complement ?? 'Valor não especificado',
             ]);
         }
     }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\{Employee};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,42 +15,21 @@ return new class () extends Migration {
             $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
             $table->string('name');
             $table->string('gender');
-            $table->string('email');
-            $table->string('phone_one');
+            $table->string('email')->nullable();
+            $table->string('phone_one')->nullable();
             $table->string('phone_two')->nullable();
             $table->decimal('salary', places: 2);
-            $table->string('rg', 20);
-            $table->string('cpf', 20);
-            $table->date('birth_date');
+            $table->string('rg', 20)->nullable();
+            $table->string('cpf', 20)->nullable();
+            $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
-            $table->string('mother');
-            $table->string('marital_status');
+            $table->string('mother')->nullable();
+            $table->string('marital_status')->nullable();
             $table->string('spouse')->nullable();
             $table->date('admission_date');
             $table->date('resignation_date')->nullable();
             $table->timestamps();
         });
-
-        Schema::create('employee_addresses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Employee::class)->constrained()->cascadeOnDelete();
-            $table->string('zip_code')->nullable();
-            $table->string('street')->nullable();
-            $table->string('number')->nullable();
-            $table->string('neighborhood')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('complement')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('employee_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Employee::class)->constrained()->cascadeOnDelete();
-            $table->string('path');
-            $table->timestamps();
-        });
-
     }
 
     /**
@@ -59,8 +37,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('employee_photos');
-        Schema::dropIfExists('employee_address');
-        Schema::dropIfExists('employee');
+        Schema::dropIfExists('employees');
     }
 };

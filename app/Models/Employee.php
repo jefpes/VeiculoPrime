@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 
 /**
  * Class Employee
@@ -39,20 +40,12 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 class Employee extends BaseModel
 {
     use HasFactory;
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(EmployeeAddress::class);
-    }
+    use HasAddress;
+    use HasPhoto;
 
     public function ceo(): HasOne
     {
         return $this->hasOne(Settings::class);
-    }
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(EmployeePhoto::class);
     }
 
     public function user(): HasOne
