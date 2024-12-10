@@ -45,7 +45,7 @@ class Employee extends BaseModel
 
     public function ceo(): HasOne
     {
-        return $this->hasOne(Settings::class);
+        return $this->hasOne(Company::class);
     }
 
     public function user(): HasOne
