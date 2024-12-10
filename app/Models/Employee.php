@@ -52,4 +52,14 @@ class Employee extends BaseModel
     {
         return $this->hasOne(User::class);
     }
+
+    public function getPhotoDirectory(): string
+    {
+        return 'employee_photos';
+    }
+
+    public function getPhotoNamePrefix(): string
+    {
+        return $this->name;
+    }
 }
