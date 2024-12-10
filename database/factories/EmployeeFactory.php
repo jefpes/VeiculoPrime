@@ -43,7 +43,7 @@ class EmployeeFactory extends Factory
     {
         return $this->afterCreating(function (Employee $employee) {
             // Cria um endereço usando o AddressFactory e associa ao Client
-            $employee->address()->create(array_merge(
+            $employee->addresses()->create(array_merge(
                 AddressFactory::new()->definition()
             ));
         });
