@@ -20,7 +20,7 @@ class PhotosRelationManager extends RelationManager
             ->schema([
                 Forms\Components\FileUpload::make('path')
                     ->label('Foto')
-                    ->multiple()
+                    ->multiple(fn (string $operation): bool => $operation === 'create')
                     ->maxSize(10240) // 10MB
                     ->maxFiles(5)
                     ->columnSpanFull()
@@ -36,29 +36,37 @@ class PhotosRelationManager extends RelationManager
             ->recordAction(null)
             ->recordUrl(null)
             ->columns([
-                Tables\Columns\ImageColumn::make('path')
-                    ->label('Foto')
-                    ->square()
-                    ->extraImgAttributes(['class' => 'object-fill']),
-                Tables\Columns\IconColumn::make('is_main')
-                    ->label('Principal')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_public')
-                    ->label('Pública')
-                    ->boolean(),
+                Tables\Columns\Layout\Grid::make()
+                    ->columns(1)
+                    ->schema([
+                        Tables\Columns\Layout\Split::make([
+                            Tables\Columns\Layout\Grid::make()
+                                ->columns(1)
+                                ->schema([
+                                    Tables\Columns\ImageColumn::make('path')
+                                        ->label('Foto')
+                                        ->height(300)
+                                        ->width(240)
+                                        ->extraImgAttributes(['class' => 'rounded-md']),
+                                ])->grow(false),
+                        ]),
+                    ]),
             ])
             ->contentGrid([
-                'md' => 2,
-                'xl' => 3,
+                'md'  => 2,
+                'xl'  => 3,
+                '2xl' => 4,
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
+                        dump($data);
                         $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
 
                         return $data;
                     })
                     ->using(function (array $data, $livewire): Model {
+                        dump($data);
                         $model      = $livewire->getOwnerRecord();
                         $firstPhoto = $model->{static::$relationship}()->create([
                             'path' => $data['path'][0],
@@ -77,6 +85,7 @@ class PhotosRelationManager extends RelationManager
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('setAsMain')
+                    ->icon('heroicon-o-check-circle')
                     ->label('Main')
                     ->action(function ($record) {
                         $record->photoable->photos()->update(['is_main' => false]);
