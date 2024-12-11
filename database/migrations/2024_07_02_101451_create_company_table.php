@@ -18,13 +18,6 @@ return new class () extends Migration {
             $table->string('name')->nullable();
             $table->string('cnpj')->nullable();
             $table->date('opened_in')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('street')->nullable();
-            $table->string('number')->nullable();
-            $table->string('neighborhood')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('complement')->nullable();
             $table->string('about')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();

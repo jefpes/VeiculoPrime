@@ -3,10 +3,10 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
-use App\Forms\Components\MoneyInput;
+use App\Forms\Components\{MoneyInput, PhoneInput, ZipCode};
 use App\Models\{Company};
-use App\Tools\{FormFields};
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\{Grid, Repeater, TextInput, Textarea};
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -34,7 +34,7 @@ class CompanyPage extends Page
 
     public function mount(): void
     {
-        $this->form->fill(Company::query()->first()->toArray()); //@phpstan-ignore-line
+        $this->form->fill(Company::with('addresses')->first()->toArray()); //@phpstan-ignore-line
     }
 
     public static function getNavigationGroup(): ?string
@@ -69,11 +69,7 @@ class CompanyPage extends Page
                             ->rules(['required', 'size:18']),
                         Forms\Components\DatePicker::make('opened_in')
                             ->label('Opened in'),
-                        Forms\Components\TextInput::make('phone')
-                            ->label('Phone')
-                            ->mask('(99) 9999-9999')
-                            ->maxLength(20)
-                            ->prefixIcon('heroicon-m-phone'),
+                        PhoneInput::make('phone'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->email()
@@ -102,8 +98,40 @@ class CompanyPage extends Page
                             ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(3),
-                    Tab::make('Endereço')->schema([
-                        FormFields::setAddressFields(),
+                    Tab::make(__('Address'))->schema([
+                        Repeater::make('addresses')
+                            ->grid(2)
+                            ->hiddenLabel()
+                            ->addActionLabel(__('Add Address'))
+                            ->schema([
+                                Grid::make()->columns(['md' => 2, 1])->schema([
+                                    ZipCode::make('zip_code'),
+                                    TextInput::make('state')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('city')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('neighborhood')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Grid::make()
+                                        ->columns(5)
+                                        ->schema([
+                                            TextInput::make('street')
+                                                ->required()
+                                                ->maxLength(255)
+                                                ->columnSpan(['md' => 4, 'sm' => 5]),
+                                            TextInput::make('number')
+                                                ->columnSpan(['md' => 1, 'sm' => 5])
+                                                ->minValue(0),
+                                        ]),
+                                    Textarea::make('complement')
+                                        ->maxLength(255)
+                                        ->rows(1)
+                                        ->columnSpanFull(),
+                                ]),
+                            ]),
                     ]),
                     Tab::make('Redes Sociais')->schema([
                         Forms\Components\TextInput::make('whatsapp')
@@ -228,7 +256,25 @@ class CompanyPage extends Page
 
     public function save(): void
     {
-        Company::query()->first()->update($this->form->getState()); //@phpstan-ignore-line
+        $data = $this->form->getState(); //@phpstan-ignore-line
+
+        $addresses = $data['addresses'];
+
+        unset($data['addresses']);
+
+        $company = Company::with('addresses')->first();
+        $company->fill($data);
+        $company->save();
+
+        // Lidar com os endereços
+        if (isset($addresses)) {
+            $company->addresses()->delete(); // Remove os endereços existentes
+
+            foreach ($addresses as $address) {
+                $company->addresses()->create($address);
+            }
+        }
+
         Notification::make()->body(__('Company updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
     }
 }

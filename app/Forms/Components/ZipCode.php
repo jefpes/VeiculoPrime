@@ -62,11 +62,11 @@ class ZipCode extends TextInput
             'street'       => 'logradouro',
             'number'       => 'numero',
             'complement'   => 'complemento',
-            'uf'           => 'uf',
-            'region'       => 'regiao',
-            'ibge'         => 'ibge',
-            'ddd'          => 'ddd',
-            'siafi'        => 'siafi',
+            // 'uf'           => 'uf',
+            // 'region'       => 'regiao',
+            // 'ibge'         => 'ibge',
+            // 'ddd'          => 'ddd',
+            // 'siafi'        => 'siafi',
         ]);
     }
 }

@@ -13,6 +13,6 @@ class PhoneInput extends TextInput
         parent::setUp();
 
         $this->prefixIcon('heroicon-s-phone');
-        $this->mask('(99) 99999-9999');
+        $this->mask('(99) 9 9999-9999');
     }
 }
