@@ -14,7 +14,7 @@ class ClientSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $photo = "client_$i.webp";
-            $model = Client::factory()->withAddress()->withAffiliate()->create();
+            $model = Client::factory()->withAddress()->withAffiliate()->withPhone()->create();
 
             $folder = "photos/client";
 

@@ -14,7 +14,7 @@ class EmployeeSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $photo = "employee_$i.webp";
-            $model = Employee::factory()->withAddress()->create();
+            $model = Employee::factory()->withAddress()->withPhone()->create();
 
             $folder = "photos/employee";
 

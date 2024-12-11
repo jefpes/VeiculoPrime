@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasAffiliate;
 use App\Traits\{HasAddress, HasPhoto};
+use App\Traits\{HasAffiliate, HasPhone};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasMany};
 
@@ -46,6 +46,7 @@ class Supplier extends BaseModel
     use HasFactory;
     use HasAddress;
     use HasPhoto;
+    use HasPhone;
     use HasAffiliate;
 
     public function vehicles(): HasMany

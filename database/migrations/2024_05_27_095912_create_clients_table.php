@@ -20,8 +20,6 @@ return new class () extends Migration {
             $table->string('client_id');
             $table->string('marital_status')->nullable();
             $table->string('spouse')->nullable();
-            $table->string('phone_one', 20)->nullable();
-            $table->string('phone_two', 20)->nullable();
             $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
             $table->string('mother')->nullable();

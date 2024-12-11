@@ -14,7 +14,7 @@ class SuppliersSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $photo = "supplier_$i.webp";
-            $model = Supplier::factory()->withAddress()->withAffiliate()->create();
+            $model = Supplier::factory()->withAddress()->withAffiliate()->withPhone()->create();
 
             $folder = "photos/supplier";
 

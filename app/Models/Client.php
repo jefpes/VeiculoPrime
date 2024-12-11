@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\{HasAddress, HasAffiliate, HasPhoto};
+use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -42,4 +42,5 @@ class Client extends BaseModel
     use HasAddress;
     use HasPhoto;
     use HasAffiliate;
+    use HasPhone;
 }

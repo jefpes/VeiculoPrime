@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasPhone;
 use App\Traits\{HasAddress, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasOne};
@@ -40,6 +41,7 @@ class Employee extends BaseModel
 {
     use HasFactory;
     use HasAddress;
+    use HasPhone;
     use HasPhoto;
 
     public function ceo(): HasOne

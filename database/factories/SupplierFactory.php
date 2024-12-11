@@ -30,8 +30,6 @@ class SupplierFactory extends Factory
             'rg'             => $supplierType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
             'marital_status' => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
             'spouse'         => $this->faker->optional()->name,
-            'phone_one'      => $this->faker->unique()->numerify('(##) #####-####'),
-            'phone_two'      => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'     => $this->faker->date(),
             'father'         => $this->faker->optional()->name('male'),
             'mother'         => $this->faker->optional()->name('female'),
@@ -56,6 +54,17 @@ class SupplierFactory extends Factory
             for ($i = 0; $i < $count; $i++) {
                 $model->affiliates()->create(array_merge(
                     AffiliateFactory::new()->definition()
+                ));
+            }
+        });
+    }
+
+    public function withPhone(int $count = 1)
+    {
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->phones()->create(array_merge(
+                    PhoneFactory::new()->definition()
                 ));
             }
         });

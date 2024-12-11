@@ -16,8 +16,6 @@ return new class () extends Migration {
             $table->string('name');
             $table->string('gender');
             $table->string('email')->nullable();
-            $table->string('phone_one')->nullable();
-            $table->string('phone_two')->nullable();
             $table->decimal('salary', places: 2);
             $table->string('rg', 20)->nullable();
             $table->string('cpf', 20)->nullable();
