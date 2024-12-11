@@ -13,14 +13,16 @@ class EmployeeSeeder extends Seeder
     public function run(): void
     {
         for ($i = 1; $i <= 10; $i++) {
-            $photo    = "employee_$i.webp";
-            $employee = Employee::factory()->withAddress()->create();
+            $photo = "employee_$i.webp";
+            $model = Employee::factory()->withAddress()->create();
 
             $folder = "photos/employee";
 
-            $employee->photos()->create([
-                'path' => "$folder/$photo",
-            ]);
+            \App\Models\Photo::withoutEvents(function () use ($model, $folder, $photo) {
+                $model->photos()->create([
+                    'path' => "$folder/$photo",
+                ]);
+            });
         }
     }
 }

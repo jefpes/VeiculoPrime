@@ -13,15 +13,17 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         for ($i = 1; $i <= 10; $i++) {
-            $photo  = "client_$i.webp";
-            $client = Client::factory()->withAddress()->withAffiliate()->create();
+            $photo = "client_$i.webp";
+            $model = Client::factory()->withAddress()->withAffiliate()->create();
 
             $folder = "photos/client";
 
             // Desabilitar eventos para a criação da foto
-            $client->photos()->create([
-                'path' => "$folder/$photo",
-            ]);
+            \App\Models\Photo::withoutEvents(function () use ($model, $folder, $photo) {
+                $model->photos()->create([
+                    'path' => "$folder/$photo",
+                ]);
+            });
         }
     }
 }
