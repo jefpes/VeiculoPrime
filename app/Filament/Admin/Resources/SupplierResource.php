@@ -4,11 +4,11 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\PersonType;
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\SupplierResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Admin\Resources\SupplierResource\{Pages};
 use App\Forms\Components\PhoneInput;
 use App\Helpers\AddressForm;
 use App\Models\{Supplier};
+use App\Tools\PhotosRelationManager;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;

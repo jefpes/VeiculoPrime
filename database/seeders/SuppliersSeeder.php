@@ -13,17 +13,15 @@ class SuppliersSeeder extends Seeder
     public function run(): void
     {
         for ($i = 1; $i <= 10; $i++) {
-            $photo  = "supplier_$i.webp";
-            $client = Supplier::factory()->withAddress()->create();
+            $photo = "supplier_$i.webp";
+            $s     = Supplier::factory()->withAddress()->create();
 
             $folder = "photos/supplier";
 
             // Desabilitar eventos para a criação da foto
-            \App\Models\SupplierPhoto::withoutEvents(function () use ($client, $folder, $photo) {
-                $client->photos()->create([
-                    'path' => "$folder/$photo",
-                ]);
-            });
+            $s->photos()->create([
+                'path' => "$folder/$photo",
+            ]);
         }
     }
 }

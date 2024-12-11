@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Models\{Supplier, SupplierAddress};
+use App\Models\{Supplier};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -49,9 +49,8 @@ class SupplierFactory extends Factory
     {
         return $this->afterCreating(function (Supplier $supplier) {
             // Cria um endereço usando o AddressFactory e associa ao Client
-            SupplierAddress::create(array_merge(
-                AddressFactory::new()->definition(),
-                ['supplier_id' => $supplier->id]
+            $supplier->addresses()->create(array_merge(
+                AddressFactory::new()->definition()
             ));
         });
     }

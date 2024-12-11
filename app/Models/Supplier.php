@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{HasMany};
 
 /**
  * Class Supplier
@@ -42,16 +43,8 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 class Supplier extends BaseModel
 {
     use HasFactory;
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(SupplierPhoto::class);
-    }
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(SupplierAddress::class);
-    }
+    use HasAddress;
+    use HasPhoto;
 
     public function vehicles(): HasMany
     {
