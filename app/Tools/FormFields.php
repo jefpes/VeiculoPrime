@@ -2,10 +2,11 @@
 
 namespace App\Tools;
 
+use App\Forms\Components\PhoneInput;
 use App\Forms\Components\ZipCode;
 use Filament\Forms\Components\{Component, Grid, Repeater, TextInput, Textarea};
 
-class AddressForm
+class FormFields
 {
     public static function setAddressFields(): Component
     {
@@ -41,6 +42,47 @@ class AddressForm
                             ->maxLength(255)
                             ->rows(1)
                             ->columnSpanFull(),
+                    ]),
+                ]);
+    }
+
+    public static function setAffiliateFields(): Component
+    {
+        return Repeater::make('affiliates')
+            ->grid(2)
+            ->hiddenLabel()
+            ->addActionLabel(__('Add Affiliate'))
+            ->relationship('affiliates')
+            ->schema([
+                Grid::make()->schema([
+                    TextInput::make('type')
+                        ->required()
+                        ->columnSpan(['md' => 1, 'sm' => 5])
+                        ->maxLength(255),
+                    TextInput::make('name')
+                        ->required()
+                        ->columnSpan(['md' => 2, 'sm' => 5])
+                        ->maxLength(255),
+                    PhoneInput::make('phone')
+                        ->columnSpan(['md' => 2, 'sm' => 5])
+                        ->required(),
+                ])->columns(5),
+            ]);
+    }
+
+    public static function setPhoneFields(): Component
+    {
+        return Repeater::make('phones')
+                ->grid(2)
+                ->hiddenLabel()
+                ->addActionLabel(__('Add phone'))
+                ->relationship('phones')
+                ->schema([
+                    Grid::make()->columns(['md' => 2, 1])->schema([
+                        TextInput::make('type')
+                            ->maxLength(50),
+                        PhoneInput::make('phone')
+                            ->required(),
                     ]),
                 ]);
     }

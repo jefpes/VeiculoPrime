@@ -6,7 +6,7 @@ use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\EmployeeResource\{Pages};
 use App\Forms\Components\{MoneyInput, PhoneInput};
 use App\Models\Employee;
-use App\Tools\{AddressForm, PhotosRelationManager};
+use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -86,7 +86,7 @@ class EmployeeResource extends Resource
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
-                        AddressForm::setAddressFields(),
+                        FormFields::setAddressFields(),
                     ]),
                 ]),
             ]);

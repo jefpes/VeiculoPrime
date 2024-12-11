@@ -7,8 +7,7 @@ use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\SupplierResource\{Pages};
 use App\Forms\Components\PhoneInput;
 use App\Models\{Supplier};
-use App\Tools\AffiliateForm;
-use App\Tools\{AddressForm, PhotosRelationManager};
+use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -95,10 +94,10 @@ class SupplierResource extends Resource
                             ->columnSpanFull(),
                     ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
-                        AddressForm::setAddressFields(),
+                        FormFields::setAddressFields(),
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
-                        AffiliateForm::setFields(),
+                        FormFields::setAffiliateFields(),
                     ]),
                 ]),
             ]);

@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Pages;
 use App\Enums\{Permission};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Company};
-use App\Tools\AddressForm;
+use App\Tools\{FormFields};
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
@@ -103,7 +103,7 @@ class CompanyPage extends Page
                             ->columnSpanFull(),
                     ])->columns(3),
                     Tab::make('Endereço')->schema([
-                        AddressForm::setAddressFields(),
+                        FormFields::setAddressFields(),
                     ]),
                     Tab::make('Redes Sociais')->schema([
                         Forms\Components\TextInput::make('whatsapp')
