@@ -19,7 +19,8 @@ class PhotosRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('path')
-                    ->label('Foto')
+                    ->label(fn (string $operation) => $operation === 'create' ? 'Fotos' : 'Foto')
+
                     ->multiple(fn (string $operation): bool => $operation === 'create')
                     ->maxSize(10240) // 10MB
                     ->maxFiles(5)
@@ -59,6 +60,9 @@ class PhotosRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->modalWidth('2xl')
+                    ->label('Adicionar Fotos')
+                    ->modalHeading('Adicionar Fotos')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
 
@@ -80,16 +84,35 @@ class PhotosRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('setAsMain')
-                    ->icon('heroicon-o-check-circle')
+                    ->icon('heroicon-o-star')
+                    ->color(fn ($record) => $record->is_main ? 'success' : 'gray')
                     ->label('Main')
+                    ->hiddenLabel()
+                    ->iconSize('lg')
                     ->action(function ($record) {
                         $record->photoable->photos()->update(['is_main' => false]);
                         $record->update(['is_main' => true]);
-                    })
-                    ->hidden(fn ($record) => $record->is_main),
+                    }),
+                Tables\Actions\Action::make('setAsPublic')
+                    ->icon(fn ($record) => $record->is_public ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
+                    ->color(fn ($record) => $record->is_public ? 'warning' : 'gray')
+                    ->label(fn ($record) => $record->is_public ? 'Public' : 'Private')
+                    ->iconSize('lg')
+                    ->hiddenLabel()
+                    ->action(function ($record) {
+                        $record->update(['is_public' => !$record->is_public]);
+                    }),
+                Tables\Actions\EditAction::make()
+                    ->hiddenLabel()
+                    ->iconSize('lg')
+                    ->modalWidth('2xl')
+                    ->label('Editar Foto')
+                    ->modalHeading('Editar Foto'),
+                Tables\Actions\DeleteAction::make()
+                    ->hiddenLabel()
+                    ->iconSize('lg')
+                    ->modalHeading('Excluir Foto'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

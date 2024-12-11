@@ -83,7 +83,7 @@ class EmployeeResource extends Resource
                             Forms\Components\TextInput::make('spouse')
                                 ->maxLength(255),
                             Forms\Components\DatePicker::make('admission_date')->required(),
-                            Forms\Components\DatePicker::make('resignation_date'),
+                            Forms\Components\DatePicker::make('resignation_date')->readOnly(),
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make('Endereço')->schema([
