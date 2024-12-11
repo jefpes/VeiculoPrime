@@ -4,7 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\EmployeeResource\{Pages};
-use App\Forms\Components\{MoneyInput, PhoneInput};
+use App\Forms\Components\{MoneyInput};
 use App\Models\Employee;
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\{Grid};
@@ -51,8 +51,6 @@ class EmployeeResource extends Resource
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->maxLength(255),
-                            PhoneInput::make('phone_one')->required(),
-                            PhoneInput::make('phone_two'),
                             MoneyInput::make('salary')
                                 ->required()
                                 ->numeric(),
@@ -87,6 +85,9 @@ class EmployeeResource extends Resource
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
                         FormFields::setAddressFields(),
+                    ]),
+                    Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
+                        FormFields::setPhoneFields(),
                     ]),
                 ]),
             ]);

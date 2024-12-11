@@ -5,7 +5,6 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\PersonType;
 use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\ClientResource\{Pages};
-use App\Forms\Components\PhoneInput;
 use App\Models\Client;
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Form;
@@ -80,11 +79,6 @@ class ClientResource extends Resource
                             ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                                 $status->value => $status->value,
                             ])->toArray()),
-                        PhoneInput::make('phone_one')
-                            ->label('Phone (1)')
-                            ->required(),
-                        PhoneInput::make('phone_two')
-                            ->label('Phone (2)'),
                         Forms\Components\DatePicker::make('birth_date')
                             ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                             ->label('Birth Date')
@@ -98,6 +92,9 @@ class ClientResource extends Resource
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
                         FormFields::setAffiliateFields(),
+                    ]),
+                    Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
+                        FormFields::setPhoneFields(),
                     ]),
                 ]),
             ]);
