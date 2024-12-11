@@ -23,34 +23,34 @@ class ClientFactory extends Factory
         $gender     = $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases())) : Genders::OUTRO->value;
 
         return [
-            'name'                 => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
-            'gender'               => $gender,
-            'client_type'          => $clientType, // Define o tipo de contribuinte
-            'client_id'            => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
-            'rg'                   => $clientType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
-            'marital_status'       => $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
-            'spouse'               => $this->faker->optional()->name,
-            'phone_one'            => $this->faker->unique()->numerify('(##) #####-####'),
-            'phone_two'            => $this->faker->optional()->numerify('(##) #####-####'),
-            'birth_date'           => $clientType === 'Física' ? $this->faker->date() : null,
-            'father'               => $this->faker->optional()->name('male'),
-            'father_phone'         => $this->faker->optional()->numerify('(##) #####-####'),
-            'mother'               => $this->faker->name('female'),
-            'mother_phone'         => $this->faker->numerify('(##) #####-####'),
-            'affiliated_one'       => $this->faker->name,
-            'affiliated_one_phone' => $this->faker->numerify('(##) #####-####'),
-            'affiliated_two'       => $this->faker->name,
-            'affiliated_two_phone' => $this->faker->numerify('(##) #####-####'),
-            'description'          => $this->faker->text,
+            'name'           => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'gender'         => $gender,
+            'client_type'    => $clientType, // Define o tipo de contribuinte
+            'client_id'      => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
+            'rg'             => $clientType === 'Física' ? $this->faker->unique()->numerify('##########-#') : null,
+            'marital_status' => $clientType === 'Física' ? $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())) : null,
+            'spouse'         => $this->faker->optional()->name,
+            'phone_one'      => $this->faker->unique()->numerify('(##) #####-####'),
+            'phone_two'      => $this->faker->optional()->numerify('(##) #####-####'),
+            'birth_date'     => $clientType === 'Física' ? $this->faker->date() : null,
+            'description'    => $this->faker->text,
         ];
     }
 
     public function withAddress()
     {
         return $this->afterCreating(function (Client $client) {
-            // Cria um endereço usando o AddressFactory e associa ao Client
             $client->addresses()->create(array_merge(
                 AddressFactory::new()->definition()
+            ));
+        });
+    }
+
+    public function withAffiliate()
+    {
+        return $this->afterCreating(function (Client $client) {
+            $client->affiliates()->create(array_merge(
+                AffiliateFactory::new()->definition()
             ));
         });
     }
