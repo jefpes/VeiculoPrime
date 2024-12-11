@@ -16,7 +16,7 @@ class EmployeeSeeder extends Seeder
             $photo    = "employee_$i.webp";
             $employee = Employee::factory()->withAddress()->create();
 
-            $folder = "employee_photos";
+            $folder = "photos/employee";
 
             $employee->photos()->create([
                 'path' => "$folder/$photo",

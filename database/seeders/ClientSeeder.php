@@ -16,7 +16,7 @@ class ClientSeeder extends Seeder
             $photo  = "client_$i.webp";
             $client = Client::factory()->withAddress()->create();
 
-            $folder = "client_photos";
+            $folder = "photos/client";
 
             // Desabilitar eventos para a criação da foto
             \App\Models\ClientPhoto::withoutEvents(function () use ($client, $folder, $photo) {

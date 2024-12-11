@@ -36,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-
 class Employee extends BaseModel
 {
     use HasFactory;
@@ -51,15 +50,5 @@ class Employee extends BaseModel
     public function user(): HasOne
     {
         return $this->hasOne(User::class);
-    }
-
-    public function getPhotoDirectory(): string
-    {
-        return 'employee_photos';
-    }
-
-    public function getPhotoNamePrefix(): string
-    {
-        return $this->name;
     }
 }

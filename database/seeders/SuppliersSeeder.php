@@ -16,7 +16,7 @@ class SuppliersSeeder extends Seeder
             $photo  = "supplier_$i.webp";
             $client = Supplier::factory()->withAddress()->create();
 
-            $folder = "supplier_photos";
+            $folder = "photos/supplier";
 
             // Desabilitar eventos para a criação da foto
             \App\Models\SupplierPhoto::withoutEvents(function () use ($client, $folder, $photo) {

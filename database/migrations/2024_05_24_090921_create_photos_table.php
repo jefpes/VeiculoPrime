@@ -15,6 +15,7 @@ return new class () extends Migration {
             $table->morphs('photoable');
             $table->string('path');
             $table->boolean('is_main')->default(false);
+            $table->boolean('is_public')->default(false);
             $table->timestamps();
         });
     }

@@ -5,22 +5,11 @@ declare(strict_types = 1);
 namespace App\Traits;
 
 use App\Models\Photo;
+use Illuminate\Database\Eloquent\Relations\{MorphMany};
 
-/**
- * Trait HasPhoto
- *
- * @property \App\Models\Photo $photos
- * @property \App\Models\Photo $mainPhoto
- *
- * @method \App\Models\Photo photos()
- * @method \App\Models\Photo mainPhoto()
- *
- * @method string getPhotoDirectory()
- * @method string getPhotoNamePrefix()
- */
 trait HasPhoto
 {
-    public function photos(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function photos(): MorphMany
     {
         return $this->morphMany(Photo::class, 'photoable');
     }
@@ -30,6 +19,28 @@ trait HasPhoto
         return $this->morphOne(Photo::class, 'photoable')->where('is_main', true);
     }
 
-    abstract public function getPhotoDirectory(): string;
-    abstract public function getPhotoNamePrefix(): string;
+    public function publicPhotos(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->morphMany(Photo::class, 'photoable')->where('is_public', true);
+    }
+
+    public function getPhotoDirectory(): string
+    {
+        return 'photos/' . strtolower(class_basename($this));
+    }
+
+    public function getPhotoNamePrefix(): string
+    {
+        $attributes = ['name', 'plate'];
+
+        // Verifique cada atributo na ordem definida e use o primeiro que existir
+        foreach ($attributes as $attribute) {
+            if (isset($this->$attribute) && !empty($this->$attribute)) {
+                return $this->$attribute;
+            }
+        }
+
+        // Caso nenhum atributo seja encontrado, use o nome da classe como fallback
+        return class_basename($this);
+    }
 }
