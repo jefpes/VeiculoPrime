@@ -19,8 +19,8 @@ class PhotosRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('path')
+                    ->helperText(fn (string $operation) => $operation === 'create' ? 'Tamanho máximo: 10MB. Máximo de arquivos: 5.' : 'Tamanho máximo: 10MB.')
                     ->label(fn (string $operation) => $operation === 'create' ? 'Fotos' : 'Foto')
-
                     ->multiple(fn (string $operation): bool => $operation === 'create')
                     ->maxSize(10240) // 10MB
                     ->maxFiles(5)

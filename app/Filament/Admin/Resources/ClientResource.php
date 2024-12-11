@@ -4,11 +4,11 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\PersonType;
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Admin\Resources\ClientResource\{Pages};
 use App\Forms\Components\PhoneInput;
 use App\Helpers\AddressForm;
 use App\Models\Client;
+use App\Tools\PhotosRelationManager;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -95,8 +95,15 @@ class ClientResource extends Resource
                             ->columnSpanFull(),
                     ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
 
-                    Forms\Components\Tabs\Tab::make(__('Address'))->columns(['md' => 2, 1])->schema([
-                        AddressForm::setAddressFields(),
+                    Forms\Components\Tabs\Tab::make(__('Address'))->schema([
+                        Forms\Components\Repeater::make('addresses')
+                            ->grid(2)
+                            ->hiddenLabel()
+                            ->addActionLabel(__('Add Address'))
+                            ->relationship('addresses')
+                            ->schema([
+                                AddressForm::setAddressFields(),
+                            ]),
                     ]),
 
                     Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([

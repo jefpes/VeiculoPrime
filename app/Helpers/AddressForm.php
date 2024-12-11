@@ -26,8 +26,9 @@ class AddressForm
                     TextInput::make('street')
                         ->required()
                         ->maxLength(255)
-                        ->columnSpan(4),
+                        ->columnSpan(['md' => 4, 'sm' => 5]),
                     TextInput::make('number')
+                        ->columnSpan(['md' => 1, 'sm' => 5])
                         ->minValue(0),
                 ]),
             Textarea::make('complement')
