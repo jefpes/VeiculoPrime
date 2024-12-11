@@ -25,6 +25,7 @@ return new class () extends Migration {
             $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
             $table->string('mother')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
