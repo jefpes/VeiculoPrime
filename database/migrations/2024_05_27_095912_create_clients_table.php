@@ -24,15 +24,7 @@ return new class () extends Migration {
             $table->string('phone_two', 20)->nullable();
             $table->date('birth_date')->nullable();
             $table->string('father')->nullable();
-            $table->string('father_phone', 20)->nullable();
             $table->string('mother')->nullable();
-            $table->string('mother_phone', 20)->nullable();
-            $table->string('affiliated_one')->nullable();
-            $table->string('affiliated_one_phone')->nullable();
-            $table->string('affiliated_two')->nullable();
-            $table->string('affiliated_two_phone')->nullable();
-            $table->string('description')->nullable();
-
             $table->timestamps();
         });
     }

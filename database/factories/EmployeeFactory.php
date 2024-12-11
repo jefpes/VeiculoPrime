@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Models\{Employee};
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employees>
@@ -39,12 +39,14 @@ class EmployeeFactory extends Factory
         ];
     }
 
-    public function withAddress()
+    public function withAddress(int $count = 1)
     {
-        return $this->afterCreating(function (Employee $employee) {
-            $employee->addresses()->create(array_merge(
-                AddressFactory::new()->definition()
-            ));
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->addresses()->create(array_merge(
+                    AddressFactory::new()->definition()
+                ));
+            }
         });
     }
 }

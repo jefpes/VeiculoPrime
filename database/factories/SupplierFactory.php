@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Models\{Supplier};
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Suppliers>
@@ -45,12 +45,25 @@ class SupplierFactory extends Factory
         ];
     }
 
-    public function withAddress()
+    public function withAddress(int $count = 1)
     {
-        return $this->afterCreating(function (Supplier $supplier) {
-            $supplier->addresses()->create(array_merge(
-                AddressFactory::new()->definition()
-            ));
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->addresses()->create(array_merge(
+                    AddressFactory::new()->definition()
+                ));
+            }
+        });
+    }
+
+    public function withAffiliate(int $count = 1)
+    {
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->affiliates()->create(array_merge(
+                    AffiliateFactory::new()->definition()
+                ));
+            }
         });
     }
 }
