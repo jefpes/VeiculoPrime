@@ -93,8 +93,15 @@ class SupplierResource extends Resource
                         ->maxLength(255)
                         ->columnSpanFull(),
                 ]),
-                Forms\Components\Tabs\Tab::make('Endereço')->schema([
-                    AddressForm::setAddressFields(),
+                Forms\Components\Tabs\Tab::make(__('Address'))->schema([
+                    Forms\Components\Repeater::make('addresses')
+                        ->grid(2)
+                        ->hiddenLabel()
+                        ->addActionLabel(__('Add Address'))
+                        ->relationship('addresses')
+                        ->schema([
+                            AddressForm::setAddressFields(),
+                        ]),
                 ]),
                 Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
                     Forms\Components\TextInput::make('father')
