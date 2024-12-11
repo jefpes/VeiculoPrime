@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
 /**
  * Class Client
@@ -39,14 +39,6 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 class Client extends BaseModel
 {
     use HasFactory;
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(ClientPhoto::class);
-    }
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(ClientAddress::class);
-    }
+    use HasAddress;
+    use HasPhoto;
 }

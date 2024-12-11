@@ -95,13 +95,13 @@ class Contracts
 
         //Substitui os placeholders com os dados do endereco do cliente
         $template->setValues([
-            'cliente_endereco_cep'         => $client->address->zip_code ?? 'Valor não especificado',
-            'cliente_endereco_rua'         => $client->address->street ?? 'Valor não especificado',
-            'cliente_endereco_numero'      => $client->address->number ?? 'Valor não especificado',
-            'cliente_endereco_bairro'      => $client->address->neighborhood ?? 'Valor não especificado',
-            'cliente_endereco_cidade'      => $client->address->city ?? 'Valor não especificado',
-            'cliente_endereco_estado'      => $client->address->state ?? 'Valor não especificado',
-            'cliente_endereco_complemento' => $client->address->complement ?? 'Valor não especificado',
+            'cliente_endereco_cep'         => $client->addresses->zip_code ?? 'Valor não especificado',
+            'cliente_endereco_rua'         => $client->addresses->street ?? 'Valor não especificado',
+            'cliente_endereco_numero'      => $client->addresses->number ?? 'Valor não especificado',
+            'cliente_endereco_bairro'      => $client->addresses->neighborhood ?? 'Valor não especificado',
+            'cliente_endereco_cidade'      => $client->addresses->city ?? 'Valor não especificado',
+            'cliente_endereco_estado'      => $client->addresses->state ?? 'Valor não especificado',
+            'cliente_endereco_complemento' => $client->addresses->complement ?? 'Valor não especificado',
         ]);
     }
 

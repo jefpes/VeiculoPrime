@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\{Client};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -36,26 +35,6 @@ return new class () extends Migration {
 
             $table->timestamps();
         });
-
-        Schema::create('client_addresses', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
-            $table->string('zip_code')->nullable();
-            $table->string('street')->nullable();
-            $table->string('number')->nullable();
-            $table->string('neighborhood')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('complement')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('client_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Client::class)->constrained()->cascadeOnDelete();
-            $table->string('path', 255);
-            $table->timestamps();
-        });
     }
 
     /**
@@ -63,8 +42,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('client_photos');
-        Schema::dropIfExists('client_addresses');
         Schema::dropIfExists('clients');
     }
 };

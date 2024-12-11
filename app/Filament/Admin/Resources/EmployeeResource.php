@@ -3,11 +3,11 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\EmployeeResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Admin\Resources\EmployeeResource\{Pages};
 use App\Forms\Components\{MoneyInput, PhoneInput};
 use App\Helpers\AddressForm;
 use App\Models\Employee;
+use App\Tools\PhotosRelationManager;
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;

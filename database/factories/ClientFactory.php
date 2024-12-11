@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Models\{Client, ClientAddress};
+use App\Models\{Client};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -49,9 +49,8 @@ class ClientFactory extends Factory
     {
         return $this->afterCreating(function (Client $client) {
             // Cria um endereço usando o AddressFactory e associa ao Client
-            ClientAddress::create(array_merge(
-                AddressFactory::new()->definition(),
-                ['client_id' => $client->id]
+            $client->addresses()->create(array_merge(
+                AddressFactory::new()->definition()
             ));
         });
     }
