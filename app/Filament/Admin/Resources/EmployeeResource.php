@@ -86,14 +86,7 @@ class EmployeeResource extends Resource
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
-                        Forms\Components\Repeater::make('addresses')
-                            ->grid(2)
-                            ->hiddenLabel()
-                            ->addActionLabel(__('Add Address'))
-                            ->relationship('addresses')
-                            ->schema([
-                                AddressForm::setAddressFields(),
-                            ]),
+                        AddressForm::setAddressFields(),
                     ]),
                 ]),
             ]);

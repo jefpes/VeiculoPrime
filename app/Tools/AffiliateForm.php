@@ -2,39 +2,32 @@
 
 namespace App\Tools;
 
-use App\Forms\Components\ZipCode;
-use Filament\Forms\Components\{Component, Grid, TextInput, Textarea};
+use App\Forms\Components\{PhoneInput};
+use Filament\Forms\Components\{Component, Grid, Repeater, TextInput};
 
 class AffiliateForm
 {
-    public static function setAddressFields(): Component
+    public static function setFields(): Component
     {
-        return Grid::make()->columns(['md' => 2, 1])->schema([
-            ZipCode::make('zip_code'),
-            TextInput::make('state')
-                ->required()
-                ->maxLength(255),
-            TextInput::make('city')
-                ->required()
-                ->maxLength(255),
-            TextInput::make('neighborhood')
-                ->required()
-                ->maxLength(255),
-            Grid::make()
-                ->columns(5)
-                ->schema([
-                    TextInput::make('street')
+        return Repeater::make('affiliates')
+            ->grid(2)
+            ->hiddenLabel()
+            ->addActionLabel(__('Add Affiliate'))
+            ->relationship('affiliates')
+            ->schema([
+                Grid::make()->schema([
+                    TextInput::make('type')
                         ->required()
-                        ->maxLength(255)
-                        ->columnSpan(['md' => 4, 'sm' => 5]),
-                    TextInput::make('number')
                         ->columnSpan(['md' => 1, 'sm' => 5])
-                        ->minValue(0),
-                ]),
-            Textarea::make('complement')
-                ->maxLength(255)
-                ->rows(1)
-                ->columnSpanFull(),
-        ]);
+                        ->maxLength(255),
+                    TextInput::make('name')
+                        ->required()
+                        ->columnSpan(['md' => 2, 'sm' => 5])
+                        ->maxLength(255),
+                    PhoneInput::make('phone')
+                        ->columnSpan(['md' => 2, 'sm' => 5])
+                        ->required(),
+                ])->columns(5),
+            ]);
     }
 }

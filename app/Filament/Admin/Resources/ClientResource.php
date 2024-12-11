@@ -7,7 +7,7 @@ use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\ClientResource\{Pages};
 use App\Forms\Components\PhoneInput;
 use App\Models\Client;
-use App\Tools\{AddressForm, PhotosRelationManager};
+use App\Tools\{AddressForm, AffiliateForm, PhotosRelationManager};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -93,38 +93,12 @@ class ClientResource extends Resource
                             ->maxLength(255)
                             ->columnSpanFull(),
                     ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
-
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
-                        Forms\Components\Repeater::make('addresses')
-                            ->grid(2)
-                            ->hiddenLabel()
-                            ->addActionLabel(__('Add Address'))
-                            ->relationship('addresses')
-                            ->schema([
-                                AddressForm::setAddressFields(),
-                            ]),
+                        AddressForm::setAddressFields(),
                     ]),
-
                     Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
-                        Forms\Components\TextInput::make('father')
-                            ->maxLength(255),
-                        PhoneInput::make('father_phone')
-                            ->label('Father Phone'),
-                        Forms\Components\TextInput::make('mother')
-                            ->maxLength(255),
-                        PhoneInput::make('mother_phone')
-                            ->label('Mother Phone'),
-                        Forms\Components\TextInput::make('affiliated_one')
-                            ->label('Affiliated (1)')
-                            ->maxLength(255),
-                        PhoneInput::make('affiliated_one_phone')
-                            ->label('Affiliated Phone (1)'),
-                        Forms\Components\TextInput::make('affiliated_two')
-                            ->label('Affiliated (2)')
-                            ->maxLength(255),
-                        PhoneInput::make('affiliated_two_phone')
-                            ->label('Affiliated Phone (2)'),
-                    ])->columns(['sm' => 1, 'md' => 2]),
+                        AffiliateForm::setFields(),
+                    ]),
                 ]),
             ]);
     }
