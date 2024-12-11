@@ -115,9 +115,7 @@ class PhotosRelationManager extends RelationManager
                     ->modalHeading('Excluir Foto'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make()->modalHeading('Excluir Fotos Selecionadas')->label('Excluir Fotos Selecionadas'),
             ]);
     }
 }
