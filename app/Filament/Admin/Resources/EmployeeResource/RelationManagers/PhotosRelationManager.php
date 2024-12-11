@@ -60,13 +60,11 @@ class PhotosRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
-                        dump($data);
                         $data['path'] = is_array($data['path']) ? $data['path'] : [$data['path']];
 
                         return $data;
                     })
                     ->using(function (array $data, $livewire): Model {
-                        dump($data);
                         $model      = $livewire->getOwnerRecord();
                         $firstPhoto = $model->{static::$relationship}()->create([
                             'path' => $data['path'][0],
