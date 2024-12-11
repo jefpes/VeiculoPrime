@@ -32,7 +32,7 @@ class EmployeeFactory extends Factory
             'phone_two'        => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'       => $this->faker->date(),
             'father'           => $this->faker->optional()->name('male'),
-            'mother'           => $this->faker->name('female'),
+            'mother'           => $this->faker->optional()->name('female'),
             'spouse'           => $this->faker->optional()->name,
             'admission_date'   => $this->faker->date(),
             'resignation_date' => $this->faker->optional()->date(),

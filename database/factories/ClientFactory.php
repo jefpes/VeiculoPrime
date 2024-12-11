@@ -33,6 +33,8 @@ class ClientFactory extends Factory
             'phone_one'      => $this->faker->unique()->numerify('(##) #####-####'),
             'phone_two'      => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'     => $clientType === 'Física' ? $this->faker->date() : null,
+            'father'         => $this->faker->optional()->name('male'),
+            'mother'         => $this->faker->optional()->name('female'),
             'description'    => $this->faker->text,
         ];
     }
