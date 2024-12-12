@@ -34,7 +34,7 @@ class CompanyPage extends Page
 
     public function mount(): void
     {
-        $this->form->fill(Company::with('addresses')->first()->toArray()); //@phpstan-ignore-line
+        $this->form->fill(Company::with('addresses', 'phones')->first()->toArray()); //@phpstan-ignore-line
     }
 
     public static function getNavigationGroup(): ?string
@@ -66,17 +66,29 @@ class CompanyPage extends Page
                         Forms\Components\TextInput::make('cnpj')
                             ->label('CNPJ')
                             ->mask('99.999.999/9999-99')
-                            ->rules(['required', 'size:18']),
+                            ->length(18)
+                            ->validationAttribute('CNPJ'),
                         Forms\Components\DatePicker::make('opened_in')
                             ->label('Opened in'),
-                        PhoneInput::make('phone'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->email()
-                            ->required()
-                            ->unique(ignoreRecord:true)
                             ->maxLength(255)
                             ->prefixIcon('heroicon-m-envelope'),
+                        Repeater::make('phones')
+                            ->columnSpanFull()
+                            ->grid(2)
+                            ->hiddenLabel()
+                            ->addActionLabel(__('Add phone'))
+                            ->schema([
+                                Grid::make()->columns(['md' => 2, 1])->schema([
+                                    TextInput::make('type')
+                                        ->maxLength(50),
+                                    PhoneInput::make('phone')
+                                        ->required(),
+                                ]),
+                            ]),
+
                         Forms\Components\Grid::make()
                             ->schema([
                                 Forms\Components\FileUpload::make('logo')
@@ -259,8 +271,10 @@ class CompanyPage extends Page
         $data = $this->form->getState(); //@phpstan-ignore-line
 
         $addresses = $data['addresses'];
+        $phones    = $data['phones'];
 
         unset($data['addresses']);
+        unset($data['phones']);
 
         $company = Company::with('addresses')->first();
         $company->fill($data);
@@ -272,6 +286,15 @@ class CompanyPage extends Page
 
             foreach ($addresses as $address) {
                 $company->addresses()->create($address);
+            }
+        }
+
+        // Lidar com os telefones
+        if (isset($phones)) {
+            $company->phones()->delete(); // Remove os telefones existentes
+
+            foreach ($phones as $phone) {
+                $company->phones()->create($phone);
             }
         }
 

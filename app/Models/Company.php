@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasAddress;
+use App\Traits\{HasAddress, HasPhone};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasOne};
 use Illuminate\Support\Facades\Storage;
@@ -47,6 +47,7 @@ class Company extends BaseModel
 {
     use HasFactory;
     use HasAddress;
+    use HasPhone;
 
     protected $table = 'company';
 
