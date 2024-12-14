@@ -56,12 +56,11 @@ class CompanyPage extends Page
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                Forms\Components\Tabs::make('tabs')->tabs([
                     Tab::make('Dados')->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->maxLength(50)
-                            ->columnSpan(2)
                             ->required(),
                         Forms\Components\TextInput::make('cnpj')
                             ->label('CNPJ')
@@ -81,12 +80,30 @@ class CompanyPage extends Page
                             ->hiddenLabel()
                             ->addActionLabel(__('Add phone'))
                             ->schema([
-                                Grid::make()->columns(['md' => 2, 1])->schema([
-                                    TextInput::make('type')
-                                        ->maxLength(50),
-                                    PhoneInput::make('phone')
-                                        ->required(),
-                                ]),
+                                Grid::make()
+                                    ->columns(5)
+                                    ->schema([
+                                        Grid::make()
+                                            ->columnSpan(2)
+                                            ->columns(2)
+                                        ->schema([
+                                            TextInput::make('ddi')
+                                                ->prefixIcon('heroicon-o-plus')
+                                                ->mask('99999')
+                                                ->default('55')
+                                                ->minLength(1)
+                                                ->maxLength(5),
+                                            TextInput::make('ddd')
+                                                ->mask('99')
+                                                ->length(2),
+                                        ]),
+                                        PhoneInput::make('phone')
+                                            ->columnSpan(2)
+                                            ->required(),
+                                        TextInput::make('type')
+                                            ->columnSpan(['md' => 1, 'sm' => 'full'])
+                                            ->maxLength(50),
+                                    ]),
                             ]),
 
                         Forms\Components\Grid::make()

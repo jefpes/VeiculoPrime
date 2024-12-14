@@ -36,7 +36,9 @@ class CompanySeeder extends Seeder
 
         $company->phones()->create([
             'type'  => 'Comercial',
-            'phone' => '(85) 9 9999-9999',
+            'ddi'   => '55',
+            'ddd'   => '85',
+            'phone' => '99999-9999',
         ]);
     }
 }

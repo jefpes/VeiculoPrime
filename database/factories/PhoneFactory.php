@@ -18,7 +18,9 @@ class PhoneFactory extends Factory
     {
         return [
             'type'  => $this->faker->randomElement(['Casa', 'Trabalho', 'Pai', 'Mãe', 'Whatsapp', 'Outro']),
-            'phone' => $this->faker->numerify('(##) #####-####'),
+            'ddi'   => $this->faker->numerify('##'),
+            'ddd'   => $this->faker->numerify('##'),
+            'phone' => $this->faker->numerify('#####-####'),
         ];
     }
 }

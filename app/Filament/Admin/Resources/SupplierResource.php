@@ -125,14 +125,8 @@ class SupplierResource extends Resource
                     ->label('CPF/CNPJ')
                     ->copyable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phones')
-                    ->getStateUsing(function ($record) {
-                        if ($record->phone_two !== null) {
-                            return  $record->phone_one . ' | ' . $record->phone_two;
-                        }
-
-                        return  $record->phone_one;
-                    })
+                Tables\Columns\TextColumn::make('phones.full_phone')
+                    ->searchable()
                     ->label('Phone'),
                 Tables\Columns\TextColumn::make('rg')
                     ->label('RG')

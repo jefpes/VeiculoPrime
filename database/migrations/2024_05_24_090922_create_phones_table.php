@@ -14,7 +14,10 @@ return new class () extends Migration {
             $table->id();
             $table->morphs('phoneable');
             $table->string('type');
+            $table->string('ddi');
+            $table->string('ddd');
             $table->string('phone');
+            $table->string('full_phone')->virtualAs('CONCAT("+",ddi, " (", ddd, ") ", phone)');
             $table->timestamps();
         });
     }
