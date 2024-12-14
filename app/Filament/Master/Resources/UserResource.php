@@ -47,11 +47,11 @@ class UserResource extends Resource
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrated(fn (?string $state) => filled($state))
-                    ->visible(fn (string $operation): bool => $operation === 'create')
+                    ->visibleOn('create')
                     ->confirmed()
                     ->maxLength(8),
                 Forms\Components\TextInput::make('password_confirmation')
-                    ->visible(fn (string $operation): bool => $operation === 'create')
+                    ->visibleOn('create')
                     ->password()
                     ->requiredWith('password')
                     ->dehydrated(false)

@@ -41,7 +41,7 @@ class TenantResource extends Resource
                         Forms\Components\Fieldset::make('Master User')
                             ->columnSpanFull()
                             ->columns(2)
-                            ->visible(fn (string $operation): bool => $operation === 'create')
+                            ->visibleOn('create')
                             ->schema([
                                 Forms\Components\TextInput::make('user_name')
                                     ->label('Name')
