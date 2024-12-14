@@ -13,6 +13,7 @@ use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CompanyPage extends Page
@@ -117,12 +118,12 @@ class CompanyPage extends Page
                                 Forms\Components\FileUpload::make('logo')
                                     ->label('Logo')
                                     ->image()
-                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo.' . $file->getClientOriginalExtension())
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                     ->directory('company'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
-                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favico.' . $file->getClientOriginalExtension())
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favicon_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                     ->directory('company'),
                             ])
                             ->columns(2)
@@ -209,7 +210,7 @@ class CompanyPage extends Page
                         Forms\Components\FileUpload::make('bg_img')
                                 ->label('Backgroud image')
                                 ->image()
-                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
+                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                 ->directory('company'),
                         Forms\Components\Select::make('bg_img_opacity')
                             ->label('Backgroud image opacity')
