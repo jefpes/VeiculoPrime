@@ -32,6 +32,11 @@ class CheckTenant
             return $next($request);
         }
 
+        // Verifica se o tenant está ativo
+        if (!$tenant->is_active) {
+            abort(403, 'Tenant is inactive. Access forbidden.');
+        }
+
         session()->put('tenant', $tenant);
 
         if (is_null($request->user())) {
