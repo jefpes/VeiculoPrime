@@ -85,12 +85,18 @@ class FormFields
                                 ->columns(2)
                             ->schema([
                                 TextInput::make('ddi')
+                                    ->required()
+                                    ->label('DDI')
+                                    ->validationAttribute('DDI')
                                     ->prefixIcon('heroicon-o-plus')
                                     ->mask('99999')
                                     ->default('55')
                                     ->minLength(1)
                                     ->maxLength(5),
                                 TextInput::make('ddd')
+                                    ->required()
+                                    ->label('DDD')
+                                    ->validationAttribute('DDD')
                                     ->mask('99')
                                     ->length(2),
                             ]),
