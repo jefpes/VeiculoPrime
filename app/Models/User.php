@@ -36,6 +36,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use SoftDeletes;
     use TenantScopeTrait;
 
+    protected $fillable = [
+        'tenant_id',
+        'name',
+        'email',
+        'password',
+        'avatar_url',
+        'employee_id',
+    ];
+
     /**
      * @var array<string>
      */

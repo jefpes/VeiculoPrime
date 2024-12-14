@@ -4,11 +4,9 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\PersonType;
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\ClientResource\RelationManagers\{PhotosRelationManager};
 use App\Filament\Admin\Resources\ClientResource\{Pages};
-use App\Forms\Components\PhoneInput;
-use App\Helpers\AddressForm;
 use App\Models\Client;
+use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -81,11 +79,6 @@ class ClientResource extends Resource
                             ->options(collect(MaritalStatus::cases())->mapWithKeys(fn (MaritalStatus $status) => [
                                 $status->value => $status->value,
                             ])->toArray()),
-                        PhoneInput::make('phone_one')
-                            ->label('Phone (1)')
-                            ->required(),
-                        PhoneInput::make('phone_two')
-                            ->label('Phone (2)'),
                         Forms\Components\DatePicker::make('birth_date')
                             ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
                             ->label('Birth Date')
@@ -94,31 +87,15 @@ class ClientResource extends Resource
                             ->maxLength(255)
                             ->columnSpanFull(),
                     ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
-
-                    Forms\Components\Tabs\Tab::make(__('Address'))->columns(['md' => 2, 1])->schema([
-                        AddressForm::setAddressFields(),
+                    Forms\Components\Tabs\Tab::make(__('Address'))->schema([
+                        FormFields::setAddressFields(),
                     ]),
-
                     Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
-                        Forms\Components\TextInput::make('father')
-                            ->maxLength(255),
-                        PhoneInput::make('father_phone')
-                            ->label('Father Phone'),
-                        Forms\Components\TextInput::make('mother')
-                            ->maxLength(255),
-                        PhoneInput::make('mother_phone')
-                            ->label('Mother Phone'),
-                        Forms\Components\TextInput::make('affiliated_one')
-                            ->label('Affiliated (1)')
-                            ->maxLength(255),
-                        PhoneInput::make('affiliated_one_phone')
-                            ->label('Affiliated Phone (1)'),
-                        Forms\Components\TextInput::make('affiliated_two')
-                            ->label('Affiliated (2)')
-                            ->maxLength(255),
-                        PhoneInput::make('affiliated_two_phone')
-                            ->label('Affiliated Phone (2)'),
-                    ])->columns(['sm' => 1, 'md' => 2]),
+                        FormFields::setAffiliateFields(),
+                    ]),
+                    Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
+                        FormFields::setPhoneFields(),
+                    ]),
                 ]),
             ]);
     }
@@ -147,14 +124,8 @@ class ClientResource extends Resource
                     ->label('CPF/CNPJ')
                     ->copyable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phones')
-                    ->getStateUsing(function ($record) {
-                        if ($record->phone_two !== null) {
-                            return  $record->phone_one . ' | ' . $record->phone_two;
-                        }
-
-                        return  $record->phone_one;
-                    })
+                Tables\Columns\TextColumn::make('phones.full_phone')
+                    ->searchable()
                     ->label('Phone'),
                 Tables\Columns\TextColumn::make('rg')
                     ->label('RG')

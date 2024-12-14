@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Models\{Employee, EmployeeAddress};
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employees>
@@ -28,25 +28,34 @@ class EmployeeFactory extends Factory
             'rg'               => $this->faker->unique()->numerify('##.###.###-#'),
             'cpf'              => $this->faker->unique()->numerify('###.###.###-##'),
             'marital_status'   => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
-            'phone_one'        => $this->faker->unique()->numerify('(##) #####-####'),
-            'phone_two'        => $this->faker->optional()->numerify('(##) #####-####'),
             'birth_date'       => $this->faker->date(),
             'father'           => $this->faker->optional()->name('male'),
-            'mother'           => $this->faker->name('female'),
+            'mother'           => $this->faker->optional()->name('female'),
             'spouse'           => $this->faker->optional()->name,
             'admission_date'   => $this->faker->date(),
             'resignation_date' => $this->faker->optional()->date(),
         ];
     }
 
-    public function withAddress()
+    public function withAddress(int $count = 1)
     {
-        return $this->afterCreating(function (Employee $employee) {
-            // Cria um endereço usando o AddressFactory e associa ao Client
-            EmployeeAddress::create(array_merge(
-                AddressFactory::new()->definition(),
-                ['employee_id' => $employee->id]
-            ));
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->addresses()->create(array_merge(
+                    AddressFactory::new()->definition()
+                ));
+            }
+        });
+    }
+
+    public function withPhone(int $count = 1)
+    {
+        return $this->afterCreating(function (Model $model) use ($count) {
+            for ($i = 0; $i < $count; $i++) {
+                $model->phones()->create(array_merge(
+                    PhoneFactory::new()->definition()
+                ));
+            }
         });
     }
 }

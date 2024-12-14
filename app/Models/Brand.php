@@ -15,6 +15,10 @@ class Brand extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
+
     public function models(): HasMany
     {
         return $this->hasMany(VehicleModel::class);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasPhone};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{HasOne};
 use Illuminate\Support\Facades\Storage;
@@ -45,8 +46,54 @@ use Illuminate\Support\Facades\Storage;
 class Company extends BaseModel
 {
     use HasFactory;
+    use HasAddress;
+    use HasPhone;
 
     protected $table = 'company';
+
+    protected $fillable = [
+        'employee_id',
+        'name',
+        'cnpj',
+        'opened_in',
+        'about',
+        'email',
+        'logo',
+        'favicon',
+        'x',
+        'instagram',
+        'facebook',
+        'linkedin',
+        'youtube',
+        'whatsapp',
+        'interest_rate_sale',
+        'interest_rate_installment',
+        'late_fee',
+
+        'font_family',
+        'font_color',
+        'promo_price_color',
+        'body_bg_color',
+        'card_color',
+        'card_text_color',
+        'nav_color',
+        'footer_color',
+        'footer_text_color',
+        'link_color',
+        'link_text_color',
+        'btn_1_color',
+        'btn_1_text_color',
+        'btn_2_color',
+        'btn_2_text_color',
+        'btn_3_color',
+        'btn_3_text_color',
+        'select_color',
+        'select_text_color',
+        'check_color',
+        'check_text_color',
+        'bg_img',
+        'bg_img_opacity',
+    ];
 
     public function ceo(): HasOne
     {

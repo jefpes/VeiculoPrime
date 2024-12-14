@@ -9,6 +9,15 @@ class Tenant extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'code',
+        'name',
+        'domain',
+        'monthly_fee',
+        'due_day',
+        'include_in_marketplace',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

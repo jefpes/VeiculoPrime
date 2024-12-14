@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,8 +10,13 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignIdFor(Employee::class)->nullable()->after('id');
+        Schema::create('photos', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('photoable');
+            $table->string('path');
+            $table->boolean('is_main')->default(false);
+            $table->boolean('is_public')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('employee_id');
-        });
+        Schema::dropIfExists('photos');
     }
 };

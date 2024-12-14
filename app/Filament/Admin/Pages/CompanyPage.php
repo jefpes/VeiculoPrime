@@ -3,16 +3,17 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
-use App\Forms\Components\MoneyInput;
-use App\Helpers\AddressForm;
+use App\Forms\Components\{MoneyInput, PhoneInput, ZipCode};
 use App\Models\{Company};
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\{Grid, Repeater, TextInput, Textarea};
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CompanyPage extends Page
@@ -34,7 +35,7 @@ class CompanyPage extends Page
 
     public function mount(): void
     {
-        $this->form->fill(Company::query()->first()->toArray()); //@phpstan-ignore-line
+        $this->form->fill(Company::with('addresses', 'phones')->first()->toArray()); //@phpstan-ignore-line
     }
 
     public static function getNavigationGroup(): ?string
@@ -56,42 +57,73 @@ class CompanyPage extends Page
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                Forms\Components\Tabs::make('tabs')->tabs([
                     Tab::make('Dados')->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->maxLength(50)
-                            ->columnSpan(2)
                             ->required(),
                         Forms\Components\TextInput::make('cnpj')
                             ->label('CNPJ')
                             ->mask('99.999.999/9999-99')
-                            ->rules(['required', 'size:18']),
+                            ->length(18)
+                            ->validationAttribute('CNPJ'),
                         Forms\Components\DatePicker::make('opened_in')
                             ->label('Opened in'),
-                        Forms\Components\TextInput::make('phone')
-                            ->label('Phone')
-                            ->mask('(99) 9999-9999')
-                            ->maxLength(20)
-                            ->prefixIcon('heroicon-m-phone'),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->email()
-                            ->required()
-                            ->unique(ignoreRecord:true)
                             ->maxLength(255)
                             ->prefixIcon('heroicon-m-envelope'),
+                        Repeater::make('phones')
+                            ->columnSpanFull()
+                            ->grid(2)
+                            ->hiddenLabel()
+                            ->addActionLabel(__('Add phone'))
+                            ->schema([
+                                Grid::make()
+                                    ->columns(5)
+                                    ->schema([
+                                        Grid::make()
+                                            ->columnSpan(2)
+                                            ->columns(2)
+                                        ->schema([
+                                            TextInput::make('ddi')
+                                                ->required()
+                                                ->label('DDI')
+                                                ->validationAttribute('DDI')
+                                                ->prefixIcon('heroicon-o-plus')
+                                                ->mask('99999')
+                                                ->default('55')
+                                                ->minLength(1)
+                                                ->maxLength(5),
+                                            TextInput::make('ddd')
+                                                ->required()
+                                                ->label('DDD')
+                                                ->validationAttribute('DDD')
+                                                ->mask('99')
+                                                ->length(2),
+                                        ]),
+                                        PhoneInput::make('number')
+                                            ->columnSpan(2)
+                                            ->required(),
+                                        TextInput::make('type')
+                                            ->columnSpan(['md' => 1, 'sm' => 'full'])
+                                            ->maxLength(50),
+                                    ]),
+                            ]),
+
                         Forms\Components\Grid::make()
                             ->schema([
                                 Forms\Components\FileUpload::make('logo')
                                     ->label('Logo')
                                     ->image()
-                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo.' . $file->getClientOriginalExtension())
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                     ->directory('company'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->label('Favicon')
                                     ->image()
-                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favico.' . $file->getClientOriginalExtension())
+                                    ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favicon_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                     ->directory('company'),
                             ])
                             ->columns(2)
@@ -102,8 +134,40 @@ class CompanyPage extends Page
                             ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(3),
-                    Tab::make('Endereço')->schema([
-                        AddressForm::setAddressFields(false),
+                    Tab::make(__('Address'))->schema([
+                        Repeater::make('addresses')
+                            ->grid(2)
+                            ->hiddenLabel()
+                            ->addActionLabel(__('Add Address'))
+                            ->schema([
+                                Grid::make()->columns(['md' => 2, 1])->schema([
+                                    ZipCode::make('zip_code'),
+                                    TextInput::make('state')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('city')
+                                        ->required()
+                                        ->maxLength(255),
+                                    TextInput::make('neighborhood')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Grid::make()
+                                        ->columns(5)
+                                        ->schema([
+                                            TextInput::make('street')
+                                                ->required()
+                                                ->maxLength(255)
+                                                ->columnSpan(['md' => 4, 'sm' => 5]),
+                                            TextInput::make('number')
+                                                ->columnSpan(['md' => 1, 'sm' => 5])
+                                                ->minValue(0),
+                                        ]),
+                                    Textarea::make('complement')
+                                        ->maxLength(255)
+                                        ->rows(1)
+                                        ->columnSpanFull(),
+                                ]),
+                            ]),
                     ]),
                     Tab::make('Redes Sociais')->schema([
                         Forms\Components\TextInput::make('whatsapp')
@@ -146,7 +210,7 @@ class CompanyPage extends Page
                         Forms\Components\FileUpload::make('bg_img')
                                 ->label('Backgroud image')
                                 ->image()
-                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image.' . $file->getClientOriginalExtension())
+                                ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                                 ->directory('company'),
                         Forms\Components\Select::make('bg_img_opacity')
                             ->label('Backgroud image opacity')
@@ -228,7 +292,36 @@ class CompanyPage extends Page
 
     public function save(): void
     {
-        Company::query()->first()->update($this->form->getState()); //@phpstan-ignore-line
+        $data = $this->form->getState(); //@phpstan-ignore-line
+
+        $addresses = $data['addresses'];
+        $phones    = $data['phones'];
+
+        unset($data['addresses']);
+        unset($data['phones']);
+
+        $company = Company::with('addresses')->first();
+        $company->fill($data);
+        $company->save();
+
+        // Lidar com os endereços
+        if (isset($addresses)) {
+            $company->addresses()->delete(); // Remove os endereços existentes
+
+            foreach ($addresses as $address) {
+                $company->addresses()->create($address);
+            }
+        }
+
+        // Lidar com os telefones
+        if (isset($phones)) {
+            $company->phones()->delete(); // Remove os telefones existentes
+
+            foreach ($phones as $phone) {
+                $company->phones()->create($phone);
+            }
+        }
+
         Notification::make()->body(__('Company updated successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
     }
 }

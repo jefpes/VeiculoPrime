@@ -15,7 +15,8 @@ class Show extends Component
 
     public function mount(int $id): void
     {
-        $this->vehicle = Vehicle::with('photos', 'model')->findOrFail($id);
+        $this->vehicle = Vehicle::query()->where('id', $id)->withPublicPhotos()->with('model')->firstOrFail(); // @phpstan-ignore-line
+
         $this->company = Company::query()->first();
     }
 

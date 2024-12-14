@@ -29,6 +29,12 @@ class VehicleModel extends BaseModel
 
     protected $table = 'vehicle_models';
 
+    protected $fillable = [
+        'name',
+        'brand_id',
+        'vehicle_type_id',
+    ];
+
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class);

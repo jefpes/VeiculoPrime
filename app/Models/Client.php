@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
 /**
  * Class Client
@@ -39,14 +39,22 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 class Client extends BaseModel
 {
     use HasFactory;
+    use HasAddress;
+    use HasPhoto;
+    use HasAffiliate;
+    use HasPhone;
 
-    public function photos(): HasMany
-    {
-        return $this->hasMany(ClientPhoto::class);
-    }
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(ClientAddress::class);
-    }
+    protected $fillable = [
+        'name',
+        'gender',
+        'rg',
+        'client_type',
+        'client_id',
+        'marital_status',
+        'spouse',
+        'birth_date',
+        'father',
+        'mother',
+        'description',
+    ];
 }

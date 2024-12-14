@@ -51,13 +51,13 @@ class Contracts
 
             //Substitui os placeholders com os dados do endereco do usuario
             $template->setValues([
-                'ucv_endereco_cep'         => $user->employee->address->zip_code ?? 'Valor não especificado',
-                'ucv_endereco_rua'         => $user->employee->address->street ?? 'Valor não especificado',
-                'ucv_endereco_numero'      => $user->employee->address->number ?? 'Valor não especificado',
-                'ucv_endereco_bairro'      => $user->employee->address->neighborhood ?? 'Valor não especificado',
-                'ucv_endereco_cidade'      => $user->employee->address->city ?? 'Valor não especificado',
-                'ucv_endereco_estado'      => $user->employee->address->state ?? 'Valor não especificado',
-                'ucv_endereco_complemento' => $user->employee->address->complement ?? 'Valor não especificado',
+                'ucv_endereco_cep'         => $user->employee->addresses->zip_code ?? 'Valor não especificado',
+                'ucv_endereco_rua'         => $user->employee->addresses->street ?? 'Valor não especificado',
+                'ucv_endereco_numero'      => $user->employee->addresses->number ?? 'Valor não especificado',
+                'ucv_endereco_bairro'      => $user->employee->addresses->neighborhood ?? 'Valor não especificado',
+                'ucv_endereco_cidade'      => $user->employee->addresses->city ?? 'Valor não especificado',
+                'ucv_endereco_estado'      => $user->employee->addresses->state ?? 'Valor não especificado',
+                'ucv_endereco_complemento' => $user->employee->addresses->complement ?? 'Valor não especificado',
             ]);
         }
     }
@@ -95,13 +95,13 @@ class Contracts
 
         //Substitui os placeholders com os dados do endereco do cliente
         $template->setValues([
-            'cliente_endereco_cep'         => $client->address->zip_code ?? 'Valor não especificado',
-            'cliente_endereco_rua'         => $client->address->street ?? 'Valor não especificado',
-            'cliente_endereco_numero'      => $client->address->number ?? 'Valor não especificado',
-            'cliente_endereco_bairro'      => $client->address->neighborhood ?? 'Valor não especificado',
-            'cliente_endereco_cidade'      => $client->address->city ?? 'Valor não especificado',
-            'cliente_endereco_estado'      => $client->address->state ?? 'Valor não especificado',
-            'cliente_endereco_complemento' => $client->address->complement ?? 'Valor não especificado',
+            'cliente_endereco_cep'         => $client->addresses->zip_code ?? 'Valor não especificado',
+            'cliente_endereco_rua'         => $client->addresses->street ?? 'Valor não especificado',
+            'cliente_endereco_numero'      => $client->addresses->number ?? 'Valor não especificado',
+            'cliente_endereco_bairro'      => $client->addresses->neighborhood ?? 'Valor não especificado',
+            'cliente_endereco_cidade'      => $client->addresses->city ?? 'Valor não especificado',
+            'cliente_endereco_estado'      => $client->addresses->state ?? 'Valor não especificado',
+            'cliente_endereco_complemento' => $client->addresses->complement ?? 'Valor não especificado',
         ]);
     }
 
@@ -186,13 +186,13 @@ class Contracts
 
         //Substitui os placeholders com os dados do endereco do fornecedor
         $template->setValues([
-            'fornecedor_endereco_cep'         => $supplier->address->zip_code ?? 'Valor não especificado',
-            'fornecedor_endereco_rua'         => $supplier->address->street ?? 'Valor não especificado',
-            'fornecedor_endereco_numero'      => $supplier->address->number ?? 'Valor não especificado',
-            'fornecedor_endereco_bairro'      => $supplier->address->neighborhood ?? 'Valor não especificado',
-            'fornecedor_endereco_cidade'      => $supplier->address->city ?? 'Valor não especificado',
-            'fornecedor_endereco_estado'      => $supplier->address->state ?? 'Valor não especificado',
-            'fornecedor_endereco_complemento' => $supplier->address->complement ?? 'Valor não especificado',
+            'fornecedor_endereco_cep'         => $supplier->addresses->zip_code ?? 'Valor não especificado',
+            'fornecedor_endereco_rua'         => $supplier->addresses->street ?? 'Valor não especificado',
+            'fornecedor_endereco_numero'      => $supplier->addresses->number ?? 'Valor não especificado',
+            'fornecedor_endereco_bairro'      => $supplier->addresses->neighborhood ?? 'Valor não especificado',
+            'fornecedor_endereco_cidade'      => $supplier->addresses->city ?? 'Valor não especificado',
+            'fornecedor_endereco_estado'      => $supplier->addresses->state ?? 'Valor não especificado',
+            'fornecedor_endereco_complemento' => $supplier->addresses->complement ?? 'Valor não especificado',
         ]);
     }
 

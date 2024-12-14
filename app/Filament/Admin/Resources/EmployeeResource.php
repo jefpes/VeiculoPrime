@@ -3,11 +3,10 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\EmployeeResource\RelationManagers\PhotosRelationManager;
 use App\Filament\Admin\Resources\EmployeeResource\{Pages};
-use App\Forms\Components\{MoneyInput, PhoneInput};
-use App\Helpers\AddressForm;
+use App\Forms\Components\{MoneyInput};
 use App\Models\Employee;
+use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -52,8 +51,6 @@ class EmployeeResource extends Resource
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->maxLength(255),
-                            PhoneInput::make('phone_one')->required(),
-                            PhoneInput::make('phone_two'),
                             MoneyInput::make('salary')
                                 ->required()
                                 ->numeric(),
@@ -83,11 +80,14 @@ class EmployeeResource extends Resource
                             Forms\Components\TextInput::make('spouse')
                                 ->maxLength(255),
                             Forms\Components\DatePicker::make('admission_date')->required(),
-                            Forms\Components\DatePicker::make('resignation_date'),
+                            Forms\Components\DatePicker::make('resignation_date')->readOnly(),
                         ]),
                     ]),
-                    Forms\Components\Tabs\Tab::make('Endereço')->schema([
-                        AddressForm::setAddressFields(),
+                    Forms\Components\Tabs\Tab::make(__('Address'))->schema([
+                        FormFields::setAddressFields(),
+                    ]),
+                    Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
+                        FormFields::setPhoneFields(),
                     ]),
                 ]),
             ]);
@@ -118,17 +118,9 @@ class EmployeeResource extends Resource
                     ->copyable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('phone')
-                    ->getStateUsing(function ($record) {
-                        if ($record->phone_two !== null) {
-                            return  $record->phone_one . ' | ' . $record->phone_two;
-                        }
-
-                        return  $record->phone_one;
-                    })
-                    ->wrap(false)
-                    ->label('Phone')
-                    ->toggleable(isToggledHiddenByDefault: false),
+                Tables\Columns\TextColumn::make('phones.full_phone')
+                    ->searchable()
+                    ->label('Phone'),
                 Tables\Columns\TextColumn::make('salary')
                     ->numeric()
                     ->sortable()

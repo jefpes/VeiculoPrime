@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\{HasAddress, HasPhoto};
+use App\Traits\{HasAffiliate, HasPhone};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{HasMany};
 
 /**
  * Class Supplier
@@ -42,16 +44,24 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 class Supplier extends BaseModel
 {
     use HasFactory;
+    use HasAddress;
+    use HasPhoto;
+    use HasPhone;
+    use HasAffiliate;
 
-    public function photos(): HasMany
-    {
-        return $this->hasMany(SupplierPhoto::class);
-    }
-
-    public function address(): HasOne
-    {
-        return $this->hasOne(SupplierAddress::class);
-    }
+    protected $fillable = [
+        'name',
+        'gender',
+        'rg',
+        'supplier_type',
+        'supplier_id',
+        'marital_status',
+        'spouse',
+        'birth_date',
+        'father',
+        'mother',
+        'description',
+    ];
 
     public function vehicles(): HasMany
     {

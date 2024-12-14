@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
@@ -57,20 +58,39 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 class Vehicle extends BaseModel
 {
     use HasFactory;
+    use HasPhoto;
+
+    protected $fillable = [
+        'employee_id',
+        'vehicle_model_id',
+        'supplier_id',
+        'purchase_date',
+        'fipe_price',
+        'purchase_price',
+        'sale_price',
+        'promotional_price',
+        'year_one',
+        'year_two',
+        'km',
+        'fuel',
+        'engine_power',
+        'steering',
+        'transmission',
+        'doors',
+        'seats',
+        'traction',
+        'color',
+        'plate',
+        'chassi',
+        'renavam',
+        'sold_date',
+        'description',
+        'annotation',
+    ];
 
     public function model(): BelongsTo
     {
         return $this->belongsTo(VehicleModel::class, 'vehicle_model_id', 'id');
-    }
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(VehiclePhoto::class);
-    }
-
-    public function docPhotos(): HasMany
-    {
-        return $this->hasMany(VehicleDocPhoto::class);
     }
 
     public function sale(): HasMany

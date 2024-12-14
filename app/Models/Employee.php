@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\HasPhone;
+use App\Traits\{HasAddress, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 
 /**
  * Class Employee
@@ -35,24 +37,32 @@ use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-
 class Employee extends BaseModel
 {
     use HasFactory;
+    use HasAddress;
+    use HasPhone;
+    use HasPhoto;
 
-    public function address(): HasOne
-    {
-        return $this->hasOne(EmployeeAddress::class);
-    }
+    protected $fillable = [
+        'name',
+        'gender',
+        'email',
+        'salary',
+        'rg',
+        'cpf',
+        'birth_date',
+        'father',
+        'mother',
+        'marital_status',
+        'spouse',
+        'admission_date',
+        'resignation_date',
+    ];
 
     public function ceo(): HasOne
     {
-        return $this->hasOne(Settings::class);
-    }
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(EmployeePhoto::class);
+        return $this->hasOne(Company::class);
     }
 
     public function user(): HasOne

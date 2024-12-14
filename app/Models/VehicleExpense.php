@@ -26,6 +26,14 @@ class VehicleExpense extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'vehicle_id',
+        'user_id',
+        'date',
+        'description',
+        'value',
+    ];
+
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);

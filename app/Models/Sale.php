@@ -41,6 +41,25 @@ class Sale extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'vehicle_id',
+        'client_id',
+        'payment_method',
+        'status',
+        'date_sale',
+        'date_payment',
+        'interest_rate',
+        'discount',
+        'interest',
+        'down_payment',
+        'number_installments',
+        'reimbursement',
+        'date_cancel',
+        'total',
+        'total_with_interest',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
