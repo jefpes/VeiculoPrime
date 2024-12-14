@@ -3,12 +3,12 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
-use App\Filament\Admin\Resources\VehicleResource\RelationManagers\{DocPhotosRelationManager, PhotosRelationManager};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
 use App\Models\{Brand, VehicleType};
 use App\Models\{Employee, Supplier, Vehicle, VehicleModel};
+use App\Tools\PhotosRelationManager;
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
 use Filament\Forms\{Form, Get};
@@ -378,7 +378,6 @@ class VehicleResource extends Resource
     {
         return [
             PhotosRelationManager::class,
-            DocPhotosRelationManager::class,
         ];
     }
 

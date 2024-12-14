@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\VehiclePhoto;
-use App\Models\{Vehicle};
+use App\Models\{Photo, Vehicle};
 use Illuminate\Database\Seeder;
 
 class VehicleSeeder extends Seeder
@@ -13,7 +12,6 @@ class VehicleSeeder extends Seeder
      */
     public function run(): void
     {
-
         $vehicle = Vehicle::create([
             'purchase_date'    => '2024-05-24',
             'fipe_price'       => 48000.00,
@@ -38,7 +36,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle) {
+        Photo::withoutEvents(function () use ($vehicle) {
             $vehicle->photos()->createMany([
                 ['path' => 'photos/vehicle/corrola-branco-2014-1.webp'],
                 ['path' => 'photos/vehicle/corrola-branco-2014-2.webp'],
@@ -71,7 +69,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle1) {
+        Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
                 ['path' => 'photos/vehicle/bros-branca-2015-1.webp'],
                 ['path' => 'photos/vehicle/bros-branca-2015-2.webp'],
@@ -103,7 +101,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle2) {
+        Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
                 ['path' => 'photos/vehicle/bros-preta-2015-1.webp'],
                 ['path' => 'photos/vehicle/bros-preta-2015-2.webp'],
@@ -135,7 +133,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle3) {
+        Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
                 ['path' => 'photos/vehicle/bros-vermelha-2015-1.webp'],
                 ['path' => 'photos/vehicle/bros-vermelha-2015-2.webp'],
@@ -171,7 +169,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle4) {
+        Photo::withoutEvents(function () use ($vehicle4) {
             $vehicle4->photos()->createMany([
                 ['path' => 'photos/vehicle/celta-preto-2012-1.webp'],
                 ['path' => 'photos/vehicle/celta-preto-2012-2.webp'],
@@ -208,7 +206,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle5) {
+        Photo::withoutEvents(function () use ($vehicle5) {
             $vehicle5->photos()->createMany([
                 ['path' => 'photos/vehicle/celta-vermelho-2013-1.webp'],
                 ['path' => 'photos/vehicle/celta-vermelho-2013-2.webp'],
@@ -245,7 +243,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle1) {
+        Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
                 ['path' => 'photos/vehicle/corrola-preto-2021-1.webp'],
                 ['path' => 'photos/vehicle/corrola-preto-2021-2.webp'],
@@ -282,7 +280,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle2) {
+        Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
                 ['path' => 'photos/vehicle/corrola-vermelho-2016-1.webp'],
                 ['path' => 'photos/vehicle/corrola-vermelho-2016-2.webp'],
@@ -313,7 +311,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle3) {
+        Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
                 ['path' => 'photos/vehicle/crosser-branca-2020-1.webp'],
                 ['path' => 'photos/vehicle/crosser-branca-2020-2.webp'],
@@ -344,7 +342,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle1) {
+        Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
                 ['path' => 'photos/vehicle/crosser-preta-2020-1.webp'],
                 ['path' => 'photos/vehicle/crosser-preta-2020-2.webp'],
@@ -379,7 +377,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle2) {
+        Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
                 ['path' => 'photos/vehicle/hb20-preto-2017-1.webp'],
                 ['path' => 'photos/vehicle/hb20-preto-2017-2.webp'],
@@ -414,7 +412,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle3) {
+        Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
                 ['path' => 'photos/vehicle/hb20-vermelho-2015-1.webp'],
                 ['path' => 'photos/vehicle/hb20-vermelho-2015-2.webp'],
@@ -449,7 +447,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle4) {
+        Photo::withoutEvents(function () use ($vehicle4) {
             $vehicle4->photos()->createMany([
                 ['path' => 'photos/vehicle/hilux-preta-2017-1.webp'],
                 ['path' => 'photos/vehicle/hilux-preta-2017-2.webp'],
@@ -483,7 +481,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle1) {
+        Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
                 ['path' => 'photos/vehicle/hilux-cereja-2022-1.webp'],
                 ['path' => 'photos/vehicle/hilux-cereja-2022-2.webp'],
@@ -518,7 +516,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle2) {
+        Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
                 ['path' => 'photos/vehicle/kwid-branco-2019-1.webp'],
                 ['path' => 'photos/vehicle/kwid-branco-2019-2.webp'],
@@ -554,7 +552,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle3) {
+        Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
                 ['path' => 'photos/vehicle/kwid-vermelho-2018-1.webp'],
                 ['path' => 'photos/vehicle/kwid-vermelho-2018-2.webp'],
@@ -584,7 +582,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle1) {
+        Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
                 ['path' => 'photos/vehicle/lander-azul-2020-1.webp'],
                 ['path' => 'photos/vehicle/lander-azul-2020-2.webp'],
@@ -616,7 +614,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle2) {
+        Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
                 ['path' => 'photos/vehicle/s10-branco-2018-1.webp'],
                 ['path' => 'photos/vehicle/s10-branco-2018-2.webp'],
@@ -650,7 +648,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle3) {
+        Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
                 ['path' => 'photos/vehicle/s10-vermelha-2016-1.webp'],
                 ['path' => 'photos/vehicle/s10-vermelha-2016-2.webp'],
@@ -681,7 +679,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle5) {
+        Photo::withoutEvents(function () use ($vehicle5) {
             $vehicle5->photos()->createMany([
                 ['path' => 'photos/vehicle/titan-azul-2012-1.webp'],
                 ['path' => 'photos/vehicle/titan-azul-2012-2.webp'],
@@ -709,7 +707,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle6) {
+        Photo::withoutEvents(function () use ($vehicle6) {
             $vehicle6->photos()->createMany([
                 ['path' => 'photos/vehicle/titan-vermelha-2012-1.webp'],
                 ['path' => 'photos/vehicle/titan-vermelha-2012-2.webp'],
@@ -738,7 +736,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle7) {
+        Photo::withoutEvents(function () use ($vehicle7) {
             $vehicle7->photos()->createMany([
                 ['path' => 'photos/vehicle/titan-vermelha-2015-1.webp'],
                 ['path' => 'photos/vehicle/titan-vermelha-2015-2.webp'],
@@ -768,7 +766,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle8) {
+        Photo::withoutEvents(function () use ($vehicle8) {
             $vehicle8->photos()->createMany([
                 ['path' => 'photos/vehicle/twister-prata-2020-1.jpg'],
                 ['path' => 'photos/vehicle/twister-prata-2020-2.jpg'],
@@ -797,7 +795,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle9) {
+        Photo::withoutEvents(function () use ($vehicle9) {
             $vehicle9->photos()->createMany([
                 ['path' => 'photos/vehicle/twister-vermelha-2020-1.jpg'],
                 ['path' => 'photos/vehicle/twister-vermelha-2020-2.jpg'],
@@ -826,7 +824,7 @@ class VehicleSeeder extends Seeder
         ]);
 
         // Desativar eventos temporariamente para evitar renomeação e movimentação
-        VehiclePhoto::withoutEvents(function () use ($vehicle10) {
+        Photo::withoutEvents(function () use ($vehicle10) {
             $vehicle10->photos()->createMany([
                 ['path' => 'photos/vehicle/xre-preta-2020-1.webp'],
                 ['path' => 'photos/vehicle/xre-preta-2020-2.webp'],

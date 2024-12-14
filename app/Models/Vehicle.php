@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
@@ -57,6 +58,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 class Vehicle extends BaseModel
 {
     use HasFactory;
+    use HasPhoto;
 
     protected $fillable = [
         'employee_id',
@@ -89,16 +91,6 @@ class Vehicle extends BaseModel
     public function model(): BelongsTo
     {
         return $this->belongsTo(VehicleModel::class, 'vehicle_model_id', 'id');
-    }
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(VehiclePhoto::class);
-    }
-
-    public function docPhotos(): HasMany
-    {
-        return $this->hasMany(VehicleDocPhoto::class);
     }
 
     public function sale(): HasMany
