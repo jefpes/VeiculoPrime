@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $number
  * @property string $complement
  * @property string $neighborhood
+ * @property string $state
  * @property string $zip_code
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -39,5 +40,14 @@ class Address extends Model
     public function addressable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function getFullAddressAttribute(): string
+    {
+        if ($this->complement) {
+            return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state} ({$this->complement})";
+        }
+
+        return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state}";
     }
 }
