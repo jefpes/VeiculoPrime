@@ -18,6 +18,7 @@ return new class () extends Migration {
             $table->decimal('monthly_fee', places: 2)->nullable()->default(null);
             $table->integer('due_day')->nullable()->default(5);
             $table->boolean('include_in_marketplace')->default(true);
+            $table->boolean('is_active')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
