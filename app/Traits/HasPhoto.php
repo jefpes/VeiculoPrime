@@ -7,6 +7,26 @@ namespace App\Traits;
 use App\Models\Photo;
 use Illuminate\Database\Eloquent\Relations\{MorphMany};
 
+/**
+ * Trait HasPhoto
+ *
+ * @property \App\Models\Photo $photos
+ * @property \App\Models\Photo $mainPhoto
+ * @property \App\Models\Photo $publicPhotos
+ *
+ * @method \App\Models\Photo photos()
+ * @method \App\Models\Photo mainPhoto()
+ * @method \App\Models\Photo publicPhotos()
+ *
+ * @method \Illuminate\Database\Eloquent\Builder withPublicPhotos()
+ * @method \Illuminate\Database\Eloquent\Builder withMainPhoto()
+ *
+ * @method string getPhotoDirectory()
+ * @method string getPhotoNamePrefix()
+ *
+ * @property-read string $name
+ * @property-read string $plate
+ */
 trait HasPhoto
 {
     public function photos(): MorphMany
@@ -22,6 +42,20 @@ trait HasPhoto
     public function publicPhotos(): \Illuminate\Database\Eloquent\Builder
     {
         return $this->morphMany(Photo::class, 'photoable')->where('is_public', true);
+    }
+
+    public function scopeWithPublicPhotos(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->with(['photos' => function ($query) {
+            $query->where('is_public', true);
+        }]);
+    }
+
+    public function scopeWithMainPhoto(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->with(['photos' => function ($query) {
+            $query->where('is_public', true)->where('is_main', true);
+        }]);
     }
 
     public function getPhotoDirectory(): string

@@ -93,17 +93,19 @@
     @foreach ($this->vehicles as $v)
       <div class="md:rounded-lg shadow-md overflow-hidden" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
         <a href="{{ url('/show', $v->id) }}" class="block">
-          <div class="h-56 w-full">
-            @php
-                $mainPhoto = $v->photos->where('main', 1)->first();
-                $defaultPhoto = $v->photos->first();
-            @endphp
+        <div class="h-56 w-full">
+        @php
+            $mainPhoto = $v->photos->where('is_public', true)->where('is_main', true)->first();
+            $defaultPhoto = $v->photos->where('is_public', true)->first();
+        @endphp
 
-            @if ($defaultPhoto && Storage::disk('public')->exists($defaultPhoto->path))
-                <img src="{{ image_path(($mainPhoto->path ?? $defaultPhoto->path)) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
-            @else
-                <x-icons.no-image class="object-fill w-full h-full" />
-            @endif
+        @if ($mainPhoto && Storage::disk('public')->exists($mainPhoto->path))
+            <img src="{{ image_path($mainPhoto->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+        @elseif ($defaultPhoto && Storage::disk('public')->exists($defaultPhoto->path))
+            <img src="{{ image_path($defaultPhoto->path) }}" alt="{{ $v->model->name }}" class="object-fill w-full h-full">
+        @else
+        <x-icons.no-image class="object-fill w-full h-full" />
+        @endif
           </div>
           <div class="py-2 px-3 space-y-2">
             <div class="flex justify-between items-center">
