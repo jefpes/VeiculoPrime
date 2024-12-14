@@ -25,11 +25,6 @@ class CreateTenant extends CreateRecord
             'remember_token'    => Str::random(10),
         ];
 
-        unset($data['user_name']);
-        unset($data['user_email']);
-        unset($data['user_password']);
-        unset($data['user_password_confirmation']);
-
         return $data;
     }
 
