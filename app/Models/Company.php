@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Traits\{HasAddress, HasPhone};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -101,9 +101,9 @@ class Company extends BaseModel
         return $this->hasOne(Employee::class);
     }
 
-    public function getAddress(): string
+    public function tenant(): BelongsTo
     {
-        return "$this->zip_code, $this->street, $this->street , $this->neighborhood, $this->city - $this->state";
+        return $this->belongsTo(Tenant::class);
     }
 
     protected static function booted()

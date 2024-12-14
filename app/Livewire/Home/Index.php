@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Home;
 
-use App\Models\{Brand, Company, Vehicle, VehicleType};
+use App\Models\{Brand, Company, Tenant, Vehicle, VehicleType};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -69,8 +69,18 @@ class Index extends Component
     #[Computed()]
     public function vehicles(): LengthAwarePaginator
     {
-        return Vehicle::with('model', 'photos')
-            ->where('tenant_id', $this->getTenantId())
+        $vehicles = Vehicle::with('model', 'photos');
+
+        if ($this->getTenantId() === null) {
+            $tenants = Tenant::query()->where('is_active', true)->where('include_in_marketplace', true)->get();
+            $vehicles->where('tenant_id', null)->orWhereIn('tenant_id', [...$tenants->pluck('id')->toArray()])->paginate();
+        }
+
+        if ($this->getTenantId() !== null) {
+            $vehicles->where('tenant_id', $this->getTenantId());
+        }
+
+        return $vehicles
             ->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
