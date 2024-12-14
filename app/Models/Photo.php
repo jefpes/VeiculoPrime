@@ -60,6 +60,12 @@ class Photo extends Model
                 $photo->handlePhotoSaving();
             }
         });
+
+        static::updating(function ($photo) {
+            if ($photo->isDirty('path')) {
+                $photo->deleteOldPhoto();
+            }
+        });
     }
 
     public function photoable(): MorphTo
@@ -87,6 +93,15 @@ class Photo extends Model
         if (Storage::disk('public')->exists($this->path)) {
             Storage::disk('public')->move($this->path, $newFilePath);
             $this->path = $newFilePath;
+        }
+    }
+
+    protected function deleteOldPhoto(): void
+    {
+        $originalPath = $this->getOriginal('path');
+
+        if ($originalPath && Storage::disk('public')->exists($originalPath)) {
+            Storage::disk('public')->delete($originalPath);
         }
     }
 }
