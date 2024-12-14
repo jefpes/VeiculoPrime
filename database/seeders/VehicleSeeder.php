@@ -38,13 +38,13 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle) {
             $vehicle->photos()->createMany([
-                ['path' => 'photos/vehicle/corrola-branco-2014-1.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-2.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-3.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-4.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-5.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-6.webp'],
-                ['path' => 'photos/vehicle/corrola-branco-2014-7.webp'],
+                ['path' => 'photos/vehicle/corrola-branco-2014-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-6.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-branco-2014-7.webp', 'is_public' => true],
             ]);
         });
 
@@ -71,11 +71,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
-                ['path' => 'photos/vehicle/bros-branca-2015-1.webp'],
-                ['path' => 'photos/vehicle/bros-branca-2015-2.webp'],
-                ['path' => 'photos/vehicle/bros-branca-2015-3.webp'],
-                ['path' => 'photos/vehicle/bros-branca-2015-4.webp'],
-                ['path' => 'photos/vehicle/bros-branca-2015-5.webp'],
+                ['path' => 'photos/vehicle/bros-branca-2015-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-branca-2015-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-branca-2015-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-branca-2015-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-branca-2015-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -103,11 +103,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
-                ['path' => 'photos/vehicle/bros-preta-2015-1.webp'],
-                ['path' => 'photos/vehicle/bros-preta-2015-2.webp'],
-                ['path' => 'photos/vehicle/bros-preta-2015-3.webp'],
-                ['path' => 'photos/vehicle/bros-preta-2015-4.webp'],
-                ['path' => 'photos/vehicle/bros-preta-2015-5.webp'],
+                ['path' => 'photos/vehicle/bros-preta-2015-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-preta-2015-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-preta-2015-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-preta-2015-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-preta-2015-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -135,11 +135,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
-                ['path' => 'photos/vehicle/bros-vermelha-2015-1.webp'],
-                ['path' => 'photos/vehicle/bros-vermelha-2015-2.webp'],
-                ['path' => 'photos/vehicle/bros-vermelha-2015-3.webp'],
-                ['path' => 'photos/vehicle/bros-vermelha-2015-4.webp'],
-                ['path' => 'photos/vehicle/bros-vermelha-2015-5.webp'],
+                ['path' => 'photos/vehicle/bros-vermelha-2015-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-vermelha-2015-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-vermelha-2015-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-vermelha-2015-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/bros-vermelha-2015-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -171,13 +171,13 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle4) {
             $vehicle4->photos()->createMany([
-                ['path' => 'photos/vehicle/celta-preto-2012-1.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-2.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-3.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-4.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-5.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-6.webp'],
-                ['path' => 'photos/vehicle/celta-preto-2012-7.webp'],
+                ['path' => 'photos/vehicle/celta-preto-2012-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-6.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-preto-2012-7.webp', 'is_public' => true],
             ]);
         });
 
@@ -208,13 +208,13 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle5) {
             $vehicle5->photos()->createMany([
-                ['path' => 'photos/vehicle/celta-vermelho-2013-1.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-2.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-3.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-4.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-5.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-6.webp'],
-                ['path' => 'photos/vehicle/celta-vermelho-2013-7.webp'],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-6.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/celta-vermelho-2013-7.webp', 'is_public' => true],
             ]);
         });
 
@@ -245,12 +245,12 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
-                ['path' => 'photos/vehicle/corrola-preto-2021-1.webp'],
-                ['path' => 'photos/vehicle/corrola-preto-2021-2.webp'],
-                ['path' => 'photos/vehicle/corrola-preto-2021-3.webp'],
-                ['path' => 'photos/vehicle/corrola-preto-2021-4.webp'],
-                ['path' => 'photos/vehicle/corrola-preto-2021-5.webp'],
-                ['path' => 'photos/vehicle/corrola-preto-2021-6.webp'],
+                ['path' => 'photos/vehicle/corrola-preto-2021-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-preto-2021-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-preto-2021-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-preto-2021-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-preto-2021-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-preto-2021-6.webp', 'is_public' => true],
             ]);
         });
 
@@ -282,11 +282,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
-                ['path' => 'photos/vehicle/corrola-vermelho-2016-1.webp'],
-                ['path' => 'photos/vehicle/corrola-vermelho-2016-2.webp'],
-                ['path' => 'photos/vehicle/corrola-vermelho-2016-3.webp'],
-                ['path' => 'photos/vehicle/corrola-vermelho-2016-4.webp'],
-                ['path' => 'photos/vehicle/corrola-vermelho-2016-5.webp'],
+                ['path' => 'photos/vehicle/corrola-vermelho-2016-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-vermelho-2016-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-vermelho-2016-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-vermelho-2016-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/corrola-vermelho-2016-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -313,11 +313,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
-                ['path' => 'photos/vehicle/crosser-branca-2020-1.webp'],
-                ['path' => 'photos/vehicle/crosser-branca-2020-2.webp'],
-                ['path' => 'photos/vehicle/crosser-branca-2020-3.webp'],
-                ['path' => 'photos/vehicle/crosser-branca-2020-4.webp'],
-                ['path' => 'photos/vehicle/crosser-branca-2020-5.webp'],
+                ['path' => 'photos/vehicle/crosser-branca-2020-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-branca-2020-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-branca-2020-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-branca-2020-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-branca-2020-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -344,11 +344,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
-                ['path' => 'photos/vehicle/crosser-preta-2020-1.webp'],
-                ['path' => 'photos/vehicle/crosser-preta-2020-2.webp'],
-                ['path' => 'photos/vehicle/crosser-preta-2020-3.webp'],
-                ['path' => 'photos/vehicle/crosser-preta-2020-4.webp'],
-                ['path' => 'photos/vehicle/crosser-preta-2020-5.webp'],
+                ['path' => 'photos/vehicle/crosser-preta-2020-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-preta-2020-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-preta-2020-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-preta-2020-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/crosser-preta-2020-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -379,11 +379,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
-                ['path' => 'photos/vehicle/hb20-preto-2017-1.webp'],
-                ['path' => 'photos/vehicle/hb20-preto-2017-2.webp'],
-                ['path' => 'photos/vehicle/hb20-preto-2017-3.webp'],
-                ['path' => 'photos/vehicle/hb20-preto-2017-4.webp'],
-                ['path' => 'photos/vehicle/hb20-preto-2017-5.webp'],
+                ['path' => 'photos/vehicle/hb20-preto-2017-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-preto-2017-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-preto-2017-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-preto-2017-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-preto-2017-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -414,11 +414,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
-                ['path' => 'photos/vehicle/hb20-vermelho-2015-1.webp'],
-                ['path' => 'photos/vehicle/hb20-vermelho-2015-2.webp'],
-                ['path' => 'photos/vehicle/hb20-vermelho-2015-3.webp'],
-                ['path' => 'photos/vehicle/hb20-vermelho-2015-4.webp'],
-                ['path' => 'photos/vehicle/hb20-vermelho-2015-5.webp'],
+                ['path' => 'photos/vehicle/hb20-vermelho-2015-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-vermelho-2015-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-vermelho-2015-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-vermelho-2015-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hb20-vermelho-2015-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -449,11 +449,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle4) {
             $vehicle4->photos()->createMany([
-                ['path' => 'photos/vehicle/hilux-preta-2017-1.webp'],
-                ['path' => 'photos/vehicle/hilux-preta-2017-2.webp'],
-                ['path' => 'photos/vehicle/hilux-preta-2017-3.webp'],
-                ['path' => 'photos/vehicle/hilux-preta-2017-4.webp'],
-                ['path' => 'photos/vehicle/hilux-preta-2017-5.webp'],
+                ['path' => 'photos/vehicle/hilux-preta-2017-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-preta-2017-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-preta-2017-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-preta-2017-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-preta-2017-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -483,12 +483,12 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
-                ['path' => 'photos/vehicle/hilux-cereja-2022-1.webp'],
-                ['path' => 'photos/vehicle/hilux-cereja-2022-2.webp'],
-                ['path' => 'photos/vehicle/hilux-cereja-2022-3.webp'],
-                ['path' => 'photos/vehicle/hilux-cereja-2022-4.webp'],
-                ['path' => 'photos/vehicle/hilux-cereja-2022-5.webp'],
-                ['path' => 'photos/vehicle/hilux-cereja-2022-6.webp'],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/hilux-cereja-2022-6.webp', 'is_public' => true],
             ]);
         });
 
@@ -518,13 +518,13 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
-                ['path' => 'photos/vehicle/kwid-branco-2019-1.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-2.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-3.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-4.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-5.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-6.webp'],
-                ['path' => 'photos/vehicle/kwid-branco-2019-7.webp'],
+                ['path' => 'photos/vehicle/kwid-branco-2019-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-6.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-branco-2019-7.webp', 'is_public' => true],
             ]);
         });
 
@@ -554,11 +554,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
-                ['path' => 'photos/vehicle/kwid-vermelho-2018-1.webp'],
-                ['path' => 'photos/vehicle/kwid-vermelho-2018-2.webp'],
-                ['path' => 'photos/vehicle/kwid-vermelho-2018-3.webp'],
-                ['path' => 'photos/vehicle/kwid-vermelho-2018-4.webp'],
-                ['path' => 'photos/vehicle/kwid-vermelho-2018-5.webp'],
+                ['path' => 'photos/vehicle/kwid-vermelho-2018-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-vermelho-2018-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-vermelho-2018-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-vermelho-2018-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/kwid-vermelho-2018-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -584,9 +584,9 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle1) {
             $vehicle1->photos()->createMany([
-                ['path' => 'photos/vehicle/lander-azul-2020-1.webp'],
-                ['path' => 'photos/vehicle/lander-azul-2020-2.webp'],
-                ['path' => 'photos/vehicle/lander-azul-2020-3.webp'],
+                ['path' => 'photos/vehicle/lander-azul-2020-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/lander-azul-2020-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/lander-azul-2020-3.webp', 'is_public' => true],
             ]);
         });
 
@@ -616,11 +616,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle2) {
             $vehicle2->photos()->createMany([
-                ['path' => 'photos/vehicle/s10-branco-2018-1.webp'],
-                ['path' => 'photos/vehicle/s10-branco-2018-2.webp'],
-                ['path' => 'photos/vehicle/s10-branco-2018-3.webp'],
-                ['path' => 'photos/vehicle/s10-branco-2018-4.webp'],
-                ['path' => 'photos/vehicle/s10-branco-2018-5.webp'],
+                ['path' => 'photos/vehicle/s10-branco-2018-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-branco-2018-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-branco-2018-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-branco-2018-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-branco-2018-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -650,12 +650,12 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle3) {
             $vehicle3->photos()->createMany([
-                ['path' => 'photos/vehicle/s10-vermelha-2016-1.webp'],
-                ['path' => 'photos/vehicle/s10-vermelha-2016-2.webp'],
-                ['path' => 'photos/vehicle/s10-vermelha-2016-3.webp'],
-                ['path' => 'photos/vehicle/s10-vermelha-2016-4.webp'],
-                ['path' => 'photos/vehicle/s10-vermelha-2016-5.webp'],
-                ['path' => 'photos/vehicle/s10-vermelha-2016-6.webp'],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-5.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/s10-vermelha-2016-6.webp', 'is_public' => true],
             ]);
         });
 
@@ -681,9 +681,9 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle5) {
             $vehicle5->photos()->createMany([
-                ['path' => 'photos/vehicle/titan-azul-2012-1.webp'],
-                ['path' => 'photos/vehicle/titan-azul-2012-2.webp'],
-                ['path' => 'photos/vehicle/titan-azul-2012-3.webp'],
+                ['path' => 'photos/vehicle/titan-azul-2012-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-azul-2012-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-azul-2012-3.webp', 'is_public' => true],
             ]);
         });
 
@@ -709,10 +709,10 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle6) {
             $vehicle6->photos()->createMany([
-                ['path' => 'photos/vehicle/titan-vermelha-2012-1.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2012-2.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2012-3.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2012-4.webp'],
+                ['path' => 'photos/vehicle/titan-vermelha-2012-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2012-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2012-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2012-4.webp', 'is_public' => true],
             ]);
         });
 
@@ -738,11 +738,11 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle7) {
             $vehicle7->photos()->createMany([
-                ['path' => 'photos/vehicle/titan-vermelha-2015-1.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2015-2.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2015-3.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2015-4.webp'],
-                ['path' => 'photos/vehicle/titan-vermelha-2015-5.webp'],
+                ['path' => 'photos/vehicle/titan-vermelha-2015-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2015-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2015-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2015-4.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/titan-vermelha-2015-5.webp', 'is_public' => true],
             ]);
         });
 
@@ -768,10 +768,10 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle8) {
             $vehicle8->photos()->createMany([
-                ['path' => 'photos/vehicle/twister-prata-2020-1.jpg'],
-                ['path' => 'photos/vehicle/twister-prata-2020-2.jpg'],
-                ['path' => 'photos/vehicle/twister-prata-2020-3.jpg'],
-                ['path' => 'photos/vehicle/twister-prata-2020-4.jpg'],
+                ['path' => 'photos/vehicle/twister-prata-2020-1.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-prata-2020-2.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-prata-2020-3.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-prata-2020-4.jpg', 'is_public' => true],
             ]);
         });
 
@@ -797,10 +797,10 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle9) {
             $vehicle9->photos()->createMany([
-                ['path' => 'photos/vehicle/twister-vermelha-2020-1.jpg'],
-                ['path' => 'photos/vehicle/twister-vermelha-2020-2.jpg'],
-                ['path' => 'photos/vehicle/twister-vermelha-2020-3.jpg'],
-                ['path' => 'photos/vehicle/twister-vermelha-2020-4.jpg'],
+                ['path' => 'photos/vehicle/twister-vermelha-2020-1.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-vermelha-2020-2.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-vermelha-2020-3.jpg', 'is_public' => true],
+                ['path' => 'photos/vehicle/twister-vermelha-2020-4.jpg', 'is_public' => true],
             ]);
         });
 
@@ -826,10 +826,10 @@ class VehicleSeeder extends Seeder
         // Desativar eventos temporariamente para evitar renomeação e movimentação
         Photo::withoutEvents(function () use ($vehicle10) {
             $vehicle10->photos()->createMany([
-                ['path' => 'photos/vehicle/xre-preta-2020-1.webp'],
-                ['path' => 'photos/vehicle/xre-preta-2020-2.webp'],
-                ['path' => 'photos/vehicle/xre-preta-2020-3.webp'],
-                ['path' => 'photos/vehicle/xre-preta-2020-4.webp'],
+                ['path' => 'photos/vehicle/xre-preta-2020-1.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/xre-preta-2020-2.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/xre-preta-2020-3.webp', 'is_public' => true],
+                ['path' => 'photos/vehicle/xre-preta-2020-4.webp', 'is_public' => true],
             ]);
         });
 
