@@ -37,7 +37,7 @@ class FilamentSettings
             ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
             ->sidebarFullyCollapsibleOnDesktop()
             ->font(Auth::user()->settings->font ?? 'Inter')
-            ->brandName($company->name);
+            ->brandName($company->name ?? env('APP_NAME'));
 
         if (Storage::disk('public')->exists($favicon)) {
             Filament::getPanel()
