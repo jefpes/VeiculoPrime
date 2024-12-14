@@ -26,6 +26,7 @@ class Settings extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'primary_color',
         'secondary_color',
         'tertiary_color',

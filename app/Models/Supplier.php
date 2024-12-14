@@ -50,6 +50,7 @@ class Supplier extends BaseModel
     use HasAffiliate;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'gender',
         'rg',

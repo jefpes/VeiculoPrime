@@ -16,6 +16,7 @@ class Brand extends BaseModel
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
     ];
 

@@ -27,6 +27,7 @@ class VehicleExpense extends BaseModel
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'vehicle_id',
         'user_id',
         'date',

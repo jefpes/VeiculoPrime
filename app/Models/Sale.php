@@ -42,6 +42,7 @@ class Sale extends BaseModel
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'vehicle_id',
         'client_id',

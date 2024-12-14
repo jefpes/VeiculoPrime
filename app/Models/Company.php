@@ -52,6 +52,7 @@ class Company extends BaseModel
     protected $table = 'company';
 
     protected $fillable = [
+        'tenant_id',
         'employee_id',
         'name',
         'cnpj',

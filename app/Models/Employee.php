@@ -45,6 +45,7 @@ class Employee extends BaseModel
     use HasPhoto;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'gender',
         'email',
