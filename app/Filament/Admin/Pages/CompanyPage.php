@@ -103,7 +103,7 @@ class CompanyPage extends Page
                                                 ->mask('99')
                                                 ->length(2),
                                         ]),
-                                        PhoneInput::make('phone')
+                                        PhoneInput::make('number')
                                             ->columnSpan(2)
                                             ->required(),
                                         TextInput::make('type')

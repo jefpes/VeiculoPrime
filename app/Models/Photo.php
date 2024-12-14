@@ -26,6 +26,12 @@ class Photo extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'path',
+        'is_main',
+        'is_public',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

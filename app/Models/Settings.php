@@ -25,6 +25,17 @@ class Settings extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'primary_color',
+        'secondary_color',
+        'tertiary_color',
+        'quaternary_color',
+        'quinary_color',
+        'senary_color',
+        'font',
+        'navigation_mode',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

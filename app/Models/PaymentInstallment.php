@@ -34,6 +34,21 @@ class PaymentInstallment extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'sale_id',
+        'due_date',
+        'value',
+        'status',
+        'payment_date',
+        'late_fee',
+        'interest_rate',
+        'interest',
+        'payment_value',
+        'payment_method',
+        'discount',
+    ];
+
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);

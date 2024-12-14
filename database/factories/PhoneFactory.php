@@ -17,10 +17,10 @@ class PhoneFactory extends Factory
     public function definition(): array
     {
         return [
-            'type'  => $this->faker->randomElement(['Casa', 'Trabalho', 'Pai', 'Mãe', 'Whatsapp', 'Outro']),
-            'ddi'   => $this->faker->numerify('##'),
-            'ddd'   => $this->faker->numerify('##'),
-            'phone' => $this->faker->numerify('#####-####'),
+            'type'   => $this->faker->randomElement(['Casa', 'Trabalho', 'Pai', 'Mãe', 'Whatsapp', 'Outro']),
+            'ddi'    => $this->faker->numerify('##'),
+            'ddd'    => $this->faker->numerify('##'),
+            'number' => $this->faker->numerify('#####-####'),
         ];
     }
 }

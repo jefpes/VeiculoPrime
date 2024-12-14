@@ -26,6 +26,11 @@ class Role extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'hierarchy',
+    ];
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

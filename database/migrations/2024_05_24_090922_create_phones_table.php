@@ -16,8 +16,8 @@ return new class () extends Migration {
             $table->string('type');
             $table->string('ddi');
             $table->string('ddd');
-            $table->string('phone');
-            $table->string('full_phone')->virtualAs('CONCAT("+",ddi, " (", ddd, ") ", phone)');
+            $table->string('number');
+            $table->string('full_phone')->virtualAs('CONCAT("+",ddi, " (", ddd, ") ", number)');
             $table->timestamps();
         });
     }

@@ -49,6 +49,20 @@ class Supplier extends BaseModel
     use HasPhone;
     use HasAffiliate;
 
+    protected $fillable = [
+        'name',
+        'gender',
+        'rg',
+        'supplier_type',
+        'supplier_id',
+        'marital_status',
+        'spouse',
+        'birth_date',
+        'father',
+        'mother',
+        'description',
+    ];
+
     public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class);

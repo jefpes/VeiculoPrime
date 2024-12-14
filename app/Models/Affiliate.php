@@ -9,6 +9,12 @@ class Affiliate extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'type',
+        'name',
+        'phone',
+    ];
+
     public function affiliatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();

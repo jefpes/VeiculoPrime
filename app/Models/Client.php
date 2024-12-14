@@ -43,4 +43,18 @@ class Client extends BaseModel
     use HasPhoto;
     use HasAffiliate;
     use HasPhone;
+
+    protected $fillable = [
+        'name',
+        'gender',
+        'rg',
+        'client_type',
+        'client_id',
+        'marital_status',
+        'spouse',
+        'birth_date',
+        'father',
+        'mother',
+        'description',
+    ];
 }

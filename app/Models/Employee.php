@@ -44,6 +44,22 @@ class Employee extends BaseModel
     use HasPhone;
     use HasPhoto;
 
+    protected $fillable = [
+        'name',
+        'gender',
+        'email',
+        'salary',
+        'rg',
+        'cpf',
+        'birth_date',
+        'father',
+        'mother',
+        'marital_status',
+        'spouse',
+        'admission_date',
+        'resignation_date',
+    ];
+
     public function ceo(): HasOne
     {
         return $this->hasOne(Company::class);

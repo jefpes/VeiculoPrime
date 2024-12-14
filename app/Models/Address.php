@@ -24,6 +24,18 @@ class Address extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'addressable_id',
+        'addressable_type',
+        'zip_code',
+        'street',
+        'number',
+        'neighborhood',
+        'city',
+        'state',
+        'complement',
+    ];
+
     public function addressable(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();

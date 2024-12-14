@@ -58,6 +58,34 @@ class Vehicle extends BaseModel
 {
     use HasFactory;
 
+    protected $fillable = [
+        'employee_id',
+        'vehicle_model_id',
+        'supplier_id',
+        'purchase_date',
+        'fipe_price',
+        'purchase_price',
+        'sale_price',
+        'promotional_price',
+        'year_one',
+        'year_two',
+        'km',
+        'fuel',
+        'engine_power',
+        'steering',
+        'transmission',
+        'doors',
+        'seats',
+        'traction',
+        'color',
+        'plate',
+        'chassi',
+        'renavam',
+        'sold_date',
+        'description',
+        'annotation',
+    ];
+
     public function model(): BelongsTo
     {
         return $this->belongsTo(VehicleModel::class, 'vehicle_model_id', 'id');

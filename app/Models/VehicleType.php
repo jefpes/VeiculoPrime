@@ -21,6 +21,10 @@ class VehicleType extends BaseModel
 
     protected $table = 'vehicle_types';
 
+    protected $fillable = [
+        'name',
+    ];
+
     public function models(): HasMany
     {
         return $this->hasMany(VehicleModel::class);
