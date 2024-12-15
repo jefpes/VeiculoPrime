@@ -72,7 +72,7 @@ class Index extends Component
     #[Computed()]
     public function vehicles(): LengthAwarePaginator
     {
-        $vehicles = Vehicle::with('model.type', 'photos')->whereNull('sold_date');
+        $vehicles = Vehicle::with('model.type', 'model.brand', 'photos')->whereNull('sold_date');
 
         if ($this->getTenantId() === null) {
             $tenants = $this->getTenantsQuery()->pluck('id');
@@ -85,11 +85,11 @@ class Index extends Component
         }
 
         return $vehicles
-            // ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
-            // ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
-            // ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
-            // ->when($this->order, fn ($query) => $query->orderBy('sale_price', $this->order))
-            // ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
+            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model.brand', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
+            ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
+            ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
+            ->when($this->order, fn ($query) => $query->orderBy('sale_price', $this->order))
+            ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
             ->when(
                 $this->vehicle_type,
                 fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
@@ -113,7 +113,7 @@ class Index extends Component
         }
 
         return $vehicles
-            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
+            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model.brand', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when(
                 $this->vehicle_type,
                 fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
@@ -157,19 +157,40 @@ class Index extends Component
     #[Computed()]
     public function brands(): Collection
     {
-        return Brand::query()
-            ->where('brands.tenant_id', $this->getTenantId()) // Filtra tenant_id
+        $brands = Brand::query();
+
+        if ($this->getTenantId() === null) {
+            $tenants = $this->getTenantsQuery()->pluck('id');
+            $brands->where(function ($q) use ($tenants) {
+                $q->whereNull('tenant_id')
+                  ->orWhereIn('tenant_id', $tenants);
+            });
+        } else {
+            $brands->where('tenant_id', $this->getTenantId());
+        }
+
+        return $brands
             ->whereHas('models', function ($query) {
                 $query->whereHas('vehicles', function ($query) {
                     $query->whereNull('vehicles.sold_date');
                 });
 
-                if ($this->vehicle_type_id) {
-                    $query->where('vehicle_models.vehicle_type_id', $this->vehicle_type_id);
+                if ($this->vehicle_type) {
+                    $query->whereIn('vehicle_models.vehicle_type_id', $this->getTypes($this->vehicle_type));
                 }
             })
-            ->orderBy('brands.name')
+            ->orderBy('name')
+            ->select('name')
+            ->distinct()
             ->get();
+    }
+
+    /**
+     * @param array<int> $name
+     */
+    public function getBrands(array $name): Collection
+    {
+        return Brand::query()->whereIn('name', $name)->get()->pluck('id');
     }
 
     public function updatedVehicleTypeId(): void
@@ -209,7 +230,7 @@ class Index extends Component
     public function clearFilters(): void
     {
         $this->reset([
-            'vehicle_type_id',
+            'vehicle_type',
             'selectedBrands',
             'order',
             'max_price',
