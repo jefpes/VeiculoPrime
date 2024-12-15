@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Vehicle;
+use App\Models\{Client, User, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class SalesSeeder extends Seeder
@@ -12,6 +12,10 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
+        $users   = User::all();
+        $clients = Client::all();
+        $models  = VehicleModel::query()->pluck('id', 'name');
+
         Vehicle::create([
             'purchase_date'    => '2024-02-03',
             'purchase_price'   => 10500.00,
@@ -31,8 +35,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
+                'user_id'        => $users->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-01',
@@ -61,8 +65,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
+                'user_id'        => $users->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-03',
@@ -90,8 +94,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
+                'user_id'        => $users->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'PIX',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-04',
@@ -181,7 +185,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-04-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date'       => '2024-05-07',
@@ -190,7 +194,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date'       => '2024-06-07',
@@ -199,7 +203,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'TRANSFERÊNCIA',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
         ]);
 
@@ -241,7 +245,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-04-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date'       => '2024-05-07',
@@ -250,7 +254,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date'       => '2024-06-07',
@@ -259,7 +263,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'TRANSFERÊNCIA',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
         ]);
 
@@ -300,7 +304,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 1600,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date'       => '2024-06-07',
@@ -309,7 +313,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 1600,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date' => '2024-07-07',
@@ -391,7 +395,7 @@ class SalesSeeder extends Seeder
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
+                'user_id'        => $users->random()->id,
             ],
             [
                 'due_date' => '2024-07-07',
