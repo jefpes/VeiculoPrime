@@ -45,6 +45,7 @@ class Client extends BaseModel
     use HasPhone;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'gender',
         'rg',

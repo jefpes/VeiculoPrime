@@ -35,6 +35,7 @@ class PaymentInstallment extends BaseModel
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'sale_id',
         'due_date',

@@ -30,6 +30,7 @@ class VehicleModel extends BaseModel
     protected $table = 'vehicle_models';
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'brand_id',
         'vehicle_type_id',

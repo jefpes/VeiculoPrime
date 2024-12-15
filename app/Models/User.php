@@ -40,7 +40,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         'tenant_id',
         'name',
         'email',
+        'email_verified_at',
         'password',
+        'custom_fields',
         'avatar_url',
         'employee_id',
     ];

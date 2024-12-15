@@ -88,6 +88,7 @@ class TenantResource extends Resource
                 Tables\Columns\TextColumn::make('due_day')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('include_in_marketplace'),
+                Tables\Columns\ToggleColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

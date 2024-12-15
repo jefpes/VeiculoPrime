@@ -61,10 +61,15 @@ class VehicleResource extends Resource
                         ->required(),
                     MoneyInput::make('promotional_price'),
                     Select::make('vehicle_model_id')
-                        ->relationship('model', 'name'),
+                        ->relationship('model', 'name')
+                        ->required()
+                        ->searchable()
+                        ->preload()
+                        ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
                         ->options(Supplier::query()->pluck('name', 'id'))
+                        ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
                     TextInput::make('year_one')

@@ -16,6 +16,7 @@ class Tenant extends Model
         'monthly_fee',
         'due_day',
         'include_in_marketplace',
+        'is_active',
     ];
 
     /**

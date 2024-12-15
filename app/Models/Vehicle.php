@@ -61,6 +61,7 @@ class Vehicle extends BaseModel
     use HasPhoto;
 
     protected $fillable = [
+        'tenant_id',
         'employee_id',
         'vehicle_model_id',
         'supplier_id',
