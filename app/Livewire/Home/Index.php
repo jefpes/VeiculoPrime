@@ -128,13 +128,26 @@ class Index extends Component
     #[Computed()]
     public function prices(): Collection
     {
-        return Vehicle::query()
-            ->where('tenant_id', $this->getTenantId())
-            ->where('sold_date', null)
+        $vehicles = Vehicle::with('model.type')->whereNull('sold_date');
+
+        if ($this->getTenantId() === null) {
+            $tenants = $this->getTenantsQuery()->pluck('id');
+            $vehicles->where(function ($q) use ($tenants) {
+                $q->whereNull('tenant_id')
+                  ->orWhereIn('tenant_id', $tenants);
+            });
+        } else {
+            $vehicles->where('tenant_id', $this->getTenantId());
+        }
+
+        return $vehicles
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
-            ->when($this->vehicle_type_id, fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $this->vehicle_type_id)))
+            ->when(
+                $this->vehicle_type,
+                fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
+            )
             ->select('sale_price')
             ->distinct()
             ->orderBy('sale_price')
