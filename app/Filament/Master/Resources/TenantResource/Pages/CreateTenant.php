@@ -15,8 +15,6 @@ class CreateTenant extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['code'] = Str::uuid();
-
         $this->user = [
             'name'              => $data['user_name'],
             'email'             => $data['user_email'],

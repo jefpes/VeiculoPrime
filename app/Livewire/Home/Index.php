@@ -55,7 +55,7 @@ class Index extends Component
         return VehicleType::query()->where('name', $name)->get()->pluck('id');
     }
 
-    protected function getTenantId(): int|null
+    protected function getTenantId(): string|null
     {
         return session()->get('tenant')->id ?? null;
     }
