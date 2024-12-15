@@ -15,7 +15,7 @@ class Show extends Component
 
     public ?Company $tenantCompany;
 
-    public function mount(int $id): void
+    public function mount(string $id): void
     {
         $this->vehicle = Vehicle::query()->where('id', $id)->withPublicPhotos()->with(['model'])->first(); //@phpstan-ignore-line
 
