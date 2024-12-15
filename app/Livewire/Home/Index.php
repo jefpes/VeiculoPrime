@@ -193,7 +193,7 @@ class Index extends Component
         return Brand::query()->whereIn('name', $name)->get()->pluck('id');
     }
 
-    public function updatedVehicleTypeId(): void
+    public function updatedVehicleType(): void
     {
         $this->reset(['selectedBrands', 'order', 'max_price', 'year_ini', 'year_end']);
         $this->resetPage();
