@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Vehicle;
+use App\Models\{User, Vehicle, VehicleExpense};
 use Illuminate\Database\Seeder;
 
 class VehicleExpenseSeeder extends Seeder
@@ -12,13 +12,19 @@ class VehicleExpenseSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 15; $i++) {
-            Vehicle::find(rand(1, 33))->expenses()->create([
-                'date'        => '2024-' . rand(1, 6) . '-' . rand(1, 28),
-                'description' => 'Despesa de teste',
-                'value'       => rand(1, 1000),
-                'user_id'     => 1,
-            ]);
+        $vehicles = Vehicle::all();
+        $user     = User::first() ?? User::factory()->create();
+
+        foreach ($vehicles as $vehicle) {
+            for ($i = 0; $i < rand(1, 5); $i++) {
+                VehicleExpense::create([
+                    'date'        => now()->subDays(rand(1, 180)),
+                    'description' => 'Despesa de teste',
+                    'value'       => rand(100, 100000) / 100,
+                    'vehicle_id'  => $vehicle->id,
+                    'user_id'     => $user->id,
+                ]);
+            }
         }
     }
 }
