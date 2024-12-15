@@ -68,7 +68,7 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->options(Supplier::query()->pluck('name', 'id'))
+                        ->relationship('suppliers', 'name')
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
