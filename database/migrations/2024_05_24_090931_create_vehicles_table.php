@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\{Brand, Employee, Supplier, Vehicle, VehicleModel, VehicleType};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,34 +11,34 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('brands', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicle_types', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicle_models', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
-            $table->foreignIdFor(VehicleType::class)->constrained(table: 'vehicle_types', column: 'id');
-            $table->foreignIdFor(Brand::class)->constrained();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
+            $table->foreignUlid('vehicle_type_id')->constrained(table: 'vehicle_types', column: 'id');
+            $table->foreignUlid('brand_id')->constrained();
             $table->string('name');
             $table->timestamps();
         });
 
         Schema::create('vehicles', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
-            $table->foreignIdFor(Employee::class)->nullable()->constrained(table: 'employees', column: 'id');
-            $table->foreignIdFor(VehicleModel::class)->constrained(table: 'vehicle_models', column: 'id');
-            $table->foreignIdFor(Supplier::class)->nullable()->constrained(table: 'suppliers', column: 'id');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
+            $table->foreignUlid('employee_id')->nullable()->constrained(table: 'employees', column: 'id');
+            $table->foreignUlid('vehicle_model_id')->constrained(table: 'vehicle_models', column: 'id');
+            $table->foreignUlid('sipplier_id')->nullable()->constrained(table: 'suppliers', column: 'id');
             $table->date('purchase_date');
             $table->decimal('fipe_price', places: 2)->nullable()->default(null);
             $table->decimal('purchase_price', places: 2);
@@ -68,22 +67,6 @@ return new class () extends Migration {
 
             $table->timestamps();
         });
-
-        Schema::create('vehicle_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
-            $table->string('path', 255);
-            $table->boolean('main')->default(false);
-            $table->timestamps();
-        });
-
-        Schema::create('vehicle_doc_photos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Vehicle::class)->constrained()->cascadeOnDelete();
-            $table->string('path', 255);
-            $table->timestamps();
-        });
-
     }
 
     /**
@@ -91,7 +74,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicle_photos');
         Schema::dropIfExists('vehicles');
         Schema::dropIfExists('vehicle_models');
         Schema::dropIfExists('vehicle_types');

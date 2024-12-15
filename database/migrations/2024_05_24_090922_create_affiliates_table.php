@@ -11,8 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('affiliates', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('affiliatable');
+            $table->ulid('id')->primary();
+            $table->ulidMorphs('affiliatable');
             $table->string('type')->nullable();
             $table->string('name')->nullable();
             $table->string('phone')->nullable();

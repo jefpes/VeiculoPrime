@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\{Client, User, Vehicle};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +11,11 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained();
-            $table->foreignIdFor(Vehicle::class)->constrained();
-            $table->foreignIdFor(Client::class)->constrained();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
+            $table->foreignUlid('user_id')->nullable()->constrained(table: 'users', column: 'id');
+            $table->foreignUlid('vehicle_id')->nullable()->constrained(table: 'vehicles', column: 'id');
+            $table->foreignUlid('client_id')->nullable()->constrained(table: 'clients', column: 'id');
             $table->string('payment_method');
             $table->string('status');
             $table->date('date_sale');

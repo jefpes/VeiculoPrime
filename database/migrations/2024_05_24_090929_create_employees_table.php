@@ -11,8 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->string('gender');
             $table->string('email')->nullable();

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\{User};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,8 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class, 'user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('user_id')->nullable()->constrained(table: 'users', column: 'id');
             $table->string('primary_color')->nullable();
             $table->string('secondary_color')->nullable();
             $table->string('tertiary_color')->nullable();
