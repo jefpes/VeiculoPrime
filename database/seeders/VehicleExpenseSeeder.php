@@ -13,18 +13,16 @@ class VehicleExpenseSeeder extends Seeder
     public function run(): void
     {
         $vehicles = Vehicle::all();
-        $user     = User::first() ?? User::factory()->create();
+        $user     = User::all();
 
-        foreach ($vehicles as $vehicle) {
-            for ($i = 0; $i < rand(1, 5); $i++) {
-                VehicleExpense::create([
-                    'date'        => now()->subDays(rand(1, 180)),
-                    'description' => 'Despesa de teste',
-                    'value'       => rand(100, 100000) / 100,
-                    'vehicle_id'  => $vehicle->id,
-                    'user_id'     => $user->id,
-                ]);
-            }
+        for ($i = 0; $i < 60; $i++) {
+            VehicleExpense::create([
+                'date'        => now()->subDays(rand(1, 180)),
+                'description' => 'Despesa de teste',
+                'value'       => rand(100, 100000) / 100,
+                'vehicle_id'  => $vehicles->random()->id,
+                'user_id'     => $user->random()->id,
+            ]);
         }
     }
 }
