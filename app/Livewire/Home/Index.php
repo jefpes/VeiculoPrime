@@ -69,7 +69,7 @@ class Index extends Component
     #[Computed()]
     public function vehicles(): LengthAwarePaginator
     {
-        $vehicles = Vehicle::with('model', 'photos');
+        $vehicles = Vehicle::with('model', 'photos')->whereNull('sold_date');
 
         if ($this->getTenantId() === null) {
             $tenants = Tenant::query()->where('is_active', true)->where('include_in_marketplace', true)->get();
@@ -81,7 +81,6 @@ class Index extends Component
         }
 
         return $vehicles
-            ->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
