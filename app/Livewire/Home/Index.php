@@ -72,7 +72,7 @@ class Index extends Component
     #[Computed()]
     public function vehicles(): LengthAwarePaginator
     {
-        $vehicles = Vehicle::with('model', 'photos')->whereNull('sold_date');
+        $vehicles = Vehicle::with('model.type', 'photos')->whereNull('sold_date');
 
         if ($this->getTenantId() === null) {
             $tenants = $this->getTenantsQuery()->pluck('id');
@@ -100,11 +100,24 @@ class Index extends Component
     #[Computed()]
     public function years(): Collection
     {
-        return Vehicle::query()
-            ->where('tenant_id', $this->getTenantId())
-            ->where('sold_date', null)
+        $vehicles = Vehicle::with('model.type')->whereNull('sold_date');
+
+        if ($this->getTenantId() === null) {
+            $tenants = $this->getTenantsQuery()->pluck('id');
+            $vehicles->where(function ($q) use ($tenants) {
+                $q->whereNull('tenant_id')
+                  ->orWhereIn('tenant_id', $tenants);
+            });
+        } else {
+            $vehicles->where('tenant_id', $this->getTenantId());
+        }
+
+        return $vehicles
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
-            ->when($this->vehicle_type_id, fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $this->vehicle_type_id)))
+            ->when(
+                $this->vehicle_type,
+                fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
+            )
             ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
             ->select('year_one')
             ->distinct()
