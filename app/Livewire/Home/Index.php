@@ -73,7 +73,7 @@ class Index extends Component
 
         if ($this->getTenantId() === null) {
             $tenants = Tenant::query()->where('is_active', true)->where('include_in_marketplace', true)->get();
-            $vehicles->where('tenant_id', null)->orWhereIn('tenant_id', [...$tenants->pluck('id')->toArray()])->paginate();
+            $vehicles->where('tenant_id', null)->orWhereIn('tenant_id', [...$tenants->pluck('id')->toArray()]);
         }
 
         if ($this->getTenantId() !== null) {
