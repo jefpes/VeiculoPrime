@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 
-    public function hierarchy(int $id): bool
+    public function hierarchy(string $id): bool
     {
         $h_user_loged = collect($this->roles)->pluck('hierarchy')->max();
         $h_user_param = (collect(User::withTrashed()->find($id)->roles)->pluck('hierarchy')->max() ?? $h_user_loged + 1);
