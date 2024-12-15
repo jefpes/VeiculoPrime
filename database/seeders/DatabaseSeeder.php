@@ -42,8 +42,8 @@ class DatabaseSeeder extends Seeder
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),
-            'password'          => '$2y$12$TZI4KbmG6YeMURIVF.BwFO/Yc/RLZlQIM/7Kol6SEYrL7biPQoxqe',
-            'remember_token'    => 'BKbXG5GMBE',
+            'password'          => '$2y$12$p0D7QL40tsmgvEsx1BC32eicJU1BAQRWN39so0xq.oJ5K0XhcJwc2',
+            'remember_token'    => 'yLvCEW5zMY',
         ]);
 
         Settings::create(['user_id' => $user->id]);
