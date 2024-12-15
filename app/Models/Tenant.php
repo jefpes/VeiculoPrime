@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Tenant extends Model
 {
     use SoftDeletes;
+    use HasUlids;
 
     protected $fillable = [
         'code',
