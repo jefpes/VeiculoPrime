@@ -5,6 +5,7 @@ namespace App\Livewire\Home;
 use App\Models\{Brand, Company, Tenant, Vehicle, VehicleType};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, Layout, Url};
 use Livewire\{Component, WithPagination};
@@ -34,6 +35,9 @@ class Index extends Component
     #[Url(except: '', as: 'type', history: true)]
     public ?int $vehicle_type_id = null;
 
+    #[Url(except: '', as: 'type_name', history: true)]
+    public ?string $vehicle_type = null;
+
     #[Layout('components.layouts.home')]
     public function render(): View
     {
@@ -43,12 +47,54 @@ class Index extends Component
     #[Computed()]
     public function types(): Collection
     {
-        return VehicleType::query()->orderBy('name')->get();
+        return VehicleType::query()->select('name')->distinct()->get();
+    }
+
+    public function getTypes(string $name): Collection
+    {
+        return VehicleType::query()->where('name', $name)->get()->pluck('id');
     }
 
     protected function getTenantId(): int|null
     {
         return session()->get('tenant')->id ?? null;
+    }
+
+    protected function getTenantsQuery(): Builder
+    {
+        if ($this->getTenantId() === null) {
+            return Tenant::query()->where('is_active', true)->where('include_in_marketplace', true);
+        }
+
+        return Tenant::query()->where('id', $this->getTenantId());
+    }
+
+    #[Computed()]
+    public function vehicles(): LengthAwarePaginator
+    {
+        $vehicles = Vehicle::with('model', 'photos')->whereNull('sold_date');
+
+        if ($this->getTenantId() === null) {
+            $tenants = $this->getTenantsQuery()->pluck('id');
+            $vehicles->where(function ($q) use ($tenants) {
+                $q->whereNull('tenant_id')
+                  ->orWhereIn('tenant_id', $tenants);
+            });
+        } else {
+            $vehicles->where('tenant_id', $this->getTenantId());
+        }
+
+        return $vehicles
+            // ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
+            // ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
+            // ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
+            // ->when($this->order, fn ($query) => $query->orderBy('sale_price', $this->order))
+            // ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
+            ->when(
+                $this->vehicle_type,
+                fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
+            )
+            ->paginate();
     }
 
     #[Computed()]
@@ -64,30 +110,6 @@ class Index extends Component
             ->distinct()
             ->orderBy('year_one')
             ->get();
-    }
-
-    #[Computed()]
-    public function vehicles(): LengthAwarePaginator
-    {
-        $vehicles = Vehicle::with('model', 'photos')->whereNull('sold_date');
-
-        if ($this->getTenantId() === null) {
-            $tenants = Tenant::query()->where('is_active', true)->where('include_in_marketplace', true)->get();
-            $vehicles->where('tenant_id', null)->orWhereIn('tenant_id', [...$tenants->pluck('id')->toArray()]);
-        }
-
-        if ($this->getTenantId() !== null) {
-            $vehicles->where('tenant_id', $this->getTenantId());
-        }
-
-        return $vehicles
-            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
-            ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
-            ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
-            ->when($this->order, fn ($query) => $query->orderBy('sale_price', $this->order))
-            ->when($this->max_price, fn ($query) => $query->where('sale_price', '<=', $this->max_price))
-            ->when($this->vehicle_type_id, fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $this->vehicle_type_id)))
-            ->paginate();
     }
 
     #[Computed()]

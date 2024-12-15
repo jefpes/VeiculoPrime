@@ -28,10 +28,10 @@
                     </x-secondary-button>
                 </div>
               <div >
-                <x-select wire:model.live="vehicle_type_id" class="w-full" label="Type">
+                <x-select wire:model.live="vehicle_type" class="w-full" label="Type">
                   <option value="">{{ __('All') }}</option>
                   @foreach ($this->types as $t)
-                  <option value="{{ $t->id }}">{{ $t->name }}</option>
+                  <option value="{{ $t->name }}">{{ $t->name }}</option>
                   @endforeach
                 </x-select>
               </div>
