@@ -7,7 +7,7 @@ use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
 use App\Models\{Brand, VehicleType};
-use App\Models\{Employee, Supplier, Vehicle, VehicleModel};
+use App\Models\{Supplier, Vehicle, VehicleModel};
 use App\Tools\PhotosRelationManager;
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
@@ -49,7 +49,9 @@ class VehicleResource extends Resource
                 Section::make()->schema([
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->options(Employee::whereNull('resignation_date')->pluck('name', 'id')) //@phpstan-ignore-line
+                        ->relationship('employee', 'name', modifyQueryUsing: function ($query) {
+                            return $query->where('resignation_date', null);
+                        })
                         ->optionsLimit(5)
                         ->searchable(),
                     DatePicker::make('purchase_date')
@@ -68,7 +70,7 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->options(Supplier::query()->pluck('name', 'id'))
+                        ->relationship('supplier', 'name')
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),

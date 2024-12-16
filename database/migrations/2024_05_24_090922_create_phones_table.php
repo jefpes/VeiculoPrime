@@ -11,8 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('phones', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('phoneable');
+            $table->ulid('id')->primary();
+            $table->ulidMorphs('phoneable');
             $table->string('type');
             $table->string('ddi');
             $table->string('ddd');

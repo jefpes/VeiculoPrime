@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\{TenantScopeTrait};
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasOne};
 use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
@@ -35,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use Notifiable;
     use SoftDeletes;
     use TenantScopeTrait;
+    use HasUlids;
 
     protected $fillable = [
         'tenant_id',
@@ -79,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 
-    public function hierarchy(int $id): bool
+    public function hierarchy(string $id): bool
     {
         $h_user_loged = collect($this->roles)->pluck('hierarchy')->max();
         $h_user_param = (collect(User::withTrashed()->find($id)->roles)->pluck('hierarchy')->max() ?? $h_user_loged + 1);

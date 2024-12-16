@@ -8,27 +8,27 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(App\Models\Tenant::class)->nullable()->cascadeOnDelete();
+            $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name', 100);
             $table->tinyInteger('hierarchy');
             $table->timestamps();
         });
 
         Schema::create('abilities', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->string('name', 100)->unique();
             $table->timestamps();
         });
 
         Schema::create('ability_role', function (Blueprint $table) {
-            $table->foreignId('ability_id')->constrained(table: 'abilities');
-            $table->foreignId('role_id')->constrained(table: 'roles');
+            $table->foreignUlid('ability_id')->constrained(table: 'abilities');
+            $table->foreignUlid('role_id')->constrained(table: 'roles');
         });
 
         Schema::create('role_user', function (Blueprint $table) {
-            $table->foreignId('role_id')->constrained(table: 'roles');
-            $table->foreignId('user_id')->constrained(table: 'users');
+            $table->foreignUlid('role_id')->constrained(table: 'roles');
+            $table->foreignUlid('user_id')->constrained(table: 'users');
         });
 
     }

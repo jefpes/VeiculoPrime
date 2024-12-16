@@ -11,8 +11,8 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('photos', function (Blueprint $table) {
-            $table->id();
-            $table->morphs('photoable');
+            $table->ulid('id')->primary();
+            $table->ulidMorphs('photoable');
             $table->string('path');
             $table->boolean('is_main')->default(false);
             $table->boolean('is_public')->default(false);

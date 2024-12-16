@@ -11,8 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('tenants', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('code');
+            $table->ulid('id')->primary();
             $table->string('name');
             $table->string('domain')->unique();
             $table->decimal('monthly_fee', places: 2)->nullable()->default(null);
