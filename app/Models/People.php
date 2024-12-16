@@ -46,7 +46,7 @@ class People extends BaseModel
 
     public function employee(): HasMany
     {
-        return $this->hasMany(Employee::class, 'employee_id');
+        return $this->hasMany(Employee::class, 'people_id');
     }
 
     public function client(): BelongsTo

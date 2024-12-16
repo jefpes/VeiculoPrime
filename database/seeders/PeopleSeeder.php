@@ -17,21 +17,11 @@ class PeopleSeeder extends Seeder
             $model = People::factory()
                         ->withAddress()
                         ->withAffiliate()
-                        ->withPhone();
-
-            if ($i <= 3) {
-                $model->withClient();
-            }
-
-            if ($i > 3 && $i <= 6) {
-                $model->withSupplier();
-            }
-
-            if ($i > 6 && $i <= 9) {
-                $model->withEmployee();
-            }
-
-            $model = $model->create();
+                        ->withPhone()
+                        ->withClient()
+                        ->withSupplier()
+                        ->withEmployee()
+                        ->create();
 
             $folder = "photos/people";
 
