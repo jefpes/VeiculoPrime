@@ -111,12 +111,19 @@ class PeopleResource extends Resource
     {
         return $table
             ->recordUrl(null)
+            ->modifyQueryUsing(function ($query) {
+                return $query->with(['tenant', 'user', 'phones']);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('tenant.name')
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->description('user.email')
+                    ->label('User')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -147,7 +154,6 @@ class PeopleResource extends Resource
                     ->label('RG')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make('birth_date')
                     ->date('d/m/Y')
                     ->sortable()

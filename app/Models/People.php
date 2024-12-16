@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\PersonType;
 use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
 
 class People extends BaseModel
 {
@@ -59,8 +59,8 @@ class People extends BaseModel
         return $this->hasOne(Supplier::class, 'people_id');
     }
 
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, 'people_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -99,9 +99,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->belongsToMany(Role::class);
     }
 
-    public function employee(): BelongsTo
+    public function people(): HasOne
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasOne(People::class, 'user_id');
     }
 
     public function settings(): HasOne
