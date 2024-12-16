@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\{Genders, MaritalStatus};
+use App\Enums\{MaritalStatus, Sexes};
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,12 +18,12 @@ class PeopleFactory extends Factory
      */
     public function definition(): array
     {
-        $gender     = $this->faker->randomElement(array_map(fn ($case) => $case->value, Genders::cases()));
+        $sex        = $this->faker->randomElement(array_map(fn ($case) => $case->value, Sexes::cases()));
         $clientType = $this->faker->randomElement(['Física', 'Jurídica']);
 
         return [
-            'name'           => $gender === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
-            'gender'         => $gender,
+            'name'           => $sex === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'sex'            => $sex,
             'email'          => fake()->unique()->safeEmail(),
             'salary'         => $this->faker->randomFloat(2, 1000, 10000),
             'rg'             => $this->faker->unique()->numerify('##.###.###-#'),

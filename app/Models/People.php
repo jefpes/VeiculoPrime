@@ -19,7 +19,7 @@ class People extends BaseModel
         'tenant_id',
         'user_id',
         'name',
-        'gender',
+        'sex',
         'email',
         'salary',
         'rg',

@@ -194,7 +194,7 @@ return [
         'day'                   => 'dia',
         'excerpt'               => 'resumo',
         'first_name'            => 'primeiro nome',
-        'gender'                => 'gênero',
+        'sex'                   => 'gênero',
         'marital_status'        => 'estado civil',
         'profession'            => 'profissão',
         'nationality'           => 'nacionalidade',

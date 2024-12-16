@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{Genders, MaritalStatus, PersonType};
+use App\Enums\{MaritalStatus, PersonType, Sexes};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\People;
@@ -41,9 +41,9 @@ class PeopleResource extends Resource
                             Forms\Components\TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
-                            Forms\Components\Select::make('gender')
+                            Forms\Components\Select::make('sex')
                                 ->required()
-                                ->options(Genders::class),
+                                ->options(Sexes::class),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->maxLength(255),
@@ -127,7 +127,7 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gender') //TODO: Add icon
+                Tables\Columns\TextColumn::make('sex') //TODO: Add icon
                     ->badge()
                     ->color(fn (string $state): string|array => match ($state) {
                         'MASCULINO' => 'info',

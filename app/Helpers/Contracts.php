@@ -28,7 +28,7 @@ class Contracts
             $template->setValues([
                 'ucv_nome'             => $user->name ?? 'Valor não especificado',
                 'ucv_nome_completo'    => $user->employee->name ?? 'Valor não especificado',
-                'ucv_genero'           => $user->employee->gender ?? 'Valor não especificado',
+                'ucv_genero'           => $user->employee->sex ?? 'Valor não especificado',
                 'ucv_email'            => $user->email ?? 'Valor não especificado',
                 'ucv_telefone_1'       => $user->employee->phone_one ?? 'Valor não especificado',
                 'ucv_telefone_2'       => $user->employee->phone_two ?? 'Valor não especificado',
@@ -73,7 +73,7 @@ class Contracts
         // Substitui os placeholders com os dados do cliente
         $template->setValues([
             'cliente_nome'         => $client->name ?? 'Valor não especificado',
-            'cliente_genero'       => $client->gender ?? 'Valor não especificado',
+            'cliente_genero'       => $client->sex ?? 'Valor não especificado',
             'cliente_tipo'         => $client->client_type ?? 'Valor não especificado',
             'cliente_rg'           => $client->rg ?? 'Valor não especificado',
             'cliente_cpf/cnpj'     => $client->client_id ?? 'Valor não especificado',
@@ -164,7 +164,7 @@ class Contracts
         //Substitui os placeholders com os dados do fornecedor
         $template->setValues([
             'fornecedor_nome'         => $supplier->name ?? 'Valor não especificado',
-            'fornecedor_genero'       => $supplier->gender ?? 'Valor não especificado',
+            'fornecedor_genero'       => $supplier->sex ?? 'Valor não especificado',
             'fornecedor_tipo'         => $supplier->supplier_type ?? 'Valor não especificado',
             'fornecedor_rg'           => $supplier->rg ?? 'Valor não especificado',
             'fornecedor_cpf/cnpj'     => $supplier->supplier_id ?? 'Valor não especificado',
