@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\PersonType;
 use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
 
-class People extends Model
+class People extends BaseModel
 {
     use HasFactory;
-    use HasUlids;
     use HasPhone;
     use HasPhoto;
     use HasAddress;
@@ -33,6 +31,13 @@ class People extends Model
         'marital_status',
         'spouse',
     ];
+
+    public function casts(): array
+    {
+        return [
+            'person_type' => PersonType::class,
+        ];
+    }
 
     public function ceo(): HasOne
     {

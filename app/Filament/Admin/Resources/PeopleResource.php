@@ -20,6 +20,8 @@ class PeopleResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getModelLabel(): string
     {
         return __('Person');
@@ -93,8 +95,6 @@ class PeopleResource extends Resource
                                 ),
                             Forms\Components\TextInput::make('spouse')
                                 ->maxLength(255),
-                            Forms\Components\DatePicker::make('admission_date')->required(),
-                            Forms\Components\DatePicker::make('resignation_date')->readOnly(),
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
@@ -115,7 +115,8 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('tenant.name')
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -128,6 +129,13 @@ class PeopleResource extends Resource
                     })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('person_type')
+                    ->label('Type')
+                    ->badge()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('person_id')
+                    ->label('CPF/CNPJ')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->copyable()
                     ->sortable()
@@ -139,9 +147,7 @@ class PeopleResource extends Resource
                     ->label('RG')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('cpf')
-                    ->label('CPF')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('birth_date')
                     ->date('d/m/Y')
                     ->sortable()
