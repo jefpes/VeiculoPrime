@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo};
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 
 /**
  * Class Client
@@ -27,8 +27,8 @@ class Client extends Model
         'active',
     ];
 
-    public function people(): BelongsTo
+    public function people(): HasOne
     {
-        return $this->belongsTo(People::class);
+        return $this->hasOne(People::class, 'Client_id');
     }
 }

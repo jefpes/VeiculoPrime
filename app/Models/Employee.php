@@ -27,7 +27,6 @@ class Employee extends Model
     use HasUlids;
 
     protected $fillable = [
-        'tenant_id',
         'people_id',
         'salary',
         'admission_date',
