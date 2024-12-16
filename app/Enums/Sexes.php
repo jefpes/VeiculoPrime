@@ -2,29 +2,29 @@
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\{HasIcon, HasLabel};
+use Filament\Support\Contracts\{HasColor, HasLabel};
 
-enum Sexes: string implements HasLabel, HasIcon
+enum Sexes: string implements HasLabel, HasColor
 {
-    case MASCULINO = 'MASCULINO';
-    case FEMININO  = 'FEMININO';
-    case OUTRO     = 'OUTRO';
+    case MASCULINO = 'Masculino';
+    case FEMININO  = 'Feminino';
+    case OUTRO     = 'Outro';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::MASCULINO => 'MASCULINO',
-            self::FEMININO  => 'FEMININO',
-            self::OUTRO     => 'OUTRO',
+            self::MASCULINO => 'Masculino',
+            self::FEMININO  => 'Feminino',
+            self::OUTRO     => 'Outro',
         };
     }
 
-    public function getIcon(): ?string
+    public function getColor(): ?string
     {
         return match ($this) {
-            self::MASCULINO => 'icon-man',
-            self::FEMININO  => 'icon-woman',
-            self::OUTRO     => 'Jurídica',
+            self::MASCULINO => 'info',
+            self::FEMININO  => 'pink',
+            self::OUTRO     => 'warning',
         };
     }
 }

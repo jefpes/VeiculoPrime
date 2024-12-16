@@ -127,13 +127,8 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('sex') //TODO: Add icon
+                Tables\Columns\TextColumn::make('sex')
                     ->badge()
-                    ->color(fn (string $state): string|array => match ($state) {
-                        'MASCULINO' => 'info',
-                        'FEMININO'  => Color::hex('#ff00b2'),
-                        default     => 'success',
-                    })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('person_type')
@@ -161,11 +156,6 @@ class PeopleResource extends Resource
 
                         return $roles;
                     })
-                    ->icons([
-                        'heroicon-o-user-circle' => __('Client') ,
-                        'heroicon-o-user'        => __('Employee'),
-                        'heroicon-o-user-group'  => __('Supplier') ,
-                    ])
                     ->colors([
                         'primary' => __('Client'),
                         'success' => __('Employee'),

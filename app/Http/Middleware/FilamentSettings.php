@@ -27,6 +27,7 @@ class FilamentSettings
             'primary' => (Auth::user()->settings->secondary_color ?? Color::Indigo),
             'success' => (Auth::user()->settings->quinary_color ?? Color::Green),
             'warning' => (Auth::user()->settings->senary_color ?? Color::Yellow),
+            'pink'    => (Auth::user()->settings->septenary_color ?? Color::Pink),
         ]);
 
         $company = Company::query()->first();

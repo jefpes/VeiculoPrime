@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PersonType;
+use App\Enums\{PersonType, Sexes};
 use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
@@ -36,6 +36,7 @@ class People extends BaseModel
     {
         return [
             'person_type' => PersonType::class,
+            'sex'         => Sexes::class,
         ];
     }
 
