@@ -12,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Database\Eloquent\{Model};
 
 class PeopleResource extends Resource
 {
@@ -142,33 +141,36 @@ class PeopleResource extends Resource
                     ->badge()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('part')
-                    ->label('Funções')
+                Tables\Columns\TextColumn::make('apart')
+                    ->label('Roles')
                     ->badge()
-                    ->formatStateUsing(function (Model $record) {
-                        $parts = [];
-                        dump($record);
+                    ->getStateUsing(function ($record) {
+                        $roles = [];
 
-                        if ($record->employee()->exists()) { //@phpstan-ignore-line
-                            $parts[] = 'Funcionário';
+                        if ($record->client && $record->client->active) {
+                            $roles[] = __('Client');
                         }
 
-                        if ($record->supplier()->exists()) { //@phpstan-ignore-line
-                            $parts[] = 'Fornecedor';
+                        if ($record->employee->isNotEmpty() && $record->employee->last()->resignation_date === null) {
+                            $roles[] = __('Employee');
                         }
 
-                        if ($record->client()->exists()) { //@phpstan-ignore-line
-                            $parts[] = 'Cliente';
+                        if ($record->supplier && $record->supplier->active) {
+                            $roles[] = __('Supplier');
                         }
 
-                        return $parts;
+                        return $roles;
                     })
-                    ->colors([
-                        'primary' => 'Funcionário',
-                        'success' => 'Fornecedor',
-                        'warning' => 'Cliente',
+                    ->icons([
+                        'heroicon-o-user-circle' => __('Client') ,
+                        'heroicon-o-user'        => __('Employee'),
+                        'heroicon-o-user-group'  => __('Supplier') ,
                     ])
-                    ->separator(','),
+                    ->colors([
+                        'primary' => __('Client'),
+                        'success' => __('Employee'),
+                        'warning' => __('Supplier'),
+                    ]),
                 Tables\Columns\TextColumn::make('person_id')
                     ->label('CPF/CNPJ')
                     ->searchable(),
