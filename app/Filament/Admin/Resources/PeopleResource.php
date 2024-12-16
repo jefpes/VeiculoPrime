@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{MaritalStatus, PersonType, Sexes};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
-use App\Forms\Components\MoneyInput;
 use App\Models\People;
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Form;
@@ -34,22 +33,17 @@ class PeopleResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(1)
             ->schema([
-                Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
+                Forms\Components\Tabs::make('tabs')->tabs([
                     Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
                         Forms\Components\Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
                             Forms\Components\TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
-                            Forms\Components\Select::make('sex')
-                                ->required()
-                                ->options(Sexes::class),
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->maxLength(255),
-                            MoneyInput::make('salary')
-                                ->required()
-                                ->numeric(),
                             Forms\Components\ToggleButtons::make('person_type')
                                 ->rule('required')
                                 ->inline()
@@ -73,26 +67,31 @@ class PeopleResource extends Resource
                                 'Jurídica' => 18,
                                 default    => 14,
                             }),
+                            Forms\Components\Select::make('sex')
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                                ->options(Sexes::class),
                             Forms\Components\TextInput::make('rg')
                                 ->label('RG')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->mask('99999999999999999999')
                                 ->maxLength(20),
                             Forms\Components\DatePicker::make('birthday')
-                                ->required(),
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física'),
                             Forms\Components\TextInput::make('father')
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('mother')
-                                ->required()
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->maxLength(255),
                             Forms\Components\Select::make('marital_status')
-                                ->required()
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->options(
                                     collect(MaritalStatus::cases())
                                     ->mapWithKeys(fn (MaritalStatus $type) => [$type->value => ucfirst($type->value)])
                                 ->toArray()
                                 ),
                             Forms\Components\TextInput::make('spouse')
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->maxLength(255),
                         ]),
                     ]),

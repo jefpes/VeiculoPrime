@@ -20,7 +20,6 @@ return new class () extends Migration {
             $table->string('person_id')->nullable();
             $table->string('rg', 20)->nullable();
             $table->string('email')->nullable();
-            $table->decimal('salary', places: 2);
             $table->date('birthday')->nullable();
             $table->string('father')->nullable();
             $table->string('mother')->nullable();

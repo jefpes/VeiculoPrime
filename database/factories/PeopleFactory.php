@@ -18,22 +18,21 @@ class PeopleFactory extends Factory
      */
     public function definition(): array
     {
-        $sex        = $this->faker->randomElement(array_map(fn ($case) => $case->value, Sexes::cases()));
+        $sex        = $this->faker->randomElement(Sexes::class);
         $clientType = $this->faker->randomElement(['Física', 'Jurídica']);
 
         return [
-            'name'           => $sex === 'MASCULINO' ? $this->faker->name('male') : $this->faker->name('female'),
+            'name'           => $sex == 'Masculino' ? $this->faker->name('male') : $this->faker->name('female'),
             'sex'            => $sex,
             'email'          => fake()->unique()->safeEmail(),
-            'salary'         => $this->faker->randomFloat(2, 1000, 10000),
-            'rg'             => $this->faker->unique()->numerify('##.###.###-#'),
-            'person_type'    => $clientType, // Define o tipo de contribuinte
-            'person_id'      => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
-            'marital_status' => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
-            'birthday'       => $this->faker->date(),
-            'father'         => $this->faker->optional()->name('male'),
-            'mother'         => $this->faker->optional()->name('female'),
-            'spouse'         => $this->faker->optional()->name,
+            'rg'             => $clientType == 'Física' ? $this->faker->unique()->numerify('##.###.###-#') : null,
+            'person_type'    => $clientType,
+            'person_id'      => $clientType == 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'),
+            'marital_status' => $clientType == 'Física' ? $this->faker->randomElement(MaritalStatus::class) : null,
+            'birthday'       => $clientType == 'Física' ? $this->faker->date() : null,
+            'father'         => $clientType == 'Física' ? $this->faker->optional()->name('male') : null,
+            'mother'         => $clientType == 'Física' ? $this->faker->optional()->name('female') : null,
+            'spouse'         => $clientType == 'Física' ? $this->faker->optional()->name : null,
         ];
     }
 
