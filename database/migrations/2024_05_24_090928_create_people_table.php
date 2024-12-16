@@ -28,6 +28,10 @@ return new class () extends Migration {
             $table->string('spouse')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignUlid('people_id')->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
+        });
     }
 
     /**
@@ -35,6 +39,10 @@ return new class () extends Migration {
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('people_id');
+        });
+
         Schema::dropIfExists('people');
     }
 };

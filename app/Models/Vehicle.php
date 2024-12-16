@@ -15,21 +15,21 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\VehicleDocPhoto $docPhotos
  * @property \App\Models\Sale $sale
  * @property \App\Models\VehicleExpense $expenses
- * @property \App\Models\Supplier $supplier
- * @property \App\Models\Employee $employee
+ * @property \App\Models\People $supplier
+ * @property \App\Models\People $buyer
  *
  * @method \App\Models\VehicleModel model()
  * @method \App\Models\VehiclePhoto photos()
  * @method \App\Models\VehicleDocPhoto docPhotos()
  * @method \App\Models\Sale sale()
  * @method \App\Models\VehicleExpense expenses()
- * @method \App\Models\Supplier supplier()
- * @method \App\Models\Employee employee()
+ * @method \App\Models\People supplier()
+ * @method \App\Models\People buyer()
  *
  * @property int $id
  * @property int $vehicle_model_id
  * @property int $supplier_id
- * @property int $employee_id
+ * @property int $buyer_id
  * @property \Illuminate\Support\Carbon $purchase_date
  * @property float $fipe_price
  * @property float $purchase_price
@@ -62,7 +62,7 @@ class Vehicle extends BaseModel
 
     protected $fillable = [
         'tenant_id',
-        'employee_id',
+        'buyer_id',
         'vehicle_model_id',
         'supplier_id',
         'purchase_date',
@@ -109,13 +109,14 @@ class Vehicle extends BaseModel
         return $this->hasMany(VehicleExpense::class);
     }
 
-    public function supplier(): BelongsTo
+    public function buyer(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(People::class, 'buyer_id');
+        // ->whereHas('employees', fn ($query) => $query->where('resignation_date', null));
     }
 
-    public function employee(): BelongsTo
+    public function supplier(): BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(People::class, 'supplier_id');
     }
 }

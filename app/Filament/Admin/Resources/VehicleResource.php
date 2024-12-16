@@ -49,9 +49,8 @@ class VehicleResource extends Resource
                 Section::make()->schema([
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('employee', 'name', modifyQueryUsing: function ($query) {
-                            return $query->where('resignation_date', null);
-                        })
+                        ->relationship('buyer', 'name')
+                        // , modifyQueryUsing: fn ($query) => $query->where('resignation_date', null))
                         ->optionsLimit(5)
                         ->searchable(),
                     DatePicker::make('purchase_date')
@@ -136,14 +135,14 @@ class VehicleResource extends Resource
         return $table
             ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
-                return $query->with('employee', 'model', 'supplier');
+                return $query->with('buyer', 'model', 'supplier');
             })
             ->columns([
                 TextColumn::make('tenant.name')
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                TextColumn::make('employee.name')
+                TextColumn::make('buyer.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
