@@ -2,70 +2,34 @@
 
 namespace App\Models;
 
-use App\Traits\{HasAddress, HasPhoto};
-use App\Traits\{HasAffiliate, HasPhone};
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{HasMany};
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 
 /**
  * Class Supplier
  *
- * @property \App\Models\SupplierPhoto $photos
- * @property \App\Models\SupplierAddress $address
- * @property \App\Models\Vehicle $vehicles
+ * @property \App\Models\People $address
  *
- * @method \App\Models\SupplierPhoto photos()
- * @method \App\Models\SupplierAddress address()
- * @method \App\Models\Vehicle vehicles()
+ * @method \App\Models\People people()
  *
  * @property int $id
- * @property string $name
- * @property string $gender
- * @property string $rg
- * @property string $supplier_type
- * @property string $supplier_id
- * @property string $marital_status
- * @property string $spouse
- * @property string $phone_one
- * @property string|null $phone_two
- * @property \Illuminate\Support\Carbon $birth_date
- * @property string|null $father
- * @property string|null $father_phone
- * @property string $mother
- * @property string|null $mother_phone
- * @property string|null $affiliated_one
- * @property string|null $affiliated_one_phone
- * @property string|null $affiliated_two
- * @property string|null $affiliated_two_phone
- * @property string|null $description
+ * @property int $people_id
+ * @property bool $active
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Supplier extends BaseModel
+class Supplier extends Model
 {
-    use HasFactory;
-    use HasAddress;
-    use HasPhoto;
-    use HasPhone;
-    use HasAffiliate;
+    use HasUlids;
 
     protected $fillable = [
-        'tenant_id',
-        'name',
-        'gender',
-        'rg',
-        'supplier_type',
-        'supplier_id',
-        'marital_status',
-        'spouse',
-        'birth_date',
-        'father',
-        'mother',
-        'description',
+        'people_id',
+        'active',
     ];
 
-    public function vehicles(): HasMany
+    public function people(): BelongsTo
     {
-        return $this->hasMany(Vehicle::class);
+        return $this->belongsTo(People::class);
     }
 }

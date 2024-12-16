@@ -12,18 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->string('name');
-            $table->string('gender');
-            $table->string('rg', 20)->nullable();
-            $table->string('supplier_type');
-            $table->string('supplier_id');
-            $table->string('marital_status')->nullable();
-            $table->string('spouse')->nullable();
-            $table->date('birth_date')->nullable();
-            $table->string('father')->nullable();
-            $table->string('mother')->nullable();
-            $table->string('description')->nullable();
+            $table->foreignUlid('people_id')->unique()->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

@@ -10,12 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('people_id')->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
-            $table->decimal('salary', places: 2);
-            $table->date('admission_date');
-            $table->date('resignation_date')->nullable();
+            $table->foreignUlid('people_id')->unique()->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('clients');
     }
 };

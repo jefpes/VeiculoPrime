@@ -14,7 +14,24 @@ class PeopleSeeder extends Seeder
     {
         for ($i = 1; $i <= 10; $i++) {
             $photo = "people_$i.webp";
-            $model = People::factory()->withAddress()->withAffiliate()->withPhone()->create();
+            $model = People::factory()
+                        ->withAddress()
+                        ->withAffiliate()
+                        ->withPhone();
+
+            if ($i <= 3) {
+                $model->withClient();
+            }
+
+            if ($i > 3 && $i <= 6) {
+                $model->withSupplier();
+            }
+
+            if ($i > 6 && $i <= 9) {
+                $model->withEmployee();
+            }
+
+            $model = $model->create();
 
             $folder = "photos/people";
 

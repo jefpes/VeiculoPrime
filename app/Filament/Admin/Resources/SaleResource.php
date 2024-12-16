@@ -80,13 +80,6 @@ class SaleResource extends Resource
                     Forms\Components\Select::make('client_id')
                         ->relationship('client', 'name')
                         ->searchable()
-                        ->options(function () {
-                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                return [
-                                    $client->id => "{$client->name} - {$client->client_id}",
-                                ];
-                            });
-                        })
                         ->required(),
                     Forms\Components\Select::make('payment_method')
                         ->options(
@@ -352,11 +345,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                return [
-                                    $client->id => $client->name,
-                                ];
-                            });
+                            return \App\Models\People::query()->whereHas('client')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query

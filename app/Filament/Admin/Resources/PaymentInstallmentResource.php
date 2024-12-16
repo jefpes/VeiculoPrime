@@ -346,11 +346,7 @@ class PaymentInstallmentResource extends Resource
                         Select::make('client')
                             ->searchable()
                             ->options(function () {
-                                return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                    return [
-                                        $client->id => "{$client->name}",
-                                    ];
-                                });
+                                return \App\Models\People::query()->whereHas('client')->get()->pluck('name', 'id');
                             }),
                     ])
                     ->query(function (Builder $query, array $data): Builder {

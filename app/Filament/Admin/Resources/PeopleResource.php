@@ -3,9 +3,10 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{Genders, MaritalStatus};
-use App\Filament\Admin\Resources\EmployeeResource\{Pages};
+use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\{MoneyInput};
 use App\Models\Employee;
+use App\Models\People;
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
@@ -14,9 +15,9 @@ use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 
-class EmployeeResource extends Resource
+class PeopleResource extends Resource
 {
-    protected static ?string $model = Employee::class;
+    protected static ?string $model = People::class;
 
     protected static ?int $navigationSort = 6;
 
@@ -53,11 +54,28 @@ class EmployeeResource extends Resource
                                 ->maxLength(255),
                             MoneyInput::make('salary')
                                 ->required()
-                                ->numeric(),
-                            Forms\Components\TextInput::make('rg')
-                                ->label('RG')
-                                ->mask('99999999999999999999')
-                                ->maxLength(20),
+                                ->numeric(),Forms\Components\TextInput::make('client_id')
+                                ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
+                                    'Física'   => 'CPF',
+                                    'Jurídica' => 'CNPJ',
+                                    default    => 'CPF',
+                                })
+                            ->required()
+                            ->mask(fn (Forms\Get $get): string => match ($get('client_type')) {
+                                'Física'   => '999.999.999-99',
+                                'Jurídica' => '99.999.999/9999-99',
+                                default    => '999.999.999-99',
+                            })
+                            ->length(fn (Forms\Get $get): int => match ($get('client_type')) {
+                                'Física'   => 14,
+                                'Jurídica' => 18,
+                                default    => 14,
+                            }),
+                        Forms\Components\TextInput::make('rg')
+                            ->label('RG')
+                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                            ->mask('99999999999999999999')
+                            ->maxLength(20),
                             Forms\Components\TextInput::make('cpf')
                                 ->label('CPF')
                                 ->mask('999.999.999-99')
@@ -173,36 +191,36 @@ class EmployeeResource extends Resource
                         Forms\Components\DatePicker::make('resignation_date')
                             ->label('Resignation Date'),
                     ])
-                    ->action(function (Employee $employee, array $data) {
-                        if ($employee->user() !== null) {
-                            $employee->user()->delete();
+                    ->action(function (People $people, array $data) {
+                        if ($people->user() !== null) {
+                            $people->user()->delete();
                         }
-                        $employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                        $people->employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]); //@phpstan-ignore-line
                     }),
                 Tables\Actions\Action::make('rehire')
                     ->label('Rehire')
                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                     ->color('warning')
                     ->authorize('delete')
-                    ->authorize(function (Employee $employee) {
-                        return $employee->resignation_date !== null;
+                    ->authorize(function (People $people) {
+                        return $people->employee->resignation_date !== null; //@phpstan-ignore-line
                     })
                     ->requiresConfirmation()
                     ->form([
                         Forms\Components\DatePicker::make('admission_date')
                             ->label('Admission Date'),
                     ])
-                    ->action(function (Employee $employee, array $data) {
-                        if ($employee->user() !== null) {
-                            $employee->user()->restore(); //@phpstan-ignore-line
+                    ->action(function (People $people, array $data) {
+                        if ($people->user() !== null) {
+                            $people->user()->restore(); //@phpstan-ignore-line
                         }
 
                         if ($data['admission_date'] === null) {
-                            $employee->update(['resignation_date' => null]);
+                            $people->employee->update(['resignation_date' => null]); //@phpstan-ignore-line
 
                             return;
                         }
-                        $employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);//@phpstan-ignore-line
+                        $people->employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);//@phpstan-ignore-line
                     }),
             ]);
     }

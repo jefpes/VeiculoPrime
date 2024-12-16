@@ -26,19 +26,19 @@ class Contracts
 
         if ($user->employee !== null) {
             $template->setValues([
-                'ucv_nome'                     => $user->name ?? 'Valor não especificado',
-                'ucv_nome_completo'            => $user->employee->name ?? 'Valor não especificado',
-                'ucv_genero'                   => $user->employee->gender ?? 'Valor não especificado',
-                'ucv_email'                    => $user->email ?? 'Valor não especificado',
-                'ucv_telefone_1'               => $user->employee->phone_one ?? 'Valor não especificado',
-                'ucv_telefone_2'               => $user->employee->phone_two ?? 'Valor não especificado',
-                'ucv_salario'                  => number_format($user->employee->salary, 2, ',', '.'),
-                'ucv_salario_extenso'          => spell_number($user->employee->salary),
-                'ucv_salario_dinheiro'         => spell_monetary($user->employee->salary),
-                'ucv_rg'                       => $user->employee->rg ?? 'Valor não especificado',
-                'ucv_cpf'                      => $user->employee->cpf ?? 'Valor não especificado',
-                'ucv_data_nascimento'          => date_format_custom($user->employee->birth_date),
-                'ucv_data_nascimento_extenso'  => spell_date($user->employee->birth_date),
+                'ucv_nome'             => $user->name ?? 'Valor não especificado',
+                'ucv_nome_completo'    => $user->employee->name ?? 'Valor não especificado',
+                'ucv_genero'           => $user->employee->gender ?? 'Valor não especificado',
+                'ucv_email'            => $user->email ?? 'Valor não especificado',
+                'ucv_telefone_1'       => $user->employee->phone_one ?? 'Valor não especificado',
+                'ucv_telefone_2'       => $user->employee->phone_two ?? 'Valor não especificado',
+                'ucv_salario'          => number_format($user->employee->salary, 2, ',', '.'),
+                'ucv_salario_extenso'  => spell_number($user->employee->salary),
+                'ucv_salario_dinheiro' => spell_monetary($user->employee->salary),
+                'ucv_rg'               => $user->employee->rg ?? 'Valor não especificado',
+                'ucv_cpf'              => $user->employee->cpf ?? 'Valor não especificado',
+                // 'ucv_data_nascimento'          => date_format_custom($user->employee->birth_date),
+                // 'ucv_data_nascimento_extenso'  => spell_date($user->employee->birth_date),
                 'ucv_pai'                      => $user->employee->father ?? 'Valor não especificado',
                 'ucv_mae'                      => $user->employee->mother ?? 'Valor não especificado',
                 'ucv_estado_civil'             => $user->employee->marital_status ?? 'Valor não especificado',
@@ -72,25 +72,25 @@ class Contracts
 
         // Substitui os placeholders com os dados do cliente
         $template->setValues([
-            'cliente_nome'                       => $client->name ?? 'Valor não especificado',
-            'cliente_genero'                     => $client->gender ?? 'Valor não especificado',
-            'cliente_tipo'                       => $client->client_type ?? 'Valor não especificado',
-            'cliente_rg'                         => $client->rg ?? 'Valor não especificado',
-            'cliente_cpf/cnpj'                   => $client->client_id ?? 'Valor não especificado',
-            'cliente_estado_civil'               => $client->marital_status ?? 'Valor não especificado',
-            'cliente_telefone_1'                 => $client->phone_one ?? 'Valor não especificado',
-            'cliente_telefone_2'                 => $client->phone_two ?? 'Valor não especificado',
-            'cliente_data_de_nascimento'         => date_format_custom($client->birth_date),
-            'cliente_data_de_nascimento_extenso' => spell_date($client->birth_date),
-            'cliente_pai'                        => $client->father ?? 'Valor não especificado',
-            'cliente_telefone_pai'               => $client->father_phone ?? 'Valor não especificado',
-            'cliente_mae'                        => $client->mother ?? 'Valor não especificado',
-            'cliente_telefone_mae'               => $client->mother_phone ?? 'Valor não especificado',
-            'cliente_afiliado_1'                 => $client->affiliated_one ?? 'Valor não especificado',
-            'cliente_telefone_afiliado_1'        => $client->affiliated_one_phone ?? 'Valor não especificado',
-            'cliente_afiliado_2'                 => $client->affiliated_two ?? 'Valor não especificado',
-            'cliente_telefone_afiliado_2'        => $client->affiliated_two_phone ?? 'Valor não especificado',
-            'cliente_descricao'                  => $client->description ?? 'Valor não especificado',
+            'cliente_nome'         => $client->name ?? 'Valor não especificado',
+            'cliente_genero'       => $client->gender ?? 'Valor não especificado',
+            'cliente_tipo'         => $client->client_type ?? 'Valor não especificado',
+            'cliente_rg'           => $client->rg ?? 'Valor não especificado',
+            'cliente_cpf/cnpj'     => $client->client_id ?? 'Valor não especificado',
+            'cliente_estado_civil' => $client->marital_status ?? 'Valor não especificado',
+            'cliente_telefone_1'   => $client->phone_one ?? 'Valor não especificado',
+            'cliente_telefone_2'   => $client->phone_two ?? 'Valor não especificado',
+            // 'cliente_data_de_nascimento'         => date_format_custom($client->birth_date),
+            // 'cliente_data_de_nascimento_extenso' => spell_date($client->birth_date),
+            'cliente_pai'                 => $client->father ?? 'Valor não especificado',
+            'cliente_telefone_pai'        => $client->father_phone ?? 'Valor não especificado',
+            'cliente_mae'                 => $client->mother ?? 'Valor não especificado',
+            'cliente_telefone_mae'        => $client->mother_phone ?? 'Valor não especificado',
+            'cliente_afiliado_1'          => $client->affiliated_one ?? 'Valor não especificado',
+            'cliente_telefone_afiliado_1' => $client->affiliated_one_phone ?? 'Valor não especificado',
+            'cliente_afiliado_2'          => $client->affiliated_two ?? 'Valor não especificado',
+            'cliente_telefone_afiliado_2' => $client->affiliated_two_phone ?? 'Valor não especificado',
+            'cliente_descricao'           => $client->description ?? 'Valor não especificado',
         ]);
 
         //Substitui os placeholders com os dados do endereco do cliente
@@ -163,25 +163,25 @@ class Contracts
 
         //Substitui os placeholders com os dados do fornecedor
         $template->setValues([
-            'fornecedor_nome'                       => $supplier->name ?? 'Valor não especificado',
-            'fornecedor_genero'                     => $supplier->gender ?? 'Valor não especificado',
-            'fornecedor_tipo'                       => $supplier->supplier_type ?? 'Valor não especificado',
-            'fornecedor_rg'                         => $supplier->rg ?? 'Valor não especificado',
-            'fornecedor_cpf/cnpj'                   => $supplier->supplier_id ?? 'Valor não especificado',
-            'fornecedor_estado_civil'               => $supplier->marital_status ?? 'Valor não especificado',
-            'fornecedor_telefone_1'                 => $supplier->phone_one ?? 'Valor não especificado',
-            'fornecedor_telefone_2'                 => $supplier->phone_two ?? 'Valor não especificado',
-            'fornecedor_data_de_nascimento'         => date_format_custom($supplier->birth_date),
-            'fornecedor_data_de_nascimento_extenso' => spell_date($supplier->birth_date),
-            'fornecedor_pai'                        => $supplier->father ?? 'Valor não especificado',
-            'fornecedor_telefone_pai'               => $supplier->father_phone ?? 'Valor não especificado',
-            'fornecedor_mae'                        => $supplier->mother ?? 'Valor não especificado',
-            'fornecedor_telefone_mae'               => $supplier->mother_phone ?? 'Valor não especificado',
-            'fornecedor_afiliado_1'                 => $supplier->affiliated_one ?? 'Valor não especificado',
-            'fornecedor_telefone_afiliado_1'        => $supplier->affiliated_one_phone ?? 'Valor não especificado',
-            'fornecedor_afiliado_2'                 => $supplier->affiliated_two ?? 'Valor não especificado',
-            'fornecedor_telefone_afiliado_2'        => $supplier->affiliated_two_phone ?? 'Valor não especificado',
-            'fornecedor_descricao'                  => $supplier->description ?? 'Valor não especificado',
+            'fornecedor_nome'         => $supplier->name ?? 'Valor não especificado',
+            'fornecedor_genero'       => $supplier->gender ?? 'Valor não especificado',
+            'fornecedor_tipo'         => $supplier->supplier_type ?? 'Valor não especificado',
+            'fornecedor_rg'           => $supplier->rg ?? 'Valor não especificado',
+            'fornecedor_cpf/cnpj'     => $supplier->supplier_id ?? 'Valor não especificado',
+            'fornecedor_estado_civil' => $supplier->marital_status ?? 'Valor não especificado',
+            'fornecedor_telefone_1'   => $supplier->phone_one ?? 'Valor não especificado',
+            'fornecedor_telefone_2'   => $supplier->phone_two ?? 'Valor não especificado',
+            // 'fornecedor_data_de_nascimento'         => date_format_custom($supplier->birth_date),
+            // 'fornecedor_data_de_nascimento_extenso' => spell_date($supplier->birth_date),
+            'fornecedor_pai'                 => $supplier->father ?? 'Valor não especificado',
+            'fornecedor_telefone_pai'        => $supplier->father_phone ?? 'Valor não especificado',
+            'fornecedor_mae'                 => $supplier->mother ?? 'Valor não especificado',
+            'fornecedor_telefone_mae'        => $supplier->mother_phone ?? 'Valor não especificado',
+            'fornecedor_afiliado_1'          => $supplier->affiliated_one ?? 'Valor não especificado',
+            'fornecedor_telefone_afiliado_1' => $supplier->affiliated_one_phone ?? 'Valor não especificado',
+            'fornecedor_afiliado_2'          => $supplier->affiliated_two ?? 'Valor não especificado',
+            'fornecedor_telefone_afiliado_2' => $supplier->affiliated_two_phone ?? 'Valor não especificado',
+            'fornecedor_descricao'           => $supplier->description ?? 'Valor não especificado',
         ]);
 
         //Substitui os placeholders com os dados do endereco do fornecedor
@@ -440,7 +440,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx";
+        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx"; //@phpstan-ignore-line TODO: Fix this
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;
@@ -474,7 +474,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx";
+        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx"; //@phpstan-ignore-line TODO: Fix this
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;

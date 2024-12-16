@@ -69,4 +69,29 @@ class PeopleFactory extends Factory
             }
         });
     }
+
+    public function withClient()
+    {
+        return $this->afterCreating(function (Model $model) {
+            $model->client()->create(['active' => true]);
+        });
+    }
+
+    public function withSupplier()
+    {
+        return $this->afterCreating(function (Model $model) {
+            $model->supplier()->create(['active' => true]);
+        });
+    }
+
+    public function withEmployee()
+    {
+        return $this->afterCreating(function (Model $model) {
+            $model->employee()->create([
+                'salary'           => $this->faker->randomFloat(2, 1000, 10000),
+                'admission_date'   => $this->faker->date(),
+                'resignation_date' => $this->faker->optional()->date(),
+            ]);
+        });
+    }
 }

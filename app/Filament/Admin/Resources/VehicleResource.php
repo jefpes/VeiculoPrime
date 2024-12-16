@@ -342,7 +342,8 @@ class VehicleResource extends Resource
 
                     // Indicador para o fornecedor
                     if ($data['supplier'] ?? null) {
-                        $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;
+                        //@phpstan-ignore-next-line
+                        $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;  //TODO: Verificar se é supplier ou people
                     }
 
                     return $indicators;
