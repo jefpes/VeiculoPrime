@@ -48,32 +48,28 @@ class PeopleResource extends Resource
                                 ->maxLength(255),
                             MoneyInput::make('salary')
                                 ->required()
-                                ->numeric(), Forms\Components\TextInput::make('client_id')
-                                ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
+                                ->numeric(),
+                            Forms\Components\TextInput::make('person_id')
+                                ->required()
+                                ->label(fn (Forms\Get $get): string => match ($get('person_type')) {
                                     'Física'   => 'CPF',
                                     'Jurídica' => 'CNPJ',
                                     default    => 'CPF',
                                 })
-                            ->required()
-                            ->mask(fn (Forms\Get $get): string => match ($get('client_type')) {
+                            ->mask(fn (Forms\Get $get): string => match ($get('person_type')) {
                                 'Física'   => '999.999.999-99',
                                 'Jurídica' => '99.999.999/9999-99',
                                 default    => '999.999.999-99',
                             })
-                            ->length(fn (Forms\Get $get): int => match ($get('client_type')) {
+                            ->length(fn (Forms\Get $get): int => match ($get('person_type')) {
                                 'Física'   => 14,
                                 'Jurídica' => 18,
                                 default    => 14,
                             }),
                             Forms\Components\TextInput::make('rg')
                                 ->label('RG')
-                                ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->mask('99999999999999999999')
-                                ->maxLength(20),
-                            Forms\Components\TextInput::make('cpf')
-                                ->label('CPF')
-                                ->mask('999.999.999-99')
-                                ->required()
                                 ->maxLength(20),
                             Forms\Components\DatePicker::make('birth_date')
                                 ->required(),
@@ -133,11 +129,6 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('phones.full_phone')
                     ->searchable()
                     ->label('Phone'),
-                Tables\Columns\TextColumn::make('salary')
-                    ->numeric()
-                    ->sortable()
-                    ->money('BRL')
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('rg')
                     ->label('RG')
                     ->searchable()
@@ -172,50 +163,50 @@ class PeopleResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('dismiss')
-                    ->label('Dismiss')
-                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
-                    ->color('danger')
-                    ->authorize('delete')
-                    ->authorize(function (Employee $employee) {
-                        return $employee->resignation_date === null;
-                    })
-                    ->requiresConfirmation()
-                    ->form([
-                        Forms\Components\DatePicker::make('resignation_date')
-                            ->label('Resignation Date'),
-                    ])
-                    ->action(function (People $people, array $data) {
-                        if ($people->user() !== null) {
-                            $people->user()->delete();
-                        }
-                        $people->employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]); //@phpstan-ignore-line
-                    }),
-                Tables\Actions\Action::make('rehire')
-                    ->label('Rehire')
-                    ->icon('heroicon-o-arrow-left-end-on-rectangle')
-                    ->color('warning')
-                    ->authorize('delete')
-                    ->authorize(function (People $people) {
-                        return $people->employee->resignation_date !== null; //@phpstan-ignore-line
-                    })
-                    ->requiresConfirmation()
-                    ->form([
-                        Forms\Components\DatePicker::make('admission_date')
-                            ->label('Admission Date'),
-                    ])
-                    ->action(function (People $people, array $data) {
-                        if ($people->user() !== null) {
-                            $people->user()->restore(); //@phpstan-ignore-line
-                        }
+                // Tables\Actions\Action::make('dismiss')
+                //     ->label('Dismiss')
+                //     ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                //     ->color('danger')
+                //     ->authorize('delete')
+                //     ->authorize(function (People $people) {
+                //         return $people->employee->resignation_date === null;
+                //     })
+                //     ->requiresConfirmation()
+                //     ->form([
+                //         Forms\Components\DatePicker::make('resignation_date')
+                //             ->label('Resignation Date'),
+                //     ])
+                //     ->action(function (People $people, array $data) {
+                //         if ($people->user() !== null) {
+                //             $people->user()->delete();
+                //         }
+                //         $people->employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                //     }),
+                // Tables\Actions\Action::make('rehire')
+                //     ->label('Rehire')
+                //     ->icon('heroicon-o-arrow-left-end-on-rectangle')
+                //     ->color('warning')
+                //     ->authorize('delete')
+                //     ->authorize(function (People $people) {
+                //         return $people->employee->resignation_date !== null;
+                //     })
+                //     ->requiresConfirmation()
+                //     ->form([
+                //         Forms\Components\DatePicker::make('admission_date')
+                //             ->label('Admission Date'),
+                //     ])
+                //     ->action(function (People $people, array $data) {
+                //         if ($people->user() !== null) {
+                //             $people->user()->restore();
+                //         }
 
-                        if ($data['admission_date'] === null) {
-                            $people->employee->update(['resignation_date' => null]); //@phpstan-ignore-line
+                //         if ($data['admission_date'] === null) {
+                //             $people->employee->update(['resignation_date' => null]);
 
-                            return;
-                        }
-                        $people->employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);//@phpstan-ignore-line
-                    }),
+                //             return;
+                //         }
+                //         $people->employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);
+                //     }),
             ]);
     }
 
