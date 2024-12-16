@@ -4,15 +4,15 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{Genders, MaritalStatus, PersonType};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
-use App\Forms\Components\{MoneyInput};
-use App\Models\{Employee, People};
+use App\Forms\Components\MoneyInput;
+use App\Models\People;
 use App\Tools\{FormFields, PhotosRelationManager};
-use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Database\Eloquent\{Model};
 
 class PeopleResource extends Resource
 {
@@ -38,7 +38,7 @@ class PeopleResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make('tabs')->columnSpanFull()->tabs([
                     Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
-                        Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
+                        Forms\Components\Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
                             Forms\Components\TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
@@ -112,7 +112,7 @@ class PeopleResource extends Resource
         return $table
             ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
-                return $query->with(['tenant', 'user', 'phones']);
+                return $query->with(['tenant', 'user', 'phones', 'employee', 'supplier', 'client']);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('tenant.name')
@@ -140,7 +140,35 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('person_type')
                     ->label('Type')
                     ->badge()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('part')
+                    ->label('Funções')
+                    ->badge()
+                    ->formatStateUsing(function (Model $record) {
+                        $parts = [];
+                        dump($record);
+
+                        if ($record->employee()->exists()) { //@phpstan-ignore-line
+                            $parts[] = 'Funcionário';
+                        }
+
+                        if ($record->supplier()->exists()) { //@phpstan-ignore-line
+                            $parts[] = 'Fornecedor';
+                        }
+
+                        if ($record->client()->exists()) { //@phpstan-ignore-line
+                            $parts[] = 'Cliente';
+                        }
+
+                        return $parts;
+                    })
+                    ->colors([
+                        'primary' => 'Funcionário',
+                        'success' => 'Fornecedor',
+                        'warning' => 'Cliente',
+                    ])
+                    ->separator(','),
                 Tables\Columns\TextColumn::make('person_id')
                     ->label('CPF/CNPJ')
                     ->searchable(),
@@ -239,10 +267,9 @@ class PeopleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListEmployees::route('/'),
-            'create' => Pages\CreateEmployee::route('/create'),
-            'edit'   => Pages\EditEmployee::route('/{record}/edit'),
-            'view'   => Pages\ViewEmployee::route('/{record}'),
+            'index'  => Pages\ListPeople::route('/'),
+            'create' => Pages\CreatePeople::route('/create'),
+            'edit'   => Pages\EditPeople::route('/{record}/edit'),
         ];
     }
 }

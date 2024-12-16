@@ -2,12 +2,11 @@
 
 namespace App\Filament\Admin\Resources\PeopleResource\Pages;
 
-use App\Filament\Admin\Resources\EmployeeResource;
 use App\Filament\Admin\Resources\PeopleResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListEmployees extends ListRecords
+class ListPeople extends ListRecords
 {
     protected static string $resource = PeopleResource::class;
 

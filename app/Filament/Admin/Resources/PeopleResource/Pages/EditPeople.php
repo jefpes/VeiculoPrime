@@ -2,19 +2,18 @@
 
 namespace App\Filament\Admin\Resources\PeopleResource\Pages;
 
-use App\Filament\Admin\Resources\EmployeeResource;
 use App\Filament\Admin\Resources\PeopleResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Resources\Pages\EditRecord;
 
-class ViewEmployee extends ViewRecord
+class EditPeople extends EditRecord
 {
     protected static string $resource = PeopleResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }
