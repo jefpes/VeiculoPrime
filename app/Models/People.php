@@ -25,7 +25,7 @@ class People extends BaseModel
         'rg',
         'person_type',
         'person_id',
-        'birth_date',
+        'birthday',
         'father',
         'mother',
         'marital_status',

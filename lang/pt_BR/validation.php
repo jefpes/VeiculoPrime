@@ -228,7 +228,7 @@ return [
         'modality'              => 'modalidade',
         'category'              => 'categoria',
         'blood_type'            => 'tipo sanguíneo',
-        'birth_date'            => 'data de nascimento',
+        'birthday'              => 'data de nascimento',
         'regist_number'         => 'matrícula',
         'user_name'             => 'nome de usuário',
         'email'                 => 'e-mail',

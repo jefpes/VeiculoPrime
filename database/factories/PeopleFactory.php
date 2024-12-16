@@ -30,7 +30,7 @@ class PeopleFactory extends Factory
             'person_type'    => $clientType, // Define o tipo de contribuinte
             'person_id'      => $clientType === 'Física' ? $this->faker->unique()->numerify('###.###.###-##') : $this->faker->unique()->numerify('##.###.###/####-##'), // Gera CNPJ
             'marital_status' => $this->faker->randomElement(array_map(fn ($case) => $case->value, MaritalStatus::cases())),
-            'birth_date'     => $this->faker->date(),
+            'birthday'       => $this->faker->date(),
             'father'         => $this->faker->optional()->name('male'),
             'mother'         => $this->faker->optional()->name('female'),
             'spouse'         => $this->faker->optional()->name,

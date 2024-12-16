@@ -16,12 +16,12 @@ return new class () extends Migration {
             $table->foreignUlid('user_id')->unique()->nullable()->constrained(table: 'users', column: 'id');
             $table->string('name');
             $table->string('gender');
-            $table->string('email')->nullable();
-            $table->decimal('salary', places: 2);
-            $table->string('rg', 20)->nullable();
             $table->string('person_type')->nullable();
             $table->string('person_id')->nullable();
-            $table->date('birth_date')->nullable();
+            $table->string('rg', 20)->nullable();
+            $table->string('email')->nullable();
+            $table->decimal('salary', places: 2);
+            $table->date('birthday')->nullable();
             $table->string('father')->nullable();
             $table->string('mother')->nullable();
             $table->string('marital_status')->nullable();

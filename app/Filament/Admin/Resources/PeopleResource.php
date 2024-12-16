@@ -79,7 +79,7 @@ class PeopleResource extends Resource
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->mask('99999999999999999999')
                                 ->maxLength(20),
-                            Forms\Components\DatePicker::make('birth_date')
+                            Forms\Components\DatePicker::make('birthday')
                                 ->required(),
                             Forms\Components\TextInput::make('father')
                                 ->maxLength(255),
@@ -123,11 +123,12 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('user.name')
                     ->description(fn ($record): string|null => $record->user?->email)
                     ->label('User')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gender')
+                Tables\Columns\TextColumn::make('gender') //TODO: Add icon
                     ->badge()
                     ->color(fn (string $state): string|array => match ($state) {
                         'MASCULINO' => 'info',
@@ -143,6 +144,10 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('person_id')
                     ->label('CPF/CNPJ')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('rg')
+                    ->label('RG')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('email')
                     ->copyable()
                     ->sortable()
@@ -150,11 +155,7 @@ class PeopleResource extends Resource
                 Tables\Columns\TextColumn::make('phones.full_phone')
                     ->searchable()
                     ->label('Phone'),
-                Tables\Columns\TextColumn::make('rg')
-                    ->label('RG')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('birth_date')
+                Tables\Columns\TextColumn::make('birthday')
                     ->date('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
