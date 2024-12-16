@@ -49,14 +49,14 @@ class People extends BaseModel
         return $this->hasMany(Employee::class, 'people_id');
     }
 
-    public function client(): BelongsTo
+    public function client(): HasOne
     {
-        return $this->belongsTo(Client::class, 'people_id');
+        return $this->hasOne(Client::class, 'people_id');
     }
 
-    public function supplier(): BelongsTo
+    public function supplier(): HasOne
     {
-        return $this->belongsTo(Supplier::class, 'people_id');
+        return $this->hasOne(Supplier::class, 'people_id');
     }
 
     public function user(): BelongsTo

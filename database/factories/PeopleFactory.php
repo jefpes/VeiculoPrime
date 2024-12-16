@@ -73,14 +73,14 @@ class PeopleFactory extends Factory
     public function withClient()
     {
         return $this->afterCreating(function (Model $model) {
-            $model->client()->create(['active' => true, 'people_id' => $model->id]);
+            $model->client()->create(['active' => true]);
         });
     }
 
     public function withSupplier()
     {
         return $this->afterCreating(function (Model $model) {
-            $model->supplier()->create(['active' => true, 'people_id' => $model->id]);
+            $model->supplier()->create(['active' => true]);
         });
     }
 
