@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{Genders, MaritalStatus};
+use App\Enums\{Genders, MaritalStatus, PersonType};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\{MoneyInput};
 use App\Models\{Employee, People};
@@ -49,6 +49,12 @@ class PeopleResource extends Resource
                             MoneyInput::make('salary')
                                 ->required()
                                 ->numeric(),
+                            Forms\Components\ToggleButtons::make('person_type')
+                                ->rule('required')
+                                ->inline()
+                                ->label('Tipo de Pessoa')
+                                ->options(PersonType::class)
+                                ->live(),
                             Forms\Components\TextInput::make('person_id')
                                 ->required()
                                 ->label(fn (Forms\Get $get): string => match ($get('person_type')) {
