@@ -121,7 +121,7 @@ class PeopleResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
-                    ->description('user.email')
+                    ->description(fn ($record): string|null => $record->user?->email)
                     ->label('User')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
