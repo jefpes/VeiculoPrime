@@ -5,8 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{Genders, MaritalStatus};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\{MoneyInput};
-use App\Models\Employee;
-use App\Models\People;
+use App\Models\{Employee, People};
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\{Grid};
 use Filament\Forms\Form;
@@ -21,19 +20,14 @@ class PeopleResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('People');
-    }
-
     public static function getModelLabel(): string
     {
-        return __('Employee');
+        return __('Person');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('Employees');
+        return __('People');
     }
 
     public static function form(Form $form): Form
@@ -54,7 +48,7 @@ class PeopleResource extends Resource
                                 ->maxLength(255),
                             MoneyInput::make('salary')
                                 ->required()
-                                ->numeric(),Forms\Components\TextInput::make('client_id')
+                                ->numeric(), Forms\Components\TextInput::make('client_id')
                                 ->label(fn (Forms\Get $get): string => match ($get('client_type')) {
                                     'Física'   => 'CPF',
                                     'Jurídica' => 'CNPJ',
@@ -71,11 +65,11 @@ class PeopleResource extends Resource
                                 'Jurídica' => 18,
                                 default    => 14,
                             }),
-                        Forms\Components\TextInput::make('rg')
-                            ->label('RG')
-                            ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
-                            ->mask('99999999999999999999')
-                            ->maxLength(20),
+                            Forms\Components\TextInput::make('rg')
+                                ->label('RG')
+                                ->visible(fn (Forms\Get $get): bool => $get('client_type') === 'Física')
+                                ->mask('99999999999999999999')
+                                ->maxLength(20),
                             Forms\Components\TextInput::make('cpf')
                                 ->label('CPF')
                                 ->mask('999.999.999-99')
