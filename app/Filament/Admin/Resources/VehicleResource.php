@@ -6,7 +6,7 @@ use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Helpers\Contracts;
-use App\Models\{Brand, VehicleType};
+use App\Models\{Brand, People, VehicleType};
 use App\Models\{Supplier, Vehicle, VehicleModel};
 use App\Tools\PhotosRelationManager;
 use Carbon\Carbon;
@@ -281,7 +281,7 @@ class VehicleResource extends Resource
                     // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
-                        ->options(Supplier::all()->pluck('name', 'id'))
+                        ->options(People::all()->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5),
                 ])->query(function (Builder $query, array $data): Builder {
@@ -342,8 +342,7 @@ class VehicleResource extends Resource
 
                     // Indicador para o fornecedor
                     if ($data['supplier'] ?? null) {
-                        //@phpstan-ignore-next-line
-                        $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;  //TODO: Verificar se é supplier ou people
+                        $indicators[] = __('Supplier') . ': ' . People::query()->find($data['supplier'])->name;  //TODO: Verificar se é supplier ou people
                     }
 
                     return $indicators;

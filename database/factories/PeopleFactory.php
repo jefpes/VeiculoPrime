@@ -33,6 +33,8 @@ class PeopleFactory extends Factory
             'father'         => $clientType == 'Física' ? $this->faker->optional()->name('male') : null,
             'mother'         => $clientType == 'Física' ? $this->faker->optional()->name('female') : null,
             'spouse'         => $clientType == 'Física' ? $this->faker->optional()->name : null,
+            'client'         => $this->faker->boolean,
+            'supplier'       => $this->faker->boolean,
         ];
     }
 
@@ -66,20 +68,6 @@ class PeopleFactory extends Factory
                     PhoneFactory::new()->definition()
                 ));
             }
-        });
-    }
-
-    public function withClient()
-    {
-        return $this->afterCreating(function (Model $model) {
-            $model->client()->create(['active' => true]);
-        });
-    }
-
-    public function withSupplier()
-    {
-        return $this->afterCreating(function (Model $model) {
-            $model->supplier()->create(['active' => true]);
         });
     }
 

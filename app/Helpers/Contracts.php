@@ -3,7 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Vehicle;
-use App\Models\{Client, PaymentInstallment, Sale, Supplier, User, VehicleExpense};
+use App\Models\{PaymentInstallment, People, Sale, User, VehicleExpense};
 use Illuminate\Support\Facades\{Auth, Storage};
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -68,7 +68,7 @@ class Contracts
             return;
         }
 
-        $client = Client::with('address')->find($clientId);
+        $client = People::with('address')->find($clientId);
 
         // Substitui os placeholders com os dados do cliente
         $template->setValues([
@@ -159,7 +159,7 @@ class Contracts
             return;
         }
 
-        $supplier = Supplier::with('address')->find($supplier_id);
+        $supplier = People::with('address')->find($supplier_id);
 
         //Substitui os placeholders com os dados do fornecedor
         $template->setValues([
@@ -421,7 +421,7 @@ class Contracts
         self::setUserValues($template, $sale->user_id ?? null);
 
         // Substitui os placeholders com os dados do cliente
-        self::setClientValues($template, $sale->client->id ?? null);
+        self::setClientValues($template, $sale->people->id ?? null);
 
         //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $sale->vehicle->id ?? null);
@@ -452,7 +452,7 @@ class Contracts
         self::setUserValues($template);
 
         // Substitui os placeholders com os dados do cliente
-        self::setClientValues($template, $installment->sale->client->id ?? null);
+        self::setClientValues($template, $installment->sale->people->id ?? null);
 
         //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $installment->sale->vehicle->id ?? null);

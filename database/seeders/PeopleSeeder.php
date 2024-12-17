@@ -18,8 +18,6 @@ class PeopleSeeder extends Seeder
                         ->withAddress()
                         ->withAffiliate()
                         ->withPhone()
-                        ->withClient()
-                        ->withSupplier()
                         ->withEmployee()
                         ->create();
 

@@ -88,7 +88,7 @@ class PeopleResource extends Resource
                                 ->options(
                                     collect(MaritalStatus::cases())
                                     ->mapWithKeys(fn (MaritalStatus $type) => [$type->value => ucfirst($type->value)])
-                                ->toArray()
+                                    ->toArray()
                                 ),
                             Forms\Components\TextInput::make('spouse')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
@@ -141,7 +141,7 @@ class PeopleResource extends Resource
                     ->getStateUsing(function ($record) {
                         $roles = [];
 
-                        if ($record->client && $record->client->active) {
+                        if ($record->client) {
                             $roles[] = __('Client');
                         }
 
@@ -149,7 +149,7 @@ class PeopleResource extends Resource
                             $roles[] = __('Employee');
                         }
 
-                        if ($record->supplier && $record->supplier->active) {
+                        if ($record->supplier) {
                             $roles[] = __('Supplier');
                         }
 

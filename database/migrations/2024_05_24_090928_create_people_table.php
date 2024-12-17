@@ -25,6 +25,8 @@ return new class () extends Migration {
             $table->string('mother')->nullable();
             $table->string('marital_status')->nullable();
             $table->string('spouse')->nullable();
+            $table->boolean('client')->default(false);
+            $table->boolean('supplier')->default(false);
             $table->timestamps();
         });
 

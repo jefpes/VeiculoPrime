@@ -30,6 +30,8 @@ class People extends BaseModel
         'mother',
         'marital_status',
         'spouse',
+        'client',
+        'supplier',
     ];
 
     public function casts(): array
@@ -37,6 +39,8 @@ class People extends BaseModel
         return [
             'person_type' => PersonType::class,
             'sex'         => Sexes::class,
+            'client'      => 'boolean',
+            'supplier'    => 'boolean',
         ];
     }
 
@@ -48,16 +52,6 @@ class People extends BaseModel
     public function employee(): HasMany
     {
         return $this->hasMany(Employee::class, 'people_id');
-    }
-
-    public function client(): HasOne
-    {
-        return $this->hasOne(Client::class, 'people_id');
-    }
-
-    public function supplier(): HasOne
-    {
-        return $this->hasOne(Supplier::class, 'people_id');
     }
 
     public function user(): BelongsTo
