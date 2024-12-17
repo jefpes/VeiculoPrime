@@ -85,11 +85,7 @@ class PeopleResource extends Resource
                                 ->maxLength(255),
                             Forms\Components\Select::make('marital_status')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->options(
-                                    collect(MaritalStatus::cases())
-                                    ->mapWithKeys(fn (MaritalStatus $type) => [$type->value => ucfirst($type->value)])
-                                    ->toArray()
-                                ),
+                                ->options(MaritalStatus::class),
                             Forms\Components\TextInput::make('spouse')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->maxLength(255),
@@ -110,7 +106,7 @@ class PeopleResource extends Resource
         return $table
             ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
-                return $query->with(['tenant', 'user', 'phones', 'employee', 'supplier', 'client']);
+                return $query->with(['tenant', 'user', 'phones', 'employee']);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('tenant.name')
@@ -199,7 +195,6 @@ class PeopleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 // Tables\Actions\Action::make('dismiss')
                 //     ->label('Dismiss')
