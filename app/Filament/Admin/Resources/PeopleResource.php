@@ -4,8 +4,11 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{MaritalStatus, PersonType, Sexes};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
+use App\Forms\Components\MoneyInput;
 use App\Models\People;
 use App\Tools\{FormFields, PhotosRelationManager};
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -36,6 +39,28 @@ class PeopleResource extends Resource
             ->columns(1)
             ->schema([
                 Forms\Components\Tabs::make('tabs')->tabs([
+                    Forms\Components\Tabs\Tab::make(__('Employee'))->schema([
+                        Repeater::make('employee')
+                            ->collapsible()
+                            ->deletable(false)
+                            ->addable(fn ($record) => $record->employee()->where('resignation_date', null)->count() === 0)
+                            ->relationship()
+                            ->grid(2)
+                            ->columns(3)
+                            ->hiddenLabel()
+                            ->itemLabel(fn ($state) => $state['resignation_date'] ? date_format_custom($state['admission_date']) . ' - ' . date_format_custom($state['resignation_date']) : date_format_custom($state['admission_date']))
+                            ->addActionLabel(__('Add Employee'))
+                            ->schema([
+                                MoneyInput::make('salary')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\DatePicker::make('admission_date')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('resignation_date')
+                                    ->disabled()
+                                    ->live(),
+                            ]),
+                    ]),
                     Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
                         Forms\Components\Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
                             Forms\Components\TextInput::make('name')
@@ -108,6 +133,7 @@ class PeopleResource extends Resource
                     Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
                         FormFields::setPhoneFields(),
                     ]),
+
                 ]),
             ]);
     }
