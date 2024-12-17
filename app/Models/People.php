@@ -58,4 +58,9 @@ class People extends BaseModel
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class, 'client_id');
+    }
 }

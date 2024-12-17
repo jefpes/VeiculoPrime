@@ -318,13 +318,7 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(function () {
-                            return \App\Models\User::all()->mapWithKeys(function ($user) {
-                                return [
-                                    $user->id => $user->name,
-                                ];
-                            });
-                        }),
+                        ->options(fn () => \App\Models\User::withTrashed()->whereHas('sales')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
                     return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
                 })->indicateUsing(function (array $data): array {
@@ -340,7 +334,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return \App\Models\People::query()->whereHas('client')->get()->pluck('name', 'id');
+                            return \App\Models\People::query()->whereHas('sales')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
