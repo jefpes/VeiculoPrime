@@ -7,11 +7,9 @@ use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\People;
 use App\Tools\{FormFields, PhotosRelationManager};
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 
@@ -233,50 +231,44 @@ class PeopleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                // Tables\Actions\Action::make('dismiss')
-                //     ->label('Dismiss')
-                //     ->icon('heroicon-o-arrow-left-start-on-rectangle')
-                //     ->color('danger')
-                //     ->authorize('delete')
-                //     ->authorize(function (People $people) {
-                //         return $people->employee->resignation_date === null;
-                //     })
-                //     ->requiresConfirmation()
-                //     ->form([
-                //         Forms\Components\DatePicker::make('resignation_date')
-                //             ->label('Resignation Date'),
-                //     ])
-                //     ->action(function (People $people, array $data) {
-                //         if ($people->user() !== null) {
-                //             $people->user()->delete();
-                //         }
-                //         $people->employee->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
-                //     }),
-                // Tables\Actions\Action::make('rehire')
-                //     ->label('Rehire')
-                //     ->icon('heroicon-o-arrow-left-end-on-rectangle')
-                //     ->color('warning')
-                //     ->authorize('delete')
-                //     ->authorize(function (People $people) {
-                //         return $people->employee->resignation_date !== null;
-                //     })
-                //     ->requiresConfirmation()
-                //     ->form([
-                //         Forms\Components\DatePicker::make('admission_date')
-                //             ->label('Admission Date'),
-                //     ])
-                //     ->action(function (People $people, array $data) {
-                //         if ($people->user() !== null) {
-                //             $people->user()->restore();
-                //         }
+                Tables\Actions\Action::make('dismiss')
+                    ->label('Dismiss')
+                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                    ->color('danger')
+                    ->authorize('delete')
+                    ->authorize(function ($record) {
+                        return $record->employee->last()->resignation_date === null;
+                    })
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\DatePicker::make('resignation_date')
+                            ->label('Resignation Date'),
+                    ])
+                    ->action(function ($record, array $data) {
+                        if ($record->user() !== null) {
+                            $record->user()->delete();
+                        }
+                        $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                    }),
+                Tables\Actions\Action::make('rehire')
+                    ->label('Rehire')
+                    ->icon('heroicon-o-arrow-left-end-on-rectangle')
+                    ->color('warning')
+                    ->authorize('delete')
+                    ->authorize(function ($record) {
+                        $max30days  = strtotime($record->employee->last()->resignation_date) > now()->subDays(30)->timestamp;
+                        $resignated = $record->employee->last()->resignation_date !== null;
 
-                //         if ($data['admission_date'] === null) {
-                //             $people->employee->update(['resignation_date' => null]);
+                        return ($max30days && $resignated);
+                    })
+                    ->requiresConfirmation()
+                    ->action(function ($record) {
+                        if ($record->user() !== null) {
+                            $record->user()->restore();
+                        }
 
-                //             return;
-                //         }
-                //         $people->employee->update(['resignation_date' => null, 'admission_date' => ($data['admission_date'] ?? now())]);
-                //     }),
+                        $record->employee->last()->update(['resignation_date' => null]);
+                    }),
             ]);
     }
 
