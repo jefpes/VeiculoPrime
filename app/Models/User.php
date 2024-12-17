@@ -109,14 +109,14 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->hasOne(Settings::class);
     }
 
-    public function abilities(): Collection
+    public function abilities(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+        return Ability::query()->whereHas('roles', fn ($query) => $query->whereIn('id', $this->roles->pluck('id'))); //@phpstan-ignore-line
     }
 
     public function hasAbility(string $ability): bool
     {
-        return $this->abilities()->contains($ability);
+        return $this->abilities()->where('name', $ability)->exists(); //@phpstan-ignore-line
     }
 
     public function tenant(): BelongsTo
@@ -128,4 +128,14 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     {
         return $this->hasMany(Sale::class);
     }
+
+    // public function abilities(): Collection
+    // {
+    //     return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+    // }
+
+    // public function hasAbility(string $ability): bool
+    // {
+    //     return $this->abilities()->contains($ability);
+    // }
 }
