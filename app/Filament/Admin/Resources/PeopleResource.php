@@ -230,6 +230,19 @@ class PeopleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('attach_user')
+                    ->label('Attach User')
+                    ->icon('heroicon-o-user')
+                    ->form([
+                        Forms\Components\Select::make('user_id')
+                            ->label('User')
+                            ->relationship('user', 'name', modifyQueryUsing: function ($query) {
+                                return $query->whereDoesntHave('people');
+                            }),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update(['user_id' => $data['user_id']]);
+                    }),
                 Tables\Actions\Action::make('dismiss')
                     ->label('Dismiss')
                     ->icon('heroicon-o-arrow-left-start-on-rectangle')

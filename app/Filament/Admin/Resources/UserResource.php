@@ -36,17 +36,18 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('employee_id')
-                    ->label('Employee')
-                    ->options(function (string $operation, $record) {
-                        if ($operation === 'create') {
-                            return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->pluck('name', 'id');
-                        }
-
-                        return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->orWhere('id', $record->employee_id)->pluck('name', 'id');
-                    })
-                    ->optionsLimit(5)
-                    ->searchable(),
+                // Forms\Components\Select::make('people_id')
+                //     ->label('Person')
+                //     ->relationship('people', 'name', modifyQueryUsing: function ($query, $context, $record) {
+                //         return $query->orderBy('name')->whereHas('employee', function ($query) use ($context, $record) {
+                //             if ($context === 'create') {
+                //                 return $query->where('resignation_date', null)->whereDoesntHave('people.user');
+                //             }
+                //             return $query->where('resignation_date', null)->whereDoesntHave('people.user')->orWhere('id', $record->people?->employee->last()->id);
+                //         });
+                //     })
+                //     ->optionsLimit(5)
+                //     ->searchable(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -92,8 +93,8 @@ class UserResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('people.name')
+                    ->label('Person')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
