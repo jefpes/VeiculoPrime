@@ -46,19 +46,14 @@ class RoleResource extends Resource
                         function () {
                             $user = Auth::user();
 
-                            // Carregar as roles do usuário logado com a relação já carregada
                             $roles = $user->roles->pluck('hierarchy'); //@phpstan-ignore-line
 
-                            // Verificar se o usuário tem roles
                             if ($roles->isNotEmpty()) {
-                                // Pega o menor valor de hierarquia das roles
                                 $minHierarchy = $roles->min();
 
-                                // Gera o intervalo do menor nível de hierarquia até 100
                                 return collect(range($minHierarchy, 100))->mapWithKeys(fn ($value) => [$value => $value]);
                             }
 
-                            // Se o usuário não tiver roles, retorne um array vazio
                             return [];
                         }
                     )
@@ -88,8 +83,9 @@ class RoleResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('add-abilities')
                     ->requiresConfirmation()
+                    ->slideOver()
                     ->modalHeading(__('Abilities'))
-                    ->modalWidth('full')
+                    ->modalWidth('5xl')
                     ->modalDescription(null)
                     ->modalIcon(null)
                     ->label('Abilities')
@@ -100,9 +96,7 @@ class RoleResource extends Resource
                     ->fillForm(function ($record) {
                         $abilities = Role::find($record->id)->abilities->pluck('id')->toArray(); //@phpstan-ignore-line
 
-                        return [
-                            'abilities' => $abilities,
-                        ];
+                        return ['abilities' => $abilities];
                     })
                     ->form([
                         Forms\Components\ToggleButtons::make('abilities')
@@ -120,9 +114,8 @@ class RoleResource extends Resource
                             )
                             ->multiple()
                             ->columns([
-                                'sm'  => 3,
-                                'xl'  => 6,
-                                '2xl' => 8,
+                                'sm' => 3,
+                                'xl' => 4,
                             ]),
                     ])
                     ->action(function (array $data, Role $role) {
