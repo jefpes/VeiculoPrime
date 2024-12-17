@@ -136,7 +136,11 @@ class PeopleResource extends Resource
                                     ->label('Dismiss')
                                     ->icon('heroicon-o-arrow-left-start-on-rectangle')
                                     ->color('danger')
-                                    ->authorize(function (Repeater $component, $arguments) {
+                                    ->authorize(function (Repeater $component, $arguments, $record) {
+                                        if ($record->employee->isEmpty()) {
+                                            return false;
+                                        }
+
                                         return $component->getItemState($arguments['item'])['resignation_date'] === null;
                                     })
                                     ->requiresConfirmation()
@@ -160,6 +164,10 @@ class PeopleResource extends Resource
                                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                                     ->color('warning')
                                     ->authorize(function (Repeater $component, $arguments, $record) {
+                                        if ($record->employee->isEmpty()) {
+                                            return false;
+                                        }
+
                                         $max30days  = strtotime($component->getItemState($arguments['item'])['resignation_date']) > now()->subDays(30)->timestamp;
                                         $resignated = $component->getItemState($arguments['item'])['resignation_date'] !== null;
 
@@ -304,6 +312,10 @@ class PeopleResource extends Resource
                     ->icon('heroicon-o-arrow-left-start-on-rectangle')
                     ->color('danger')
                     ->authorize(function ($record) {
+                        if ($record->employee->isEmpty()) {
+                            return false;
+                        }
+
                         return $record->employee->last()->resignation_date === null && auth_user()->hasAbility(Permission::PEOPLE_DELETE->value);
                     })
                     ->requiresConfirmation()
@@ -322,6 +334,10 @@ class PeopleResource extends Resource
                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                     ->color('warning')
                     ->authorize(function ($record) {
+                        if ($record->employee->isEmpty()) {
+                            return false;
+                        }
+
                         $max30days  = strtotime($record->employee->last()->resignation_date) > now()->subDays(30)->timestamp;
                         $resignated = $record->employee->last()->resignation_date !== null;
 
