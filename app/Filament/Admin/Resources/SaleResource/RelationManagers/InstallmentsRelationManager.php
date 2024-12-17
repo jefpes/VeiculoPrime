@@ -2,8 +2,7 @@
 
 namespace App\Filament\Admin\Resources\SaleResource\RelationManagers;
 
-use App\Enums\PaymentMethod;
-use App\Forms\Components\MoneyInput;
+use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\Contracts;
 use App\Models\{PaymentInstallment};
 use Filament\Forms\Components\FileUpload;
@@ -73,11 +72,7 @@ class InstallmentsRelationManager extends RelationManager
                     ])
                     ->form([
                         MoneyInput::make('value')->readOnly(),
-                        Forms\Components\Select::make('payment_method')
-                            ->options(
-                                collect(PaymentMethod::cases())
-                                    ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                            )
+                        SelectPaymentMethod::make('payment_method')
                             ->required(),
                         MoneyInput::make('payment_value')->required(),
                         Forms\Components\DatePicker::make('payment_date')->required(),

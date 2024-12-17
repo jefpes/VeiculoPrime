@@ -2,10 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{PaymentMethod, StatusPayments};
+use App\Enums\{StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
-use App\Forms\Components\MoneyInput;
+use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\{Contracts};
 use App\Models\{Sale, Vehicle};
 use Carbon\Carbon;
@@ -81,12 +81,7 @@ class SaleResource extends Resource
                         ->relationship('client', 'name')
                         ->searchable()
                         ->required(),
-                    Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        )
-                        ->required(),
+                    SelectPaymentMethod::make('payment_method'),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
                     MoneyInput::make('discount')
@@ -354,18 +349,14 @@ class SaleResource extends Resource
                     $indicators = [];
 
                     if ($data['client'] ?? null) {
-                        $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Client') . ': ' . \App\Models\People::find($data['client'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
                 }),
                 Filter::make('payment_method')
                     ->form([
-                        Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        SelectPaymentMethod::make('payment_method'),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -381,10 +372,7 @@ class SaleResource extends Resource
                 Filter::make('status')
                     ->form([
                         Forms\Components\Select::make('status')
-                        ->options(
-                            collect(StatusPayments::cases())
-                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        ->options(StatusPayments::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));

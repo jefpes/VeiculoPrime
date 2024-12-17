@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{PaymentMethod, StatusPayments};
+use App\Enums\{StatusPayments};
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
 use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Helpers\Contracts;
@@ -305,11 +305,7 @@ class PaymentInstallmentResource extends Resource
                     }),
                 Filter::make('payment_method')
                     ->form([
-                        Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        SelectPaymentMethod::make('payment_method'),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -325,10 +321,7 @@ class PaymentInstallmentResource extends Resource
                 Filter::make('status')
                     ->form([
                         Forms\Components\Select::make('status')
-                        ->options(
-                            collect(StatusPayments::cases())
-                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        ->options(StatusPayments::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
@@ -362,7 +355,7 @@ class PaymentInstallmentResource extends Resource
                         $indicators = [];
 
                         if (!empty($data['client'])) {
-                            $modelName = \App\Models\Client::find($data['client'])->name ?? null; //@phpstan-ignore-line
+                            $modelName = \App\Models\People::find($data['client'])->name ?? null; //@phpstan-ignore-line
 
                             if ($modelName) {
                                 $indicators[] = __('Client') . ': ' . $modelName;

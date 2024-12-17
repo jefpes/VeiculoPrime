@@ -83,21 +83,15 @@ class VehicleResource extends Resource
                         ->required()
                         ->numeric(),
                     Select::make('fuel')
-                        ->options(collect(FuelTypes::cases())->mapWithKeys(fn (FuelTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(FuelTypes::class),
                     TextInput::make('engine_power')
                         ->required()
                         ->maxLength(30),
                     Select::make('steering')
-                        ->options(collect(SteeringTypes::cases())->mapWithKeys(fn (SteeringTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(SteeringTypes::class),
                     Select::make('transmission')
                         ->required()
-                        ->options(collect(TransmissionTypes::cases())->mapWithKeys(fn (TransmissionTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(TransmissionTypes::class),
                     TextInput::make('doors')
                         ->numeric(),
                     TextInput::make('seats')
