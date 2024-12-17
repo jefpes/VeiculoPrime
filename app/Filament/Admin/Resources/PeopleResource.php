@@ -89,6 +89,17 @@ class PeopleResource extends Resource
                             Forms\Components\TextInput::make('spouse')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->maxLength(255),
+                            Forms\Components\Grid::make()->columnSpan(1)->columns(2)->schema([
+                                Forms\Components\ToggleButtons::make('client')
+                                    ->inline()
+                                    ->label('Client Active')
+                                    ->options([0 => 'Não', 1 => 'Sim']),
+                                Forms\Components\ToggleButtons::make('supplier')
+                                    ->inline()
+                                    ->label('Supplier Active')
+                                    ->options([0 => 'Não', 1 => 'Sim']),
+                            ]),
+
                         ]),
                     ]),
                     Forms\Components\Tabs\Tab::make(__('Address'))->schema([
