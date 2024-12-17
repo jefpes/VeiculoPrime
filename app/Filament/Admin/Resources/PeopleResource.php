@@ -187,7 +187,7 @@ class PeopleResource extends Resource
                         return $roles;
                     })
                     ->colors([
-                        'primary' => __('Client'),
+                        'info'    => __('Client'),
                         'success' => __('Employee'),
                         'warning' => __('Supplier'),
                     ]),
