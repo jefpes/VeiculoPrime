@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Tools;
 
 use App\Models\Vehicle;
 use App\Models\{PaymentInstallment, People, Sale, User, VehicleExpense};

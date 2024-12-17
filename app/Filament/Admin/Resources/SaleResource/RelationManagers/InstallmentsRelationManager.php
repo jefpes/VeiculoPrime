@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\SaleResource\RelationManagers;
 
 use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
-use App\Helpers\Contracts;
 use App\Models\{PaymentInstallment};
+use App\Tools\Contracts;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
