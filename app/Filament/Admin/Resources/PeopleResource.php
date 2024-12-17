@@ -2,12 +2,13 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{MaritalStatus, PersonType, Sexes};
+use App\Enums\{MaritalStatus, Permission, PersonType, Sexes};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Models\People;
+use App\Models\{Employee, People};
 use App\Tools\{FormFields, PhotosRelationManager};
-use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\{Repeater};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -127,8 +128,57 @@ class PeopleResource extends Resource
                                 Forms\Components\DatePicker::make('admission_date')
                                     ->required(),
                                 Forms\Components\DatePicker::make('resignation_date')
-                                    ->disabled()
-                                    ->live(),
+                                    ->live()
+                                    ->readOnly(),
+                            ])
+                            ->extraItemActions([
+                                Action::make('dismiss')
+                                    ->label('Dismiss')
+                                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                                    ->color('danger')
+                                    ->authorize(function (Repeater $component, $arguments) {
+                                        return $component->getItemState($arguments['item'])['resignation_date'] === null;
+                                    })
+                                    ->requiresConfirmation()
+                                    ->form([
+                                        Forms\Components\DatePicker::make('resignation_date')
+                                            ->label('Resignation Date'),
+                                    ])
+                                    // ->action(function ($record, array $data, Repeater $component, $arguments) {
+                                    //     $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                                    //     $items = $component->getState();
+                                    //     $items[$arguments['item']]['resignation_date'] = $record->employee->last()->resignation_date;
+                                    //     $component->state($items);
+                                    //     $component->callAfterStateUpdated();
+                                    // })
+                                    ->action(function ($record, array $data) {
+                                        $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                                        redirect(request()->header('Referer'));
+                                    }),
+                                Action::make('rehire')
+                                    ->label('Rehire')
+                                    ->icon('heroicon-o-arrow-left-end-on-rectangle')
+                                    ->color('warning')
+                                    ->authorize(function (Repeater $component, $arguments, $record) {
+                                        $max30days  = strtotime($component->getItemState($arguments['item'])['resignation_date']) > now()->subDays(30)->timestamp;
+                                        $resignated = $component->getItemState($arguments['item'])['resignation_date'] !== null;
+
+                                        $its = str_replace('record-', '', $arguments['item']) === $record->employee->last()->id;
+
+                                        return ($max30days && $resignated && $its);
+                                    })
+                                    ->requiresConfirmation()
+                                    // ->action(function ($record, Repeater $component, $arguments) {
+                                    //     $record->employee->last()->update(['resignation_date' => null]);
+                                    //     $items = $component->getState();
+                                    //     $items[$arguments['item']]['resignation_date'] = null;
+                                    //     $component->state($items);
+                                    //     $component->callAfterStateUpdated();
+                                    // })
+                                    ->action(function ($record) {
+                                        $record->employee->last()->update(['resignation_date' => null]);
+                                        redirect(request()->header('Referer'));
+                                    }),
                             ]),
                     ]),
                 ]),
@@ -186,7 +236,7 @@ class PeopleResource extends Resource
                         return $roles;
                     })
                     ->colors([
-                        'info'    => __('Client'),
+                        'primary' => __('Client'),
                         'success' => __('Employee'),
                         'warning' => __('Supplier'),
                     ]),
@@ -231,15 +281,21 @@ class PeopleResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('attach_user')
-                    ->label('Attach User')
+                    ->label('User')
+                    ->authorize('attach-user')
                     ->icon('heroicon-o-user')
                     ->form([
                         Forms\Components\Select::make('user_id')
                             ->label('User')
-                            ->relationship('user', 'name', modifyQueryUsing: function ($query) {
+                            ->relationship('user', 'name', modifyQueryUsing: function ($query, $record) {
+                                if ($record->user !== null) {
+                                    return $query->whereDoesntHave('people')->orWhere('id', $record->user->id);
+                                }
+
                                 return $query->whereDoesntHave('people');
                             }),
                     ])
+                    ->fillForm(fn ($record) => ['user_id' => $record->user_id])
                     ->action(function ($record, array $data) {
                         $record->update(['user_id' => $data['user_id']]);
                     }),
@@ -247,9 +303,8 @@ class PeopleResource extends Resource
                     ->label('Dismiss')
                     ->icon('heroicon-o-arrow-left-start-on-rectangle')
                     ->color('danger')
-                    ->authorize('delete')
                     ->authorize(function ($record) {
-                        return $record->employee->last()->resignation_date === null;
+                        return $record->employee->last()->resignation_date === null && auth_user()->hasAbility(Permission::PEOPLE_DELETE->value);
                     })
                     ->requiresConfirmation()
                     ->form([
@@ -266,12 +321,11 @@ class PeopleResource extends Resource
                     ->label('Rehire')
                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                     ->color('warning')
-                    ->authorize('delete')
                     ->authorize(function ($record) {
                         $max30days  = strtotime($record->employee->last()->resignation_date) > now()->subDays(30)->timestamp;
                         $resignated = $record->employee->last()->resignation_date !== null;
 
-                        return ($max30days && $resignated);
+                        return ($max30days && $resignated && auth_user()->hasAbility(Permission::PEOPLE_DELETE->value));
                     })
                     ->requiresConfirmation()
                     ->action(function ($record) {
