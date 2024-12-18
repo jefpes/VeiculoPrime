@@ -13,7 +13,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
 use Filament\Tables\Filters\Filter;
@@ -208,7 +207,7 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(function (string $state, $record): string|array {
+                    ->color(function (string $state, $record): string {
                         // Se o status for 'PENDENTE', verificar se há parcelas em atraso
                         if ($state === 'PENDENTE') {
                             // Verificar se a venda possui parcelas e se alguma está atrasada
@@ -219,7 +218,7 @@ class SaleResource extends Resource
 
                             // Se houver parcelas em atraso, retornar 'danger'
                             if ($hasLateInstallments) {
-                                return Color::hex('#b600ff');
+                                return 'pink';
                             }
 
                             // Caso não haja parcelas em atraso, manter a cor 'info'

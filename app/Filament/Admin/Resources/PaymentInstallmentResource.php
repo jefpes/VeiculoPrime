@@ -13,7 +13,6 @@ use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Tables\Columns\Summarizers\{Average, Sum};
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
@@ -114,11 +113,11 @@ class PaymentInstallmentResource extends Resource
                     ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(function (string $state, $record): string|array {
+                    ->color(function (string $state, $record): string {
                         // Se o status for 'PENDENTE', verificar se há parcelas em atraso
                         if ($state === 'PENDENTE') {
                             if ($record->due_date < now() && $record->status === 'PENDENTE') {
-                                return Color::hex('#b600ff');
+                                return 'pink';
                             }
 
                             // Caso não haja parcelas em atraso, manter a cor 'info'
