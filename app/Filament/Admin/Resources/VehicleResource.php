@@ -50,7 +50,7 @@ class VehicleResource extends Resource
                 Section::make()->schema([
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)))
+                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
                         ->optionsLimit(5)
                         ->searchable(),
                     DatePicker::make('purchase_date')
@@ -69,7 +69,7 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->orderBy('name')->where('employee', true))
+                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->where('supplier', true)->orWhere('id', $record?->supplier_id))
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),

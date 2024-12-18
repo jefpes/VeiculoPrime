@@ -2,6 +2,7 @@
 
 namespace App\Tools;
 
+use App\Models\Photo;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
@@ -13,6 +14,16 @@ class PhotosRelationManager extends RelationManager
     protected static string $relationship = 'photos';
 
     protected static ?string $title = 'Fotos';
+
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return auth_user()->hasAbility(strtolower(class_basename($ownerRecord)) . '_photo_read');
+    }
+
+    public function canCreate(): bool
+    {
+        return auth_user()->can('create', [Photo::class, $this->getOwnerRecord()]);
+    }
 
     public function form(Form $form): Form
     {
@@ -85,6 +96,7 @@ class PhotosRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('setAsMain')
+                    ->authorize('setMainPublic')
                     ->icon('heroicon-o-star')
                     ->color(fn ($record) => $record->is_main ? 'success' : 'gray')
                     ->label('Main')
@@ -95,6 +107,7 @@ class PhotosRelationManager extends RelationManager
                         $record->update(['is_main' => true]);
                     }),
                 Tables\Actions\Action::make('setAsPublic')
+                    ->authorize('setMainPublic')
                     ->icon(fn ($record) => $record->is_public ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
                     ->color(fn ($record) => $record->is_public ? 'warning' : 'gray')
                     ->label(fn ($record) => $record->is_public ? 'Public' : 'Private')
