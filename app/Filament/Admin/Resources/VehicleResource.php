@@ -26,6 +26,8 @@ class VehicleResource extends Resource
 
     protected static ?int $navigationSort = 11;
 
+    protected static ?string $recordTitleAttribute = 'plate';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');
@@ -67,7 +69,7 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->relationship('supplier', 'name')
+                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query) => $query->orderBy('name')->where('employee', true))
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
@@ -243,13 +245,13 @@ class VehicleResource extends Resource
                     // Filtro de Tipo de Veículo
                     Select::make('type')
                         ->label('Type')
-                        ->options(VehicleType::all()->pluck('name', 'id'))
+                        ->options(VehicleType::query()->orderBy('name')->get()->pluck('name', 'id'))
                         ->live(),
 
                     // Filtro de Marca
                     Select::make('brand')
                         ->label('Brand')
-                        ->options(Brand::all()->pluck('name', 'id'))
+                        ->options(Brand::query()->orderBy('name')->whereHas('models', fn ($query) => $query->whereHas('vehicles'))->get()->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5)
                         ->preload()
@@ -258,14 +260,15 @@ class VehicleResource extends Resource
                     // Filtro de Modelo
                     Select::make('model')
                         ->label('Model')
-                        ->options(function (Get $get) {
-                            return VehicleModel::query()
+                        ->options(
+                            fn (Get $get) => VehicleModel::query()
                                 ->orderBy('name')
+                                ->whereHas('vehicles')
                                 ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
                                 ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
+                                ->get()
                                 ->pluck('name', 'id')
-                                ->toArray();
-                        })
+                        )
                         ->searchable()
                         ->optionsLimit(5)
                         ->live(),
