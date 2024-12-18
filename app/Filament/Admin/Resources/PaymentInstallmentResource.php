@@ -138,18 +138,18 @@ class PaymentInstallmentResource extends Resource
                 Tables\Columns\TextColumn::make('late_fee')
                     ->sortable()
                     ->money('BRL')
-                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('interest_rate')
                     ->numeric()
                     ->sortable()
                     ->suffix('%')
-                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Average::make()->suffix('%')),
                 Tables\Columns\TextColumn::make('interest')
                     ->sortable()
                     ->money('BRL')
-                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
                 Tables\Columns\TextColumn::make('payment_value')
                     ->sortable()
