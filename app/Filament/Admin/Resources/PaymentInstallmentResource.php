@@ -337,9 +337,7 @@ class PaymentInstallmentResource extends Resource
                     ->form([
                         Select::make('client')
                             ->searchable()
-                            ->options(function () {
-                                return \App\Models\People::query()->whereHas('client')->get()->pluck('name', 'id');
-                            }),
+                            ->options(fn () => \App\Models\People::query()->where('client', true)->get()->pluck('name', 'id')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         if (!empty($data['client'])) {
