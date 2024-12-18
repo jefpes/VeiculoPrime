@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
+use App\Models\Tenant;
 use Carbon\Carbon;
 use Illuminate\Support\Number;
-use App\Models\Tenant;
 
 //tools begin
 if (!function_exists('auth_user')) {
@@ -200,7 +200,6 @@ if (!function_exists('spell_date')) {
 //tools end
 
 //tenant begin
-
 
 if (!function_exists('tenant')) {
     function tenant(): ?Tenant

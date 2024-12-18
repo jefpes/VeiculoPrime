@@ -112,7 +112,6 @@ class Vehicle extends BaseModel
     public function buyer(): BelongsTo
     {
         return $this->belongsTo(People::class, 'buyer_id');
-        // ->whereHas('employees', fn ($query) => $query->where('resignation_date', null));
     }
 
     public function supplier(): BelongsTo

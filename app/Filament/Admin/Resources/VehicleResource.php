@@ -6,7 +6,7 @@ use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Brand, People, VehicleType};
-use App\Models\{Supplier, Vehicle, VehicleModel};
+use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
@@ -48,8 +48,7 @@ class VehicleResource extends Resource
                 Section::make()->schema([
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('buyer', 'name')
-                        // , modifyQueryUsing: fn ($query) => $query->where('resignation_date', null))
+                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)))
                         ->optionsLimit(5)
                         ->searchable(),
                     DatePicker::make('purchase_date')
@@ -274,7 +273,7 @@ class VehicleResource extends Resource
                     // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
-                        ->options(People::all()->pluck('name', 'id'))
+                        ->options(People::query()->whereHas('vehiclesAsSupplier')->orWhere('supplier', true)->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5),
                 ])->query(function (Builder $query, array $data): Builder {
@@ -335,7 +334,7 @@ class VehicleResource extends Resource
 
                     // Indicador para o fornecedor
                     if ($data['supplier'] ?? null) {
-                        $indicators[] = __('Supplier') . ': ' . People::query()->find($data['supplier'])->name;  //TODO: Verificar se é supplier ou people
+                        $indicators[] = __('Supplier') . ': ' . People::query()->find($data['supplier'])->name;
                     }
 
                     return $indicators;

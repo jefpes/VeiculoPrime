@@ -63,4 +63,14 @@ class People extends BaseModel
     {
         return $this->hasMany(Sale::class, 'client_id');
     }
+
+    public function vehiclesAsBuyer(): HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'buyer_id');
+    }
+
+    public function vehiclesAsSupplier(): HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'supplier_id');
+    }
 }
