@@ -103,7 +103,7 @@ class VehicleResource extends Resource
                         ->maxLength(255),
                     TextInput::make('plate')
                         ->required()
-                        ->maxLength(255)
+                        ->length(8)
                         ->mask('aaa-9*99'),
                     TextInput::make('chassi')
                         ->maxLength(255),
