@@ -11,16 +11,14 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * Class Vehicle
  *
  * @property \App\Models\VehicleModel $model
- * @property \App\Models\VehiclePhoto $photos
- * @property \App\Models\VehicleDocPhoto $docPhotos
+ * @property \App\Models\Photo $photos
  * @property \App\Models\Sale $sale
  * @property \App\Models\VehicleExpense $expenses
  * @property \App\Models\People $supplier
  * @property \App\Models\People $buyer
  *
  * @method \App\Models\VehicleModel model()
- * @method \App\Models\VehiclePhoto photos()
- * @method \App\Models\VehicleDocPhoto docPhotos()
+ * @method \App\Models\Photo photos()
  * @method \App\Models\Sale sale()
  * @method \App\Models\VehicleExpense expenses()
  * @method \App\Models\People supplier()
