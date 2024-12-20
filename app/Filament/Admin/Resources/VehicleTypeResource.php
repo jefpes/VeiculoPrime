@@ -17,6 +17,8 @@ class VehicleTypeResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');
@@ -40,7 +42,7 @@ class VehicleTypeResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->rules([
-                        fn ($record) => new UniqueWithinTenant(
+                        fn ($record) => UniqueWithinTenant::make(
                             table: 'vehicle_types',
                             column: 'name',
                             ignore: $record?->id

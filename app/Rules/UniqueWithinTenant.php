@@ -36,4 +36,9 @@ class UniqueWithinTenant implements ValidationRule
             $fail("$value já existe.");
         }
     }
+
+    public static function make(string $table, ?string $column = null, mixed $ignore = null): self
+    {
+        return new self($table, $column, $ignore);
+    }
 }
