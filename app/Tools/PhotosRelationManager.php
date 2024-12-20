@@ -39,6 +39,15 @@ class PhotosRelationManager extends RelationManager
                     ->required()
                     ->directory($this->getOwnerRecord()->getPhotoDirectory()) //@phpstan-ignore-line
                     ->image(),
+                Forms\Components\ToggleButtons::make('is_public')
+                    ->label('Visibilidade')
+                    ->inline()
+                    ->options([
+                        0 => 'Privado',
+                        1 => 'Público',
+                    ])
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -82,12 +91,14 @@ class PhotosRelationManager extends RelationManager
                     ->using(function (array $data, $livewire): Model {
                         $model      = $livewire->getOwnerRecord();
                         $firstPhoto = $model->{static::$relationship}()->create([
-                            'path' => $data['path'][0],
+                            'path'      => $data['path'][0],
+                            'is_public' => $data['is_public'],
                         ]);
 
                         foreach (array_slice($data['path'], 1) as $path) {
                             $model->{static::$relationship}()->create([
-                                'path' => $path,
+                                'path'      => $path,
+                                'is_public' => $data['is_public'],
                             ]);
                         }
 
@@ -126,9 +137,9 @@ class PhotosRelationManager extends RelationManager
                     ->hiddenLabel()
                     ->iconSize('lg')
                     ->modalHeading('Excluir Foto'),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()->modalHeading('Excluir Fotos Selecionadas')->label('Excluir Fotos Selecionadas'),
             ]);
+        // ->bulkActions([
+        //     Tables\Actions\DeleteBulkAction::make()->modalHeading('Excluir Fotos Selecionadas')->label('Excluir Fotos Selecionadas'),
+        // ]);
     }
 }
