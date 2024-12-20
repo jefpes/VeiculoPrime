@@ -42,11 +42,13 @@ class VehicleTypeResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->rules([
-                        fn ($record) => UniqueWithinTenant::make(
-                            table: 'vehicle_types',
-                            column: 'name',
-                            ignore: $record?->id
-                        ),
+                        function ($record, $component) {
+                            return UniqueWithinTenant::make(
+                                table: (static::$model)::query()->getModel()->getTable(),
+                                column: $component->getName(),
+                                ignore: $record?->id
+                            );
+                        },
                     ])
                     ->columnSpanFull(),
             ]);
