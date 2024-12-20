@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use App\Models\Tenant;
+use App\Rules\UniqueWithinTenant;
 use Carbon\Carbon;
 use Illuminate\Support\Number;
 
@@ -286,6 +287,20 @@ if (!function_exists('check_cpf')) {
         }
 
         return true;
+    }
+
+    if (!function_exists('unique_within_tenant_rule')) {
+        function unique_within_tenant_rule(mixed $model = null): Closure
+        {
+            return function ($record, $component) use ($model) {
+                return UniqueWithinTenant::make(
+                    table: ($model::getModel())::query()->getModel()->getTable(),
+                    column: $component->getName(),
+                    ignore: $record?->id
+                );
+            };
+        }
+
     }
 }
 //tenant end

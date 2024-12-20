@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\VehicleTypeResource\{Pages};
 use App\Models\VehicleType;
-use App\Rules\UniqueWithinTenant;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -39,17 +38,8 @@ class VehicleTypeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
                     ->maxLength(255)
-                    ->rules([
-                        function ($record, $component) {
-                            return UniqueWithinTenant::make(
-                                table: (static::$model)::query()->getModel()->getTable(),
-                                column: $component->getName(),
-                                ignore: $record?->id
-                            );
-                        },
-                    ])
+                    ->rules([unique_within_tenant_rule(static::$model)])
                     ->columnSpanFull(),
             ]);
     }

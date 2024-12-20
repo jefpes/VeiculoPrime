@@ -40,7 +40,8 @@ class RoleResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(100),
+                    ->maxLength(100)
+                    ->rules([unique_within_tenant_rule(static::$model)]),
                 Forms\Components\Select::make('hierarchy')
                     ->options(
                         function () {

@@ -38,12 +38,13 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->rules([unique_within_tenant_rule(static::$model)]),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->unique(ignoreRecord:true)
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->rules([unique_within_tenant_rule(static::$model)]),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
