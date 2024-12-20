@@ -36,9 +36,9 @@ return new class () extends Migration {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->foreignUlid('employee_id')->nullable()->constrained(table: 'employees', column: 'id');
+            $table->foreignUlid('buyer_id')->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
+            $table->foreignUlid('supplier_id')->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('vehicle_model_id')->constrained(table: 'vehicle_models', column: 'id');
-            $table->foreignUlid('supplier_id')->nullable()->constrained(table: 'suppliers', column: 'id');
             $table->date('purchase_date');
             $table->decimal('fipe_price', places: 2)->nullable()->default(null);
             $table->decimal('purchase_price', places: 2);

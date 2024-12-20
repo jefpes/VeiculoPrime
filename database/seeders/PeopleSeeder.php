@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Supplier;
+use App\Models\{People};
 use Illuminate\Database\Seeder;
 
-class SuppliersSeeder extends Seeder
+class PeopleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,10 +13,15 @@ class SuppliersSeeder extends Seeder
     public function run(): void
     {
         for ($i = 1; $i <= 10; $i++) {
-            $photo = "supplier_$i.webp";
-            $model = Supplier::factory()->withAddress()->withAffiliate()->withPhone()->create();
+            $photo = "people_$i.webp";
+            $model = People::factory()
+                        ->withAddress()
+                        ->withAffiliate()
+                        ->withPhone()
+                        ->withEmployee()
+                        ->create();
 
-            $folder = "photos/supplier";
+            $folder = "photos/people";
 
             // Desabilitar eventos para a criação da foto
             \App\Models\Photo::withoutEvents(function () use ($model, $folder, $photo) {

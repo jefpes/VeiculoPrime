@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\UserResource\{Pages};
-use App\Models\{Employee, Role, User};
+use App\Models\{Role, User};
 use Filament\Forms\Components\{CheckboxList, Fieldset};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,17 +36,6 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('employee_id')
-                    ->label('Employee')
-                    ->options(function (string $operation, $record) {
-                        if ($operation === 'create') {
-                            return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->pluck('name', 'id');
-                        }
-
-                        return Employee::query()->orderBy('name')->where('resignation_date', null)->whereDoesntHave('user')->orWhere('id', $record->employee_id)->pluck('name', 'id');
-                    })
-                    ->optionsLimit(5)
-                    ->searchable(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -92,8 +81,8 @@ class UserResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('employee.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('people.name')
+                    ->label('Person')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

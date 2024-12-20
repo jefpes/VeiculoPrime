@@ -13,7 +13,7 @@ class EditSale extends EditRecord
 
     public array $dataInstallments = []; //@phpstan-ignore-line
 
-    public int $oldVehicleId;
+    public string $oldVehicleId;
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

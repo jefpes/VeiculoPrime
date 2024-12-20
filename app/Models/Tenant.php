@@ -43,11 +43,6 @@ class Tenant extends Model
         return $this->hasMany(Brand::class);
     }
 
-    public function clients(): HasMany
-    {
-        return $this->hasMany(Client::class);
-    }
-
     public function companies(): HasMany
     {
         return $this->hasMany(Company::class);
@@ -71,11 +66,6 @@ class Tenant extends Model
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
-    }
-
-    public function suppliers(): HasMany
-    {
-        return $this->hasMany(Supplier::class);
     }
 
     public function vehicles(): HasMany

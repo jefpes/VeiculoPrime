@@ -5,12 +5,11 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Helpers\Contracts;
-use App\Models\{Brand, VehicleType};
-use App\Models\{Supplier, Vehicle, VehicleModel};
-use App\Tools\PhotosRelationManager;
+use App\Models\{Brand, People, VehicleType};
+use App\Models\{Vehicle, VehicleModel};
+use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
-use Filament\Forms\Components\{DatePicker, FileUpload, Group, Section, Select, TextInput, Textarea};
+use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Group, Section, Select, TextInput, Textarea};
 use Filament\Forms\{Form, Get};
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
@@ -26,6 +25,8 @@ class VehicleResource extends Resource
     protected static ?string $model = Vehicle::class;
 
     protected static ?int $navigationSort = 11;
+
+    protected static ?string $recordTitleAttribute = 'plate';
 
     public static function getNavigationGroup(): ?string
     {
@@ -49,9 +50,7 @@ class VehicleResource extends Resource
                 Section::make()->schema([
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('employee', 'name', modifyQueryUsing: function ($query) {
-                            return $query->where('resignation_date', null);
-                        })
+                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
                         ->optionsLimit(5)
                         ->searchable(),
                     DatePicker::make('purchase_date')
@@ -70,7 +69,7 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->relationship('supplier', 'name')
+                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->where('supplier', true)->orWhere('id', $record?->supplier_id))
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
@@ -84,21 +83,15 @@ class VehicleResource extends Resource
                         ->required()
                         ->numeric(),
                     Select::make('fuel')
-                        ->options(collect(FuelTypes::cases())->mapWithKeys(fn (FuelTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(FuelTypes::class),
                     TextInput::make('engine_power')
                         ->required()
                         ->maxLength(30),
                     Select::make('steering')
-                        ->options(collect(SteeringTypes::cases())->mapWithKeys(fn (SteeringTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(SteeringTypes::class),
                     Select::make('transmission')
                         ->required()
-                        ->options(collect(TransmissionTypes::cases())->mapWithKeys(fn (TransmissionTypes $status) => [
-                            $status->value => $status->value,
-                        ])->toArray()),
+                        ->options(TransmissionTypes::class),
                     TextInput::make('doors')
                         ->numeric(),
                     TextInput::make('seats')
@@ -136,14 +129,14 @@ class VehicleResource extends Resource
         return $table
             ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
-                return $query->with('employee', 'model', 'supplier');
+                return $query->with('buyer', 'model', 'supplier');
             })
             ->columns([
                 TextColumn::make('tenant.name')
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                TextColumn::make('employee.name')
+                TextColumn::make('buyer.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
@@ -227,6 +220,7 @@ class VehicleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filtersTriggerAction(fn (Tables\Actions\Action $action) => $action->slideOver())
+            ->filtersFormWidth('xl')
             ->filters([
                 Filter::make('filter')->form([
                     // Filtro de Datas de Compra
@@ -237,54 +231,63 @@ class VehicleResource extends Resource
                             ->label('Purchase Date Before'),
                     ])->columns(['sm' => 1, 'md' => 2]),
 
-                    // Filtro de Ano
-                    Select::make('year_one')
-                        ->label('After Year')
-                        ->options(function () {
-                            return Vehicle::query()
-                                ->select('year_one')
-                                ->distinct()
-                                ->orderBy('year_one')
-                                ->pluck('year_one', 'year_one')
-                                ->toArray();
-                        }),
+                    Grid::make()->columns(2)->schema([
+                        // Filtro de Ano
+                        Select::make('year_one')
+                            ->label('After Year')
+                            ->options(function () {
+                                return Vehicle::query()
+                                    ->select('year_one')
+                                    ->distinct()
+                                    ->orderBy('year_one')
+                                    ->pluck('year_one', 'year_one')
+                                    ->toArray();
+                            }),
+                        // Filtro de Tipo de Veículo
+                        Select::make('type')
+                            ->label('Type')
+                            ->options(VehicleType::query()->orderBy('name')->get()->pluck('name', 'id'))
+                            ->live(),
 
-                    // Filtro de Tipo de Veículo
-                    Select::make('type')
-                        ->label('Type')
-                        ->options(VehicleType::all()->pluck('name', 'id'))
-                        ->live(),
+                        // Filtro de Marca
+                        Select::make('brand')
+                            ->label('Brand')
+                            ->options(Brand::query()->orderBy('name')->whereHas('models', fn ($query) => $query->whereHas('vehicles'))->get()->pluck('name', 'id'))
+                            ->searchable()
+                            ->optionsLimit(5)
+                            ->preload()
+                            ->live(),
 
-                    // Filtro de Marca
-                    Select::make('brand')
-                        ->label('Brand')
-                        ->options(Brand::all()->pluck('name', 'id'))
-                        ->searchable()
-                        ->optionsLimit(5)
-                        ->preload()
-                        ->live(),
-
-                    // Filtro de Modelo
-                    Select::make('model')
-                        ->label('Model')
-                        ->options(function (Get $get) {
-                            return VehicleModel::query()
-                                ->orderBy('name')
-                                ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
-                                ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
-                                ->pluck('name', 'id')
-                                ->toArray();
-                        })
-                        ->searchable()
-                        ->optionsLimit(5)
-                        ->live(),
+                        // Filtro de Modelo
+                        Select::make('model')
+                            ->label('Model')
+                            ->options(
+                                fn (Get $get) => VehicleModel::query()
+                                    ->orderBy('name')
+                                    ->whereHas('vehicles')
+                                    ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
+                                    ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
+                            ->searchable()
+                            ->optionsLimit(5)
+                            ->live(),
+                    ]),
 
                     // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
-                        ->options(Supplier::all()->pluck('name', 'id'))
+                        ->options(People::query()->whereHas('vehiclesAsSupplier')->orWhere('supplier', true)->pluck('name', 'id'))
                         ->searchable()
                         ->optionsLimit(5),
+
+                    // Filtro de Comprador
+                    Select::make('buyer')
+                        ->label('Buyer')
+                        ->options(People::query()->whereHas('vehiclesAsBuyer')->orWhere('supplier', true)->pluck('name', 'id'))
+                        ->optionsLimit(5)
+                        ->searchable(),
                 ])->query(function (Builder $query, array $data): Builder {
                     return $query
                         // Aplica o filtro de data de compra
@@ -310,7 +313,10 @@ class VehicleResource extends Resource
                         ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
 
                         // Aplica o filtro de fornecedor
-                        ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value));
+                        ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
+
+                        // Aplica o filtro de comprador
+                        ->when($data['buyer'], fn ($query, $value) => $query->where('buyer_id', $value));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
@@ -343,7 +349,12 @@ class VehicleResource extends Resource
 
                     // Indicador para o fornecedor
                     if ($data['supplier'] ?? null) {
-                        $indicators[] = __('Supplier') . ': ' . Supplier::query()->find($data['supplier'])->name;
+                        $indicators[] = __('Supplier') . ': ' . People::query()->find($data['supplier'])->name;
+                    }
+
+                    // Indicador para o comprador
+                    if ($data['buyer'] ?? null) {
+                        $indicators[] = __('Buyer') . ': ' . People::query()->find($data['buyer'])->name;
                     }
 
                     return $indicators;

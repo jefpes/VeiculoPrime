@@ -12,18 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->string('name');
-            $table->string('gender');
-            $table->string('email')->nullable();
+            $table->foreignUlid('people_id')->nullable()->constrained(table: 'people', column: 'id')->cascadeOnDelete();
             $table->decimal('salary', places: 2);
-            $table->string('rg', 20)->nullable();
-            $table->string('cpf', 20)->nullable();
-            $table->date('birth_date')->nullable();
-            $table->string('father')->nullable();
-            $table->string('mother')->nullable();
-            $table->string('marital_status')->nullable();
-            $table->string('spouse')->nullable();
             $table->date('admission_date');
             $table->date('resignation_date')->nullable();
             $table->timestamps();

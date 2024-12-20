@@ -73,7 +73,8 @@ class Sale extends BaseModel
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(People::class, 'client_id');
+        // ->whereHas('client', fn ($query) => $query->where('is_active', true));
     }
 
     public function paymentInstallments(): HasMany

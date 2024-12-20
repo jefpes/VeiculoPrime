@@ -2,6 +2,7 @@
 
 namespace App\Tools;
 
+use App\Models\Photo;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
@@ -13,6 +14,16 @@ class PhotosRelationManager extends RelationManager
     protected static string $relationship = 'photos';
 
     protected static ?string $title = 'Fotos';
+
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return auth_user()->hasAbility(strtolower(class_basename($ownerRecord)) . '_photo_read');
+    }
+
+    public function canCreate(): bool
+    {
+        return auth_user()->can('create', [Photo::class, $this->getOwnerRecord()]);
+    }
 
     public function form(Form $form): Form
     {
@@ -28,6 +39,15 @@ class PhotosRelationManager extends RelationManager
                     ->required()
                     ->directory($this->getOwnerRecord()->getPhotoDirectory()) //@phpstan-ignore-line
                     ->image(),
+                Forms\Components\ToggleButtons::make('is_public')
+                    ->label('Visibilidade')
+                    ->inline()
+                    ->options([
+                        0 => 'Privado',
+                        1 => 'Público',
+                    ])
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -71,12 +91,14 @@ class PhotosRelationManager extends RelationManager
                     ->using(function (array $data, $livewire): Model {
                         $model      = $livewire->getOwnerRecord();
                         $firstPhoto = $model->{static::$relationship}()->create([
-                            'path' => $data['path'][0],
+                            'path'      => $data['path'][0],
+                            'is_public' => $data['is_public'],
                         ]);
 
                         foreach (array_slice($data['path'], 1) as $path) {
                             $model->{static::$relationship}()->create([
-                                'path' => $path,
+                                'path'      => $path,
+                                'is_public' => $data['is_public'],
                             ]);
                         }
 
@@ -85,6 +107,7 @@ class PhotosRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\Action::make('setAsMain')
+                    ->authorize('setMainPublic')
                     ->icon('heroicon-o-star')
                     ->color(fn ($record) => $record->is_main ? 'success' : 'gray')
                     ->label('Main')
@@ -95,6 +118,7 @@ class PhotosRelationManager extends RelationManager
                         $record->update(['is_main' => true]);
                     }),
                 Tables\Actions\Action::make('setAsPublic')
+                    ->authorize('setMainPublic')
                     ->icon(fn ($record) => $record->is_public ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
                     ->color(fn ($record) => $record->is_public ? 'warning' : 'gray')
                     ->label(fn ($record) => $record->is_public ? 'Public' : 'Private')
@@ -113,9 +137,9 @@ class PhotosRelationManager extends RelationManager
                     ->hiddenLabel()
                     ->iconSize('lg')
                     ->modalHeading('Excluir Foto'),
-            ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()->modalHeading('Excluir Fotos Selecionadas')->label('Excluir Fotos Selecionadas'),
             ]);
+        // ->bulkActions([
+        //     Tables\Actions\DeleteBulkAction::make()->modalHeading('Excluir Fotos Selecionadas')->label('Excluir Fotos Selecionadas'),
+        // ]);
     }
 }

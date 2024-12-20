@@ -7,7 +7,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -99,9 +99,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->belongsToMany(Role::class);
     }
 
-    public function employee(): BelongsTo
+    public function people(): HasOne
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasOne(People::class, 'user_id');
     }
 
     public function settings(): HasOne
@@ -109,18 +109,33 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->hasOne(Settings::class);
     }
 
-    public function abilities(): Collection
+    public function abilities(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+        return Ability::query()->whereHas('roles', fn ($query) => $query->whereIn('id', $this->roles->pluck('id'))); //@phpstan-ignore-line
     }
 
     public function hasAbility(string $ability): bool
     {
-        return $this->abilities()->contains($ability);
+        return $this->abilities()->where('name', $ability)->exists(); //@phpstan-ignore-line
     }
 
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    // public function abilities(): Collection
+    // {
+    //     return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
+    // }
+
+    // public function hasAbility(string $ability): bool
+    // {
+    //     return $this->abilities()->contains($ability);
+    // }
 }

@@ -2,18 +2,17 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{PaymentMethod, StatusPayments};
+use App\Enums\{StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
-use App\Forms\Components\MoneyInput;
-use App\Helpers\{Contracts};
+use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
 use App\Models\{Sale, Vehicle};
+use App\Tools\{Contracts};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
 use Filament\Tables\Filters\Filter;
@@ -80,20 +79,8 @@ class SaleResource extends Resource
                     Forms\Components\Select::make('client_id')
                         ->relationship('client', 'name')
                         ->searchable()
-                        ->options(function () {
-                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                return [
-                                    $client->id => "{$client->name} - {$client->client_id}",
-                                ];
-                            });
-                        })
                         ->required(),
-                    Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        )
-                        ->required(),
+                    SelectPaymentMethod::make('payment_method'),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
                     MoneyInput::make('discount')
@@ -220,7 +207,7 @@ class SaleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(function (string $state, $record): string|array {
+                    ->color(function (string $state, $record): string {
                         // Se o status for 'PENDENTE', verificar se há parcelas em atraso
                         if ($state === 'PENDENTE') {
                             // Verificar se a venda possui parcelas e se alguma está atrasada
@@ -231,7 +218,7 @@ class SaleResource extends Resource
 
                             // Se houver parcelas em atraso, retornar 'danger'
                             if ($hasLateInstallments) {
-                                return Color::hex('#b600ff');
+                                return 'pink';
                             }
 
                             // Caso não haja parcelas em atraso, manter a cor 'info'
@@ -330,13 +317,7 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(function () {
-                            return \App\Models\User::all()->mapWithKeys(function ($user) {
-                                return [
-                                    $user->id => $user->name,
-                                ];
-                            });
-                        }),
+                        ->options(fn () => \App\Models\User::withTrashed()->whereHas('sales')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
                     return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
                 })->indicateUsing(function (array $data): array {
@@ -352,11 +333,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return \App\Models\Client::all()->mapWithKeys(function ($client) {
-                                return [
-                                    $client->id => $client->name,
-                                ];
-                            });
+                            return \App\Models\People::query()->whereHas('sales')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
@@ -365,18 +342,14 @@ class SaleResource extends Resource
                     $indicators = [];
 
                     if ($data['client'] ?? null) {
-                        $indicators[] = __('Client') . ': ' . \App\Models\Client::find($data['client'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Client') . ': ' . \App\Models\People::find($data['client'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
                 }),
                 Filter::make('payment_method')
                     ->form([
-                        Forms\Components\Select::make('payment_method')
-                        ->options(
-                            collect(PaymentMethod::cases())
-                                ->mapWithKeys(fn (PaymentMethod $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        SelectPaymentMethod::make('payment_method'),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -392,10 +365,7 @@ class SaleResource extends Resource
                 Filter::make('status')
                     ->form([
                         Forms\Components\Select::make('status')
-                        ->options(
-                            collect(StatusPayments::cases())
-                                ->mapWithKeys(fn (StatusPayments $type) => [$type->value => ucfirst($type->value)])
-                        ),
+                        ->options(StatusPayments::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));

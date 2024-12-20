@@ -17,7 +17,6 @@ class VehicleModelSeeder extends Seeder
 
         $models = [
             ['name' => 'Strada', 'brand' => 'Fiat', 'type' => 'Carro'],
-            ['name' => 'Strada', 'brand' => 'Fiat', 'type' => 'Carro'],
             ['name' => 'Uno', 'brand' => 'Fiat', 'type' => 'Carro'],
             ['name' => 'Vivace', 'brand' => 'Fiat', 'type' => 'Carro'],
             ['name' => 'Argo', 'brand' => 'Fiat', 'type' => 'Carro'],

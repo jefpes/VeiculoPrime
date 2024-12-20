@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Client, User, Vehicle, VehicleModel};
+use App\Models\{People, User, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class SalesSeeder extends Seeder
@@ -12,9 +12,9 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
-        $users   = User::all();
-        $clients = Client::all();
-        $models  = VehicleModel::query()->pluck('id', 'name');
+        $users  = User::all();
+        $people = People::all();
+        $models = VehicleModel::query()->pluck('id', 'name');
 
         Vehicle::create([
             'purchase_date'    => '2024-02-03',
@@ -36,7 +36,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'        => $users->random()->id,
-                'client_id'      => $clients->random()->id,
+                'client_id'      => $people->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-01',
@@ -66,7 +66,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'        => $users->random()->id,
-                'client_id'      => $clients->random()->id,
+                'client_id'      => $people->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-03',
@@ -95,7 +95,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'        => $users->random()->id,
-                'client_id'      => $clients->random()->id,
+                'client_id'      => $people->random()->id,
                 'payment_method' => 'PIX',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-04',
@@ -125,7 +125,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'             => $users->random()->id,
-                'client_id'           => $clients->random()->id,
+                'client_id'           => $people->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-03-07',
@@ -167,7 +167,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'             => $users->random()->id,
-                'client_id'           => $clients->random()->id,
+                'client_id'           => $people->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PAGO',
                 'date_sale'           => '2024-03-07',
@@ -227,7 +227,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'             => $users->random()->id,
-                'client_id'           => $clients->random()->id,
+                'client_id'           => $people->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-03-07',
@@ -287,7 +287,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'             => $users->random()->id,
-                'client_id'           => $clients->random()->id,
+                'client_id'           => $people->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-04-07',
@@ -377,7 +377,7 @@ class SalesSeeder extends Seeder
         ])->sale()->create(
             [
                 'user_id'             => $users->random()->id,
-                'client_id'           => $clients->random()->id,
+                'client_id'           => $people->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-05-07',
