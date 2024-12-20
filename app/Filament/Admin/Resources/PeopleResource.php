@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{MaritalStatus, Permission, PersonType, Sexes};
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Models\{Employee, People};
+use App\Models\{People};
 use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\{Repeater};
@@ -115,7 +115,7 @@ class PeopleResource extends Resource
                         Repeater::make('employee')
                             ->collapsible()
                             ->deletable(false)
-                            ->addable(fn ($record) => $record->employee()->where('resignation_date', null)->count() === 0)
+                            ->addable(fn ($record) => $record === null || ($record->employee->isEmpty() || $record->employee->last()->resignation_date !== null))
                             ->relationship()
                             ->grid(2)
                             ->columns(3)
@@ -138,7 +138,7 @@ class PeopleResource extends Resource
                                     ->icon('heroicon-o-arrow-left-start-on-rectangle')
                                     ->color('danger')
                                     ->authorize(function (Repeater $component, $arguments, $record) {
-                                        if ($record->employee->isEmpty()) {
+                                        if ($record === null || $record->employee->isEmpty()) {
                                             return false;
                                         }
 
@@ -149,23 +149,18 @@ class PeopleResource extends Resource
                                         Forms\Components\DatePicker::make('resignation_date')
                                             ->label('Resignation Date'),
                                     ])
-                                    // ->action(function ($record, array $data, Repeater $component, $arguments) {
-                                    //     $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
-                                    //     $items = $component->getState();
-                                    //     $items[$arguments['item']]['resignation_date'] = $record->employee->last()->resignation_date;
-                                    //     $component->state($items);
-                                    //     $component->callAfterStateUpdated();
-                                    // })
                                     ->action(function ($record, array $data) {
-                                        $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
-                                        redirect(request()->header('Referer'));
+                                        if ($record !== null && $record->employee->isNotEmpty()) {
+                                            $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                                            redirect(request()->header('Referer'));
+                                        }
                                     }),
                                 Action::make('rehire')
                                     ->label('Rehire')
                                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                                     ->color('warning')
                                     ->authorize(function (Repeater $component, $arguments, $record) {
-                                        if ($record->employee->isEmpty()) {
+                                        if ($record === null || $record->employee->isEmpty()) {
                                             return false;
                                         }
 
@@ -177,16 +172,11 @@ class PeopleResource extends Resource
                                         return ($max30days && $resignated && $its);
                                     })
                                     ->requiresConfirmation()
-                                    // ->action(function ($record, Repeater $component, $arguments) {
-                                    //     $record->employee->last()->update(['resignation_date' => null]);
-                                    //     $items = $component->getState();
-                                    //     $items[$arguments['item']]['resignation_date'] = null;
-                                    //     $component->state($items);
-                                    //     $component->callAfterStateUpdated();
-                                    // })
                                     ->action(function ($record) {
-                                        $record->employee->last()->update(['resignation_date' => null]);
-                                        redirect(request()->header('Referer'));
+                                        if ($record !== null && $record->employee->isNotEmpty()) {
+                                            $record->employee->last()->update(['resignation_date' => null]);
+                                            redirect(request()->header('Referer'));
+                                        }
                                     }),
                             ]),
                     ]),
@@ -325,10 +315,13 @@ class PeopleResource extends Resource
                             ->label('Resignation Date'),
                     ])
                     ->action(function ($record, array $data) {
-                        if ($record->user() !== null) {
-                            $record->user()->delete();
+                        if ($record->user !== null) {
+                            $record->user->delete();
                         }
-                        $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+
+                        if ($record->employee->isNotEmpty()) {
+                            $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                        }
                     }),
                 Tables\Actions\Action::make('rehire')
                     ->label('Rehire')
@@ -346,11 +339,13 @@ class PeopleResource extends Resource
                     })
                     ->requiresConfirmation()
                     ->action(function ($record) {
-                        if ($record->user() !== null) {
-                            $record->user()->restore();
+                        if ($record->user !== null) {
+                            $record->user->restore();
                         }
 
-                        $record->employee->last()->update(['resignation_date' => null]);
+                        if ($record->employee->isNotEmpty()) {
+                            $record->employee->last()->update(['resignation_date' => null]);
+                        }
                     }),
             ]);
     }
