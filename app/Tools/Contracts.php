@@ -86,7 +86,7 @@ class Contracts
         }
     }
 
-    public static function setAddressesValues(TemplateProcessor $template, MorphMany $addressable = null, string $parent = null): void
+    public static function setAddressesValues(TemplateProcessor $template, ?MorphMany $addressable = null, string $parent = null): void
     {
         if ($addressable === null || $parent === null) {
             return;
@@ -393,16 +393,22 @@ class Contracts
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
         self::setUserValues($template, $sale->user_id);
+        // dump('user foi chamado');
 
         self::setPeopleValues($template, $sale->client_id, 'cliente');
+        // dump('people-client foi chamado');
 
-        self::setAddressesValues($template, $sale->client()->addresses(), 'cliente');
+        self::setAddressesValues($template, $sale->client->addresses(), 'cliente');
+        // dump('addresses-client foi chamado');
 
-        self::setAffiliatesValues($template, $sale->client()->affiliates(), 'cliente');
-        //Substitui os placeholders com os dados do veiculo
+        self::setAffiliatesValues($template, $sale->client->affiliates(), 'cliente');
+        // dump('affiliates foi chamado');
+
         self::setVehicleValues($template, $sale->vehicle->id ?? null);
+        // dump('vehicle foi chamado');
 
         self::setPeopleValues($template, $sale->vehicle->supplier->id ?? null, 'fornecedor');
+        // dump('people-suplier foi chamado');
 
         //Substitui os placeholders com os dados da venda
         self::setSaleValues($template, $sale->id ?? null);
@@ -415,7 +421,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx"; //@phpstan-ignore-line TODO: Fix this
+        $caminhoContratoPreenchido = "storage/contracts/Contrato - {$sale->client->name}.docx";
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;
@@ -449,7 +455,7 @@ class Contracts
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
-        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx"; //@phpstan-ignore-line TODO: Fix this
+        $caminhoContratoPreenchido = "storage/contracts/Recibo - {$installment->sale->client->name}.docx";
         $template->saveAs($caminhoContratoPreenchido);
 
         return $caminhoContratoPreenchido;

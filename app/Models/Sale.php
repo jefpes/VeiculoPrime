@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  *
  * @property \App\Models\User $user
  * @property \App\Models\Vehicle $vehicle
- * @property \App\Models\Client $client
+ * @property \App\Models\People $client
  * @property \App\Models\PaymentInstallment $paymentInstallments
  *
  * @method \App\Models\User user()
