@@ -416,13 +416,13 @@ class SaleResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Action::make('sale_cancel')
-                                        ->authorize('saleCancel')
-                                        ->requiresConfirmation()
-                                        ->modalHeading(__('Cancel sale'))
-                                        ->modalDescription(function (Sale $sale) {
-                                            return new HtmlString(
-                                                Blade::render(
-                                                    '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
+                    ->authorize('saleCancel')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Cancel sale'))
+                    ->modalDescription(function (Sale $sale) {
+                        return new HtmlString(
+                            Blade::render(
+                                '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
                                 <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
                                 <p>Data da venda: {{ $dateSale }}</p>
                                 <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
@@ -443,60 +443,60 @@ class SaleResource extends Resource
                                     <p>Valor das parcelas pago: R$ {{ number_format($sale->paymentInstallments->where("status", "PAGO")->sum("value"), 2, ",", ".") }} </p>
                                 @endif
                                     <p>Total recebido: R$ {{ number_format(($sale->paymentInstallments->where("status", "PAGO")->sum("value") ?? 0)+($sale->down_payment ?? 0), 2, ",", ".") }} </p>',
-                                                    [
-                                                        'sale'          => $sale,
-                                                        'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
-                                                        'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
-                                                        'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
-                                                    ]
-                                                )
-                                            );
+                                [
+                                    'sale'          => $sale,
+                                    'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
+                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
+                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
+                                ]
+                            )
+                        );
 
-                                        })
-                                        ->label('Cancel')
-                                        ->translateLabel()
-                                        ->icon('heroicon-o-x-circle')
-                                        ->iconSize('md')
-                                        ->color('danger')
-                                        ->form([
-                                            MoneyInput::make('reimbursement')
-                                                ->label('Reimbursement')
-                                                ->live(debounce: 500),
-                                        ])
-                                        ->action(function (Sale $sale, array $data) {
-                                            $sale->update([
-                                                'date_cancel'   => Carbon::now()->format('Y-m-d'),
-                                                'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
-                                                'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
-                                            ]);
+                    })
+                    ->label('Cancel')
+                    ->translateLabel()
+                    ->icon('heroicon-o-x-circle')
+                    ->iconSize('md')
+                    ->color('danger')
+                    ->form([
+                        MoneyInput::make('reimbursement')
+                            ->label('Reimbursement')
+                            ->live(debounce: 500),
+                    ])
+                    ->action(function (Sale $sale, array $data) {
+                        $sale->update([
+                            'date_cancel'   => Carbon::now()->format('Y-m-d'),
+                            'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
+                            'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
+                        ]);
 
-                                            Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
-                                        }),
+                        Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
+                    }),
                 Action::make('contract')
-                                        ->requiresConfirmation()
-                                        ->modalHeading(__('Contract'))
-                                        ->label('Contract')
-                                        ->translateLabel()
-                                        ->icon('heroicon-o-document')
-                                        ->iconSize('md')
-                                        ->color('info')
-                                        ->form([
-                                            FileUpload::make('contract')
-                                                ->label('Contract')
-                                                ->panelAspectRatio('2:1')
-                                                ->storeFiles(false)
-                                                ->acceptedFileTypes([
-                                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                                                ]),
-                                        ])
-                                        ->action(function (array $data, Sale $sale) {
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Contract'))
+                    ->label('Contract')
+                    ->translateLabel()
+                    ->icon('heroicon-o-document')
+                    ->iconSize('md')
+                    ->color('info')
+                    ->form([
+                        FileUpload::make('contract')
+                            ->label('Contract')
+                            ->panelAspectRatio('2:1')
+                            ->storeFiles(false)
+                            ->acceptedFileTypes([
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            ]),
+                    ])
+                    ->action(function (array $data, Sale $sale) {
 
-                                            $template = new TemplateProcessor($data['contract']->getRealPath());
+                        $template = new TemplateProcessor($data['contract']->getRealPath());
 
-                                            $caminho = Contracts::generateSaleContract($template, $sale);
+                        $caminho = Contracts::generateSaleContract($template, $sale);
 
-                                            return response()->download($caminho)->deleteFileAfterSend(true);
-                                        }),
+                        return response()->download($caminho)->deleteFileAfterSend(true);
+                    }),
             ]);
     }
 
