@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{StatusPayments};
+use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
-use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
+use App\Forms\Components\{MoneyInput};
 use App\Models\{Company, PaymentInstallment};
 use App\Tools\Contracts;
 use Carbon\Carbon;
@@ -184,7 +184,8 @@ class PaymentInstallmentResource extends Resource
                         'interest_rate' => Company::query()->first()->interest_rate_installment,
                     ])
                     ->form([
-                        SelectPaymentMethod::make('payment_method')->required(),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class)->required(),
                         Forms\Components\DatePicker::make('due_date')->readOnly(),
                         Group::make([
                             MoneyInput::make('value')->readOnly(),
@@ -304,7 +305,8 @@ class PaymentInstallmentResource extends Resource
                     }),
                 Filter::make('payment_method')
                     ->form([
-                        SelectPaymentMethod::make('payment_method'),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
