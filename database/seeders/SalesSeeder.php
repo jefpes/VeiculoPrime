@@ -12,7 +12,6 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
-        $people = People::all();
         $models = VehicleModel::query()->pluck('id', 'name');
 
         $sellers = People::where('supplier', true)->get();
