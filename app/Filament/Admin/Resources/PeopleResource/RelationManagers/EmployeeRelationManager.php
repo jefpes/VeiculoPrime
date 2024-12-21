@@ -80,6 +80,7 @@ class EmployeeRelationManager extends RelationManager
                         $max30days  = strtotime($record->resignation_date) > now()->subDays(30)->timestamp;
                         $resignated = $record->resignation_date !== null;
 
+                        //TODO: Conferir se há um contrato mais novo
                         return ($max30days && $resignated && auth_user()->hasAbility(Permission::EMPLOYEE_DELETE->value));
                     })
                     ->requiresConfirmation()
