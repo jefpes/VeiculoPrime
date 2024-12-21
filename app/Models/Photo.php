@@ -16,12 +16,10 @@ use Illuminate\Support\Str;
  *
  * @property \Illuminate\Database\Eloquent\Model $photoable
  *
- * @property int $id
+ * @property string $id
  * @property string $path
  * @property bool $is_main
  * @property bool $is_public
- *
- *
  */
 class Photo extends Model
 {
