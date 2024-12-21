@@ -24,10 +24,10 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @method \App\Models\People supplier()
  * @method \App\Models\People buyer()
  *
- * @property int $id
- * @property int $vehicle_model_id
- * @property int $supplier_id
- * @property int $buyer_id
+ * @property string $id
+ * @property string $vehicle_model_id
+ * @property string $supplier_id
+ * @property string $buyer_id
  * @property \Illuminate\Support\Carbon $purchase_date
  * @property float $fipe_price
  * @property float $purchase_price
