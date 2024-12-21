@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Storage;
  * @property \App\Models\Employee $ceo
  * @method \App\Models\Employee ceo()
  *
- * @property int $id
- * @property int|null $employee_id
+ * @property string $id
+ * @property string|null $employee_id
  * @property string|null $name
  * @property string|null $cnpj
  * @property string|null $opened_in
