@@ -138,7 +138,7 @@ class Contracts
         }
     }
 
-    public static function setVehicleValues(TemplateProcessor $template, ?int $vehicle_id): void
+    public static function setVehicleValues(TemplateProcessor $template, ?string $vehicle_id): void
     {
         if ($vehicle_id === null) {
             return;
@@ -229,7 +229,7 @@ class Contracts
         ]);
     }
 
-    public static function setSaleValues(TemplateProcessor $template, ?int $sale_id): void
+    public static function setSaleValues(TemplateProcessor $template, ?string $sale_id): void
     {
         if ($sale_id === null) {
             return;
@@ -272,7 +272,7 @@ class Contracts
         ]);
     }
 
-    public static function setInstallmentValues(TemplateProcessor $template, ?int $installment_id): void
+    public static function setInstallmentValues(TemplateProcessor $template, ?string $installment_id): void
     {
         if ($installment_id === null) {
             return;
@@ -324,7 +324,7 @@ class Contracts
         ]);
     }
 
-    public static function setInstallmentsValues(TemplateProcessor $template, ?int $sale_id): void
+    public static function setInstallmentsValues(TemplateProcessor $template, ?string $sale_id): void
     {
         if ($sale_id === null) {
             return;
@@ -373,7 +373,7 @@ class Contracts
         }
     }
 
-    public static function setExpenseValues(TemplateProcessor $template, ?int $expense_id): void
+    public static function setExpenseValues(TemplateProcessor $template, ?string $expense_id): void
     {
         if ($expense_id === null) {
             return;
@@ -396,7 +396,7 @@ class Contracts
         ]);
     }
 
-    public static function setExpensesValues(TemplateProcessor $template, ?int $vehicle_id): void
+    public static function setExpensesValues(TemplateProcessor $template, ?string $vehicle_id): void
     {
         if ($vehicle_id === null) {
             return;
@@ -451,7 +451,7 @@ class Contracts
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
         //TODO: Fix this
-        //self::setUserValues($template, $sale->user_id ?? null);
+        self::setUserValues($template, $sale->user_id ?? null);
 
         //TODO: Fix this
         //self::setClientValues($template, $sale->people->id ?? null);
