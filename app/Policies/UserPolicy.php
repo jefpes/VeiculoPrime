@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        if (!$user->hierarchy($model->id)) { // @phpstan-ignore-line
+        if (!$user->hierarchy($model->id)) {
             return false;
         }
 
@@ -52,7 +52,7 @@ class UserPolicy
             return false;
         }
 
-        if (!$user->hierarchy($model->id)) { // @phpstan-ignore-line
+        if (!$user->hierarchy($model->id)) {
             return false;
         }
 
@@ -68,7 +68,7 @@ class UserPolicy
             return false;
         }
 
-        if (!$user->hierarchy($model->id)) { // @phpstan-ignore-line
+        if (!$user->hierarchy($model->id)) {
             return false;
         }
 
