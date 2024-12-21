@@ -18,6 +18,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Validation\Rules\Unique;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -27,6 +28,8 @@ class VehicleResource extends Resource
     protected static ?int $navigationSort = 11;
 
     protected static ?string $recordTitleAttribute = 'plate';
+
+    protected bool $validPlate = false;
 
     public static function getNavigationGroup(): ?string
     {
@@ -103,18 +106,38 @@ class VehicleResource extends Resource
                         ->maxLength(255),
                     TextInput::make('plate')
                         ->required()
-                        ->maxLength(255)
-                        ->mask('aaa-9*99'),
+                        ->length(8)
+                        ->mask('aaa-9*99')
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
+                        ),
                     TextInput::make('chassi')
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
+                        ),
                     TextInput::make('renavam')
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
+                        ),
                     TextInput::make('crv_number')
                         ->label('CRV number')
-                        ->maxLength(20),
+                        ->maxLength(20)
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
+                        ),
                     TextInput::make('crv_code')
                         ->label('CRV code')
-                        ->maxLength(20),
+                        ->maxLength(20)
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
+                        ),
                     DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),

@@ -16,15 +16,15 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * @property \App\Models\Role $roles
- * @property \App\Models\Employee $employee
+ * @property \App\Models\People $people
  * @property Collection $abilities
  *
  * @method \App\Models\Role roles()
- * @method \App\Models\Employee employee()
+ * @method \App\Models\People people()
  * @method Collection abilities()
  *
- * @property int $id
- * @property int $tenant_id
+ * @property string $id
+ * @property string $tenant_id
  * @property string $name
  * @property string $email
  * @property string $password

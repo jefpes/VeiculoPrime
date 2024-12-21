@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\{Builder};
  * @method \App\Models\User user()
  * @method \App\Models\Sale sale()
  *
- * @property int $id
- * @property int $user_id
- * @property int $sale_id
+ * @property string $id
+ * @property string $user_id
+ * @property string $sale_id
  * @property \Illuminate\Support\Carbon $due_date
  * @property float $value
  * @property string $status

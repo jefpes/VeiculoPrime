@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @method \App\Models\Role roles()
  * @property \App\Models\Role $roles
- * @property int $id
+ * @property string $id
  * @property string $name
  */
 class Ability extends Model

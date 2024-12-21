@@ -36,8 +36,9 @@ class BrandResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->rules(['required', unique_within_tenant_rule(static::$model)])
+                    ->columnSpanFull(),
             ]);
     }
 

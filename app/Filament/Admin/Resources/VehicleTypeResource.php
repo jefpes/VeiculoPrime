@@ -16,6 +16,8 @@ class VehicleTypeResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');
@@ -36,9 +38,8 @@ class VehicleTypeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true)
+                    ->rules([unique_within_tenant_rule(static::$model)])
                     ->columnSpanFull(),
             ]);
     }

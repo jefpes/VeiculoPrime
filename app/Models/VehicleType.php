@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @method \App\Models\VehicleModel models()
  *
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at

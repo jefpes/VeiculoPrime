@@ -7,6 +7,32 @@ use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
 
+/**
+ * @property \App\Models\Company $ceo
+ * @property \App\Models\Employee $employee
+ * @property \App\Models\User $user
+ * @property \App\Models\Sale $sales
+ * @property \App\Models\Vehicle $vehiclesAsBuyer
+ * @property \App\Models\Vehicle $vehiclesAsSupplier
+ * @property string $id
+ * @property string $tenant_id
+ * @property string $user_id
+ * @property string $name
+ * @property string $sex
+ * @property string $email
+ * @property string $rg
+ * @property string $person_type
+ * @property string $person_id
+ * @property string $birthday
+ * @property string $father
+ * @property string $mother
+ * @property string $marital_status
+ * @property string $spouse
+ * @property bool $client
+ * @property bool $supplier
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ */
 class People extends BaseModel
 {
     use HasFactory;
