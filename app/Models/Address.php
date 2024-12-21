@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Address
  *
- * @property int $id
+ * @property string $id
  * @property string $addressable_id
  * @property string $addressable_type
  * @property string $city
