@@ -3,9 +3,9 @@
 namespace App\Tools;
 
 use App\Models\Vehicle;
-use App\Models\{Address, Affiliate, PaymentInstallment, People, Sale, User, VehicleExpense};
+use App\Models\{PaymentInstallment, People, Sale, User, VehicleExpense};
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\{Storage};
-use Illuminate\Support\Str;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
@@ -32,52 +32,40 @@ class Contracts
             $person = $user->people;
 
             $template->setValues([
-                'usuario_nome'  => $user->name ?? 'Valor não especificado',
                 'usuario_email' => $user->email ?? 'Valor não especificado',
             ]);
 
-            self::setPeopleValues($template, $person->id);
-            self::setEmployeeValues($template, $person->id);
-
-            $template->setValues([
-                'usuario_endereco_cep'         => $person->addresses->zip_code ?? 'Valor não especificado',
-                'usuario_endereco_rua'         => $person->addresses->street ?? 'Valor não especificado',
-                'usuario_endereco_numero'      => $person->addresses->number ?? 'Valor não especificado',
-                'usuario_endereco_bairro'      => $person->addresses->neighborhood ?? 'Valor não especificado',
-                'usuario_endereco_cidade'      => $person->addresses->city ?? 'Valor não especificado',
-                'usuario_endereco_estado'      => $person->addresses->state ?? 'Valor não especificado',
-                'usuario_endereco_complemento' => $person->addresses->complement ?? 'Valor não especificado',
-            ]);
+            self::setPeopleValues($template, $person->id, 'usuario');
         }
     }
 
-    public static function setPeopleValues(TemplateProcessor $template, ?string $people_id = null): void
+    public static function setPeopleValues(TemplateProcessor $template, ?string $people_id = null, string $parent = null): void
     {
         if ($people_id === null) {
             return;
         }
 
-        $person = People::with('address', 'affiliates')->find($people_id);
+        $person = People::query()->find($people_id);
 
         if ($person !== null) {
             $template->setValues([
-                'pessoa_nome_completo'           => $person->name ?? 'Valor não especificado',
-                'pessoa_genero'                  => $person->sex ?? 'Valor não especificado',
-                'pessoa_type'                    => $person->person_type ?? 'Valor não especificado',
-                'pessoa_cpf_cnpj'                => $person->person_id ?? 'Valor não especificado',
-                'pessoa_rg'                      => $person->rg ?? 'Valor não especificado',
-                'pessoa_email'                   => $person->email ?? 'Valor não especificado',
-                'pessoa_data_nascimento'         => date_format_custom($person->birthday),
-                'pessoa_data_nascimento_extenso' => spell_date($person->birthday),
-                'pessoa_pai'                     => $person->father ?? 'Valor não especificado',
-                'pessoa_mae'                     => $person->mother ?? 'Valor não especificado',
-                'pessoa_estado_civil'            => $person->marital_status ?? 'Valor não especificado',
-                'pessoa_conjuje'                 => $person->spouse ?? 'Valor não especificado',
+                $parent === null ? "nome" : "{$parent}_nome"                                       => $person->name ?? 'Valor não especificado',
+                $parent === null ? "sexo" : "{$parent}_sexo"                                       => $person->sex->value ?? 'Valor não especificado', //@phpstan-ignore-line
+                $parent === null ? "type" : "{$parent}_tipo"                                       => $person->person_type->value ?? 'Valor não especificado', //@phpstan-ignore-line
+                $parent === null ? "cpf_cnpj" : "{$parent}_cpf_cnpj"                               => $person->person_id ?? 'Valor não especificado',
+                $parent === null ? "rg" : "{$parent}_rg"                                           => $person->rg ?? 'Valor não especificado',
+                $parent === null ? "email" : "{$parent}_email"                                     => $person->email ?? 'Valor não especificado',
+                $parent === null ? "data_nascimento" : "{$parent}_data_nascimento"                 => date_format_custom($person->birthday),
+                $parent === null ? "data_nascimento_extenso" : "{$parent}_data_nascimento_extenso" => spell_date($person->birthday),
+                $parent === null ? "pai" : "{$parent}_pai"                                         => $person->father ?? 'Valor não especificado',
+                $parent === null ? "mae" : "{$parent}_mae"                                         => $person->mother ?? 'Valor não especificado',
+                $parent === null ? "estado_civil" : "{$parent}_estado_civil"                       => $person->marital_status ?? 'Valor não especificado',
+                $parent === null ? "conjuje" : "{$parent}_conjuje"                                 => $person->spouse ?? 'Valor não especificado',
             ]);
         }
     }
 
-    public static function setEmployeeValues(TemplateProcessor $template, ?string $people_id = null): void
+    public static function setEmployeeValues(TemplateProcessor $template, ?string $people_id = null, string $parent = null): void
     {
         if ($people_id === null) {
             return;
@@ -87,40 +75,40 @@ class Contracts
 
         if ($employee !== null) {
             $template->setValues([
-                'funcionario_salario'                         => number_format($employee->salary, 2, ',', '.'),
-                'funcionario_salario_extenso'                 => spell_number($employee->salary),
-                'funcionario_salario_dinheiro'                => spell_monetary($employee->salary),
-                'funcionario_pessoa_data_contratacao'         => date_format_custom($employee->admission_date),
-                'funcionario_pessoa_data_contratacao_extenso' => spell_date($employee->admission_date),
-                'funcionario_pessoa_data_demissao'            => date_format_custom($employee->resignation_date),
-                'funcionario_pessoa_data_demissao_extenso'    => spell_date($employee->resignation_date),
+                $parent === null ? 'funcionario_salario' : "{$parent}_funcionario_salario"                                                 => number_format($employee->salary, 2, ',', '.'),
+                $parent === null ? 'funcionario_salario_extenso' : "{$parent}_funcionario_salario_extenso"                                 => spell_number($employee->salary),
+                $parent === null ? 'funcionario_salario_dinheiro' : "{$parent}_funcionario_salario_dinheiro"                               => spell_monetary($employee->salary),
+                $parent === null ? 'funcionario_pessoa_data_contratacao' : "{$parent}_funcionario_pessoa_data_contratacao"                 => date_format_custom($employee->admission_date),
+                $parent === null ? 'funcionario_pessoa_data_contratacao_extenso' : "{$parent}_funcionario_pessoa_data_contratacao_extenso" => spell_date($employee->admission_date),
+                $parent === null ? 'funcionario_pessoa_data_demissao' : "{$parent}_funcionario_pessoa_data_demissao"                       => date_format_custom($employee->resignation_date),
+                $parent === null ? 'funcionario_pessoa_data_demissao_extenso' : "{$parent}_funcionario_pessoa_data_demissao_extenso"       => spell_date($employee->resignation_date),
             ]);
         }
     }
 
-    public static function setAddressesValues(TemplateProcessor $template, Address $addressable = null): void
+    public static function setAddressesValues(TemplateProcessor $template, MorphMany $addressable = null, string $parent = null): void
     {
-        if ($addressable === null) {
+        if ($addressable === null || $parent === null) {
             return;
         }
 
         $iteration = 0;
 
-        foreach ($addressable->get() as $address) { //@phpstan-ignore-line
+        foreach ($addressable->get() as $address) {
             $iteration++;
             $template->setValues([
-                Str::lower($address->addressable_type) . "_endereco_cep_$iteration"         => $address->zip_code ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_rua_$iteration"         => $address->street ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_numero_$iteration"      => $address->number ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_bairro_$iteration"      => $address->neighborhood ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_cidade_$iteration"      => $address->city ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_estado_$iteration"      => $address->state ?? 'Valor não especificado',
-                Str::lower($address->addressable_type) . "_endereco_complemento_$iteration" => $address->complement ?? 'Valor não especificado',
+                "{$parent}_endereco_cep_{$iteration}"         => $address->zip_code ?? 'Valor não especificado',
+                "{$parent}_endereco_rua_{$iteration}"         => $address->street ?? 'Valor não especificado',
+                "{$parent}_endereco_numero_{$iteration}"      => $address->number ?? 'Valor não especificado',
+                "{$parent}_endereco_bairro_{$iteration}"      => $address->neighborhood ?? 'Valor não especificado',
+                "{$parent}_endereco_cidade_{$iteration}"      => $address->city ?? 'Valor não especificado',
+                "{$parent}_endereco_estado_{$iteration}"      => $address->state ?? 'Valor não especificado',
+                "{$parent}_endereco_complemento_{$iteration}" => $address->complement ?? 'Valor não especificado',
             ]);
         }
     }
 
-    public static function setAffiliatesValues(TemplateProcessor $template, Affiliate $affiliatable = null): void
+    public static function setAffiliatesValues(TemplateProcessor $template, ?MorphMany $affiliatable = null, ?string $parent = null): void
     {
         if ($affiliatable === null) {
             return;
@@ -128,12 +116,12 @@ class Contracts
 
         $iteration = 0;
 
-        foreach ($affiliatable->get() as $affiliate) { //@phpstan-ignore-line
+        foreach ($affiliatable->get() as $affiliate) {
             $iteration++;
             $template->setValues([
-                Str::lower($affiliate->affiliatable_type) . "_tipo_$iteration"     => $affiliate->type ?? 'Valor não especificado',
-                Str::lower($affiliate->affiliatable_type) . "_nome_$iteration"     => $affiliate->name ?? 'Valor não especificado',
-                Str::lower($affiliate->affiliatable_type) . "_telefone_$iteration" => $affiliate->phone ?? 'Valor não especificado',
+                "{$parent}_afiliado_tipo_{$iteration}"     => $affiliate->type ?? 'Valor não especificado',
+                "{$parent}_afiliado_nome_{$iteration}"     => $affiliate->name ?? 'Valor não especificado',
+                "{$parent}_afiliado_telefone_{$iteration}" => $affiliate->phone ?? 'Valor não especificado',
             ]);
         }
     }
@@ -183,49 +171,6 @@ class Contracts
             'codigo_crv'            => $vehicle->crv_code ?? 'Valor não especificado',
             'descricao'             => $vehicle->description ?? 'Valor não especificado',
             'anotacao'              => $vehicle->annotation ?? 'Valor não especificado',
-        ]);
-    }
-
-    public static function setSupplierValues(TemplateProcessor $template, ?int $supplier_id): void
-    {
-        if ($supplier_id === null) {
-            return;
-        }
-
-        $supplier = People::with('address')->find($supplier_id);
-
-        //Substitui os placeholders com os dados do fornecedor
-        $template->setValues([
-            'fornecedor_nome'         => $supplier->name ?? 'Valor não especificado',
-            'fornecedor_genero'       => $supplier->sex ?? 'Valor não especificado',
-            'fornecedor_tipo'         => $supplier->supplier_type ?? 'Valor não especificado',
-            'fornecedor_rg'           => $supplier->rg ?? 'Valor não especificado',
-            'fornecedor_cpf/cnpj'     => $supplier->supplier_id ?? 'Valor não especificado',
-            'fornecedor_estado_civil' => $supplier->marital_status ?? 'Valor não especificado',
-            'fornecedor_telefone_1'   => $supplier->phone_one ?? 'Valor não especificado',
-            'fornecedor_telefone_2'   => $supplier->phone_two ?? 'Valor não especificado',
-            // 'fornecedor_data_de_nascimento'         => date_format_custom($supplier->birthday),
-            // 'fornecedor_data_de_nascimento_extenso' => spell_date($supplier->birthday),
-            'fornecedor_pai'                 => $supplier->father ?? 'Valor não especificado',
-            'fornecedor_telefone_pai'        => $supplier->father_phone ?? 'Valor não especificado',
-            'fornecedor_mae'                 => $supplier->mother ?? 'Valor não especificado',
-            'fornecedor_telefone_mae'        => $supplier->mother_phone ?? 'Valor não especificado',
-            'fornecedor_afiliado_1'          => $supplier->affiliated_one ?? 'Valor não especificado',
-            'fornecedor_telefone_afiliado_1' => $supplier->affiliated_one_phone ?? 'Valor não especificado',
-            'fornecedor_afiliado_2'          => $supplier->affiliated_two ?? 'Valor não especificado',
-            'fornecedor_telefone_afiliado_2' => $supplier->affiliated_two_phone ?? 'Valor não especificado',
-            'fornecedor_descricao'           => $supplier->description ?? 'Valor não especificado',
-        ]);
-
-        //Substitui os placeholders com os dados do endereco do fornecedor
-        $template->setValues([
-            'fornecedor_endereco_cep'         => $supplier->addresses->zip_code ?? 'Valor não especificado',
-            'fornecedor_endereco_rua'         => $supplier->addresses->street ?? 'Valor não especificado',
-            'fornecedor_endereco_numero'      => $supplier->addresses->number ?? 'Valor não especificado',
-            'fornecedor_endereco_bairro'      => $supplier->addresses->neighborhood ?? 'Valor não especificado',
-            'fornecedor_endereco_cidade'      => $supplier->addresses->city ?? 'Valor não especificado',
-            'fornecedor_endereco_estado'      => $supplier->addresses->state ?? 'Valor não especificado',
-            'fornecedor_endereco_complemento' => $supplier->addresses->complement ?? 'Valor não especificado',
         ]);
     }
 
@@ -433,9 +378,6 @@ class Contracts
         //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $vehicle->id ?? null);
 
-        //TODO: Fix this
-        //self::setSupplierValues($template, $vehicle->supplier->id ?? null);
-
         //Substitui os placeholders com os dados das despesas
         self::setExpensesValues($template, $vehicle->id ?? null);
 
@@ -450,17 +392,17 @@ class Contracts
 
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
-        //TODO: Fix this
-        self::setUserValues($template, $sale->user_id ?? null);
+        self::setUserValues($template, $sale->user_id);
 
-        //TODO: Fix this
-        //self::setClientValues($template, $sale->people->id ?? null);
+        self::setPeopleValues($template, $sale->client_id, 'cliente');
 
+        self::setAddressesValues($template, $sale->client()->addresses(), 'cliente');
+
+        self::setAffiliatesValues($template, $sale->client()->affiliates(), 'cliente');
         //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $sale->vehicle->id ?? null);
 
-        //TODO: Fix this
-        //self::setSupplierValues($template, $sale->vehicle->supplier->id ?? null);
+        self::setPeopleValues($template, $sale->vehicle->supplier->id ?? null, 'fornecedor');
 
         //Substitui os placeholders com os dados da venda
         self::setSaleValues($template, $sale->id ?? null);
