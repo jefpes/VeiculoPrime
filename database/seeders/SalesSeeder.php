@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{People, User, Vehicle, VehicleModel};
+use App\Models\{People, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class SalesSeeder extends Seeder
@@ -12,15 +12,11 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
-        $user   = User::all();
         $people = People::all();
         $models = VehicleModel::query()->pluck('id', 'name');
 
-        $sellerId = $people->random()->id;
-
-        do {
-            $clientId = $people->random()->id;
-        } while ($clientId === $sellerId);
+        $sellers = People::where('supplier', true)->get();
+        $clients = People::where('client', true)->get();
 
         Vehicle::create([
             'purchase_date'    => '2024-02-03',
@@ -41,8 +37,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'      => $sellerId,
-                'client_id'      => $clientId,
+                'seller_id'      => $sellers->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-01',
@@ -71,8 +67,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'      => $sellerId,
-                'client_id'      => $clientId,
+                'seller_id'      => $sellers->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'DINHEIRO',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-03',
@@ -100,8 +96,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'      => $sellerId,
-                'client_id'      => $clientId,
+                'seller_id'      => $sellers->random()->id,
+                'client_id'      => $clients->random()->id,
                 'payment_method' => 'PIX',
                 'status'         => 'PAGO',
                 'date_sale'      => '2024-03-04',
@@ -130,8 +126,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'           => $sellerId,
-                'client_id'           => $clientId,
+                'seller_id'           => $sellers->random()->id,
+                'client_id'           => $clients->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-03-07',
@@ -172,8 +168,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'           => $sellerId,
-                'client_id'           => $clientId,
+                'seller_id'           => $sellers->random()->id,
+                'client_id'           => $clients->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PAGO',
                 'date_sale'           => '2024-03-07',
@@ -229,8 +225,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'           => $sellerId,
-                'client_id'           => $clientId,
+                'seller_id'           => $sellers->random()->id,
+                'client_id'           => $clients->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-03-07',
@@ -286,8 +282,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'           => $sellerId,
-                'client_id'           => $clientId,
+                'seller_id'           => $sellers->random()->id,
+                'client_id'           => $clients->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-04-07',
@@ -374,8 +370,8 @@ class SalesSeeder extends Seeder
             'description'      => 'Veículo em ótimo estado de conservação.',
         ])->sale()->create(
             [
-                'seller_id'           => $sellerId,
-                'client_id'           => $clientId,
+                'seller_id'           => $sellers->random()->id,
+                'client_id'           => $clients->random()->id,
                 'payment_method'      => 'CREDIÁRIO PRÓPRIO',
                 'status'              => 'PENDENTE',
                 'date_sale'           => '2024-05-07',
