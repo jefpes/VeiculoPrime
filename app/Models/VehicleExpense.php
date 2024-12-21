@@ -13,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method \App\Models\Vehicle vehicle()
  * @method \App\Models\User user()
  *
- * @property int $id
- * @property int $vehicle_id
- * @property int $user_id
+ * @property string $id
+ * @property string $vehicle_id
+ * @property string $user_id
  * @property \Illuminate\Support\Carbon $date
  * @property string $description
  * @property float $value
