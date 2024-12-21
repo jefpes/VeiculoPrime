@@ -62,7 +62,8 @@ class FormFields
                         ->required()
                         ->columnSpan(['md' => 2, 'sm' => 5])
                         ->maxLength(255),
-                    PhoneInput::make('phone')
+                    TextInput::make('phone')
+                        ->mask('(99) 9 9999-9999')
                         ->columnSpan(['md' => 2, 'sm' => 5])
                         ->required(),
                 ])->columns(5),

@@ -110,6 +110,9 @@ class PeopleResource extends Resource
                     Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
                         FormFields::setPhoneFields(),
                     ]),
+                    Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
+                        FormFields::setAffiliateFields(),
+                    ]),
                     Forms\Components\Tabs\Tab::make(__('Employment contract'))
                         ->visibleOn('edit')
                         ->schema(
