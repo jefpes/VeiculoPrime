@@ -3,8 +3,9 @@
 namespace App\Tools;
 
 use App\Models\Vehicle;
-use App\Models\{PaymentInstallment, People, Sale, User, VehicleExpense};
+use App\Models\{Address, Affiliate, PaymentInstallment, People, Sale, User, VehicleExpense};
 use Illuminate\Support\Facades\{Storage};
+use Illuminate\Support\Str;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Contracts
@@ -93,6 +94,46 @@ class Contracts
                 'funcionario_pessoa_data_contratacao_extenso' => spell_date($employee->admission_date),
                 'funcionario_pessoa_data_demissao'            => date_format_custom($employee->resignation_date),
                 'funcionario_pessoa_data_demissao_extenso'    => spell_date($employee->resignation_date),
+            ]);
+        }
+    }
+
+    public static function setAddressesValues(TemplateProcessor $template, Address $addressable = null): void
+    {
+        if ($addressable === null) {
+            return;
+        }
+
+        $iteration = 0;
+
+        foreach ($addressable->get() as $address) { //@phpstan-ignore-line
+            $iteration++;
+            $template->setValues([
+                Str::lower($address->addressable_type) . "_endereco_cep_$iteration"         => $address->zip_code ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_rua_$iteration"         => $address->street ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_numero_$iteration"      => $address->number ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_bairro_$iteration"      => $address->neighborhood ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_cidade_$iteration"      => $address->city ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_estado_$iteration"      => $address->state ?? 'Valor não especificado',
+                Str::lower($address->addressable_type) . "_endereco_complemento_$iteration" => $address->complement ?? 'Valor não especificado',
+            ]);
+        }
+    }
+
+    public static function setAffiliatesValues(TemplateProcessor $template, Affiliate $affiliatable = null): void
+    {
+        if ($affiliatable === null) {
+            return;
+        }
+
+        $iteration = 0;
+
+        foreach ($affiliatable->get() as $affiliate) { //@phpstan-ignore-line
+            $iteration++;
+            $template->setValues([
+                Str::lower($affiliate->affiliatable_type) . "_tipo_$iteration"     => $affiliate->type ?? 'Valor não especificado',
+                Str::lower($affiliate->affiliatable_type) . "_nome_$iteration"     => $affiliate->name ?? 'Valor não especificado',
+                Str::lower($affiliate->affiliatable_type) . "_telefone_$iteration" => $affiliate->phone ?? 'Valor não especificado',
             ]);
         }
     }
