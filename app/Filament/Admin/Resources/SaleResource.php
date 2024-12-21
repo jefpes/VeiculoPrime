@@ -2,11 +2,11 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{StatusPayments};
+use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
-use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
-use App\Models\{Sale, Vehicle};
+use App\Forms\Components\{MoneyInput};
+use App\Models\{Sale, Vehicle, VehicleModel};
 use App\Tools\{Contracts};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -48,9 +48,9 @@ class SaleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
-                    Forms\Components\Select::make('user_id')
+                    Forms\Components\Select::make('seller_id')
                         ->label('Seller')
-                        ->relationship('user', 'name')
+                        ->relationship('people', 'name')
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->label('Vehicle')
@@ -80,7 +80,8 @@ class SaleResource extends Resource
                         ->relationship('client', 'name')
                         ->searchable()
                         ->required(),
-                    SelectPaymentMethod::make('payment_method'),
+                    Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
                     MoneyInput::make('discount')
@@ -192,7 +193,7 @@ class SaleResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('seller.name')
                     ->label('Seller')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -317,24 +318,24 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(fn () => \App\Models\User::withTrashed()->whereHas('sales')->get()->pluck('name', 'id')),
+                        ->options(fn () => \App\Models\People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
-                    return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                    return $query->when($data['seller'], fn ($query, $value) => $query->where('seller_id', $value));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
                     if ($data['seller'] ?? null) {
-                        $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Seller') . ': ' . \App\Models\People::find($data['seller'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
                 }),
                 Filter::make('client')->form([
-                    Select::make('client')
-                        ->searchable()
-                        ->options(function () {
-                            return \App\Models\People::query()->whereHas('sales')->get()->pluck('name', 'id');
-                        }),
+                Select::make('client')
+                    ->searchable()
+                    ->options(function () {
+                        return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
+                    }),
                 ])->query(function ($query, array $data) {
                     return $query
                         ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
@@ -349,7 +350,8 @@ class SaleResource extends Resource
                 }),
                 Filter::make('payment_method')
                     ->form([
-                        SelectPaymentMethod::make('payment_method'),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -365,7 +367,7 @@ class SaleResource extends Resource
                 Filter::make('status')
                     ->form([
                         Forms\Components\Select::make('status')
-                        ->options(StatusPayments::class),
+                            ->options(StatusPayments::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
@@ -382,13 +384,15 @@ class SaleResource extends Resource
                     ->form([
                         Select::make('model')
                             ->searchable()
-                            ->options(function () {
-                                return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
-                                    return [
-                                        $model->id => "{$model->name}",
-                                    ];
-                                });
-                            }),
+                            ->options(
+                                VehicleModel::query()->orderBy('name')
+                                    ->whereHas(
+                                        'vehicles',
+                                        fn ($query) => $query->whereHas('sale')
+                                    )
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            ),
                     ])
                     ->query(function ($query, array $data) {
                         if (!empty($data['model'])) {
@@ -403,7 +407,7 @@ class SaleResource extends Resource
                         $indicators = [];
 
                         if (!empty($data['model'])) {
-                            $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
+                            $modelName = VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
 
                             if ($modelName) {
                                 $indicators[] = __('Model') . ': ' . $modelName;
