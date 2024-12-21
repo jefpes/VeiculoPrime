@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int|null $tenant_id
+ * Class BaseModel
+ * @package App\Models
+ * @property string $id
+ * @property string|null $tenant_id
  * @property Tenant $tenant
  */
 class BaseModel extends Model
