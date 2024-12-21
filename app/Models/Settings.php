@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 /**
  * Class Settings
  *
- * @property int $id
+ * @property string $id
  * @property string|null $primary_color
  * @property string|null $secondary_color
  * @property string|null $tertiary_color
