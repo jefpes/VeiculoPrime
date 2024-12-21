@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property \App\Models\VehicleModel $models
  * @method \App\Models\VehicleModel models()
- * @property int $id
+ * @property string $id
  * @property string $name
  */
 class Brand extends BaseModel
