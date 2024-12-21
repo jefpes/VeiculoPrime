@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @method \App\Models\Vehicle vehicles()
  * @method \App\Models\VehicleType type()
  *
- * @property int $id
- * @property int $vehicle_type_id
- * @property int $brand_id
+ * @property string $id
+ * @property string $vehicle_type_id
+ * @property string $brand_id
  * @property string $name
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
