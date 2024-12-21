@@ -50,30 +50,31 @@ class SaleResource extends Resource
                 Section::make()->schema([
                     Forms\Components\Select::make('seller_id')
                         ->label('Seller')
-                        ->relationship('people', 'name')
+                        ->relationship('seller', 'name', modifyQueryUsing: function ($query, $record) {
+                            return $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null))->orWhere('id', $record->seller_id);
+                        })
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->label('Vehicle')
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            self::updateInstallmentValues($set, $get);
-                        })
+                        ->afterStateUpdated(fn (Forms\Set $set, Forms\Get $get) => self::updateInstallmentValues($set, $get))
                         ->live()
                         ->options(function ($record) {
-                            $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
-
-                            if ($record !== null) {
-                                $query->orWhere('id', $record->vehicle_id);
-                            }
-
-                            return $query->get()->mapWithKeys(function (Vehicle $vehicle) {
-                                $price = $vehicle->promotional_price ?? $vehicle->sale_price;
-                                $price = number_format($price, 2, ',', '.');
-                                $price = "R$ {$price}";
-
-                                return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})",
-                                ];
-                            });
+                            return Vehicle::query()
+                                ->where(function ($query) use ($record) {
+                                    $query->whereNull('sold_date')
+                                        ->when($record, fn ($q) => $q->orWhere('id', $record->vehicle_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (Vehicle $vehicle) => [
+                                    $vehicle->id => sprintf(
+                                        '%s - %s (%s/%s) - (R$ %s)',
+                                        $vehicle->plate,
+                                        $vehicle->model->name,
+                                        $vehicle->year_one,
+                                        $vehicle->year_two,
+                                        number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2)
+                                    ),
+                                ]);
                         })
                         ->required(),
                     Forms\Components\Select::make('client_id')
@@ -331,11 +332,11 @@ class SaleResource extends Resource
                     return $indicators;
                 }),
                 Filter::make('client')->form([
-                Select::make('client')
-                    ->searchable()
-                    ->options(function () {
-                        return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
-                    }),
+                    Select::make('client')
+                        ->searchable()
+                        ->options(function () {
+                            return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
+                        }),
                 ])->query(function ($query, array $data) {
                     return $query
                         ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
