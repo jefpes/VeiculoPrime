@@ -3,12 +3,11 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{MaritalStatus, Permission, PersonType, Sexes};
+use App\Filament\Admin\Resources\PeopleResource\RelationManagers\EmployeeRelationManager;
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
-use App\Forms\Components\MoneyInput;
 use App\Models\{People};
 use App\Tools\{FormFields, PhotosRelationManager};
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\{Repeater};
+use Filament\Forms\Components\{Livewire};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -111,75 +110,13 @@ class PeopleResource extends Resource
                     Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
                         FormFields::setPhoneFields(),
                     ]),
-                    Forms\Components\Tabs\Tab::make(__('Employee'))->schema([
-                        Repeater::make('employee')
-                            ->collapsible()
-                            ->deletable(false)
-                            ->addable(fn ($record) => $record === null || ($record->employee->isEmpty() || $record->employee->last()->resignation_date !== null))
-                            ->relationship()
-                            ->grid(2)
-                            ->columns(3)
-                            ->hiddenLabel()
-                            ->itemLabel(fn ($state) => $state['resignation_date'] ? date_format_custom($state['admission_date']) . ' - ' . date_format_custom($state['resignation_date']) : date_format_custom($state['admission_date']))
-                            ->addActionLabel(__('Add Employee'))
-                            ->schema([
-                                MoneyInput::make('salary')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\DatePicker::make('admission_date')
-                                    ->required(),
-                                Forms\Components\DatePicker::make('resignation_date')
-                                    ->live()
-                                    ->readOnly(),
-                            ])
-                            ->extraItemActions([
-                                Action::make('dismiss')
-                                    ->label('Dismiss')
-                                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
-                                    ->color('danger')
-                                    ->authorize(function (Repeater $component, $arguments, $record) {
-                                        if ($record === null || $record->employee->isEmpty()) {
-                                            return false;
-                                        }
-
-                                        return $component->getItemState($arguments['item'])['resignation_date'] === null;
-                                    })
-                                    ->requiresConfirmation()
-                                    ->form([
-                                        Forms\Components\DatePicker::make('resignation_date')
-                                            ->label('Resignation Date'),
-                                    ])
-                                    ->action(function ($record, array $data) {
-                                        if ($record !== null && $record->employee->isNotEmpty()) {
-                                            $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
-                                            redirect(request()->header('Referer'));
-                                        }
-                                    }),
-                                Action::make('rehire')
-                                    ->label('Rehire')
-                                    ->icon('heroicon-o-arrow-left-end-on-rectangle')
-                                    ->color('warning')
-                                    ->authorize(function (Repeater $component, $arguments, $record) {
-                                        if ($record === null || $record->employee->isEmpty()) {
-                                            return false;
-                                        }
-
-                                        $max30days  = strtotime($component->getItemState($arguments['item'])['resignation_date']) > now()->subDays(30)->timestamp;
-                                        $resignated = $component->getItemState($arguments['item'])['resignation_date'] !== null;
-
-                                        $its = str_replace('record-', '', $arguments['item']) === $record->employee->last()->id;
-
-                                        return ($max30days && $resignated && $its);
-                                    })
-                                    ->requiresConfirmation()
-                                    ->action(function ($record) {
-                                        if ($record !== null && $record->employee->isNotEmpty()) {
-                                            $record->employee->last()->update(['resignation_date' => null]);
-                                            redirect(request()->header('Referer'));
-                                        }
-                                    }),
-                            ]),
-                    ]),
+                    Forms\Components\Tabs\Tab::make(__('Employment contract'))->schema(
+                        function ($livewire) {
+                            return [
+                                Livewire::make(EmployeeRelationManager::class, ['pageClass' => static::class, 'ownerRecord' => $livewire->record, 'lazy' => true]),
+                            ];
+                        }
+                    ),
                 ]),
             ]);
     }
