@@ -72,16 +72,36 @@ class EmployeeRelationManager extends RelationManager
 
                     $record->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
                 }),
+
                 Tables\Actions\Action::make('rehire')
                     ->label('Rehire')
                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                     ->color('warning')
                     ->authorize(function ($record) {
-                        $max30days  = strtotime($record->resignation_date) > now()->subDays(30)->timestamp;
-                        $resignated = $record->resignation_date !== null;
+                        // Verificar se a demissão foi nos últimos 30 dias
+                        $wasResignedRecently = strtotime($record->resignation_date) > now()->subDays(30)->timestamp;
 
-                        //TODO: Conferir se há um contrato mais novo
-                        return ($max30days && $resignated && auth_user()->hasAbility(Permission::EMPLOYEE_DELETE->value));
+                        // Verificar se o registro foi de fato demitido
+                        $isResigned = $record->resignation_date !== null;
+
+                        // Obter a pessoa associada ao registro
+                        $people = People::query()->find($record->people_id);
+
+                        // Verificar se há contrato ativo
+                        $hasActiveContract = $people->employee()->whereNull('resignation_date')->exists();
+
+                        // Obter o contrato mais recente
+                        $lastContract = $people->employee()->latest('created_at')->first();
+
+                        // Verificar se o contrato atual é o mais recente
+                        $isLastContract = $lastContract?->id === $record->id; //@phpstan-ignore-line
+
+                        // Retornar se todas as condições são atendidas
+                        return $wasResignedRecently
+                            && $isResigned
+                            && auth_user()->hasAbility(Permission::EMPLOYEE_DELETE->value)
+                            && !$hasActiveContract
+                            && $isLastContract;
                     })
                     ->requiresConfirmation()
                     ->action(function ($record) {

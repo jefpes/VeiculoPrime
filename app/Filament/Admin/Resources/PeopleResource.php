@@ -110,13 +110,15 @@ class PeopleResource extends Resource
                     Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
                         FormFields::setPhoneFields(),
                     ]),
-                    Forms\Components\Tabs\Tab::make(__('Employment contract'))->schema(
-                        function ($livewire) {
-                            return [
-                                Livewire::make(EmployeeRelationManager::class, ['pageClass' => static::class, 'ownerRecord' => $livewire->record, 'lazy' => true]),
-                            ];
-                        }
-                    ),
+                    Forms\Components\Tabs\Tab::make(__('Employment contract'))
+                        ->visibleOn('edit')
+                        ->schema(
+                            function ($livewire) {
+                                return [
+                                    Livewire::make(EmployeeRelationManager::class, ['pageClass' => static::class, 'ownerRecord' => $livewire->record, 'lazy' => true]),
+                                ];
+                            }
+                        ),
                 ]),
             ]);
     }
