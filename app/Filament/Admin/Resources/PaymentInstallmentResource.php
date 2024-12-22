@@ -2,10 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{StatusPayments};
+use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
-use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
-use App\Models\{Company, PaymentInstallment};
+use App\Forms\Components\{MoneyInput};
+use App\Models\{Company, PaymentInstallment, People};
 use App\Tools\Contracts;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
@@ -19,7 +19,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\{Builder};
-use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class PaymentInstallmentResource extends Resource
@@ -94,8 +93,8 @@ class PaymentInstallmentResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('receiver.name')
+                    ->label('Responsible')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('sale.client.name')
@@ -184,7 +183,8 @@ class PaymentInstallmentResource extends Resource
                         'interest_rate' => Company::query()->first()->interest_rate_installment,
                     ])
                     ->form([
-                        SelectPaymentMethod::make('payment_method')->required(),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class)->required(),
                         Forms\Components\DatePicker::make('due_date')->readOnly(),
                         Group::make([
                             MoneyInput::make('value')->readOnly(),
@@ -211,7 +211,7 @@ class PaymentInstallmentResource extends Resource
                             ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
                     ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
-                            'user_id'        => Auth::id(),
+                            'received_by'    => auth_user()?->people?->id,
                             'status'         => 'PAGO',
                             'discount'       => $data['discount'],
                             'late_fee'       => $data['late_fee'],
@@ -235,7 +235,7 @@ class PaymentInstallmentResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (PaymentInstallment $installment) {
                         $installment->update([
-                            'user_id'        => Auth::id(),
+                            'received_by'    => auth_user()?->people?->id,
                             'status'         => 'PENDENTE',
                             'discount'       => null,
                             'late_fee'       => null,
@@ -304,7 +304,8 @@ class PaymentInstallmentResource extends Resource
                     }),
                 Filter::make('payment_method')
                     ->form([
-                        SelectPaymentMethod::make('payment_method'),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -337,7 +338,12 @@ class PaymentInstallmentResource extends Resource
                     ->form([
                         Select::make('client')
                             ->searchable()
-                            ->options(fn () => \App\Models\People::query()->where('client', true)->get()->pluck('name', 'id')),
+                            ->options(
+                                fn () => People::query()
+                                        ->whereHas('client')
+                                        ->get()
+                                        ->pluck('name', 'id')
+                            ),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         if (!empty($data['client'])) {

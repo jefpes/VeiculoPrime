@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\{Builder};
 /**
  * Class PaymentInstallments
  *
- * @property \App\Models\User $user
+ * @property \App\Models\People $receiver
  * @property \App\Models\Sale $sale
  *
- * @method \App\Models\User user()
+ * @method \App\Models\People receiver()
  * @method \App\Models\Sale sale()
  *
  * @property string $id
- * @property string $user_id
+ * @property string $received_by
  * @property string $sale_id
  * @property \Illuminate\Support\Carbon $due_date
  * @property float $value
@@ -36,7 +36,7 @@ class PaymentInstallment extends BaseModel
 
     protected $fillable = [
         'tenant_id',
-        'user_id',
+        'received_by',
         'sale_id',
         'due_date',
         'value',
@@ -50,9 +50,9 @@ class PaymentInstallment extends BaseModel
         'discount',
     ];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(People::class, 'received_by');
     }
 
     public function sale(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -2,11 +2,11 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\{StatusPayments};
+use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
-use App\Forms\Components\{MoneyInput, SelectPaymentMethod};
-use App\Models\{Sale, Vehicle};
+use App\Forms\Components\{MoneyInput};
+use App\Models\{People, Sale, Vehicle, VehicleModel};
 use App\Tools\{Contracts};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -48,39 +48,73 @@ class SaleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
-                    Forms\Components\Select::make('user_id')
+                    Forms\Components\Select::make('seller_id')
                         ->label('Seller')
-                        ->relationship('user', 'name')
-                        ->required(),
-                    Forms\Components\Select::make('vehicle_id')
-                        ->label('Vehicle')
-                        ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
-                            self::updateInstallmentValues($set, $get);
-                        })
-                        ->live()
                         ->options(function ($record) {
-                            $query = Vehicle::whereNull('sold_date'); //@phpstan-ignore-line
-
-                            if ($record !== null) {
-                                $query->orWhere('id', $record->vehicle_id);
-                            }
-
-                            return $query->get()->mapWithKeys(function (Vehicle $vehicle) {
-                                $price = $vehicle->promotional_price ?? $vehicle->sale_price;
-                                $price = number_format($price, 2, ',', '.');
-                                $price = "R$ {$price}";
-
-                                return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two}) - ({$price})",
-                                ];
-                            });
+                            return People::query()
+                                ->orderBy('name')
+                                ->where(function ($query) use ($record) {
+                                    $query->whereHas(
+                                        'employee',
+                                        fn ($query) => $query->where('resignation_date', null)
+                                    )
+                                    ->when($record, fn ($q) => $q->orWhere('id', $record->seller_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (People $person) => [ // @phpstan-ignore-line
+                                    $person->id => sprintf(
+                                        '%s - %s',
+                                        $person->name,
+                                        $person->person_id,
+                                    ),
+                                ]);
                         })
                         ->required(),
                     Forms\Components\Select::make('client_id')
-                        ->relationship('client', 'name')
+                        ->label('Client')
+                        ->options(function ($record) {
+                            return People::query()
+                                ->orderBy('name')
+                                ->where(function ($query) use ($record) {
+                                    $query->where('client', true)
+                                        ->when($record, fn ($q) => $q->orWhere('id', $record->vehicle_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (People $person) => [ // @phpstan-ignore-line
+                                    $person->id => sprintf(
+                                        '%s - %s',
+                                        $person->name,
+                                        $person->person_id,
+                                    ),
+                                ]);
+                        })
                         ->searchable()
                         ->required(),
-                    SelectPaymentMethod::make('payment_method'),
+                    Forms\Components\Select::make('vehicle_id')
+                        ->label('Vehicle')
+                        ->afterStateUpdated(fn (Forms\Set $set, Forms\Get $get) => self::updateInstallmentValues($set, $get))
+                        ->live()
+                        ->options(function ($record) {
+                            return Vehicle::query()
+                                ->where(function ($query) use ($record) {
+                                    $query->whereNull('sold_date')
+                                        ->when($record, fn ($q) => $q->orWhere('id', $record->vehicle_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (Vehicle $vehicle) => [
+                                    $vehicle->id => sprintf(
+                                        '%s - %s (%s/%s) - (R$ %s)',
+                                        $vehicle->plate,
+                                        $vehicle->model->name,
+                                        $vehicle->year_one,
+                                        $vehicle->year_two,
+                                        number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.')
+                                    ),
+                                ]);
+                        })
+                        ->required(),
+                    Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
                     MoneyInput::make('discount')
@@ -192,7 +226,7 @@ class SaleResource extends Resource
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('seller.name')
                     ->label('Seller')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -317,14 +351,14 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(fn () => \App\Models\User::withTrashed()->whereHas('sales')->get()->pluck('name', 'id')),
+                        ->options(fn () => \App\Models\People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
-                    return $query->when($data['seller'], fn ($query, $value) => $query->where('user_id', $value));
+                    return $query->when($data['seller'], fn ($query, $value) => $query->where('seller_id', $value));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
                     if ($data['seller'] ?? null) {
-                        $indicators[] = __('Seller') . ': ' . \App\Models\User::find($data['seller'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Seller') . ': ' . \App\Models\People::find($data['seller'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
@@ -333,7 +367,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return \App\Models\People::query()->whereHas('sales')->get()->pluck('name', 'id');
+                            return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
@@ -349,7 +383,8 @@ class SaleResource extends Resource
                 }),
                 Filter::make('payment_method')
                     ->form([
-                        SelectPaymentMethod::make('payment_method'),
+                        Forms\Components\Select::make('payment_method')
+                            ->options(PaymentMethod::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
@@ -365,7 +400,7 @@ class SaleResource extends Resource
                 Filter::make('status')
                     ->form([
                         Forms\Components\Select::make('status')
-                        ->options(StatusPayments::class),
+                            ->options(StatusPayments::class),
                     ])->query(function ($query, array $data) {
                         return $query
                             ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
@@ -382,13 +417,15 @@ class SaleResource extends Resource
                     ->form([
                         Select::make('model')
                             ->searchable()
-                            ->options(function () {
-                                return \App\Models\VehicleModel::all()->mapWithKeys(function ($model) {
-                                    return [
-                                        $model->id => "{$model->name}",
-                                    ];
-                                });
-                            }),
+                            ->options(
+                                VehicleModel::query()->orderBy('name')
+                                    ->whereHas(
+                                        'vehicles',
+                                        fn ($query) => $query->whereHas('sale')
+                                    )
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            ),
                     ])
                     ->query(function ($query, array $data) {
                         if (!empty($data['model'])) {
@@ -403,7 +440,7 @@ class SaleResource extends Resource
                         $indicators = [];
 
                         if (!empty($data['model'])) {
-                            $modelName = \App\Models\VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
+                            $modelName = VehicleModel::find($data['model'])->name ?? null; //@phpstan-ignore-line
 
                             if ($modelName) {
                                 $indicators[] = __('Model') . ': ' . $modelName;

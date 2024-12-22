@@ -392,7 +392,7 @@ class Contracts
 
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
-        self::setUserValues($template, $sale->user_id);
+        self::setUserValues($template, $sale->seller_id);
         // dump('user foi chamado');
 
         self::setPeopleValues($template, $sale->client_id, 'cliente');

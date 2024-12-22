@@ -85,9 +85,19 @@ class People extends BaseModel
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function sales(): HasMany
+    public function client(): HasMany
     {
         return $this->hasMany(Sale::class, 'client_id');
+    }
+
+    public function seller(): HasMany
+    {
+        return $this->hasMany(Sale::class, 'seller_id');
+    }
+
+    public function receivedInstallments(): HasMany
+    {
+        return $this->hasMany(PaymentInstallment::class, 'received_by');
     }
 
     public function vehiclesAsBuyer(): HasMany
