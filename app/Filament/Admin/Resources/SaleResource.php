@@ -6,7 +6,7 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
 use App\Forms\Components\{MoneyInput};
-use App\Models\{Sale, Vehicle, VehicleModel};
+use App\Models\{People, Sale, Vehicle, VehicleModel};
 use App\Tools\{Contracts};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
@@ -50,9 +50,45 @@ class SaleResource extends Resource
                 Section::make()->schema([
                     Forms\Components\Select::make('seller_id')
                         ->label('Seller')
-                        ->relationship('seller', 'name', modifyQueryUsing: function ($query, $record) {
-                            return $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null))->orWhere('id', $record->seller_id);
+                        ->options(function ($record) {
+                            return People::query()
+                                ->orderBy('name')
+                                ->where(function ($query) use ($record) {
+                                    $query->whereHas(
+                                        'employee',
+                                        fn ($query) => $query->where('resignation_date', null)
+                                    )
+                                    ->when($record, fn ($q) => $q->orWhere('id', $record->seller_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (People $person) => [ // @phpstan-ignore-line
+                                    $person->id => sprintf(
+                                        '%s - %s',
+                                        $person->name,
+                                        $person->person_id,
+                                    ),
+                                ]);
                         })
+                        ->required(),
+                    Forms\Components\Select::make('client_id')
+                        ->label('Client')
+                        ->options(function ($record) {
+                            return People::query()
+                                ->orderBy('name')
+                                ->where(function ($query) use ($record) {
+                                    $query->where('client', true)
+                                        ->when($record, fn ($q) => $q->orWhere('id', $record->vehicle_id));
+                                })
+                                ->get()
+                                ->mapWithKeys(fn (People $person) => [ // @phpstan-ignore-line
+                                    $person->id => sprintf(
+                                        '%s - %s',
+                                        $person->name,
+                                        $person->person_id,
+                                    ),
+                                ]);
+                        })
+                        ->searchable()
                         ->required(),
                     Forms\Components\Select::make('vehicle_id')
                         ->label('Vehicle')
@@ -72,14 +108,10 @@ class SaleResource extends Resource
                                         $vehicle->model->name,
                                         $vehicle->year_one,
                                         $vehicle->year_two,
-                                        number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2)
+                                        number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.')
                                     ),
                                 ]);
                         })
-                        ->required(),
-                    Forms\Components\Select::make('client_id')
-                        ->relationship('client', 'name')
-                        ->searchable()
                         ->required(),
                     Forms\Components\Select::make('payment_method')
                             ->options(PaymentMethod::class),
