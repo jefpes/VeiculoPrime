@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Extra;
 use Illuminate\Database\Seeder;
 
 class ExtraSeeder extends Seeder
@@ -9,7 +10,7 @@ class ExtraSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
         $data = [
             'Leilão',
@@ -31,7 +32,11 @@ class ExtraSeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            \App\Models\Extra::create(['name' => $d]);
+            if ($tenant_id) {
+                Extra::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            } else {
+                Extra::create(['name' => $d]);
+            }
         }
     }
 }
