@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 
 /**
  * Class Vehicle
@@ -95,11 +95,16 @@ class Vehicle extends BaseModel
         return $this->hasMany(Sale::class);
     }
 
-    /**
-     * Get the vehicle expenses.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public function accessories(): BelongsToMany
+    {
+        return $this->belongsToMany(Accessory::class);
+    }
+
+    public function extras(): BelongsToMany
+    {
+        return $this->belongsToMany(Extra::class);
+    }
+
     public function expenses(): HasMany
     {
         return $this->hasMany(VehicleExpense::class);
