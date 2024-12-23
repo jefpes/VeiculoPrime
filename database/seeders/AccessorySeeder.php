@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Accessory;
 use Illuminate\Database\Seeder;
 
 class AccessorySeeder extends Seeder
@@ -9,7 +10,7 @@ class AccessorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
         $data = [
             'Airbag',
@@ -35,7 +36,11 @@ class AccessorySeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            \App\Models\Accessory::create(['name' => $d]);
+            if ($tenant_id) {
+                Accessory::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            } else {
+                Accessory::create(['name' => $d]);
+            }
         }
     }
 }
