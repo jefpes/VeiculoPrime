@@ -56,14 +56,6 @@ class VehicleResource extends Resource
                         ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
                         ->optionsLimit(5)
                         ->searchable(),
-                    DatePicker::make('purchase_date')
-                        ->required(),
-                    MoneyInput::make('fipe_price'),
-                    MoneyInput::make('purchase_price')
-                        ->required(),
-                    MoneyInput::make('sale_price')
-                        ->required(),
-                    MoneyInput::make('promotional_price'),
                     Select::make('vehicle_model_id')
                         ->relationship('model', 'name')
                         ->required()
@@ -76,6 +68,14 @@ class VehicleResource extends Resource
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
+                    DatePicker::make('purchase_date')
+                        ->required(),
+                    MoneyInput::make('fipe_price'),
+                    MoneyInput::make('purchase_price')
+                        ->required(),
+                    MoneyInput::make('sale_price')
+                        ->required(),
+                    MoneyInput::make('promotional_price'),
                     TextInput::make('year_one')
                         ->required()
                         ->label('Year'),
