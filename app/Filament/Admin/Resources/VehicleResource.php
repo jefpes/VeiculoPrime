@@ -51,6 +51,8 @@ class VehicleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
+                    DatePicker::make('sold_date')->disabled(),
+                    DatePicker::make('purchase_date')->required(),
                     Select::make('employee_id')
                         ->label('Buyer')
                         ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
@@ -68,8 +70,6 @@ class VehicleResource extends Resource
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
-                    DatePicker::make('purchase_date')
-                        ->required(),
                     MoneyInput::make('fipe_price'),
                     MoneyInput::make('purchase_price')
                         ->required(),
@@ -102,6 +102,9 @@ class VehicleResource extends Resource
                     TextInput::make('color')
                         ->required()
                         ->maxLength(255),
+                    Select::make('accessories')
+                        ->relationship('accessories', 'name')
+                        ->multiple(),
                     TextInput::make('plate')
                         ->required()
                         ->length(8)
@@ -136,7 +139,6 @@ class VehicleResource extends Resource
                             ignoreRecord: true,
                             modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
-                    DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
                     Textarea::make('annotation')
