@@ -76,35 +76,58 @@ class VehicleResource extends Resource
                     MoneyInput::make('sale_price')
                         ->required(),
                     MoneyInput::make('promotional_price'),
-                    TextInput::make('year_one')
-                        ->required()
-                        ->label('Year'),
-                    TextInput::make('year_two')
-                        ->required()
-                        ->label('Year (Model)'),
-                    TextInput::make('km')
-                        ->required()
-                        ->numeric(),
-                    Select::make('fuel')
-                        ->options(FuelTypes::class),
-                    TextInput::make('engine_power')
-                        ->required()
-                        ->maxLength(30),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('year_one')
+                                ->required()
+                                ->label('Year'),
+                            TextInput::make('year_two')
+                                ->required()
+                                ->label('Year (Model)'),
+                        ]),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('km')
+                                ->required()
+                                ->numeric(),
+                            TextInput::make('color')
+                                ->required()
+                                ->maxLength(255),
+                        ]),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            Select::make('fuel')->options(FuelTypes::class),
+                            TextInput::make('engine_power')
+                                ->label('Motor')
+                                ->required()
+                                ->maxLength(30),
+                        ]),
                     Select::make('steering')
                         ->options(SteeringTypes::class),
                     Select::make('transmission')
                         ->required()
                         ->options(TransmissionTypes::class),
-                    TextInput::make('doors')
-                        ->numeric(),
-                    TextInput::make('seats')
-                        ->numeric(),
-                    TextInput::make('color')
-                        ->required()
-                        ->maxLength(255),
-                    Select::make('accessories')
-                        ->relationship('accessories', 'name')
-                        ->multiple(),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('doors')
+                                ->numeric(),
+                            TextInput::make('seats')
+                                ->label('Lugares')
+                                ->numeric(),
+                        ]),
+                    Grid::make()
+                        ->schema([
+                            Select::make('accessories')
+                                ->relationship('accessories', 'name')
+                                ->multiple(),
+                            Select::make('extras')
+                                ->relationship('extras', 'name')
+                                ->multiple(),
+                        ]),
                     TextInput::make('plate')
                         ->required()
                         ->length(8)
