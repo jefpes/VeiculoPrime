@@ -42,7 +42,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property string $transmission
  * @property int $doors
  * @property int $seats
- * @property string $traction
  * @property string $color
  * @property string $plate
  * @property string $chassi
@@ -77,7 +76,6 @@ class Vehicle extends BaseModel
         'transmission',
         'doors',
         'seats',
-        'traction',
         'color',
         'plate',
         'chassi',

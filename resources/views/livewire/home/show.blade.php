@@ -108,12 +108,6 @@
                     <p class="font-medium">{{ $vehicle->transmission }}</p>
                 </div>
                 @endif
-                @if ($vehicle->traction)
-                <div>
-                    <p class="text-gray-500 font-semibold">{{ __('Traction') }}</p>
-                    <p class="font-medium">{{ $vehicle->traction }}</p>
-                </div>
-                @endif
                 @if ($vehicle->doors)
                 <div>
                     <p class="text-gray-500 font-semibold">{{ __('Doors') }}</p>

@@ -161,7 +161,6 @@ class Contracts
             'portas_extenso'        => spell_number($vehicle->doors),
             'lugares'               => $vehicle->seats ?? 'Valor não especificado',
             'lugares_extenso'       => spell_number($vehicle->seats),
-            'tracao'                => $vehicle->traction ?? 'Valor não especificado',
             'cor'                   => $vehicle->color ?? 'Valor não especificado',
             'placa'                 => $vehicle->plate ?? 'Valor não especificado',
             'chassi'                => $vehicle->chassi ?? 'Valor não especificado',

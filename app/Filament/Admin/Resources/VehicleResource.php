@@ -99,8 +99,6 @@ class VehicleResource extends Resource
                         ->numeric(),
                     TextInput::make('seats')
                         ->numeric(),
-                    TextInput::make('traction')
-                        ->maxLength(255),
                     TextInput::make('color')
                         ->required()
                         ->maxLength(255),
@@ -216,8 +214,6 @@ class VehicleResource extends Resource
                 TextColumn::make('doors')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('seats')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('traction')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('color')
                     ->toggleable(isToggledHiddenByDefault: true),

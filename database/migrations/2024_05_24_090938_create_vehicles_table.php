@@ -54,7 +54,6 @@ return new class () extends Migration {
             $table->string('transmission');
             $table->string('doors')->nullable();
             $table->string('seats')->nullable();
-            $table->string('traction')->nullable();
             $table->string('color');
             $table->string('plate');
             $table->string('chassi')->nullable();
