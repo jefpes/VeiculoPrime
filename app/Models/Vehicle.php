@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 
 /**
@@ -16,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @property \App\Models\VehicleExpense $expenses
  * @property \App\Models\People $supplier
  * @property \App\Models\People $buyer
+ * @property \App\Models\Accessory $accessories
+ * @property \App\Models\Extra $extras
  *
  * @method \App\Models\VehicleModel model()
  * @method \App\Models\Photo photos()
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @method \App\Models\VehicleExpense expenses()
  * @method \App\Models\People supplier()
  * @method \App\Models\People buyer()
+ * @method \App\Models\Accessory accessories()
+ * @method \App\Models\Extra extras()
  *
  * @property string $id
  * @property string $vehicle_model_id
