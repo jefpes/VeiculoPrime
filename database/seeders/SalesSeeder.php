@@ -14,10 +14,14 @@ class SalesSeeder extends Seeder
     {
         $models = VehicleModel::query()->pluck('id', 'name');
 
-        $sellers = People::where('supplier', true)->get();
-        $clients = People::where('client', true)->get();
+        $sellers   = People::where('supplier', true)->get();
+        $clients   = People::where('client', true)->get();
+        $buyers    = People::whereHas('employee')->get();
+        $suppliers = People::where('supplier', true)->get();
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
             'purchase_price'   => 10500.00,
             'sale_price'       => 13000.00,
@@ -48,6 +52,8 @@ class SalesSeeder extends Seeder
         );
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
             'purchase_price'   => 12500.00,
             'sale_price'       => 16000.00,
@@ -77,6 +83,8 @@ class SalesSeeder extends Seeder
         );
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-01',
             'purchase_price'   => 9500.00,
             'sale_price'       => 12000.00,
@@ -107,6 +115,8 @@ class SalesSeeder extends Seeder
         );
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 10000.00,
             'sale_price'       => 13000.00,
@@ -149,6 +159,8 @@ class SalesSeeder extends Seeder
         ]);
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
@@ -206,6 +218,8 @@ class SalesSeeder extends Seeder
         ]);
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
@@ -263,6 +277,8 @@ class SalesSeeder extends Seeder
         ]);
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
@@ -351,6 +367,8 @@ class SalesSeeder extends Seeder
         ]);
 
         Vehicle::create([
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-04-15',
             'purchase_price'   => 36500.00,
             'sale_price'       => 46000.00,
