@@ -105,8 +105,7 @@ class VehicleResource extends Resource
                                 ->required()
                                 ->maxLength(30),
                         ]),
-                    Select::make('steering')
-                        ->options(SteeringTypes::class),
+                    Select::make('steering')->options(SteeringTypes::class),
                     Select::make('transmission')
                         ->required()
                         ->options(TransmissionTypes::class),
@@ -194,7 +193,20 @@ class VehicleResource extends Resource
                 TextColumn::make('full_year')
                     ->searchable()
                     ->sortable()
-                    ->label('Year'),
+                    ->label('Year')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('accessories.name')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(1)
+                    ->expandableLimitedList()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('extras.name')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(1)
+                    ->expandableLimitedList()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('km')
                     ->numeric()
                     ->sortable()
@@ -224,7 +236,8 @@ class VehicleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('model.name')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('supplier.name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
