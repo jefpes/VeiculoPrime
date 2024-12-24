@@ -34,7 +34,6 @@ class VehicleFactory extends Factory
             'transmission'      => $this->faker->randomElement(['Manual', 'Automatic']),
             'doors'             => $this->faker->randomElement(['2', '4', '5']),
             'seats'             => $this->faker->randomElement(['2', '4', '5', '7', '9']),
-            'traction'          => $this->faker->randomElement(['2x2', '4x2', '4x4']),
             'color'             => $this->faker->colorName(),
             'plate'             => $this->faker->regexify('[A-Z]{3}-[0-9]{4}'),
             'chassi'            => $this->faker->regexify('[A-Z0-9]{17}'),

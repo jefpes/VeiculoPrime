@@ -161,7 +161,6 @@ class Contracts
             'portas_extenso'        => spell_number($vehicle->doors),
             'lugares'               => $vehicle->seats ?? 'Valor não especificado',
             'lugares_extenso'       => spell_number($vehicle->seats),
-            'tracao'                => $vehicle->traction ?? 'Valor não especificado',
             'cor'                   => $vehicle->color ?? 'Valor não especificado',
             'placa'                 => $vehicle->plate ?? 'Valor não especificado',
             'chassi'                => $vehicle->chassi ?? 'Valor não especificado',
@@ -170,6 +169,8 @@ class Contracts
             'codigo_crv'            => $vehicle->crv_code ?? 'Valor não especificado',
             'descricao'             => $vehicle->description ?? 'Valor não especificado',
             'anotacao'              => $vehicle->annotation ?? 'Valor não especificado',
+            'acessorios'            => implode(', ', ($vehicle?->accessories->pluck('name')->toArray() ?? ['Valor não especificado'])), //@phpstan-ignore-line
+            'extras'                => implode(', ', ($vehicle?->extras->pluck('name')->toArray() ?? ['Valor não especificado'])), //@phpstan-ignore-line
         ]);
     }
 

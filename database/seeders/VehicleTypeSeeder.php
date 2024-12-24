@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\VehicleType;
 use Illuminate\Database\Seeder;
 
 class VehicleTypeSeeder extends Seeder
@@ -9,15 +10,19 @@ class VehicleTypeSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
-        $types = [
+        $data = [
             'Carro',
             'Motocicleta',
         ];
 
-        foreach ($types as $type) {
-            \App\Models\VehicleType::create(['name' => $type]);
+        foreach ($data as $d) {
+            if ($tenant_id) {
+                VehicleType::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            } else {
+                VehicleType::create(['name' => $d]);
+            }
         }
     }
 }

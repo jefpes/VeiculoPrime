@@ -10,29 +10,6 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->string('name');
-            $table->timestamps();
-        });
-
-        Schema::create('vehicle_types', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->string('name');
-            $table->timestamps();
-        });
-
-        Schema::create('vehicle_models', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->foreignUlid('vehicle_type_id')->constrained(table: 'vehicle_types', column: 'id');
-            $table->foreignUlid('brand_id')->constrained();
-            $table->string('name');
-            $table->timestamps();
-        });
-
         Schema::create('vehicles', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
@@ -54,7 +31,6 @@ return new class () extends Migration {
             $table->string('transmission');
             $table->string('doors')->nullable();
             $table->string('seats')->nullable();
-            $table->string('traction')->nullable();
             $table->string('color');
             $table->string('plate');
             $table->string('chassi')->nullable();
@@ -75,8 +51,5 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('vehicles');
-        Schema::dropIfExists('vehicle_models');
-        Schema::dropIfExists('vehicle_types');
-        Schema::dropIfExists('brands');
     }
 };

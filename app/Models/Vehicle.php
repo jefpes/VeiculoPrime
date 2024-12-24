@@ -4,8 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 
 /**
  * Class Vehicle
@@ -16,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\VehicleExpense $expenses
  * @property \App\Models\People $supplier
  * @property \App\Models\People $buyer
+ * @property \App\Models\Accessory $accessories
+ * @property \App\Models\Extra $extras
  *
  * @method \App\Models\VehicleModel model()
  * @method \App\Models\Photo photos()
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @method \App\Models\VehicleExpense expenses()
  * @method \App\Models\People supplier()
  * @method \App\Models\People buyer()
+ * @method \App\Models\Accessory accessories()
+ * @method \App\Models\Extra extras()
  *
  * @property string $id
  * @property string $vehicle_model_id
@@ -42,7 +45,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property string $transmission
  * @property int $doors
  * @property int $seats
- * @property string $traction
  * @property string $color
  * @property string $plate
  * @property string $chassi
@@ -77,7 +79,6 @@ class Vehicle extends BaseModel
         'transmission',
         'doors',
         'seats',
-        'traction',
         'color',
         'plate',
         'chassi',
@@ -97,11 +98,16 @@ class Vehicle extends BaseModel
         return $this->hasMany(Sale::class);
     }
 
-    /**
-     * Get the vehicle expenses.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    public function accessories(): BelongsToMany
+    {
+        return $this->belongsToMany(Accessory::class);
+    }
+
+    public function extras(): BelongsToMany
+    {
+        return $this->belongsToMany(Extra::class);
+    }
+
     public function expenses(): HasMany
     {
         return $this->hasMany(VehicleExpense::class);

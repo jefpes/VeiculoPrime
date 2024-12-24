@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Photo, Vehicle, VehicleModel};
+use App\Models\{Accessory, Extra, People, Photo, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class VehicleSeeder extends Seeder
@@ -13,6 +13,10 @@ class VehicleSeeder extends Seeder
     public function run(): void
     {
         $vehicleModels = VehicleModel::pluck('id', 'name')->toArray();
+        $extras        = Extra::all()->pluck('id', 'name');
+        $accessories   = Accessory::all()->pluck('id', 'name');
+        $buyers        = People::whereHas('employee')->get();
+        $suppliers     = People::where('supplier', true)->get();
 
         $vehicles = [
             [
@@ -30,7 +34,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Branco',
                 'plate'          => 'AAA-0001',
                 'chassi'         => '000000001',
@@ -139,7 +142,6 @@ class VehicleSeeder extends Seeder
                 'transmission'      => 'MANUAL',
                 'doors'             => '4',
                 'seats'             => '5',
-                'traction'          => '4X2',
                 'color'             => 'Preto',
                 'plate'             => 'AAA-0005',
                 'renavam'           => '000000005',
@@ -170,7 +172,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'MANUAL',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Vermelho',
                 'plate'          => 'AAA-0006',
                 'chassi'         => '000000006',
@@ -201,7 +202,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Preto',
                 'plate'          => 'AAA-0007',
                 'renavam'        => '000000007',
@@ -232,7 +232,6 @@ class VehicleSeeder extends Seeder
                 'transmission'      => 'AUTOMÁTICA',
                 'doors'             => '4',
                 'seats'             => '5',
-                'traction'          => '4X2',
                 'color'             => 'Vermelho',
                 'plate'             => 'AAA-0008',
                 'renavam'           => '000000008',
@@ -311,7 +310,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Preto',
                 'plate'          => 'AAA-0010',
                 'renavam'        => '000000010',
@@ -340,7 +338,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Vermelho',
                 'plate'          => 'AAA-0011',
                 'renavam'        => '000000011',
@@ -369,7 +366,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X4',
                 'color'          => 'Preta',
                 'plate'          => 'AAA-0012',
                 'renavam'        => '000000012',
@@ -398,7 +394,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X4',
                 'color'          => 'Cereja',
                 'plate'          => 'AAA-0013',
                 'renavam'        => '000000013',
@@ -428,7 +423,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'MANUAL',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Branco',
                 'plate'          => 'AAA-0014',
                 'renavam'        => '000000014',
@@ -459,7 +453,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'MANUAL',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X2',
                 'color'          => 'Vermelho',
                 'plate'          => 'AAA-0015',
                 'renavam'        => '000000015',
@@ -511,7 +504,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X4',
                 'color'          => 'Branco',
                 'plate'          => 'AAA-0017',
                 'renavam'        => '000000017',
@@ -540,7 +532,6 @@ class VehicleSeeder extends Seeder
                 'transmission'   => 'AUTOMÁTICA',
                 'doors'          => '4',
                 'seats'          => '5',
-                'traction'       => '4X4',
                 'color'          => 'Vermelha',
                 'plate'          => 'AAA-0018',
                 'renavam'        => '000000018',
@@ -703,6 +694,8 @@ class VehicleSeeder extends Seeder
 
         foreach ($vehicles as $vehicleData) {
             $vehicle = Vehicle::create([
+                'buyer_id'          => $buyers->random()->id,
+                'supplier_id'       => $suppliers->random()->id,
                 'purchase_date'     => $vehicleData['purchase_date'],
                 'fipe_price'        => $vehicleData['fipe_price'],
                 'purchase_price'    => $vehicleData['purchase_price'],
@@ -718,13 +711,15 @@ class VehicleSeeder extends Seeder
                 'transmission'      => $vehicleData['transmission'],
                 'doors'             => $vehicleData['doors'] ?? null,
                 'seats'             => $vehicleData['seats'] ?? null,
-                'traction'          => $vehicleData['traction'] ?? null,
                 'color'             => $vehicleData['color'],
                 'plate'             => $vehicleData['plate'],
                 'chassi'            => $vehicleData['chassi'],
                 'renavam'           => $vehicleData['renavam'],
                 'description'       => $vehicleData['description'],
             ]);
+
+            $vehicle->accessories()->attach($accessories->random(rand(1, 5)));
+            $vehicle->extras()->attach($extras->random(rand(1, 5)));
 
             foreach ($vehicleData['photos'] as $photoPath) {
                 Photo::withoutEvents(function () use ($vehicle, $photoPath) {

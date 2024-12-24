@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use Illuminate\Database\Seeder;
 
 class BrandSeeder extends Seeder
@@ -9,9 +10,9 @@ class BrandSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
-        $brands = [
+        $data = [
             'Fiat',
             'Chevrolet',
             'Hyundai',
@@ -25,8 +26,12 @@ class BrandSeeder extends Seeder
             'Yamaha',
         ];
 
-        foreach ($brands as $brand) {
-            \App\Models\Brand::create(['name' => $brand]);
+        foreach ($data as $d) {
+            if ($tenant_id) {
+                Brand::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            } else {
+                Brand::create(['name' => $d]);
+            }
         }
     }
 }

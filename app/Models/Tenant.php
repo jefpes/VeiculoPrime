@@ -73,6 +73,16 @@ class Tenant extends Model
         return $this->hasMany(Vehicle::class);
     }
 
+    public function accessories(): HasMany
+    {
+        return $this->hasMany(Accessory::class);
+    }
+
+    public function extras(): HasMany
+    {
+        return $this->hasMany(Extra::class);
+    }
+
     public function vehicleExpenses(): HasMany
     {
         return $this->hasMany(VehicleExpense::class);

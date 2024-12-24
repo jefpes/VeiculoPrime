@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Models\{Brand, People, VehicleType};
+use App\Models\{Accessory, Brand, Extra, People, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
@@ -51,6 +51,8 @@ class VehicleResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
+                    DatePicker::make('sold_date')->disabled(),
+                    DatePicker::make('purchase_date')->required(),
                     Select::make('employee_id')
                         ->label('Buyer')
                         ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
@@ -68,42 +70,63 @@ class VehicleResource extends Resource
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
-                    DatePicker::make('purchase_date')
-                        ->required(),
                     MoneyInput::make('fipe_price'),
                     MoneyInput::make('purchase_price')
                         ->required(),
                     MoneyInput::make('sale_price')
                         ->required(),
                     MoneyInput::make('promotional_price'),
-                    TextInput::make('year_one')
-                        ->required()
-                        ->label('Year'),
-                    TextInput::make('year_two')
-                        ->required()
-                        ->label('Year (Model)'),
-                    TextInput::make('km')
-                        ->required()
-                        ->numeric(),
-                    Select::make('fuel')
-                        ->options(FuelTypes::class),
-                    TextInput::make('engine_power')
-                        ->required()
-                        ->maxLength(30),
-                    Select::make('steering')
-                        ->options(SteeringTypes::class),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('year_one')
+                                ->required()
+                                ->label('Year'),
+                            TextInput::make('year_two')
+                                ->required()
+                                ->label('Year (Model)'),
+                        ]),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('km')
+                                ->required()
+                                ->numeric(),
+                            TextInput::make('color')
+                                ->required()
+                                ->maxLength(255),
+                        ]),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            Select::make('fuel')->options(FuelTypes::class),
+                            TextInput::make('engine_power')
+                                ->label('Motor')
+                                ->required()
+                                ->maxLength(30),
+                        ]),
+                    Select::make('steering')->options(SteeringTypes::class),
                     Select::make('transmission')
                         ->required()
                         ->options(TransmissionTypes::class),
-                    TextInput::make('doors')
-                        ->numeric(),
-                    TextInput::make('seats')
-                        ->numeric(),
-                    TextInput::make('traction')
-                        ->maxLength(255),
-                    TextInput::make('color')
-                        ->required()
-                        ->maxLength(255),
+                    Grid::make()
+                        ->columnSpan(1)
+                        ->schema([
+                            TextInput::make('doors')
+                                ->numeric(),
+                            TextInput::make('seats')
+                                ->label('Lugares')
+                                ->numeric(),
+                        ]),
+                    Grid::make()
+                        ->schema([
+                            Select::make('accessories')
+                                ->relationship('accessories', 'name')
+                                ->multiple(),
+                            Select::make('extras')
+                                ->relationship('extras', 'name')
+                                ->multiple(),
+                        ]),
                     TextInput::make('plate')
                         ->required()
                         ->length(8)
@@ -138,7 +161,6 @@ class VehicleResource extends Resource
                             ignoreRecord: true,
                             modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
-                    DatePicker::make('sold_date')->disabled(),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
                     Textarea::make('annotation')
@@ -171,7 +193,20 @@ class VehicleResource extends Resource
                 TextColumn::make('full_year')
                     ->searchable()
                     ->sortable()
-                    ->label('Year'),
+                    ->label('Year')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('accessories.name')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(1)
+                    ->expandableLimitedList()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('extras.name')
+                    ->badge()
+                    ->listWithLineBreaks()
+                    ->limitList(1)
+                    ->expandableLimitedList()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('km')
                     ->numeric()
                     ->sortable()
@@ -201,7 +236,8 @@ class VehicleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('model.name')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('supplier.name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -216,8 +252,6 @@ class VehicleResource extends Resource
                 TextColumn::make('doors')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('seats')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('traction')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('color')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -298,6 +332,30 @@ class VehicleResource extends Resource
                             ->live(),
                     ]),
 
+                    // Filtro acessórios
+                    Select::make('accessories')
+                            ->label('Accessories')
+                            ->options(
+                                fn () => Accessory::query()
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
+                            ->multiple()
+                            ->live(),
+
+                    // Filtro extras
+                    Select::make('extras')
+                            ->label('Extras')
+                            ->options(
+                                fn () => Extra::query()
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
+                            ->multiple()
+                            ->live(),
+
                     // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
@@ -334,6 +392,12 @@ class VehicleResource extends Resource
 
                         // Aplica o filtro de modelo
                         ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+
+                        // Aplica o filtro de acessórios
+                        ->when($data['accessories'], fn ($query, $value) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $value)))
+
+                        // Aplica o filtro de extras
+                        ->when($data['extras'], fn ($query, $value) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $value)))
 
                         // Aplica o filtro de fornecedor
                         ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))

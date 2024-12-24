@@ -10,7 +10,7 @@ class VehicleModelSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
         $brands       = Brand::query()->pluck('id', 'name');
         $vehicleTypes = VehicleType::query()->pluck('id', 'name');
@@ -59,11 +59,20 @@ class VehicleModelSeeder extends Seeder
         ];
 
         foreach ($models as $model) {
-            VehicleModel::create([
-                'name'            => $model['name'],
-                'brand_id'        => $brands[$model['brand']] ?? null,
-                'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
-            ]);
+            if ($tenant_id) {
+                VehicleModel::create([
+                    'name'            => $model['name'],
+                    'brand_id'        => $brands[$model['brand']] ?? null,
+                    'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
+                    'tenant_id'       => $tenant_id,
+                ]);
+            } else {
+                VehicleModel::create([
+                    'name'            => $model['name'],
+                    'brand_id'        => $brands[$model['brand']] ?? null,
+                    'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
+                ]);
+            }
         }
 
     }
