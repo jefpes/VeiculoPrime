@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Photo, Vehicle, VehicleModel};
+use App\Models\{Accessory, Extra, People, Photo, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class VehicleSeeder extends Seeder
@@ -13,6 +13,10 @@ class VehicleSeeder extends Seeder
     public function run(): void
     {
         $vehicleModels = VehicleModel::pluck('id', 'name')->toArray();
+        $extras        = Extra::all()->pluck('id', 'name');
+        $accessories   = Accessory::all()->pluck('id', 'name');
+        $buyers        = People::whereHas('employee')->get();
+        $suppliers     = People::where('supplier', true)->get();
 
         $vehicles = [
             [
@@ -690,6 +694,8 @@ class VehicleSeeder extends Seeder
 
         foreach ($vehicles as $vehicleData) {
             $vehicle = Vehicle::create([
+                'buyer_id'          => $buyers->random()->id,
+                'supplier_id'       => $suppliers->random()->id,
                 'purchase_date'     => $vehicleData['purchase_date'],
                 'fipe_price'        => $vehicleData['fipe_price'],
                 'purchase_price'    => $vehicleData['purchase_price'],
@@ -711,6 +717,9 @@ class VehicleSeeder extends Seeder
                 'renavam'           => $vehicleData['renavam'],
                 'description'       => $vehicleData['description'],
             ]);
+
+            $vehicle->accessories()->attach($accessories->random(rand(1, 5)));
+            $vehicle->extras()->attach($extras->random(rand(1, 5)));
 
             foreach ($vehicleData['photos'] as $photoPath) {
                 Photo::withoutEvents(function () use ($vehicle, $photoPath) {
