@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Forms\Components\MoneyInput;
-use App\Models\{Brand, People, VehicleType};
+use App\Models\{Accessory, Brand, Extra, People, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
@@ -332,6 +332,30 @@ class VehicleResource extends Resource
                             ->live(),
                     ]),
 
+                    // Filtro acessórios
+                    Select::make('accessories')
+                            ->label('Accessories')
+                            ->options(
+                                fn () => Accessory::query()
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
+                            ->multiple()
+                            ->live(),
+
+                    // Filtro extras
+                    Select::make('extras')
+                            ->label('Extras')
+                            ->options(
+                                fn () => Extra::query()
+                                    ->orderBy('name')
+                                    ->get()
+                                    ->pluck('name', 'id')
+                            )
+                            ->multiple()
+                            ->live(),
+
                     // Filtro de Fornecedor
                     Select::make('supplier')
                         ->label('Supplier')
@@ -368,6 +392,12 @@ class VehicleResource extends Resource
 
                         // Aplica o filtro de modelo
                         ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+
+                        // Aplica o filtro de acessórios
+                        ->when($data['accessories'], fn ($query, $value) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $value)))
+
+                        // Aplica o filtro de extras
+                        ->when($data['extras'], fn ($query, $value) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $value)))
 
                         // Aplica o filtro de fornecedor
                         ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
