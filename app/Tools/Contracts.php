@@ -169,6 +169,8 @@ class Contracts
             'codigo_crv'            => $vehicle->crv_code ?? 'Valor não especificado',
             'descricao'             => $vehicle->description ?? 'Valor não especificado',
             'anotacao'              => $vehicle->annotation ?? 'Valor não especificado',
+            'acessorios'            => implode(', ', ($vehicle?->accessories->pluck('name')->toArray() ?? ['Valor não especificado'])), //@phpstan-ignore-line
+            'extras'                => implode(', ', ($vehicle?->extras->pluck('name')->toArray() ?? ['Valor não especificado'])), //@phpstan-ignore-line
         ]);
     }
 
