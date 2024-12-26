@@ -189,7 +189,9 @@ class PaymentInstallmentResource extends Resource
                     ])
                     ->form([
                         Forms\Components\Select::make('payment_method')
-                            ->options(PaymentMethod::class)->required(),
+                            ->options(PaymentMethod::class)->required()
+                            ->live()
+                            ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         Forms\Components\DatePicker::make('due_date')->readOnly(),
                         Group::make([
                             MoneyInput::make('value')->readOnly(),
