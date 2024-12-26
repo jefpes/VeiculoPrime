@@ -204,8 +204,8 @@ class SaleResource extends Resource
             }
 
             // Atualiza os campos do formulário
-            $set('installment_value', number_format((float)$installmentValue, 2, ',', '.'));
-            $set('interest', number_format((float)$interest, 2, ',', '.'));
+            $set('installment_value', number_format($installmentValue, 2, ',', '.')); //@phpstan-ignore-line
+            $set('interest', number_format($interest, 2, ',', '.')); //@phpstan-ignore-line
             $set('total_with_interest', number_format(bcadd($totalWithInterest, $downPayment, 2), 2, ',', '.')); //@phpstan-ignore-line
         } else {
             // Pagamento à vista
