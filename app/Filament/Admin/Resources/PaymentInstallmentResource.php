@@ -44,44 +44,52 @@ class PaymentInstallmentResource extends Resource
 
     public static function updatePaymentValue(Set $set, Get $get): void
     {
-        $initialValue = $get('value');
-        $lateFee      = $get('late_fee') ?: 0;
-        $interestRate = $get('interest_rate') ?: 0;
+        $initialValue = string_money_to_float($get('value') ?? '0');
+        $lateFee      = string_money_to_float($get('late_fee') ?? '0');
+        $interestRate = string_money_to_float($get('interest_rate') ?? '0');
+        $discount     = string_money_to_float($get('discount') ?? '0');
 
-        // Converta due_date e payment_date para instâncias de Carbon
         $dueDate     = $get('due_date') ? Carbon::parse($get('due_date')) : null;
         $paymentDate = $get('payment_date') ? Carbon::parse($get('payment_date')) : null;
 
-        // Verifique se as datas estão válidas
         if (!$dueDate || !$paymentDate) {
-            // Se as datas não forem válidas, defina interest e payment_value como 0
-            $set('interest', 0);
-            $set('payment_value', $initialValue);
+            $set('interest', '0,00');
+            $set('payment_value', number_format((float)$initialValue, 2, ',', '.'));
 
             return;
         }
 
-        // Calcula a diferença de dias entre a data de vencimento e a data de pagamento
-        $daysLate = $dueDate->diffInDays($paymentDate, false); // `false` para considerar valores negativos
+        $daysLate = max(0, $dueDate->diffInDays($paymentDate, false));
 
-        // Se for pagamento antecipado (daysLate negativo), zera o daysLate
-        if ($daysLate < 0) {
-            $daysLate = 0;
-        }
+        // Cálculo de juros compostos
+        $interest = bcmul(
+            $initialValue,
+            bcsub(
+                bcpow(
+                    bcadd('1', bcdiv($interestRate, '100', 8), 8),
+                    (string)$daysLate,
+                    8
+                ),
+                '1',
+                8
+            ),
+            2
+        );
 
-        // Juros composto diário: Valor inicial * (1 + taxa de juros / 100) ^ dias
-        $interest = $initialValue * pow((1 + ($interestRate / 100)), $daysLate) - $initialValue;
+        $paymentValue = bcadd(
+            bcadd(
+                $initialValue,
+                $interest,
+                2
+            ),
+            $daysLate > 0 ? $lateFee : '0',
+            2
+        );
 
-        // Calcula o valor total de pagamento
-        $paymentValue = $initialValue + $interest - ($get('discount') ?: 0);
+        $paymentValue = bcsub($paymentValue, $discount, 2);
 
-        if ($daysLate > 0) {
-            $paymentValue = $paymentValue + $lateFee;
-        }
-
-        // Atualiza os valores dos campos reativos
-        $set('interest', round($interest, 2));
-        $set('payment_value', round($paymentValue, 2));
+        $set('interest', number_format((float)$interest, 2, ',', '.'));
+        $set('payment_value', number_format((float)$paymentValue, 2, ',', '.'));
     }
 
     public static function table(Table $table): Table
@@ -113,17 +121,14 @@ class PaymentInstallmentResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(function (string $state, $record): string {
-                        // Se o status for 'PENDENTE', verificar se há parcelas em atraso
                         if ($state === 'PENDENTE') {
                             if ($record->due_date < now() && $record->status === 'PENDENTE') {
                                 return 'pink';
                             }
 
-                            // Caso não haja parcelas em atraso, manter a cor 'info'
                             return 'info';
                         }
 
-                        // Verificar os demais estados
                         return match ($state) {
                             'REEMBOLSADO' => 'warning',
                             'CANCELADO'   => 'danger',
@@ -175,12 +180,12 @@ class PaymentInstallmentResource extends Resource
                     ->modalDescription(null)
                     ->modalIcon('heroicon-o-banknotes')
                     ->fillForm(fn (PaymentInstallment $record): array => [
-                        'value'         => $record->value,
-                        'payment_value' => $record->value,
+                        'value'         => number_format($record->value, 2, ',', '.'),
+                        'payment_value' => number_format($record->value, 2, ',', '.'),
                         'due_date'      => $record->due_date,
                         'payment_date'  => now(),
-                        'late_fee'      => Company::query()->first()->late_fee,
-                        'interest_rate' => Company::query()->first()->interest_rate_installment,
+                        'late_fee'      => number_format(Company::query()->first()->late_fee, 2, ',', '.'),
+                        'interest_rate' => number_format(Company::query()->first()->interest_rate_installment, 2, ',', '.'),
                     ])
                     ->form([
                         Forms\Components\Select::make('payment_method')
@@ -190,17 +195,17 @@ class PaymentInstallmentResource extends Resource
                             MoneyInput::make('value')->readOnly(),
                             MoneyInput::make('discount')
                                 ->live(debounce: 1000)
-                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                                ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         ])->columns(2),
                         Group::make([
                             MoneyInput::make('late_fee')
                                 ->live(debounce: 1000)
-                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                                ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                             MoneyInput::make('interest_rate')
                                 ->prefix(null)
                                 ->suffix('%')
                                 ->live(debounce: 1000)
-                                ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                                ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         ])->columns(2),
                         Group::make([
                             MoneyInput::make('interest')->readOnly(),
@@ -208,7 +213,7 @@ class PaymentInstallmentResource extends Resource
                         ])->columns(2),
                         Forms\Components\DatePicker::make('payment_date')->required()
                             ->live(debounce: 1000)
-                            ->afterStateUpdated(fn ($set, $get) => self::updatePaymentValue($set, $get)),
+                            ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                     ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([
                             'received_by'    => auth_user()?->people?->id,
@@ -270,10 +275,8 @@ class PaymentInstallmentResource extends Resource
                             ]),
                     ])
                     ->action(function (array $data, PaymentInstallment $installment) {
-
                         $template = new TemplateProcessor($data['receipt']->getRealPath());
-
-                        $caminho = Contracts::generateReceiptContract($template, $installment);
+                        $caminho  = Contracts::generateReceiptContract($template, $installment);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
                     }),
