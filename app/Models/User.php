@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\{TenantScopeTrait};
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -35,11 +34,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
-    use TenantScopeTrait;
     use HasUlids;
 
     protected $fillable = [
-        'tenant_id',
         'name',
         'email',
         'email_verified_at',

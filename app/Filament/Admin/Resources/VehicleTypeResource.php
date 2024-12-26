@@ -39,7 +39,6 @@ class VehicleTypeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)])
                     ->columnSpanFull(),
             ]);
     }

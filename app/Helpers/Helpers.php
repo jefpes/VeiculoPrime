@@ -219,7 +219,7 @@ if (!function_exists('spell_date')) {
 
 //tools end
 
-//tenant begin
+/**tenant begin
 
 if (!function_exists('tenant')) {
     function tenant(): ?Tenant
@@ -296,7 +296,7 @@ if (!function_exists('check_cpf')) {
         // Faz o calculo para validar o CPF
         for ($t = 9; $t < 11; $t++) {
             for ($d = 0, $c = 0; $c < $t; $c++) {
-                $d += $cpf[$c] * (($t + 1) - $c); //@phpstan-ignore-line
+                $d += $cpf[$c] * (($t + 1) - $c);
             }
             $d = ((10 * $d) % 11) % 10;
 
@@ -322,4 +322,5 @@ if (!function_exists('check_cpf')) {
 
     }
 }
-//tenant end
+tenant end
+*/

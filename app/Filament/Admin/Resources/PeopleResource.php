@@ -44,7 +44,7 @@ class PeopleResource extends Resource
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('email')
                                 ->maxLength(255)
-                                ->rules(['email', unique_within_tenant_rule(static::$model)]),
+                                ->rules(['email']),
                             Forms\Components\ToggleButtons::make('person_type')
                                 ->rule('required')
                                 ->inline()
@@ -66,14 +66,12 @@ class PeopleResource extends Resource
                                     'Física'   => 14,
                                     'Jurídica' => 18,
                                     default    => 14,
-                                })
-                                ->rules([unique_within_tenant_rule(static::$model)]),
+                                }),
                             Forms\Components\Select::make('sex')
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->options(Sexes::class),
                             Forms\Components\TextInput::make('rg')
                                 ->label('RG')
-                                ->rules([unique_within_tenant_rule(static::$model)])
                                 ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                                 ->mask('99999999999999999999')
                                 ->maxLength(20),
