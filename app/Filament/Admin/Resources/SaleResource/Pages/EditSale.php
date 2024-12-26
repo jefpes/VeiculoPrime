@@ -19,7 +19,7 @@ class EditSale extends EditRecord
     {
         $this->oldVehicleId                                              = $data['vehicle_id'];
         $data['number_installments'] > 0 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
-        $data['payment_type'] === 'on_time' ? $data['installment_value'] = number_format(bcdiv((bcsub($data['total'], ($data['down_payment']) ? $data['down_payment'] : '0')), $data['number_installments']), 2, ',', '.') : 'in_sight'; //@phpstan-ignore-line
+        $data['payment_type'] === 'on_time' ? $data['installment_value'] = PaymentInstallment::where('sale_id', $this->record->id)->first()->value : $data['installment_value'] = '0.00'; //@phpstan-ignore-line
         $data['number_installments'] > 0 ? $data['first_installment']    = PaymentInstallment::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
 
         return $data;
