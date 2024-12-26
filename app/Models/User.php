@@ -6,7 +6,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
 use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Storage;
  * @method Collection abilities()
  *
  * @property string $id
- * @property string $tenant_id
  * @property string $name
  * @property string $email
  * @property string $password
@@ -45,11 +44,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         'avatar_url',
         'employee_id',
     ];
-
-    /**
-     * @var array<string>
-     */
-    protected $with = ['tenant'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -114,11 +108,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
     public function hasAbility(string $ability): bool
     {
         return $this->abilities()->where('name', $ability)->exists(); //@phpstan-ignore-line
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
     }
 
     public function sales(): HasMany

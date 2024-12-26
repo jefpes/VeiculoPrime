@@ -76,10 +76,6 @@ class UserResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('people.name')
                     ->label('Person')
                     ->sortable(),

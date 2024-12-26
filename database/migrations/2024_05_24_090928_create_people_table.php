@@ -12,7 +12,6 @@ return new class () extends Migration {
     {
         Schema::create('people', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('user_id')->unique()->nullable()->constrained(table: 'users', column: 'id');
             $table->string('name');
             $table->string('sex');

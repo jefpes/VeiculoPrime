@@ -129,14 +129,9 @@ class PeopleResource extends Resource
         return $table
             ->recordUrl(null)
             ->modifyQueryUsing(function ($query) {
-                return $query->with(['tenant', 'user', 'phones', 'employee']);
+                return $query->with(['user', 'phones', 'employee']);
             })
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->description(fn ($record): string|null => $record->user?->email)
                     ->label('User')

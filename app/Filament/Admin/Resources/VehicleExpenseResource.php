@@ -68,10 +68,6 @@ class VehicleExpenseResource extends Resource
                 return $query->orderBy('date', 'desc');
             })
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('vehicle.plate')
                     ->label('Plate')
                     ->numeric()

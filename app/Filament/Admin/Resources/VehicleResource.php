@@ -18,7 +18,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
-use Illuminate\Validation\Rules\Unique;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -133,33 +132,28 @@ class VehicleResource extends Resource
                         ->mask('aaa-9*99')
                         ->unique(
                             ignoreRecord: true,
-                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('chassi')
                         ->maxLength(255)
                         ->unique(
                             ignoreRecord: true,
-                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('renavam')
                         ->maxLength(255)
                         ->unique(
                             ignoreRecord: true,
-                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('crv_number')
                         ->label('CRV number')
                         ->maxLength(20)
                         ->unique(
                             ignoreRecord: true,
-                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('crv_code')
                         ->label('CRV code')
                         ->maxLength(20)
                         ->unique(
                             ignoreRecord: true,
-                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
@@ -177,10 +171,6 @@ class VehicleResource extends Resource
                 return $query->with('buyer', 'model', 'supplier');
             })
             ->columns([
-                TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 TextColumn::make('buyer.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)

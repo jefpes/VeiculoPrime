@@ -12,7 +12,6 @@ return new class () extends Migration {
     {
         Schema::create('vehicle_types', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
         });

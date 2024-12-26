@@ -2,8 +2,6 @@
 
 declare(strict_types = 1);
 
-use App\Models\Tenant;
-use App\Rules\UniqueWithinTenant;
 use Carbon\Carbon;
 use Illuminate\Support\Number;
 
