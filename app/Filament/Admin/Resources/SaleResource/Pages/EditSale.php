@@ -19,7 +19,7 @@ class EditSale extends EditRecord
     {
         $this->oldVehicleId                                              = $data['vehicle_id'];
         $data['number_installments'] > 0 ? $data['payment_type']         = 'on_time' : $data['payment_type'] = 'in_sight';
-        $data['payment_type'] === 'on_time' ? $data['installment_value'] = ($data['total'] - ($data['down_payment'] ? $data['down_payment'] : 0)) / $data['number_installments'] : 'in_sight';
+        $data['payment_type'] === 'on_time' ? $data['installment_value'] = PaymentInstallment::where('sale_id', $this->record->id)->first()->value : $data['installment_value'] = '0.00'; //@phpstan-ignore-line
         $data['number_installments'] > 0 ? $data['first_installment']    = PaymentInstallment::where('sale_id', $this->record->id)->first()->due_date : $data['first_installment'] = null; //@phpstan-ignore-line
 
         return $data;
@@ -80,7 +80,6 @@ class EditSale extends EditRecord
 
                 $installmentData = [
                     'sale_id'  => $this->record->id, //@phpstan-ignore-line
-                    'user_id'  => $this->record->user_id, //@phpstan-ignore-line
                     'value'    => $this->dataInstallments['installment_value'],
                     'due_date' => $this->dataInstallments['first_installment'],
                     'status'   => 'PENDENTE',

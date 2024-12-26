@@ -52,7 +52,6 @@ class CreateSale extends CreateRecord
 
                 $installmentData = [
                     'sale_id'  => $this->record->id, //@phpstan-ignore-line
-                    'user_id'  => $this->record->user_id, //@phpstan-ignore-line
                     'value'    => $this->dataInstallments['installment_value'],
                     'due_date' => $this->dataInstallments['first_installment'],
                     'status'   => 'PENDENTE',
