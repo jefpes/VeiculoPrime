@@ -34,32 +34,51 @@ if (!function_exists('calculate_compound_interest')) {
     /**
      * Calcula o valor da parcela com juros compostos.
      *
-     * @param float|null $principal Valor principal (sem juros)
-     * @param float $rate Taxa de juros em porcentagem
-     * @param int $months Número de parcelas
-     * @return array<string, float> Um array com 'total' e 'installment' com valores numéricos (float)
+     * @param string $principal Valor principal (sem juros)
+     * @param string $rate Taxa de juros em porcentagem
+     * @param string $months Número de parcelas
+     * @return array<string> Um array com 'total' e 'installment' com 9999.99
      */
-    function calculate_compound_interest(?float $principal, float $rate, int $months): array
+    function calculate_compound_interest(string $principal, string $rate, string $months): array
     {
-        if ($principal === null || $months <= 0) {
-            return ['total' => 0.0, 'installment' => 0.0];
+        if ($principal === '0' || $months === '0') {
+            return ['total' => '0', 'installment' => '0'];
         }
 
         // Caso a taxa de juros seja 0%, retorna parcelas sem juros
-        if ($rate == 0 || $rate == null) {
-            $installment = $principal / $months;
+        if ($rate === '0') {
+            $installment = bcdiv($principal, $months, 2);
             $total       = $principal;
         } else {
-            $rate = $rate / 100; // Converte a taxa de juros para decimal
-            // Cálculo do valor da parcela com juros compostos
-            $installment = ($principal * $rate * pow(1 + $rate, $months)) / (pow(1 + $rate, $months) - 1);
-            $total       = $installment * $months;
+            $rate            = bcdiv($rate, '100', 10); // Converte a taxa de juros para decimal
+            $onePlusRate     = bcadd('1', $rate, 10); // (1 + rate)
+            $ratePowerMonths = bcpow($onePlusRate, $months, 10); // (1 + rate)^months
+            $numerator       = bcmul(bcmul($principal, $rate, 10), $ratePowerMonths, 10); // principal * rate * (1 + rate)^months
+            $denominator     = bcsub($ratePowerMonths, '1', 10); // (1 + rate)^months - 1
+            $installment     = bcdiv($numerator, $denominator, 2); // numerator / denominator
+            $total           = bcmul($installment, $months, 2); // installment * months
         }
 
         return [
-            'total'       => round($total, 2),           // Valor total pago com juros (ou sem, caso a taxa seja 0)
-            'installment' => round($installment, 2), // Valor da parcela
+            'total'       => $total,
+            'installment' => $installment,
         ];
+    }
+}
+
+if (!function_exists('string_money_to_float')) {
+    /**
+     * 9.999,00 -> 9999.99.
+     *
+     * @param string $value
+     */
+    function string_money_to_float(?string $value): string
+    {
+        if ($value === null || $value === '') {
+            return '0';
+        }
+
+        return str_replace(['.', ','], ['', '.'], $value);
     }
 }
 
