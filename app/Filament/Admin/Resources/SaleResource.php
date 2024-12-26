@@ -169,52 +169,50 @@ class SaleResource extends Resource
     public static function updateInstallmentValues(Forms\Set $set, Forms\Get $get): void
     {
         // Obtém os valores de entrada com valores padrão (0) quando vazio
-        $total        = $get('total') ?? 0;
-        $downPayment  = $get('down_payment') !== "" ? $get('down_payment') : 0;
-        $interestRate = $get('interest_rate') !== "" ? $get('interest_rate') : 0;
+        $discount     = string_money_to_float($get('discount') ?? '0');
+        $total        = string_money_to_float($get('total') ?? '0');
+        $downPayment  = string_money_to_float($get('down_payment') ?? '0');
+        $interestRate = string_money_to_float($get('interest_rate') ?? '0');
 
         // Garante que o número de parcelas seja no mínimo 1
-        $numberInstallments = $get('number_installments') != "" ? max((int) $get('number_installments'), 1) : 1;
+        $numberInstallments = max((int) ($get('number_installments') ?? '1'), '1');
 
         // Obtém o preço do veículo
-        $vehicle      = \App\Models\Vehicle::find($get('vehicle_id')); //@phpstan-ignore-line
-        $vehiclePrice = $vehicle->promotional_price ?? $vehicle->sale_price ?? 0;
-
-        // Aplica desconto, se houver
-        $discount = $get('discount') !== "" ? $get('discount') : 0;
-        $interest = $get('interest') !== "" ? $get('interest') : 0;
+        $vehicle      = Vehicle::query()->find($get('vehicle_id'));
+        $vehiclePrice = $vehicle ? $vehicle->promotional_price ?? $vehicle->sale_price ?? '0' : '0';
 
         // Calcula o total
-        $total = $vehiclePrice - $discount;
-        $set('total', $total);
+        $total = bcsub($vehiclePrice, $discount, 2);
+        $set('total', number_format((float)$total, 2, ',', '.'));
 
         // Se o pagamento for parcelado, calcula o valor da parcela
         if ($get('payment_type') === 'on_time') {
-            $installmentValue = ($total - $downPayment) / $numberInstallments;
-            $set('installment_value', round($installmentValue, 2)); // Arredonda para 2 casas decimais
-        }
+            $principal = bcsub($total, $downPayment, 2);
 
-        // Calcula o principal após o pagamento inicial (entrada)
-        $principal = $total - $downPayment;
+            // Verifica se os juros são 0%
+            if ($interestRate == 0) {
+                // Sem juros: cálculo simples
+                $installmentValue  = bcdiv($principal, $numberInstallments, 2);
+                $totalWithInterest = $principal;
+                $interest          = '0';
+            } else {
+                // Com juros compostos
+                $result            = calculate_compound_interest($principal, $interestRate, (string)$numberInstallments);
+                $installmentValue  = $result['installment'];
+                $totalWithInterest = $result['total'];
+                $interest          = bcsub($totalWithInterest, $principal, 2);
+            }
 
-        // Verifica se os juros são 0%
-        if ($interestRate == 0) {
-            // Sem juros: cálculo simples
-            $installmentValue  = round($principal / $numberInstallments, 2);  // Cálculo simples da parcela
-            $totalWithInterest = $principal;  // Total sem juros
-            $interest          = 0;  // Sem juros
+            // Atualiza os campos do formulário
+            $set('installment_value', number_format((float)$installmentValue, 2, ',', '.'));
+            $set('interest', number_format((float)$interest, 2, ',', '.'));
+            $set('total_with_interest', number_format(bcadd($totalWithInterest, $downPayment, 2), 2, ',', '.')); //@phpstan-ignore-line
         } else {
-            // Com juros compostos: chama o método para calcular os juros compostos
-            $result            = calculate_compound_interest($principal, $interestRate, $numberInstallments);
-            $installmentValue  = $result['installment'];
-            $totalWithInterest = $result['total'];  // Total com juros
-            $interest          = round($totalWithInterest - $principal, 2);  // Valor dos juros
+            // Pagamento à vista
+            $set('installment_value', '0,00');
+            $set('interest', '0,00');
+            $set('total_with_interest', number_format($total, 2, ',', '.')); //@phpstan-ignore-line
         }
-
-        // Atualiza os campos do formulário
-        $set('installment_value', $installmentValue);
-        $set('interest', $interest);
-        $set('total_with_interest', ($totalWithInterest + $downPayment));
     }
 
     public static function table(Table $table): Table
