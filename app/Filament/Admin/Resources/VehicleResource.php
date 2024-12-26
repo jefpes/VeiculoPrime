@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
-use App\Forms\Components\MoneyInput;
 use App\Models\{Accessory, Brand, Extra, People, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
@@ -18,6 +17,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
+use Leandrocfe\FilamentPtbrFormFields\Money;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -69,19 +69,21 @@ class VehicleResource extends Resource
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
-                    MoneyInput::make('fipe_price'),
-                    MoneyInput::make('purchase_price')
+                    Money::make('fipe_price'),
+                    Money::make('purchase_price')
                         ->required(),
-                    MoneyInput::make('sale_price')
+                    Money::make('sale_price')
                         ->required(),
-                    MoneyInput::make('promotional_price'),
+                    Money::make('promotional_price'),
                     Grid::make()
                         ->columnSpan(1)
                         ->schema([
                             TextInput::make('year_one')
                                 ->required()
+                                ->mask('9999')
                                 ->label('Year'),
                             TextInput::make('year_two')
+                                ->mask('9999')
                                 ->required()
                                 ->label('Year (Model)'),
                         ]),
