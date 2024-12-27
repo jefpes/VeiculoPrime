@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, PreventAccessFromCentralDomains};
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -55,6 +56,11 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
             ])
+            ->middleware([
+                'universal',
+                InitializeTenancyByDomain::class,
+                PreventAccessFromCentralDomains::class,
+            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ])
