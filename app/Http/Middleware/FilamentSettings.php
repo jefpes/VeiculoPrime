@@ -36,7 +36,7 @@ class FilamentSettings
 
         Filament::getPanel()
             ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
             ->font(Auth::user()->settings->font ?? 'Inter')
             ->brandName($company->name ?? env('APP_NAME'));
 
