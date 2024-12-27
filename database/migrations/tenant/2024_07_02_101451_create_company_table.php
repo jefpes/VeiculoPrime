@@ -12,7 +12,6 @@ return new class () extends Migration {
     {
         Schema::create('company', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('employee_id')->nullable()->constrained(table: 'people', column: 'id');
             $table->string('name')->nullable();
             $table->string('cnpj')->nullable();

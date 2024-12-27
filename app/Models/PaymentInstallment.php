@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Database\Eloquent\{Builder, Model};
 
 /**
  * Class PaymentInstallments
@@ -30,12 +31,12 @@ use Illuminate\Database\Eloquent\{Builder};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class PaymentInstallment extends BaseModel
+class PaymentInstallment extends Model
 {
+    use HasUlids;
     use HasFactory;
 
     protected $fillable = [
-        'tenant_id',
         'received_by',
         'sale_id',
         'due_date',

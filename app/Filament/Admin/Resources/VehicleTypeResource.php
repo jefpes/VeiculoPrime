@@ -39,7 +39,6 @@ class VehicleTypeResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)])
                     ->columnSpanFull(),
             ]);
     }
@@ -49,10 +48,6 @@ class VehicleTypeResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
             ])
