@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Permission;
 use App\Models\{Ability, Settings, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -32,9 +31,9 @@ class DatabaseSeeder extends Seeder
             'hierarchy' => 0,
         ]);
 
-        foreach (Permission::cases() as $permission) {
-            $role->abilities()->create(['name' => $permission->value]);
-        }
+        $this->call(AbilitySeeder::class);
+
+        $role->abilities()->sync(Ability::pluck('id')->toArray());
 
         $user = User::create([
             'name'              => 'admin',

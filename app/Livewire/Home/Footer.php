@@ -10,6 +10,6 @@ class Footer extends Component
 {
     public function render(): View
     {
-        return view('livewire.home.footer', ['company' => Company::with('addresses')->where('tenant_id', (session()->get('tenant')->id ?? null))->first()]);
+        return view('livewire.home.footer', ['company' => Company::with('addresses')->first()]);
     }
 }

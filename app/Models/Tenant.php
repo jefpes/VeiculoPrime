@@ -2,24 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
-use Illuminate\Database\Eloquent\{Model, SoftDeletes};
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Stancl\Tenancy\Contracts\TenantWithDatabase;
+use Stancl\Tenancy\Database\Concerns\{HasDatabase, HasDomains};
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
-class Tenant extends Model
+class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use SoftDeletes;
-    use HasUlids;
+    use HasDatabase;
+    use HasDomains;
 
-    protected $fillable = [
-        'code',
-        'name',
-        'domain',
-        'monthly_fee',
-        'due_day',
-        'include_in_marketplace',
-        'is_active',
-    ];
+    protected $fillable = ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
 
     /**
      * Get the attributes that should be cast.
@@ -29,72 +22,33 @@ class Tenant extends Model
     protected function casts(): array
     {
         return [
-            'include_in_marketplace' => 'boolean',
+            'active'      => 'boolean',
+            'marketplace' => 'boolean',
         ];
     }
 
-    public function user(): BelongsToMany
+    public function domains(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(Domain::class);
     }
 
-    public function brands(): HasMany
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string>
+     */
+    public static function getCustomColumns(): array
     {
-        return $this->hasMany(Brand::class);
+        return ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
     }
 
-    public function companies(): HasMany
-    {
-        return $this->hasMany(Company::class);
-    }
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-    public function employees(): HasMany
+    public function getPasswordAttribute(string $value): string
     {
-        return $this->hasMany(Employee::class);
-    }
-
-    public function installments(): HasMany
-    {
-        return $this->hasMany(PaymentInstallment::class);
-    }
-
-    public function roles(): HasMany
-    {
-        return $this->hasMany(Role::class);
-    }
-
-    public function sales(): HasMany
-    {
-        return $this->hasMany(Sale::class);
-    }
-
-    public function vehicles(): HasMany
-    {
-        return $this->hasMany(Vehicle::class);
-    }
-
-    public function accessories(): HasMany
-    {
-        return $this->hasMany(Accessory::class);
-    }
-
-    public function extras(): HasMany
-    {
-        return $this->hasMany(Extra::class);
-    }
-
-    public function vehicleExpenses(): HasMany
-    {
-        return $this->hasMany(VehicleExpense::class);
-    }
-
-    public function vehicleModels(): HasMany
-    {
-        return $this->hasMany(VehicleModel::class);
-    }
-
-    public function vehicleTypes(): HasMany
-    {
-        return $this->hasMany(VehicleType::class);
+        return $this->attributes['password'] = bcrypt($value);
     }
 }

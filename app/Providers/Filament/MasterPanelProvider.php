@@ -2,13 +2,13 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
+use Filament\Http\Middleware\{Authenticate, AuthenticateSession, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Support\Colors\Color;
-use Filament\{Pages, Panel, PanelProvider, Widgets};
+use Filament\{Pages, Panel, PanelProvider};
 use Illuminate\Cookie\Middleware\{AddQueuedCookiesToResponse, EncryptCookies};
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\{AuthenticateSession, StartSession};
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class MasterPanelProvider extends PanelProvider
@@ -18,7 +18,6 @@ class MasterPanelProvider extends PanelProvider
         return $panel
             ->id('master')
             ->path('master')
-            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -27,11 +26,7 @@ class MasterPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Master/Widgets'), for: 'App\\Filament\\Master\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+            ->login()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
