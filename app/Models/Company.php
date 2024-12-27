@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Traits\{HasAddress, HasPhone};
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -43,16 +45,16 @@ use Illuminate\Support\Facades\Storage;
  * @property \Carbon\Carbon $updated_at
  */
 
-class Company extends BaseModel
+class Company extends Model
 {
     use HasFactory;
     use HasAddress;
+    use HasUlids;
     use HasPhone;
 
     protected $table = 'company';
 
     protected $fillable = [
-        'tenant_id',
         'employee_id',
         'name',
         'cnpj',
@@ -99,11 +101,6 @@ class Company extends BaseModel
     public function ceo(): HasOne
     {
         return $this->hasOne(Employee::class);
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
     }
 
     protected static function booted()

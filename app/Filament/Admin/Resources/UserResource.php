@@ -38,13 +38,11 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)]),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)]),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
@@ -78,10 +76,6 @@ class UserResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('people.name')
                     ->label('Person')
                     ->sortable(),

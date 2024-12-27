@@ -37,7 +37,7 @@ class BrandResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255)
-                    ->rules(['required', unique_within_tenant_rule(static::$model)])
+                    ->required()
                     ->columnSpanFull(),
             ]);
     }
@@ -47,10 +47,6 @@ class BrandResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')
-                    ->label('Tenant')
-                    ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
             ])

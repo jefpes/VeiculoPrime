@@ -18,6 +18,8 @@ class Ability extends Model
     use HasFactory;
     use HasUlids;
 
+    protected $fillable = ['name'];
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);

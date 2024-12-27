@@ -10,11 +10,8 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('vehicle_models', function (Blueprint $table) {
+        Schema::create('vehicle_types', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->foreignUlid('vehicle_type_id')->constrained(table: 'vehicle_types', column: 'id');
-            $table->foreignUlid('brand_id')->constrained();
             $table->string('name');
             $table->timestamps();
         });
@@ -25,6 +22,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('vehicle_models');
+        Schema::dropIfExists('vehicle_types');
     }
 };

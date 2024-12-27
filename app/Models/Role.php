@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Database\Eloquent\{Builder, Model};
 
 /**
  * Class Role
@@ -16,18 +17,17 @@ use Illuminate\Database\Eloquent\{Builder};
  * @method \App\Models\Ability abilities()
  *
  * @property string $id
- * @property string $tenant_id
  * @property string $name
  * @property int $hierarchy
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Role extends BaseModel
+class Role extends Model
 {
+    use HasUlids;
     use HasFactory;
 
     protected $fillable = [
-        'tenant_id',
         'name',
         'hierarchy',
     ];

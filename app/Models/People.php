@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\{PersonType, Sexes};
 use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
 
 /**
@@ -15,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
  * @property \App\Models\Vehicle $vehiclesAsBuyer
  * @property \App\Models\Vehicle $vehiclesAsSupplier
  * @property string $id
- * @property string $tenant_id
  * @property string $user_id
  * @property string $name
  * @property string $sex
@@ -33,16 +34,16 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class People extends BaseModel
+class People extends Model
 {
     use HasFactory;
     use HasPhone;
     use HasPhoto;
     use HasAddress;
+    use HasUlids;
     use HasAffiliate;
 
     protected $fillable = [
-        'tenant_id',
         'user_id',
         'name',
         'sex',
