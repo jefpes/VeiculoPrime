@@ -3,12 +3,12 @@
 namespace App\Filament\Admin\Resources\PeopleResource\RelationManagers;
 
 use App\Enums\Permission;
+use App\Forms\Components\MoneyInput;
 use App\Models\People;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class EmployeeRelationManager extends RelationManager
 {
@@ -20,7 +20,7 @@ class EmployeeRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Money::make('salary')
+                MoneyInput::make('salary')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('admission_date')
