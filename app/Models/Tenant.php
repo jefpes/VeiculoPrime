@@ -2,17 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Stancl\Tenancy\Contracts\TenantWithDatabase;
-use Stancl\Tenancy\Database\Concerns\{HasDatabase, HasDomains};
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
-class Tenant extends BaseTenant implements TenantWithDatabase
+class Tenant extends Model
 {
-    use HasDatabase;
-    use HasDomains;
+    use SoftDeletes;
+    use HasUlids;
 
-    protected $fillable = ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
+    protected $fillable = [
+        'code',
+        'name',
+        'domain',
+        'monthly_fee',
+        'due_day',
+        'include_in_marketplace',
+        'is_active',
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -22,33 +29,72 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected function casts(): array
     {
         return [
-            'active'      => 'boolean',
-            'marketplace' => 'boolean',
+            'include_in_marketplace' => 'boolean',
         ];
     }
 
-    public function domains(): HasMany
+    public function user(): BelongsToMany
     {
-        return $this->hasMany(Domain::class);
+        return $this->belongsToMany(User::class);
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string>
-     */
-    public static function getCustomColumns(): array
+    public function brands(): HasMany
     {
-        return ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
+        return $this->hasMany(Brand::class);
     }
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    public function getPasswordAttribute(string $value): string
+    public function companies(): HasMany
     {
-        return $this->attributes['password'] = bcrypt($value);
+        return $this->hasMany(Company::class);
+    }
+
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    public function installments(): HasMany
+    {
+        return $this->hasMany(PaymentInstallment::class);
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
+    }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
+    public function accessories(): HasMany
+    {
+        return $this->hasMany(Accessory::class);
+    }
+
+    public function extras(): HasMany
+    {
+        return $this->hasMany(Extra::class);
+    }
+
+    public function vehicleExpenses(): HasMany
+    {
+        return $this->hasMany(VehicleExpense::class);
+    }
+
+    public function vehicleModels(): HasMany
+    {
+        return $this->hasMany(VehicleModel::class);
+    }
+
+    public function vehicleTypes(): HasMany
+    {
+        return $this->hasMany(VehicleType::class);
     }
 }

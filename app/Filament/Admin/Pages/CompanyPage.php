@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
-use App\Forms\Components\{PhoneInput, ZipCode};
+use App\Forms\Components\{MoneyInput, PhoneInput, ZipCode};
 use App\Models\{Company};
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\{Grid, Repeater, TextInput, Textarea};
@@ -14,7 +14,6 @@ use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Leandrocfe\FilamentPtbrFormFields\Money;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class CompanyPage extends Page
@@ -197,15 +196,15 @@ class CompanyPage extends Page
                             ->prefixIcon('icon-youtube'),
                     ])->columns(2),
                     Tab::make('Taxas')->schema([
-                        Money::make('interest_rate_sale')
+                        MoneyInput::make('interest_rate_sale')
                             ->label('Interest rate sales')
                             ->prefix(null)
                             ->suffix('%'),
-                        Money::make('interest_rate_installment')
+                        MoneyInput::make('interest_rate_installment')
                             ->label('Interest rate installment')
                             ->prefix(null)
                             ->suffix('%'),
-                        Money::make('late_fee')->label('Late fee'),
+                        MoneyInput::make('late_fee')->label('Late fee'),
                     ])->columns(3),
                     Tab::make('Home Page')->schema([
                         Forms\Components\FileUpload::make('bg_img')

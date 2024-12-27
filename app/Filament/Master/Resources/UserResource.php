@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Master\Resources;
 
-use App\Filament\Admin\Resources\UserResource\{Pages};
+use App\Filament\Master\Resources\UserResource\{Pages};
 use App\Models\{Role, User};
 use Filament\Forms\Components\{CheckboxList, Fieldset};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
-use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -38,13 +37,12 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)]),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255)
-                    ->rules([unique_within_tenant_rule(static::$model)]),
+                    ->unique(ignoreRecord:true)
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
@@ -60,10 +58,10 @@ class UserResource extends Resource
                     ->maxLength(8),
                 Fieldset::make('Roles')->schema([
                     CheckboxList::make('roles')
-                        ->relationship('roles', 'name')
                         ->options(
                             Role::query()
-                                ->where('hierarchy', '>=', Auth::user()->roles->min('hierarchy')) //@phpstan-ignore-line
+                                ->where('tenant_id', auth_user()->tenant_id)
+                                ->where('hierarchy', '>=', auth_user()->roles->min('hierarchy')) //@phpstan-ignore-line
                                 ->orderBy('id')
                                 ->pluck('name', 'id')
                         )
@@ -77,13 +75,11 @@ class UserResource extends Resource
     {
         return $table
             ->recordAction(null)
+            ->modifyQueryUsing(fn ($query) => $query->where('tenant_id', auth_user()->tenant_id))
             ->columns([
                 Tables\Columns\TextColumn::make('tenant.name')
                     ->label('Tenant')
                     ->visible(fn () => auth_user()->tenant_id === null)
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('people.name')
-                    ->label('Person')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

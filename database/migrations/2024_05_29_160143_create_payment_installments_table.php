@@ -12,6 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('payment_installments', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('received_by')->nullable()->constrained(table: 'people', column: 'id');
             $table->foreignUlid('sale_id')->nullable()->constrained(table: 'sales', column: 'id');
             $table->date('due_date');

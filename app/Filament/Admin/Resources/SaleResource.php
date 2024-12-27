@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
+use App\Forms\Components\{MoneyInput};
 use App\Models\{People, Sale, Vehicle, VehicleModel};
 use App\Tools\{Contracts};
 use Carbon\Carbon;
@@ -19,7 +20,6 @@ use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Support\Facades\{Blade, DB};
 use Illuminate\Support\HtmlString;
-use Leandrocfe\FilamentPtbrFormFields\Money;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class SaleResource extends Resource
@@ -117,7 +117,7 @@ class SaleResource extends Resource
                             ->options(PaymentMethod::class),
                     Forms\Components\DatePicker::make('date_sale')
                         ->required(),
-                    Money::make('discount')
+                    MoneyInput::make('discount')
                         ->label('Desconto')
                         ->live(debounce: 1000)
                         ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
@@ -132,18 +132,18 @@ class SaleResource extends Resource
                         ->live()
                         ->inline()
                         ->required(),
-                    Money::make('total')->readOnly(),
+                    MoneyInput::make('total')->readOnly(),
                 ])->columns(['sm' => 1, 'md' => 2, 'lg' => 3]),
                 Section::make(__('Installments'))
                     ->visible(fn (Forms\Get $get) => $get('payment_type') === 'on_time')
                     ->columns(['sm' => 2, 'md' => 4])
                     ->schema([
-                        Money::make('down_payment')
+                        MoneyInput::make('down_payment')
                             ->live(debounce: 1000)
                             ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                                 self::updateInstallmentValues($set, $get);
                             }),
-                        Money::make('interest_rate')
+                        MoneyInput::make('interest_rate')
                             ->prefix(null)
                             ->suffix('%')
                             ->live(debounce: 1000)
@@ -158,10 +158,10 @@ class SaleResource extends Resource
                             ->afterStateUpdated(function (Forms\Set $set, Forms\Get $get) {
                                 self::updateInstallmentValues($set, $get);
                             }),
-                        Money::make('installment_value')->readOnly(),
+                        MoneyInput::make('installment_value')->readOnly(),
                         DatePicker::make('first_installment')->required(fn (Forms\Get $get) => $get('payment_type') === 'on_time'),
-                        Money::make('interest')->readOnly(),
-                        Money::make('total_with_interest')->readOnly(),
+                        MoneyInput::make('interest')->readOnly(),
+                        MoneyInput::make('total_with_interest')->readOnly(),
                     ]),
             ]);
     }
@@ -220,6 +220,10 @@ class SaleResource extends Resource
         return $table
             ->recordUrl(null)
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')
+                    ->label('Tenant')
+                    ->visible(fn () => auth_user()->tenant_id === null)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('seller.name')
                     ->label('Seller')
                     ->sortable()
@@ -490,7 +494,7 @@ class SaleResource extends Resource
                     ->iconSize('md')
                     ->color('danger')
                     ->form([
-                        Money::make('reimbursement')
+                        MoneyInput::make('reimbursement')
                             ->label('Reimbursement')
                             ->live(debounce: 500),
                     ])

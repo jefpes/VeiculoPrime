@@ -68,6 +68,10 @@ class VehicleExpenseResource extends Resource
                 return $query->orderBy('date', 'desc');
             })
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')
+                    ->label('Tenant')
+                    ->visible(fn () => auth_user()->tenant_id === null)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('vehicle.plate')
                     ->label('Plate')
                     ->numeric()
@@ -103,12 +107,8 @@ class VehicleExpenseResource extends Resource
 
             Group::make([
                 // Value filters
-                MoneyInput::make('value_expense_min')
-                    ->label('Value expense min')
-                    ->live(debounce: 1000),
-                MoneyInput::make('value_expense_max')
-                    ->label('Value expense max')
-                    ->live(debounce: 1000),
+                MoneyInput::make('value_expense_min')->label('Value expense min'),
+                MoneyInput::make('value_expense_max')->label('Value expense max'),
             ])->columns(2),
 
             // Model filter
@@ -125,8 +125,8 @@ class VehicleExpenseResource extends Resource
                   ->when($data['expense_date_final'], fn ($query, $value) => $query->where('date', '<=', $value));
 
             // Filtering by values
-            $query->when($data['value_expense_min'] > 0, fn ($query, $value) => $query->where('value', '>=', $value))
-                  ->when($data['value_expense_max'] > 0, fn ($query, $value) => $query->where('value', '<=', $value));
+            $query->when($data['value_expense_min'], fn ($query, $value) => $query->where('value', '>=', $value))
+                  ->when($data['value_expense_max'], fn ($query, $value) => $query->where('value', '<=', $value));
 
             // Filtering by model
             if (!empty($data['model'])) {
@@ -149,11 +149,11 @@ class VehicleExpenseResource extends Resource
 
             // Indicators for value filters
             if ($data['value_expense_min'] ?? null) {
-                $indicators[] = __('Value expense min') . ': ' . number_format((float)$data['value_expense_min'], 2, ',', '');
+                $indicators[] = __('Value expense min') . ': ' . number_format($data['value_expense_min'], 2, ',', '');
             }
 
             if ($data['value_expense_max'] ?? null) {
-                $indicators[] = __('Value expense max') . ': ' . number_format((float)$data['value_expense_max'], 2, ',', '');
+                $indicators[] = __('Value expense max') . ': ' . number_format($data['value_expense_max'], 2, ',', '');
             }
 
             // Indicator for model filter
