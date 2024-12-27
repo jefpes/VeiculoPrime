@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
+use App\Forms\Components\{MoneyInput};
 use App\Models\{Company, PaymentInstallment, People};
 use App\Tools\Contracts;
 use Carbon\Carbon;
@@ -18,7 +19,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\{Builder};
-use Leandrocfe\FilamentPtbrFormFields\Money;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class PaymentInstallmentResource extends Resource
@@ -97,6 +97,10 @@ class PaymentInstallmentResource extends Resource
         return $table
             ->recordUrl(null)
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')
+                    ->label('Tenant')
+                    ->visible(fn () => auth_user()->tenant_id === null)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('receiver.name')
                     ->label('Responsible')
                     ->sortable()
@@ -190,24 +194,24 @@ class PaymentInstallmentResource extends Resource
                             ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         Forms\Components\DatePicker::make('due_date')->readOnly(),
                         Group::make([
-                            Money::make('value')->readOnly(),
-                            Money::make('discount')
+                            MoneyInput::make('value')->readOnly(),
+                            MoneyInput::make('discount')
                                 ->live(debounce: 1000)
                                 ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         ])->columns(2),
                         Group::make([
-                            Money::make('late_fee')
+                            MoneyInput::make('late_fee')
                                 ->live(debounce: 1000)
                                 ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
-                            Money::make('interest_rate')
+                            MoneyInput::make('interest_rate')
                                 ->prefix(null)
                                 ->suffix('%')
                                 ->live(debounce: 1000)
                                 ->afterStateUpdated(fn (Set $set, Get $get) => self::updatePaymentValue($set, $get)),
                         ])->columns(2),
                         Group::make([
-                            Money::make('interest')->readOnly(),
-                            Money::make('payment_value')->readOnly(),
+                            MoneyInput::make('interest')->readOnly(),
+                            MoneyInput::make('payment_value')->readOnly(),
                         ])->columns(2),
                         Forms\Components\DatePicker::make('payment_date')->required()
                             ->live(debounce: 1000)

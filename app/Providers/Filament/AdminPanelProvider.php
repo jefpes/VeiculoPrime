@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\{FilamentSettings};
+use App\Http\Middleware\{CheckTenant, FilamentSettings};
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\MaxWidth;
@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
-use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, PreventAccessFromCentralDomains};
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -55,12 +54,8 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
+                CheckTenant::class,
             ])
-            ->middleware([
-                'universal',
-                InitializeTenancyByDomain::class,
-                PreventAccessFromCentralDomains::class,
-            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ])

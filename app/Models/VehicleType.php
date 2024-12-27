@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -17,14 +15,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class VehicleType extends Model
+class VehicleType extends BaseModel
 {
-    use HasUlids;
     use HasFactory;
 
     protected $table = 'vehicle_types';
 
     protected $fillable = [
+        'tenant_id',
         'name',
     ];
 

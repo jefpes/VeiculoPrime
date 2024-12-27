@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\SaleResource\RelationManagers;
 
 use App\Enums\PaymentMethod;
+use App\Forms\Components\{MoneyInput};
 use App\Models\{PaymentInstallment};
 use App\Tools\Contracts;
 use Filament\Forms\Components\FileUpload;
@@ -12,7 +13,6 @@ use Filament\Support\Colors\Color;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Support\Facades\Auth;
-use Leandrocfe\FilamentPtbrFormFields\Money;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class InstallmentsRelationManager extends RelationManager
@@ -72,11 +72,11 @@ class InstallmentsRelationManager extends RelationManager
                         'payment_date' => now(),
                     ])
                     ->form([
-                        Money::make('value')->readOnly(),
+                        MoneyInput::make('value')->readOnly(),
                         Forms\Components\Select::make('payment_method')
                             ->options(PaymentMethod::class)
                             ->required(),
-                        Money::make('payment_value')->required(),
+                        MoneyInput::make('payment_value')->required(),
                         Forms\Components\DatePicker::make('payment_date')->required(),
                     ])->action(function (PaymentInstallment $installment, array $data) {
                         $installment->update([

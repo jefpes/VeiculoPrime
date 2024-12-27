@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
+use App\Forms\Components\MoneyInput;
 use App\Models\{Accessory, Brand, Extra, People, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
@@ -17,7 +18,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
 use Illuminate\Database\Eloquent\{Builder};
-use Leandrocfe\FilamentPtbrFormFields\Money;
+use Illuminate\Validation\Rules\Unique;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class VehicleResource extends Resource
@@ -69,21 +70,19 @@ class VehicleResource extends Resource
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
-                    Money::make('fipe_price'),
-                    Money::make('purchase_price')
+                    MoneyInput::make('fipe_price'),
+                    MoneyInput::make('purchase_price')
                         ->required(),
-                    Money::make('sale_price')
+                    MoneyInput::make('sale_price')
                         ->required(),
-                    Money::make('promotional_price'),
+                    MoneyInput::make('promotional_price'),
                     Grid::make()
                         ->columnSpan(1)
                         ->schema([
                             TextInput::make('year_one')
                                 ->required()
-                                ->mask('9999')
                                 ->label('Year'),
                             TextInput::make('year_two')
-                                ->mask('9999')
                                 ->required()
                                 ->label('Year (Model)'),
                         ]),
@@ -134,28 +133,33 @@ class VehicleResource extends Resource
                         ->mask('aaa-9*99')
                         ->unique(
                             ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('chassi')
                         ->maxLength(255)
                         ->unique(
                             ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('renavam')
                         ->maxLength(255)
                         ->unique(
                             ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('crv_number')
                         ->label('CRV number')
                         ->maxLength(20)
                         ->unique(
                             ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     TextInput::make('crv_code')
                         ->label('CRV code')
                         ->maxLength(20)
                         ->unique(
                             ignoreRecord: true,
+                            modifyRuleUsing: fn (Unique $rule) => $rule->where('tenant_id', auth_user()?->tenant_id)->whereNull('sold_date')
                         ),
                     Textarea::make('description')
                         ->maxLength(255)->columnSpanFull(),
@@ -173,6 +177,10 @@ class VehicleResource extends Resource
                 return $query->with('buyer', 'model', 'supplier');
             })
             ->columns([
+                TextColumn::make('tenant.name')
+                    ->label('Tenant')
+                    ->visible(fn () => auth_user()->tenant_id === null)
+                    ->sortable(),
                 TextColumn::make('buyer.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)

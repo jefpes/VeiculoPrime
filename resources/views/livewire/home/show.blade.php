@@ -65,7 +65,11 @@
         <div class="md:rounded-lg shadow-md p-6 space-y-6" style="{{ 'background-color:' . $company->card_color . ';color:' . $company->card_text_color }}">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-semibold">
-                    {{ __('Details') }}
+                    @if ($tenantCompany)
+                        {{ $tenantCompany->name }}
+                    @else
+                        {{ __('Details') }}
+                    @endif
                 </h2>
                 @if($vehicle->promotional_price)
                 <div class="text-right">
@@ -130,6 +134,17 @@
                 <h3 class="text-xl font-semibold mb-2">{{ __('Description') }}</h3>
                 <p class="text-gray-600">{{ $vehicle->description }}</p>
             </div>
+
+            @if ($tenantCompany->whatsapp)
+            <div class="pt-6 border-t border-gray-200">
+                <a href="{{ $tenantCompany->whatsapp }}" target="_blank">
+                    <button style="{{ 'background-color:' . $company->link_color . ';color:' . $company->link_text_color }}"
+                        class="w-full py-2 px-4 rounded-md transition-colors duration-200">
+                        {{ __('Contact Seller') }}
+                    </button>
+                </a>
+            </div>
+            @endif
         </div>
     </div>
 </div>
