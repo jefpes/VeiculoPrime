@@ -14,6 +14,8 @@ class SettingsPage extends Page
 {
     protected static string $view = 'filament.pages.settings';
 
+    protected static ?string $navigationIcon = 'heroicon-o-cog';
+
     protected static ?int $navigationSort = 4;
 
     /** @var array<string, mixed> */

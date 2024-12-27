@@ -27,6 +27,8 @@ class PaymentInstallmentResource extends Resource
 
     protected static ?int $navigationSort = 14;
 
+    protected static ?string $navigationIcon = 'heroicon-o-swatch';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Financial');

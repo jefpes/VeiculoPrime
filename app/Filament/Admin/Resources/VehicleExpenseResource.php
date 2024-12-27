@@ -21,6 +21,8 @@ class VehicleExpenseResource extends Resource
 
     protected static ?int $navigationSort = 14;
 
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-down';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Financial');

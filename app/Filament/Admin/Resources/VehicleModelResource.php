@@ -17,6 +17,8 @@ class VehicleModelResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');
