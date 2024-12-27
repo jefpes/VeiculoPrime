@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\Str;
 
 class TenantResource extends Resource
 {
@@ -22,6 +23,14 @@ class TenantResource extends Resource
                 Forms\Components\Section::make()
                     ->columns(2)
                     ->schema([
+                        Forms\Components\TextInput::make('id')
+                            ->label('Database Name')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('id', Str::slug($state)))
+                            ->unique()
+                            ->visibleOn(['create'])
+                            ->required()
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
                             ->required()
@@ -35,6 +44,7 @@ class TenantResource extends Resource
                             ->label('Password')
                             ->password()
                             ->required()
+                            ->visibleOn(['create'])
                             ->maxLength(255),
                         Forms\Components\TextInput::make('domain'),
                     ]),
@@ -46,12 +56,14 @@ class TenantResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
+                    ->label('Database Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                Tables\Columns\ToggleColumn::make('active')->onColor('success')->offColor('danger'),
+                Tables\Columns\ToggleColumn::make('marketplace')->onColor('success')->offColor('danger'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -66,11 +78,7 @@ class TenantResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 
@@ -86,7 +94,6 @@ class TenantResource extends Resource
         return [
             'index'  => Pages\ListTenants::route('/'),
             'create' => Pages\CreateTenant::route('/create'),
-            'edit'   => Pages\EditTenant::route('/{record}/edit'),
         ];
     }
 }

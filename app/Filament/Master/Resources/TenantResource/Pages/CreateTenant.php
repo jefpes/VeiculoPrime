@@ -12,6 +12,6 @@ class CreateTenant extends CreateRecord
     protected function afterCreate(): void
     {
         $tenant = $this->getRecord();
-        $tenant->domains()->create(['domain' => $this->data['domain'] . '.motormarket.test', ]); // @phpstan-ignore-line
+        $tenant->domains()->create(['domain' => $this->data['domain'] . '.' . env('CENTRAL_DOMAIN')]); // @phpstan-ignore-line
     }
 }
