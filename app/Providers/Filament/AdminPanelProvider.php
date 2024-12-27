@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\{FilamentSettings};
+use App\Http\Middleware\{CheckTenant, FilamentSettings};
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\MaxWidth;
@@ -55,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
+                CheckTenant::class,
             ])
             ->middleware([
                 'universal',
