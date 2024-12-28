@@ -33,8 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->userMenuItems([
-                'profile' => MenuItem::make()->label('Perfil')
-                    ->icon('heroicon-o-user'),
+                'profile' => MenuItem::make()->icon('heroicon-o-user'),
             ])
             ->middleware([
                 EncryptCookies::class,
