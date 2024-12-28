@@ -28,6 +28,8 @@ class SaleResource extends Resource
 
     protected static ?int $navigationSort = 13;
 
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+
     public static function getNavigationGroup(): ?string
     {
         return __('Financial');

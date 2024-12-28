@@ -21,6 +21,8 @@ class CompanyPage extends Page
 {
     protected static string $view = 'filament.pages.company-page';
 
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
     public static function canAccess(): bool
     {
         /** @var User $user */

@@ -15,6 +15,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-finger-print';
+
+    protected static ?string $recordTitleAttribute = 'email';
+
     protected static ?int $navigationSort = 2;
 
     public static function getNavigationGroup(): ?string

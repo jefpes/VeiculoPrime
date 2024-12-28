@@ -25,8 +25,8 @@ class TenantResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('id')
                             ->label('Database Name')
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('id', Str::slug($state)))
+                            ->live(debounce: 1000, onBlur: true)
+                            ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('id', Str::slug($state, '_')))
                             ->unique()
                             ->visibleOn(['create'])
                             ->required()

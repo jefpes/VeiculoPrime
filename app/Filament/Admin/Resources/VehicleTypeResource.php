@@ -16,6 +16,8 @@ class VehicleTypeResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getNavigationGroup(): ?string

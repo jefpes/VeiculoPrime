@@ -26,6 +26,8 @@ class VehicleResource extends Resource
 
     protected static ?int $navigationSort = 11;
 
+    protected static ?string $navigationIcon = 'icon-car';
+
     protected static ?string $recordTitleAttribute = 'plate';
 
     protected bool $validPlate = false;

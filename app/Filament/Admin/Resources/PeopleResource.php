@@ -21,6 +21,13 @@ class PeopleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
+
     public static function getModelLabel(): string
     {
         return __('Person');
