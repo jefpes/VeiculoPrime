@@ -7,7 +7,10 @@ namespace App\Providers;
 use App\Jobs\CreateTenant;
 use Illuminate\Support\Facades\{Event, Route};
 use Illuminate\Support\ServiceProvider;
+use Livewire\Features\SupportFileUploads\FilePreviewController;
+use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
+use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, InitializeTenancyByDomainOrSubdomain};
 use Stancl\Tenancy\{Events, Jobs, Listeners, Middleware};
 
 class TenancyServiceProvider extends ServiceProvider
@@ -25,8 +28,8 @@ class TenancyServiceProvider extends ServiceProvider
                 JobPipeline::make([
                     Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
-                    CreateTenant::class,
-                    // Jobs\SeedDatabase::class,
+                    // CreateTenant::class,
+                    Jobs\SeedDatabase::class,
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
@@ -102,6 +105,22 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+        FilePreviewController::$middleware = ['web', 'universal', InitializeTenancyByDomain::class];
+
+        $host = request()?->getHost(); //@phpstan-ignore-line
+
+        if (!in_array($host, config('tenancy.central_domains'), true)) {
+            Livewire::setUpdateRoute(static function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware([
+                        'web',
+                        'universal',
+                        InitializeTenancyByDomainOrSubdomain::class,
+                    ]);
+            });
+        }
+
     }
 
     protected function bootEvents(): void
