@@ -14,6 +14,7 @@ return new class () extends Migration {
             $table->ulid('id')->primary();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

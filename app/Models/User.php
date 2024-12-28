@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\{FilamentUser, HasAvatar, HasTenants};
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
-use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -17,10 +18,12 @@ use Illuminate\Support\Facades\Storage;
  * @property \App\Models\Role $roles
  * @property \App\Models\People $people
  * @property Collection $abilities
+ * @property Collection $stores
  *
  * @method \App\Models\Role roles()
  * @method \App\Models\People people()
  * @method Collection abilities()
+ * @method \App\Models\Store stores()
  *
  * @property string $id
  * @property string $name
@@ -28,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $password
  * @property string $avatar_url
  */
-class User extends Authenticatable implements MustVerifyEmail, HasAvatar
+class User extends Authenticatable implements MustVerifyEmail, HasAvatar, FilamentUser, HasTenants
 {
     use HasFactory;
     use Notifiable;
@@ -116,13 +119,28 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->hasMany(Sale::class);
     }
 
-    // public function abilities(): Collection
-    // {
-    //     return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
-    // }
+    // FilamentUser
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
 
-    // public function hasAbility(string $ability): bool
-    // {
-    //     return $this->abilities()->contains($ability);
-    // }
+    // HasTenants
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class);
+    }
+
+    public function canAccessTenant(Model $store): bool
+    {
+        return $this->stores->contains($store);
+    }
+
+    /**
+     * @return array<Model> | Collection
+     */
+    public function getTenants(Panel $panel): array | Collection
+    {
+        return $this->stores;
+    }
 }
