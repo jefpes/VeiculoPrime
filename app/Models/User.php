@@ -116,9 +116,9 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->hasMany(Sale::class);
     }
 
-    public function stores(): HasMany
+    public function stores(): BelongsToMany
     {
-        return $this->hasMany(Store::class);
+        return $this->belongsToMany(Store::class);
     }
 
     // public function abilities(): Collection

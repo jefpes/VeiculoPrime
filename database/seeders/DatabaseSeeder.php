@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, Settings, User};
+use App\Models\{Ability, Settings, Store, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +22,13 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
         ]);
+
+        $store = Store::create([
+            'name' => 'Loja 1',
+            'slug' => 'loja-1',
+        ]);
+
+        $user->stores()->sync($store->pluck('id')->toArray());
 
         Settings::create(['user_id' => $user->id]);
 
@@ -43,10 +50,12 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
         ]);
 
-        $user->stores()->create([
-            'name' => 'Loja 1',
-            'slug' => 'loja-1',
+        $store = Store::create([
+            'name' => 'Loja 2',
+            'slug' => 'loja-2',
         ]);
+
+        $user->stores()->sync($store->pluck('id')->toArray());
 
         Settings::create(['user_id' => $user->id]);
 
