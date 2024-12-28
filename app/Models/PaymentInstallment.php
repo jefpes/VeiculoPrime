@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\HasTenant;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Builder, Model};
@@ -17,7 +16,6 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  * @method \App\Models\Sale sale()
  *
  * @property string $id
- * @property string $store_id
  * @property string $received_by
  * @property string $sale_id
  * @property \Illuminate\Support\Carbon $due_date
@@ -36,11 +34,9 @@ use Illuminate\Database\Eloquent\{Builder, Model};
 class PaymentInstallment extends Model
 {
     use HasUlids;
-    use HasTenant;
     use HasFactory;
 
     protected $fillable = [
-        'store_id',
         'received_by',
         'sale_id',
         'due_date',

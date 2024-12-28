@@ -12,7 +12,6 @@ return new class () extends Migration {
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('store_id')->nullable()->constrained(table: 'stores', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('seller_id')->nullable()->constrained(table: 'people', column: 'id');
             $table->foreignUlid('vehicle_id')->nullable()->constrained(table: 'vehicles', column: 'id');
             $table->foreignUlid('client_id')->nullable()->constrained(table: 'people', column: 'id');

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\{HasPhoto, HasTenant};
+use App\Traits\HasPhoto;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +30,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @method \App\Models\Extra extras()
  *
  * @property string $id
- * @property string $store_id
  * @property string $vehicle_model_id
  * @property string $supplier_id
  * @property string $buyer_id
@@ -63,10 +62,8 @@ class Vehicle extends Model
     use HasUlids;
     use HasFactory;
     use HasPhoto;
-    use HasTenant;
 
     protected $fillable = [
-        'store_id',
         'buyer_id',
         'vehicle_model_id',
         'supplier_id',
