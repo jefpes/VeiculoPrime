@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\Tenancy\{EditStoreProfile, RegisterStore};
-use App\Http\Middleware\{FilamentSettings};
+use App\Http\Middleware\{ApplyTenantScopes, FilamentSettings};
 use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
@@ -56,6 +56,9 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+            ], isPersistent: true)
             ->spa()
             ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge);
     }
