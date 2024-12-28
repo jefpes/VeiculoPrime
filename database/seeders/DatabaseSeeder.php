@@ -43,6 +43,11 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
         ]);
 
+        $user->stores()->create([
+            'name' => 'Loja 1',
+            'slug' => 'loja-1',
+        ]);
+
         Settings::create(['user_id' => $user->id]);
 
         $role = $user->roles()->create([
