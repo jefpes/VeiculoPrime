@@ -16,8 +16,6 @@ return new class () extends Migration {
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->json('custom_fields')->nullable();
-            $table->string('avatar_url')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

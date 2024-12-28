@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Tenancy\{EditStoreProfile, RegisterStore};
 use App\Http\Middleware\{FilamentSettings};
+use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\MaxWidth;
@@ -11,10 +13,7 @@ use Illuminate\Cookie\Middleware\{AddQueuedCookiesToResponse, EncryptCookies};
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\{AuthenticateSession, StartSession};
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
-use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, PreventAccessFromCentralDomains};
 
 class AdminPanelProvider extends PanelProvider
@@ -25,24 +24,17 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->tenant(Store::class, 'slug')
+            ->tenantRegistration(RegisterStore::class)
+            ->tenantProfile(EditStoreProfile::class)
+            ->profile()
             ->login()
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
-            ->widgets([
-            ])
-            ->plugins([
-                FilamentEditProfilePlugin::make()
-                    ->slug('my-profile')
-                    ->shouldRegisterNavigation(false)
-                    ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowBrowserSessionsForm()
-                    ->shouldShowAvatarForm(),
-            ])
             ->userMenuItems([
-                'profile' => MenuItem::make()
-                    ->label(fn () => Auth::user()->name) //@phpstan-ignore-line
-                    ->url(fn (): string => EditProfilePage::getUrl()),
+                'profile' => MenuItem::make()->label('Perfil')
+                    ->icon('heroicon-o-user'),
             ])
             ->middleware([
                 EncryptCookies::class,

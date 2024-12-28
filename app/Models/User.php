@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\{FilamentUser, HasTenants};
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
-use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
+use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @property \App\Models\Role $roles
  * @property \App\Models\People $people
  * @property Collection $abilities
+ * @property Collection $stores
  *
  * @method \App\Models\Role roles()
  * @method \App\Models\People people()
@@ -28,7 +29,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $password
  * @property string $avatar_url
  */
-class User extends Authenticatable implements MustVerifyEmail, HasAvatar
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants
 {
     use HasFactory;
     use Notifiable;
@@ -41,9 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         'remember_token',
         'email_verified_at',
         'password',
-        'custom_fields',
-        'avatar_url',
-        'employee_id',
     ];
 
     /**
@@ -66,11 +64,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return [
             'password' => 'hashed',
         ];
-    }
-
-    public function getFilamentAvatarUrl(): ?string
-    {
-        return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 
     public function hierarchy(string $id): bool
@@ -121,13 +114,18 @@ class User extends Authenticatable implements MustVerifyEmail, HasAvatar
         return $this->belongsToMany(Store::class);
     }
 
-    // public function abilities(): Collection
-    // {
-    //     return $this->roles()->with('abilities')->get()->pluck('abilities.*.name')->flatten();
-    // }
+    public function getTenants(Panel $panel): Collection
+    {
+        return $this->stores;
+    }
 
-    // public function hasAbility(string $ability): bool
-    // {
-    //     return $this->abilities()->contains($ability);
-    // }
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->stores()->whereKey($tenant)->exists();
+    }
 }
