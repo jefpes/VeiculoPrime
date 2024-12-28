@@ -23,6 +23,8 @@ class PeopleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Management');

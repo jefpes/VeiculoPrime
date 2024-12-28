@@ -21,6 +21,8 @@ class RoleResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Management');

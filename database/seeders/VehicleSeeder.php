@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Accessory, Extra, People, Photo, Vehicle, VehicleModel};
+use App\Models\{Accessory, Extra, People, Photo, Store, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class VehicleSeeder extends Seeder
@@ -17,6 +17,7 @@ class VehicleSeeder extends Seeder
         $accessories   = Accessory::all()->pluck('id', 'name');
         $buyers        = People::whereHas('employee')->get();
         $suppliers     = People::where('supplier', true)->get();
+        $stores        = Store::all();
 
         $vehicles = [
             [
@@ -694,6 +695,7 @@ class VehicleSeeder extends Seeder
 
         foreach ($vehicles as $vehicleData) {
             $vehicle = Vehicle::create([
+                'store_id'          => $stores->random()->id,
                 'buyer_id'          => $buyers->random()->id,
                 'supplier_id'       => $suppliers->random()->id,
                 'purchase_date'     => $vehicleData['purchase_date'],

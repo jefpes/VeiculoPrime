@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasPhoto;
+use App\Traits\{HasPhoto, HasStore};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,8 +62,10 @@ class Vehicle extends Model
     use HasUlids;
     use HasFactory;
     use HasPhoto;
+    use HasStore;
 
     protected $fillable = [
+        'store_id',
         'buyer_id',
         'vehicle_model_id',
         'supplier_id',

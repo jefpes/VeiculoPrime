@@ -23,6 +23,8 @@ class CompanyPage extends Page
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static bool $isScopedToTenant = false;
+
     public static function canAccess(): bool
     {
         /** @var User $user */

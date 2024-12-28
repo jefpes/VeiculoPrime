@@ -16,11 +16,13 @@ class VehicleExpenseSeeder extends Seeder
         $user     = User::all();
 
         for ($i = 0; $i < 60; $i++) {
+            $vehicle = $vehicles->random();
             VehicleExpense::create([
+                'store_id'    => $vehicle->store_id,
                 'date'        => now()->subDays(rand(1, 180)),
                 'description' => 'Despesa de teste',
                 'value'       => rand(100, 100000) / 100,
-                'vehicle_id'  => $vehicles->random()->id,
+                'vehicle_id'  => $vehicle->id,
                 'user_id'     => $user->random()->id,
             ]);
         }

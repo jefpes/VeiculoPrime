@@ -17,6 +17,8 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
 
+    protected static bool $isScopedToTenant = false;
+
     protected static ?string $recordTitleAttribute = 'email';
 
     protected static ?int $navigationSort = 2;
