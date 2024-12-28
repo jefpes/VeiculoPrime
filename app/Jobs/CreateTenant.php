@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\{Ability, Company, Settings, Tenant, User};
-use Database\Seeders\{AbilitySeeder};
+use Database\Seeders\{AbilitySeeder, DatabaseSeeder};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -24,11 +24,28 @@ class CreateTenant implements ShouldQueue
     public function handle(): void
     {
         $this->tenant->run(function () {
-            $user = User::create(['name' => $this->tenant->name, 'email' => $this->tenant->email, 'password' => $this->tenant->password]); // @phpstan-ignore-line
+            $storage_path = storage_path('framework/cache');
+
+            if (!mkdir($storage_path, 0777, true) && !is_dir($storage_path)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $storage_path));
+            }
+
+            //create .gitignore file
+            $gitignore_path = $storage_path . '/.gitignore';
+
+            if (!file_exists($gitignore_path)) {
+                file_put_contents($gitignore_path, "*\n!data/\n!.gitignore");
+            }
+
+            //todo: create seeder for initial tenant data
+            (new DatabaseSeeder())->run();
+
+            /**
+            $user = User::create(['name' => $this->tenant->name, 'email' => $this->tenant->email, 'password' => $this->tenant->password]);
 
             (new AbilitySeeder())->run();
 
-            Company::query()->create(['name' => $this->tenant->name]); // @phpstan-ignore-line
+            Company::query()->create(['name' => $this->tenant->name]);
 
             Settings::query()->create(['user_id' => $user->id]);
 
@@ -120,7 +137,7 @@ class CreateTenant implements ShouldQueue
                     'brand_id'        => $brandIds[$model['brand']], // Usa o ID gerado
                     'vehicle_type_id' => $typeIds[$model['type']], // Usa o ID gerado
                 ]);
-            }
+            }*/
         });
     }
 }
