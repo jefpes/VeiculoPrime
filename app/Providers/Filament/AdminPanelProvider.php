@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Admin\Pages\Tenancy\{EditStoreProfile, RegisterStore};
 use App\Http\Middleware\{ApplyTenantScopes, FilamentSettings};
 use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
@@ -25,8 +24,6 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->tenant(Store::class, 'slug')
-            ->tenantRegistration(RegisterStore::class)
-            ->tenantProfile(EditStoreProfile::class)
             ->profile()
             ->login()
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
