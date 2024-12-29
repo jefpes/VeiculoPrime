@@ -69,7 +69,7 @@ class StoreResource extends Resource
                                     ->columnSpanFull(),
                             ]),
                             Forms\Components\Grid::make()->columnSpan(1)->columns(1)->schema([
-                                FormFields::setPhoneFields()->grid(1), //@phpstan-ignore-line
+                                FormFields::setPhoneFields()->grid(1),
                             ]),
                         ]),
                     ]),

@@ -72,7 +72,7 @@ class FormFields
             ]);
     }
 
-    public static function setPhoneFields(): Component
+    public static function setPhoneFields(): Repeater
     {
         return Repeater::make('phones')
                 ->grid(2)
