@@ -14,6 +14,13 @@ return new class () extends Migration {
             $table->ulid('id')->primary();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->string('zip_code')->nullable();
+            $table->string('street')->nullable();
+            $table->string('number')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('complement')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
