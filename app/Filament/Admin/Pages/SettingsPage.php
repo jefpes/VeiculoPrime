@@ -10,9 +10,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Str;
 use Leandrocfe\FilamentPtbrFormFields\Money;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class SettingsPage extends Page
 {
@@ -124,16 +122,13 @@ class SettingsPage extends Page
                 Section::make('Home Page')->schema([
                     Forms\Components\FileUpload::make('logo')
                         ->image()
-                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                         ->directory('settings'),
                     Forms\Components\FileUpload::make('bg_img')
                         ->label('Backgroud image')
                         ->image()
-                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                         ->directory('settings'),
                     Forms\Components\FileUpload::make('favicon')
                         ->image()
-                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favicon_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
                         ->directory('settings'),
                     Forms\Components\Select::make('bg_img_opacity')
                         ->label('Backgroud image opacity')
