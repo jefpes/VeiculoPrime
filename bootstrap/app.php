@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\TenantStoreUrl;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\{Exceptions, Middleware};
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('universal', []);
+        $middleware->append(TenantStoreUrl::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

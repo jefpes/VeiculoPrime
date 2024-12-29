@@ -37,18 +37,6 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root'   => storage_path('app/public'),
-            'url'    => sprintf(
-                '%s://%s/storage',
-                (request()->isSecure() ? 'https' : 'http'),
-                request()?->getHost(),
-            ),
-            'visibility' => 'public',
-            'throw'      => false,
-        ],
-
-        'public-default' => [
             'driver'     => 'local',
             'root'       => storage_path('app/public'),
             'url'        => env('APP_URL') . '/storage',
