@@ -80,7 +80,38 @@ class StoreResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('zip_code')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('state')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('city')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('neighborhood')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('street')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('number')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('complement')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('phones.full_phone')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
