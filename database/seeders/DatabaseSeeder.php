@@ -23,12 +23,9 @@ class DatabaseSeeder extends Seeder
             'password'          => Hash::make('admin'),
         ]);
 
-        $store = Store::create([
-            'name' => 'Loja 1',
-            'slug' => 'loja-1',
-        ]);
+        $this->call(StoreSeeder::class);
 
-        $user->stores()->sync($store->pluck('id')->toArray());
+        $user->stores()->sync(Store::pluck('id')->toArray());
 
         // Criar a role 'master'
         $role = $user->roles()->create([
@@ -48,12 +45,9 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
         ]);
 
-        $store = Store::create([
-            'name' => 'Loja 2',
-            'slug' => 'loja-2',
-        ]);
+        $this->call(StoreSeeder::class);
 
-        $user->stores()->sync($store->pluck('id')->toArray());
+        $user->stores()->sync(Store::pluck('id')->toArray());
 
         $role = $user->roles()->create([
             'name'      => 'admin',
