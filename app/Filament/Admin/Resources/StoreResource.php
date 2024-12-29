@@ -39,37 +39,38 @@ class StoreResource extends Resource
                             ->rules(['regex:/^[^\s]+$/'])
                             ->maxLength(255),
                         Forms\Components\Grid::make()
+                        ->columns(2)
                         ->schema([
-                            ZipCode::make('zip_code'),
-                            Forms\Components\TextInput::make('state')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make('city')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make('neighborhood')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\Grid::make()
-                                ->columns(5)
-                                ->schema([
-                                    Forms\Components\TextInput::make('street')
-                                        ->required()
-                                        ->maxLength(255)
-                                        ->columnSpan(['md' => 4, 'sm' => 5]),
-                                    Forms\Components\TextInput::make('number')
-                                        ->columnSpan(['md' => 1, 'sm' => 5])
-                                        ->minValue(0),
-                                ]),
-                            Forms\Components\Textarea::make('complement')
-                                ->maxLength(255)
-                                ->rows(1)
-                                ->columnSpanFull(),
-                        ]),
-                        Forms\Components\Grid::make()
-                        ->columnSpanFull()
-                        ->schema([
-                            FormFields::setPhoneFields(),
+                            Forms\Components\Grid::make()->columnSpan(1)->schema([
+                                ZipCode::make('zip_code'),
+                                Forms\Components\TextInput::make('state')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('city')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('neighborhood')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\Grid::make()
+                                    ->columns(5)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('street')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->columnSpan(['md' => 4, 'sm' => 5]),
+                                        Forms\Components\TextInput::make('number')
+                                            ->columnSpan(['md' => 1, 'sm' => 5])
+                                            ->minValue(0),
+                                    ]),
+                                Forms\Components\Textarea::make('complement')
+                                    ->maxLength(255)
+                                    ->rows(1)
+                                    ->columnSpanFull(),
+                            ]),
+                            Forms\Components\Grid::make()->columnSpan(1)->columns(1)->schema([
+                                FormFields::setPhoneFields()->grid(1), //@phpstan-ignore-line
+                            ]),
                         ]),
                     ]),
             ]);
