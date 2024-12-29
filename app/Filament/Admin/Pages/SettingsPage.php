@@ -122,19 +122,19 @@ class SettingsPage extends Page
                     Money::make('late_fee')->label('Late fee'),
                 ])->columns(3),
                 Section::make('Home Page')->schema([
-                    Forms\Components\FileUpload::make('favicon')
-                            ->image()
-                            ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
-                            ->directory('settings'),
                     Forms\Components\FileUpload::make('logo')
-                            ->image()
-                            ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
-                            ->directory('settings'),
+                        ->image()
+                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'logo_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
+                        ->directory('settings'),
                     Forms\Components\FileUpload::make('bg_img')
-                            ->label('Backgroud image')
-                            ->image()
-                            ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
-                            ->directory('settings'),
+                        ->label('Backgroud image')
+                        ->image()
+                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'bg-image_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
+                        ->directory('settings'),
+                    Forms\Components\FileUpload::make('favicon')
+                        ->image()
+                        ->getUploadedFileNameForStorageUsing(fn (TemporaryUploadedFile $file): string => (string) 'favicon_' . Str::slug($this->settings->name, '_') . '_' . Str::uuid() . '.' . $file->getClientOriginalExtension())
+                        ->directory('settings'),
                     Forms\Components\Select::make('bg_img_opacity')
                         ->label('Backgroud image opacity')
                         ->options([

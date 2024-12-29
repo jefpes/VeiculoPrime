@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{HasOne};
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class setting
@@ -101,22 +100,5 @@ class Settings extends Model
     public function ceo(): HasOne
     {
         return $this->hasOne(Employee::class);
-    }
-
-    protected static function booted()
-    {
-        static::updating(function (Settings $setting) {
-            $logoToDelete = $setting->getOriginal('logo');
-
-            if ($setting->isDirty('logo') && $setting->logo !== null) {
-                Storage::delete("public/$logoToDelete");
-            }
-
-            $faviconToDelete = $setting->getOriginal('favicon');
-
-            if ($setting->isDirty('favicon') && $setting->favicon !== null) {
-                Storage::delete("public/$faviconToDelete");
-            }
-        });
     }
 }
