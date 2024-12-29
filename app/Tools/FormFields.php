@@ -74,6 +74,7 @@ class FormFields
     {
         return Repeater::make('phones')
                 ->grid(2)
+                ->columnSpanFull()
                 ->hiddenLabel()
                 ->addActionLabel(__('Add phone'))
                 ->relationship('phones')
