@@ -7,10 +7,9 @@ use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
- * @property \App\Models\Company $ceo
  * @property \App\Models\Employee $employee
  * @property \App\Models\User $user
  * @property \App\Models\Sale $sales
@@ -69,11 +68,6 @@ class People extends Model
             'client'      => 'boolean',
             'supplier'    => 'boolean',
         ];
-    }
-
-    public function ceo(): HasOne
-    {
-        return $this->hasOne(Company::class, 'employee_id');
     }
 
     public function employee(): HasMany

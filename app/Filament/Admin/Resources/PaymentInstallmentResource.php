@@ -4,7 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
-use App\Models\{Company, PaymentInstallment, People};
+use App\Models\{PaymentInstallment, People, Settings};
 use App\Tools\Contracts;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
@@ -182,8 +182,8 @@ class PaymentInstallmentResource extends Resource
                         'payment_value' => number_format($record->value, 2, ',', '.'),
                         'due_date'      => $record->due_date,
                         'payment_date'  => now(),
-                        'late_fee'      => number_format(Company::query()->first()->late_fee, 2, ',', '.'),
-                        'interest_rate' => number_format(Company::query()->first()->interest_rate_installment, 2, ',', '.'),
+                        'late_fee'      => number_format(Settings::query()->first()->late_fee, 2, ',', '.'),
+                        'interest_rate' => number_format(Settings::query()->first()->interest_rate_installment, 2, ',', '.'),
                     ])
                     ->form([
                         Forms\Components\Select::make('payment_method')

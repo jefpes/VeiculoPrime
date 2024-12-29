@@ -16,6 +16,14 @@ return new class () extends Migration {
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('primary_color')->nullable();
+            $table->string('secondary_color')->nullable();
+            $table->string('tertiary_color')->nullable();
+            $table->string('quaternary_color')->nullable();
+            $table->string('quinary_color')->nullable();
+            $table->string('senary_color')->nullable();
+            $table->string('font')->nullable();
+            $table->boolean('navigation_mode')->nullable()->default(true);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

@@ -27,7 +27,14 @@ use Illuminate\Support\Collection;
  * @property string $name
  * @property string $email
  * @property string $password
- * @property string $avatar_url
+ * @property string|null $primary_color
+ * @property string|null $secondary_color
+ * @property string|null $tertiary_color
+ * @property string|null $quaternary_color
+ * @property string|null $quinary_color
+ * @property string|null $senary_color
+ * @property bool $navigation_mode
+ * @property string|null $font
  */
 class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants
 {
@@ -42,6 +49,15 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         'remember_token',
         'email_verified_at',
         'password',
+        'user_id',
+        'primary_color',
+        'secondary_color',
+        'tertiary_color',
+        'quaternary_color',
+        'quinary_color',
+        'senary_color',
+        'font',
+        'navigation_mode',
     ];
 
     /**
@@ -62,7 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     protected function casts(): array
     {
         return [
-            'password' => 'hashed',
+            'password'        => 'hashed',
+            'navigation_mode' => 'bool',
         ];
     }
 
@@ -87,11 +104,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function people(): HasOne
     {
         return $this->hasOne(People::class, 'user_id');
-    }
-
-    public function settings(): HasOne
-    {
-        return $this->hasOne(Settings::class);
     }
 
     public function abilities(): \Illuminate\Database\Eloquent\Builder

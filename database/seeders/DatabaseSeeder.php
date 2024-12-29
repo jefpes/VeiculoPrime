@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, Settings, Store, User};
+use App\Models\{Ability, Store, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -30,8 +30,6 @@ class DatabaseSeeder extends Seeder
 
         $user->stores()->sync($store->pluck('id')->toArray());
 
-        Settings::create(['user_id' => $user->id]);
-
         // Criar a role 'master'
         $role = $user->roles()->create([
             'name'      => 'master',
@@ -57,8 +55,6 @@ class DatabaseSeeder extends Seeder
 
         $user->stores()->sync($store->pluck('id')->toArray());
 
-        Settings::create(['user_id' => $user->id]);
-
         $role = $user->roles()->create([
             'name'      => 'admin',
             'hierarchy' => 1,
@@ -66,7 +62,7 @@ class DatabaseSeeder extends Seeder
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
-        $this->call(CompanySeeder::class);
+        $this->call(SettingsSeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(VehicleTypeSeeder::class);
         $this->call(VehicleModelSeeder::class);
