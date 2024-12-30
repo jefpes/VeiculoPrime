@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\{ApplyTenantScopes, FilamentSettings};
+use App\Livewire\UserProfile;
 use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
@@ -37,9 +38,13 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentEditProfilePlugin::make()
                     ->slug('me')
+                    ->shouldShowEditProfileForm(false)
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false)
-                    ->shouldShowBrowserSessionsForm(),
+                    ->shouldShowBrowserSessionsForm()
+                    ->customProfileComponents([
+                        UserProfile::class,
+                    ]),
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()

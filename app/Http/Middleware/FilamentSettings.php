@@ -30,15 +30,18 @@ class FilamentSettings
             'pink'    => (auth_user()->septenary_color ?? Color::Pink),
         ]);
 
-        $settings = Settings::query()->first();
-        $favicon  = $settings->favicon ?? 'nao existe';
-        $logo     = $settings->logo ?? 'nao existe';
+        $settings   = Settings::query()->first();
+        $name       = $settings->name ?? env('APP_NAME');
+        $favicon    = $settings->favicon ?? 'nao existe';
+        $logo       = $settings->logo ?? 'nao existe';
+        $font       = auth_user()->font ?? 'Inter';
+        $navigation = auth_user()->navigation_mode ?? true;
 
         Filament::getPanel()
-            ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
-            ->sidebarCollapsibleOnDesktop()
-            ->font(Auth::user()->settings->font ?? 'Inter')
-            ->brandName($settings->name ?? env('APP_NAME'));
+            ->topNavigation($navigation)
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->font($font)
+            ->brandName($name);
 
         if (Storage::disk('public')->exists($favicon)) {
             Filament::getPanel()
