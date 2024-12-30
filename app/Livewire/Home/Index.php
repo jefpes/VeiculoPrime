@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Home;
 
-use App\Models\{Brand, Company, Vehicle, VehicleType};
+use App\Models\{Brand, Settings, Vehicle, VehicleType};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -40,7 +40,7 @@ class Index extends Component
     #[Layout('components.layouts.home')]
     public function render(): View
     {
-        return view('livewire.home.index', ['company' => Company::query()->first()]);
+        return view('livewire.home.index', ['company' => Settings::query()->first()]);
     }
 
     #[Computed()]

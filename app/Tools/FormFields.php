@@ -11,6 +11,7 @@ class FormFields
     {
         return Repeater::make('addresses')
                 ->grid(2)
+                ->columnSpanFull()
                 ->hiddenLabel()
                 ->addActionLabel(__('Add Address'))
                 ->relationship('addresses')
@@ -49,6 +50,7 @@ class FormFields
     {
         return Repeater::make('affiliates')
             ->grid(2)
+            ->columnSpanFull()
             ->hiddenLabel()
             ->addActionLabel(__('Add Affiliate'))
             ->relationship('affiliates')
@@ -70,10 +72,11 @@ class FormFields
             ]);
     }
 
-    public static function setPhoneFields(): Component
+    public static function setPhoneFields(): Repeater
     {
         return Repeater::make('phones')
                 ->grid(2)
+                ->columnSpanFull()
                 ->hiddenLabel()
                 ->addActionLabel(__('Add phone'))
                 ->relationship('phones')

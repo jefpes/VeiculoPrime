@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasStore;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Builder, Model};
@@ -35,8 +36,10 @@ class PaymentInstallment extends Model
 {
     use HasUlids;
     use HasFactory;
+    use HasStore;
 
     protected $fillable = [
+        'store_id',
         'received_by',
         'sale_id',
         'due_date',

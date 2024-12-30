@@ -20,6 +20,8 @@ class VehicleTypeResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');

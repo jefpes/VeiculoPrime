@@ -2,9 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Permission;
 use App\Filament\Admin\Resources\UserResource\{Pages};
-use App\Models\{Role, User};
-use Filament\Forms\Components\{CheckboxList, Fieldset};
+use App\Models\{User};
+use Filament\Forms\Components\{CheckboxList};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -16,6 +17,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
+
+    protected static bool $isScopedToTenant = false;
 
     protected static ?string $recordTitleAttribute = 'email';
 
@@ -60,18 +63,38 @@ class UserResource extends Resource
                     ->requiredWith('password')
                     ->dehydrated(false)
                     ->maxLength(8),
-                Fieldset::make('Roles')->schema([
-                    CheckboxList::make('roles')
-                        ->relationship('roles', 'name')
-                        ->options(
-                            Role::query()
-                                ->where('hierarchy', '>=', Auth::user()->roles->min('hierarchy')) //@phpstan-ignore-line
-                                ->orderBy('id')
-                                ->pluck('name', 'id')
-                        )
-                        ->gridDirection('row')
-                        ->bulkToggleable(),
-                ])->label(null),
+                Forms\Components\Grid::make()
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->schema([
+                        CheckboxList::make('stores')
+                            ->relationship(
+                                'stores',
+                                'name',
+                                modifyQueryUsing: fn ($query) => $query->orderBy('name')
+                                ->when(
+                                    auth_user()->hasAbility(Permission::MASTER->value) === false,
+                                    fn ($query) => $query->whereIn('id', auth_user()->stores->pluck('id')->toArray())
+                                )
+                            )
+                            ->columns(['sm' => 1, 'md' => 2])
+                            ->gridDirection('row')
+                            ->bulkToggleable(),
+                    ]),
+                Forms\Components\Grid::make()
+                    ->columns(1)
+                    ->columnSpanFull()
+                    ->schema([
+                        CheckboxList::make('roles')
+                            ->relationship(
+                                'roles',
+                                'name',
+                                modifyQueryUsing: fn ($query) => $query->orderBy('name')->where('hierarchy', '>=', Auth::user()->roles->min('hierarchy')) //@phpstan-ignore-line
+                            )
+                            ->columns(['sm' => 1, 'md' => 3])
+                            ->gridDirection('row')
+                            ->bulkToggleable(),
+                    ]),
             ]);
     }
 

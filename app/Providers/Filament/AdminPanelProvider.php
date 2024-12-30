@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\{FilamentSettings};
+use App\Http\Middleware\{ApplyTenantScopes, FilamentSettings};
+use App\Livewire\UserProfile;
+use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\MaxWidth;
@@ -11,7 +13,6 @@ use Illuminate\Cookie\Middleware\{AddQueuedCookiesToResponse, EncryptCookies};
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\{AuthenticateSession, StartSession};
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
@@ -25,23 +26,29 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->tenant(Store::class, 'slug')
+            ->tenantMenu(fn () => auth_user()->stores()->count() > 1)
             ->login()
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
-            ->widgets([
+            ->userMenuItems([
+                'profile' => MenuItem::make()->icon('heroicon-o-user'),
             ])
             ->plugins([
                 FilamentEditProfilePlugin::make()
-                    ->slug('my-profile')
+                    ->slug('me')
+                    ->shouldShowEditProfileForm(false)
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false)
                     ->shouldShowBrowserSessionsForm()
-                    ->shouldShowAvatarForm(),
+                    ->customProfileComponents([
+                        UserProfile::class,
+                    ]),
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(fn () => Auth::user()->name) //@phpstan-ignore-line
+                    ->label(fn () => auth_user()->name)
                     ->url(fn (): string => EditProfilePage::getUrl()),
             ])
             ->middleware([
@@ -64,6 +71,9 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+            ], isPersistent: true)
             ->spa()
             ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge);
     }

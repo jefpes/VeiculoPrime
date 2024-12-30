@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 @php
-$company = App\Models\Company::query()->first();
+$company = App\Models\Settings::query()->first();
 
 // Construir os estilos dinâmicos
 $bodyStyles = [];

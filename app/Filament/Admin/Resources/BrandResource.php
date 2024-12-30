@@ -18,6 +18,8 @@ class BrandResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationGroup(): ?string
     {
         return __('Vehicle');

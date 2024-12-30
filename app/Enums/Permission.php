@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum Permission: string
 {
+    case MASTER                 = 'master';
     case ADMIN                  = 'admin';
     case USER_CREATE            = 'user_create';
     case USER_READ              = 'user_read';
@@ -48,7 +49,6 @@ enum Permission: string
     case INSTALLMENT_READ       = 'installment_read';
     case PAYMENT_RECEIVE        = 'payment_receive';
     case PAYMENT_UNDO           = 'payment_undo';
-    case COMPANY_UPDATE         = 'company_update';
     case VEHICLE_EXPENSE_CREATE = 'vehicle_expense_create';
     case VEHICLE_EXPENSE_READ   = 'vehicle_expense_read';
     case VEHICLE_EXPENSE_UPDATE = 'vehicle_expense_update';

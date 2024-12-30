@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Company;
+use App\Models\Settings;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
@@ -21,24 +21,27 @@ class FilamentSettings
     public function handle(Request $request, Closure $next): Response
     {
         FilamentColor::register([
-            'danger'  => (Auth::user()->settings->tertiary_color ?? Color::Red),
-            'gray'    => (Auth::user()->settings->primary_color ?? Color::Gray),
-            'info'    => (Auth::user()->settings->quaternary_color ?? Color::Blue),
-            'primary' => (Auth::user()->settings->secondary_color ?? Color::Indigo),
-            'success' => (Auth::user()->settings->quinary_color ?? Color::Green),
-            'warning' => (Auth::user()->settings->senary_color ?? Color::Yellow),
-            'pink'    => (Auth::user()->settings->septenary_color ?? Color::Pink),
+            'danger'  => (auth_user()->tertiary_color ?? Color::Red),
+            'gray'    => (auth_user()->primary_color ?? Color::Gray),
+            'info'    => (auth_user()->quaternary_color ?? Color::Blue),
+            'primary' => (auth_user()->secondary_color ?? Color::Indigo),
+            'success' => (auth_user()->quinary_color ?? Color::Green),
+            'warning' => (auth_user()->senary_color ?? Color::Yellow),
+            'pink'    => (auth_user()->septenary_color ?? Color::Pink),
         ]);
 
-        $company = Company::query()->first();
-        $favicon = $company->favicon ?? 'nao existe';
-        $logo    = $company->logo ?? 'nao existe';
+        $settings   = Settings::query()->first();
+        $name       = $settings->name ?? env('APP_NAME');
+        $favicon    = $settings->favicon ?? 'nao existe';
+        $logo       = $settings->logo ?? 'nao existe';
+        $font       = auth_user()->font ?? 'Inter';
+        $navigation = auth_user()->navigation_mode ?? true;
 
         Filament::getPanel()
-            ->topNavigation(Auth::user()->settings->navigation_mode ?? true)
-            ->sidebarCollapsibleOnDesktop()
-            ->font(Auth::user()->settings->font ?? 'Inter')
-            ->brandName($company->name ?? env('APP_NAME'));
+            ->topNavigation($navigation)
+            ->sidebarFullyCollapsibleOnDesktop()
+            ->font($font)
+            ->brandName($name);
 
         if (Storage::disk('public')->exists($favicon)) {
             Filament::getPanel()

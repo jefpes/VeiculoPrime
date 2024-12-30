@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Accessory, Extra, People, Photo, Vehicle, VehicleModel};
+use App\Models\{Accessory, Extra, People, Photo, Store, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class SalesSeeder extends Seeder
@@ -20,8 +20,10 @@ class SalesSeeder extends Seeder
         $clients   = People::where('client', true)->get();
         $buyers    = People::whereHas('employee')->get();
         $suppliers = People::where('supplier', true)->get();
+        $stores    = Store::all();
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
@@ -61,6 +63,7 @@ class SalesSeeder extends Seeder
         }
 
         $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
             'seller_id'      => $sellers->random()->id,
             'client_id'      => $clients->random()->id,
             'payment_method' => 'DINHEIRO',
@@ -72,6 +75,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
@@ -111,6 +115,7 @@ class SalesSeeder extends Seeder
         }
 
         $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
             'seller_id'      => $sellers->random()->id,
             'client_id'      => $clients->random()->id,
             'payment_method' => 'DINHEIRO',
@@ -121,6 +126,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-01',
@@ -160,6 +166,7 @@ class SalesSeeder extends Seeder
         }
 
         $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
             'seller_id'      => $sellers->random()->id,
             'client_id'      => $clients->random()->id,
             'payment_method' => 'PIX',
@@ -171,6 +178,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
@@ -210,6 +218,7 @@ class SalesSeeder extends Seeder
         }
 
         $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
             'seller_id'           => $sellers->random()->id,
             'client_id'           => $clients->random()->id,
             'payment_method'      => 'CREDIÁRIO PRÓPRIO',
@@ -223,11 +232,13 @@ class SalesSeeder extends Seeder
 
         $venda->paymentInstallments()->createMany([
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-04-07',
                 'value'    => 6500,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-05-07',
                 'value'    => 6500,
                 'status'   => 'PENDENTE',
@@ -235,6 +246,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
@@ -274,6 +286,7 @@ class SalesSeeder extends Seeder
         }
 
         $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
             'seller_id'           => $sellers->random()->id,
             'client_id'           => $clients->random()->id,
             'payment_method'      => 'CREDIÁRIO PRÓPRIO',
@@ -288,6 +301,7 @@ class SalesSeeder extends Seeder
 
         $venda->paymentInstallments()->createMany([
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-04-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -296,6 +310,7 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'CARTÃO DE CRÉDITO',
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -304,6 +319,7 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'DINHEIRO',
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -314,6 +330,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
@@ -353,6 +370,7 @@ class SalesSeeder extends Seeder
         }
 
         $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
             'seller_id'           => $sellers->random()->id,
             'client_id'           => $clients->random()->id,
             'payment_method'      => 'CREDIÁRIO PRÓPRIO',
@@ -367,6 +385,7 @@ class SalesSeeder extends Seeder
 
         $venda->paymentInstallments()->createMany([
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-04-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -375,6 +394,7 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'CARTÃO DE CRÉDITO',
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -383,6 +403,7 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'DINHEIRO',
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -393,6 +414,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
@@ -432,6 +454,7 @@ class SalesSeeder extends Seeder
         }
 
         $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
             'seller_id'           => $sellers->random()->id,
             'client_id'           => $clients->random()->id,
             'payment_method'      => 'CREDIÁRIO PRÓPRIO',
@@ -445,6 +468,7 @@ class SalesSeeder extends Seeder
 
         $venda->paymentInstallments()->createMany([
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 1600,
                 'status'         => 'PAGO',
@@ -453,6 +477,7 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'CARTÃO DE CRÉDITO',
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 1600,
                 'status'         => 'PAGO',
@@ -461,41 +486,49 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'DINHEIRO',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-07-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-08-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-09-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-10-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-11-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-12-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-01-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-02-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
@@ -503,6 +536,7 @@ class SalesSeeder extends Seeder
         ]);
 
         $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
             'buyer_id'         => $buyers->random()->id,
             'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-04-15',
@@ -542,6 +576,7 @@ class SalesSeeder extends Seeder
         }
 
         $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
             'seller_id'           => $sellers->random()->id,
             'client_id'           => $clients->random()->id,
             'payment_method'      => 'CREDIÁRIO PRÓPRIO',
@@ -556,6 +591,7 @@ class SalesSeeder extends Seeder
 
         $venda->paymentInstallments()->createMany([
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
@@ -564,36 +600,43 @@ class SalesSeeder extends Seeder
                 'payment_method' => 'CARTÃO DE CRÉDITO',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-07-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-08-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-09-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-10-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-11-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-12-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-01-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
