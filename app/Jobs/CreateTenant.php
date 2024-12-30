@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\{Ability, Company, Settings, Tenant, User};
+use App\Models\{Ability, Settings, Tenant, User};
 use Database\Seeders\{AbilitySeeder, DatabaseSeeder};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -44,8 +44,6 @@ class CreateTenant implements ShouldQueue
             $user = User::create(['name' => $this->tenant->name, 'email' => $this->tenant->email, 'password' => $this->tenant->password]);
 
             (new AbilitySeeder())->run();
-
-            Company::query()->create(['name' => $this->tenant->name]);
 
             Settings::query()->create(['user_id' => $user->id]);
 

@@ -17,9 +17,26 @@ class StoreResource extends Resource
 {
     protected static ?string $model = Store::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static bool $isScopedToTenant = false;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Management');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Store');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Stores');
+    }
 
     public static function form(Form $form): Form
     {
@@ -29,19 +46,22 @@ class StoreResource extends Resource
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->unique(ignoreRecord: true)
+                            ->live(onBlur: true, debounce: 1000)
+                            ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state, '-')))
+                            ->unique(ignoreRecord: true)
                             ->required(),
                         Forms\Components\TextInput::make('slug')
                             ->label('Subdomain')
-                            ->live(debounce: 1000, onBlur: true)
-                            ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state, '_')))
-                            ->unique(ignoreRecord: true)
                             ->required()
-                            ->rules(['regex:/^[^\s]+$/'])
+                            ->readOnly()
                             ->maxLength(255),
                         Forms\Components\Grid::make()
                         ->columns(2)
                         ->schema([
-                            Forms\Components\Grid::make()->columnSpan(1)->schema([
+                            Forms\Components\Grid::make()
+                            ->columnSpan(1)
+                            ->schema([
                                 ZipCode::make('zip_code'),
                                 Forms\Components\TextInput::make('state')
                                     ->required()

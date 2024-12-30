@@ -9,7 +9,6 @@ use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\{Forms};
-use Illuminate\Contracts\Support\Htmlable;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class SettingsPage extends Page
@@ -26,7 +25,7 @@ class SettingsPage extends Page
     {
         $user = auth_user();
 
-        return $user->hasAbility(Permission::ADMIN->value);
+        return $user->hasAbility(Permission::MASTER->value);
     }
 
     protected static ?int $navigationSort = 4;
@@ -50,7 +49,7 @@ class SettingsPage extends Page
         return __('Settings');
     }
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string
     {
         return __('Settings');
     }
