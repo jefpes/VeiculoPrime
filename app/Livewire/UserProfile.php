@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use Filament\Forms;
-use Filament\Forms\Components\{Section, TextInput};
+use Filament\Forms\Components\{FileUpload, Grid, Section, TextInput};
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Filament\Support\Exceptions\Halt;
 use Joaopaulolndev\FilamentEditProfile\Livewire\EditProfileForm;
 
 class UserProfile extends EditProfileForm
@@ -27,6 +29,7 @@ class UserProfile extends EditProfileForm
             'senary_color',
             'font',
             'navigation_mode',
+            'avatar_url',
         ));
     }
 
@@ -38,14 +41,25 @@ class UserProfile extends EditProfileForm
                     ->aside()
                     ->description(__('filament-edit-profile::default.profile_information_description'))
                     ->schema([
-                        TextInput::make('name')
+                        Grid::make()->columns(3)->schema([
+                            FileUpload::make('avatar_url')
+                                ->label(__('filament-edit-profile::default.avatar'))
+                                ->avatar()
+                                ->imageEditor()
+                                ->disk('public')
+                                ->directory('avatars'),
+                            Grid::make()->columns(1)->columnSpan(2)->schema([
+                                TextInput::make('name')
                             ->label(__('filament-edit-profile::default.name'))
                             ->required(),
-                        TextInput::make('email')
-                            ->label(__('filament-edit-profile::default.email'))
-                            ->email()
-                            ->required()
-                            ->unique($this->userClass, ignorable: $this->user),
+                                TextInput::make('email')
+                                    ->label(__('filament-edit-profile::default.email'))
+                                    ->email()
+                                    ->required()
+                                    ->unique($this->userClass, ignorable: $this->user),
+                            ]),
+                        ]),
+
                         Forms\Components\Grid::make()->schema([
                             Forms\Components\Select::make('font')
                             ->allowHtml()
@@ -89,5 +103,20 @@ class UserProfile extends EditProfileForm
                     ]),
             ])
             ->statePath('data');
+    }
+    public function updateProfile(): void
+    {
+        try {
+            $data = $this->form->getState(); //@phpstan-ignore-line
+
+            $this->user->update($data);
+        } catch (Halt $exception) {
+            return;
+        }
+
+        Notification::make()
+            ->success()
+            ->title(__('filament-edit-profile::default.saved_successfully'))
+            ->send();
     }
 }

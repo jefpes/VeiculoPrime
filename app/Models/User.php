@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\{FilamentUser, HasTenants};
+use Filament\Models\Contracts\{FilamentUser, HasAvatar, HasTenants};
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property \App\Models\Role $roles
@@ -33,10 +34,11 @@ use Illuminate\Support\Collection;
  * @property string|null $quaternary_color
  * @property string|null $quinary_color
  * @property string|null $senary_color
- * @property bool $navigation_mode
  * @property string|null $font
+ * @property bool $navigation_mode
+ * @property string|null $avatar_url
  */
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants, HasAvatar
 {
     use HasFactory;
     use Notifiable;
@@ -57,6 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         'senary_color',
         'font',
         'navigation_mode',
+        'avatar_url',
     ];
 
     /**
@@ -80,6 +83,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
             'password'        => 'hashed',
             'navigation_mode' => 'bool',
         ];
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
     }
 
     public function hierarchy(string $id): bool
