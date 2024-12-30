@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\StoreResource\Pages;
 
 use App\Filament\Admin\Resources\StoreResource;
-use App\Models\Store;
+use App\Models\{Store, User};
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateStore extends CreateRecord
@@ -12,6 +12,12 @@ class CreateStore extends CreateRecord
 
     protected function afterCreate(): void
     {
-        Store::find($this->record->id)->users()->attach(auth_user()->id); //@phpstan-ignore-line
+        // Obtem todos os usuários que têm a habilidade 'master'
+        $masterUsers = User::all()->filter(fn ($user) => $user->hasAbility('master'));
+
+        // Itere por cada loja e sincronize os usuários 'master'
+        Store::all()->each(function ($store) use ($masterUsers) {
+            $store->users()->syncWithoutDetaching($masterUsers->pluck('id')->toArray());
+        });
     }
 }
