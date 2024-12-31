@@ -513,7 +513,7 @@ class SaleResource extends Resource
                 Tables\Actions\Action::make('transfer')
                     ->requiresConfirmation()
                     ->modalHeading(__('Transfer'))
-                    ->modalDescription(__('Are you sure you want to transfer this sale? The vehicle and installment records will also be transferred.'))
+                    ->modalDescription(__('Are you sure you want to transfer this sale? The vehicle, expenses and installments records will also be transferred'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('warning')
                     ->form([
