@@ -35,7 +35,7 @@ class SaleResource extends Resource
         return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
     }
 
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 31;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 

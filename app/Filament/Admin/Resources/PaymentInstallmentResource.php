@@ -34,7 +34,7 @@ class PaymentInstallmentResource extends Resource
         return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
     }
 
-    protected static ?int $navigationSort = 14;
+    protected static ?int $navigationSort = 32;
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
 

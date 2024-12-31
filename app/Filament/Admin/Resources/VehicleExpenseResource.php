@@ -28,7 +28,7 @@ class VehicleExpenseResource extends Resource
         return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
     }
 
-    protected static ?int $navigationSort = 14;
+    protected static ?int $navigationSort = 33;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-down';
 
