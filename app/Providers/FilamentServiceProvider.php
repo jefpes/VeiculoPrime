@@ -85,20 +85,22 @@ class FilamentServiceProvider extends ServiceProvider
             fn (Tables\Actions\Action $action) => $action
                 ->modalWidth(MaxWidth::Large)
                 ->closeModalByClickingAway(false)
+                ->translateLabel()
         );
 
         Tables\Actions\CreateAction::configureUsing(
             fn (Tables\Actions\CreateAction $action) => $action
                 ->icon('heroicon-o-plus')
                 ->createAnother(false)
+                ->translateLabel()
         );
 
         Tables\Actions\EditAction::configureUsing(
-            fn (Tables\Actions\EditAction $action) => $action->icon('heroicon-o-pencil')
+            fn (Tables\Actions\EditAction $action) => $action->icon('heroicon-o-pencil')->translateLabel()
         );
 
         Tables\Actions\DeleteAction::configureUsing(
-            fn (Tables\Actions\DeleteAction $action) => $action->icon('heroicon-o-trash')
+            fn (Tables\Actions\DeleteAction $action) => $action->icon('heroicon-o-trash')->translateLabel()
         );
 
         Tables\Columns\ImageColumn::configureUsing(

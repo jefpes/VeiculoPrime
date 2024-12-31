@@ -6,7 +6,7 @@ use App\Traits\{HasPhoto, HasStore};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasManyThrough};
 
 /**
  * Class Vehicle
@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @property \App\Models\VehicleModel $model
  * @property \App\Models\Photo $photos
  * @property \App\Models\Sale $sale
+ * @property \App\Models\PaymentInstallment $paymentInstallments
  * @property \App\Models\VehicleExpense $expenses
  * @property \App\Models\People $supplier
  * @property \App\Models\People $buyer
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @method \App\Models\VehicleModel model()
  * @method \App\Models\Photo photos()
  * @method \App\Models\Sale sale()
+ * @method \App\Models\PaymentInstallment paymentInstallments()
  * @method \App\Models\VehicleExpense expenses()
  * @method \App\Models\People supplier()
  * @method \App\Models\People buyer()
@@ -33,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  * @property string $vehicle_model_id
  * @property string $supplier_id
  * @property string $buyer_id
+ * @property string $store_id
  * @property \Illuminate\Support\Carbon $purchase_date
  * @property float $fipe_price
  * @property float $purchase_price
@@ -100,6 +103,11 @@ class Vehicle extends Model
     public function sale(): HasMany
     {
         return $this->hasMany(Sale::class);
+    }
+
+    public function paymentInstallments(): HasManyThrough
+    {
+        return $this->hasManyThrough(PaymentInstallment::class, Sale::class);
     }
 
     public function accessories(): BelongsToMany

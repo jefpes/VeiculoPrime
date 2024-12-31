@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
-use App\Models\{Accessory, Brand, Extra, People, VehicleType};
+use App\Models\{Accessory, Brand, Extra, People, Store, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
@@ -13,6 +13,7 @@ use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Group, Section, Sel
 use Filament\Forms\{Form, Get};
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
@@ -447,13 +448,55 @@ class VehicleResource extends Resource
                 Tables\Actions\ViewAction::make()->modalWidth('2xl'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()->authorize(fn ($record) => !$record->sold_date),
+                Tables\Actions\Action::make('transfer')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Transfer'))
+                    ->modalDescription(__('Are you sure you want to transfer this vehicle? The sales and installment records will also be transferred.'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('warning')
+                    ->form([
+                        Select::make('store')
+                            ->required()
+                            ->helperText(__('Select the store to which the vehicle will be transferred.'))
+                            ->options(function ($record) {
+                                return Store::query()
+                                    ->whereNot('id', $record->store_id)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            }),
+                    ])
+                    ->action(function (array $data, Vehicle $vehicle) {
+                        $newStore = $data['store'];
+
+                        if ($vehicle->expenses()->exists()) { //@phpstan-ignore-line
+                            foreach ($vehicle->expenses as $expenses) { //@phpstan-ignore-line
+                                $expenses->store_id = $newStore;
+                                $expenses->save();
+                            }
+                        }
+
+                        if ($vehicle->sale()->exists()) { //@phpstan-ignore-line
+                            if ($vehicle->paymentInstallments()->exists()) { //@phpstan-ignore-line
+                                foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                    $installment->store_id = $newStore;
+                                    $installment->save();
+                                }
+                            }
+
+                            $vehicle->sale()->update(['store_id' => $newStore]);
+
+                            $vehicle->store_id = $newStore;
+                            $vehicle->save();
+
+                        }
+
+                        Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
+                    }),
                 Tables\Actions\Action::make('contract')
                     ->requiresConfirmation()
                     ->modalHeading(__('Contract'))
                     ->label('Contract')
-                    ->translateLabel()
                     ->icon('heroicon-o-document')
-                    ->iconSize('md')
                     ->color('info')
                     ->form([
                         FileUpload::make('contract')
