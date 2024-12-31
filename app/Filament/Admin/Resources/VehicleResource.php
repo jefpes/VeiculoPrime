@@ -177,6 +177,7 @@ class VehicleResource extends Resource
     {
         return $table
             ->recordUrl(null)
+            ->recordAction(null)
             ->modifyQueryUsing(function ($query) {
                 return $query->with('buyer', 'model', 'supplier');
             })

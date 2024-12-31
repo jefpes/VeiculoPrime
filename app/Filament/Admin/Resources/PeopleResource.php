@@ -148,6 +148,7 @@ class PeopleResource extends Resource
     {
         return $table
             ->recordUrl(null)
+            ->recordAction(null)
             ->modifyQueryUsing(function ($query) {
                 return $query->with(['user', 'phones', 'employee']);
             })
