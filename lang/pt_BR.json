@@ -2,7 +2,7 @@
     "(and :count more error)": "(e mais :count erro)",
     "Emphasis": "Ênfase",
     "Transfer": "Transferir",
-    "Are you sure you want to transfer this vehicle? The sales and installment records will also be transferred.": "Tem certeza de que deseja transferir este veículo? Os registros de vendas e parcelas também serão transferidos.",
+    "Are you sure you want to transfer this vehicle? The sale and installment records will also be transferred.": "Tem certeza de que deseja transferir este veículo? Os registros de venda e parcelas também serão transferidos.",
     "Select the store to which the vehicle will be transferred.": "Selecione a loja para a qual o veículo será transferido.",
     "Vehicle transferred successfully": "Veículo transferido com sucesso",
     "Details": "Detalhes",

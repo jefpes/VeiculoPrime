@@ -6,12 +6,13 @@ use App\Enums\{PaymentMethod, StatusPayments};
 use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
-use App\Models\{People, Sale, Vehicle, VehicleModel};
+use App\Models\{People, Sale, Store, Vehicle, VehicleModel};
 use App\Tools\{Contracts};
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
@@ -508,6 +509,44 @@ class SaleResource extends Resource
                         ]);
 
                         Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
+                    }),
+                Tables\Actions\Action::make('transfer')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Transfer'))
+                    ->modalDescription(__('Are you sure you want to transfer this sale? The vehicle and installment records will also be transferred.'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('warning')
+                    ->form([
+                        Select::make('store')
+                            ->required()
+                            ->helperText(__('Select the store to which the sale will be transferred.'))
+                            ->options(function ($record) {
+                                return Store::query()
+                                    ->whereNot('id', $record->store_id)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            }),
+                    ])
+                    ->action(function (array $data, Sale $sale) {
+                        $newStore = $data['store'];
+
+                        if ($sale->vehicle->expenses()->exists()) { //@phpstan-ignore-line
+                            foreach ($sale->vehicle->expenses as $expenses) { //@phpstan-ignore-line
+                                $expenses->update(['store_id' => $newStore]);
+                            }
+                        }
+
+                        if ($sale->paymentInstallments()->exists()) { //@phpstan-ignore-line
+                            foreach ($sale->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                $installment->update(['store_id' => $newStore]);
+                            }
+                        }
+
+                        $sale->vehicle->update(['store_id' => $newStore]);
+                        $sale->store_id = $newStore;
+                        $sale->save();
+
+                        Notification::make()->body(__('Sale transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
                     }),
                 Action::make('contract')
                     ->requiresConfirmation()

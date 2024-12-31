@@ -15,16 +15,19 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\People $client
  * @property \App\Models\People $seller
  * @property \App\Models\PaymentInstallment $paymentInstallments
+ * @property \App\Models\Store $store
  *
  * @method \App\Models\Vehicle vehicle()
  * @method \App\Models\People client()
  * @method \App\Models\People seller()
  * @method \App\Models\PaymentInstallment paymentInstallments()
+ * @method \App\Models\Store store()
  *
  * @property string $id
  * @property string $vehicle_id
  * @property string $client_id
  * @property string $seller_id
+ * @property string $store_id
  * @property \Illuminate\Support\Carbon $date_sale
  * @property \Illuminate\Support\Carbon $date_payment
  * @property string $status
