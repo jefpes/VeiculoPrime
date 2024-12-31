@@ -57,26 +57,16 @@ class PhotosRelationManager extends RelationManager
             ->recordAction(null)
             ->recordUrl(null)
             ->columns([
-                Tables\Columns\Layout\Grid::make()
-                    ->columns(1)
-                    ->schema([
-                        Tables\Columns\Layout\Split::make([
-                            Tables\Columns\Layout\Grid::make()
-                                ->columns(1)
-                                ->schema([
-                                    Tables\Columns\ImageColumn::make('path')
-                                        ->label('Foto')
-                                        ->height(300)
-                                        ->width(240)
-                                        ->extraImgAttributes(['class' => 'rounded-md']),
-                                ])->grow(false),
-                        ]),
-                    ]),
+                Tables\Columns\Layout\Stack::make([
+                    Tables\Columns\ImageColumn::make('path')
+                        ->height('100%')
+                        ->width('100%')
+                        ->extraImgAttributes(['class' => 'rounded-md']),
+                ])->space(3),
             ])
             ->contentGrid([
-                'md'  => 2,
-                'xl'  => 3,
-                '2xl' => 4,
+                'md' => 2,
+                'xl' => 3,
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
