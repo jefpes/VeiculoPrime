@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class VehicleExpenseResource extends Resource
 {
@@ -58,7 +59,7 @@ class VehicleExpenseResource extends Resource
                         ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
-                MoneyInput::make('value')
+                Money::make('value')
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->required()
@@ -127,12 +128,12 @@ class VehicleExpenseResource extends Resource
         ])
         ->query(function (Builder $query, array $data): Builder {
             // Filtering by dates
-            $query->when($data['expense_date_initial'], fn ($query, $value) => $query->where('date', '>=', $value))
-                  ->when($data['expense_date_final'], fn ($query, $value) => $query->where('date', '<=', $value));
+            $query->when($data['expense_date_initial'], fn ($query) => $query->where('date', '>=', $data['expense_date_initial']))
+                  ->when($data['expense_date_final'], fn ($query) => $query->where('date', '<=', $data['expense_date_final']));
 
             // Filtering by values
-            $query->when($data['value_expense_min'] > 0, fn ($query, $value) => $query->where('value', '>=', $value))
-                  ->when($data['value_expense_max'] > 0, fn ($query, $value) => $query->where('value', '<=', $value));
+            $query->when($data['value_expense_min'] > 0, fn ($query) => $query->where('value', '>=', $data['value_expense_min']));
+            $query->when($data['value_expense_max'] > 0, fn ($query) => $query->where('value', '<=', $data['value_expense_max']));
 
             // Filtering by model
             if (!empty($data['model'])) {
