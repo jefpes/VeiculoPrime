@@ -79,12 +79,11 @@ class UserProfile extends EditProfileForm
                             ->native(false),
                             Forms\Components\Select::make('navigation_mode')
                                 ->label(__('Navigation bar'))
+                                ->required()
                                 ->options([
                                     false => __('Sidebar'),
                                     true  => __('Topbar'),
-                                ])
-                                ->native(true)
-                                ->live(),
+                                ]),
                         ]),
                         Forms\Components\Grid::make(3)->schema([
                             Forms\Components\ColorPicker::make('primary_color')

@@ -11,6 +11,15 @@ class CreateSale extends CreateRecord
 {
     protected static string $resource = SaleResource::class;
 
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
+
     public array $dataInstallments = []; //@phpstan-ignore-line
 
     protected function mutateFormDataBeforeCreate(array $data): array

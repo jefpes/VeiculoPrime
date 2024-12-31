@@ -3,12 +3,15 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{MaritalStatus, Permission, PersonType, Sexes};
+use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\PeopleResource\RelationManagers\EmployeeRelationManager;
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Models\{People};
 use App\Tools\{FormFields, PhotosRelationManager};
-use Filament\Forms\Components\{Livewire};
 use Filament\Forms\Form;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Infolist;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -17,18 +20,20 @@ class PeopleResource extends Resource
 {
     protected static ?string $model = People::class;
 
-    protected static ?int $navigationSort = 6;
+    protected static ?string $cluster = ManagementCluster::class;
+
+    protected static ?int $navigationSort = 14;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
 
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static bool $isScopedToTenant = false;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Management');
-    }
 
     public static function getModelLabel(): string
     {
@@ -43,93 +48,99 @@ class PeopleResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        ->columns(1)
+        ->schema([
+            Forms\Components\Tabs::make('tabs')->tabs([
+                Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
+                    Forms\Components\Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->maxLength(255)
+                            ->rules(['email']),
+                        Forms\Components\ToggleButtons::make('person_type')
+                            ->rule('required')
+                            ->inline()
+                            ->label('Tipo de Pessoa')
+                            ->options(PersonType::class)
+                            ->live(),
+                        Forms\Components\TextInput::make('person_id')
+                            ->label(fn (Forms\Get $get): string => match ($get('person_type')) {
+                                'Física'   => 'CPF',
+                                'Jurídica' => 'CNPJ',
+                                default    => 'CPF',
+                            })
+                            ->mask(fn (Forms\Get $get): string => match ($get('person_type')) {
+                                'Física'   => '999.999.999-99',
+                                'Jurídica' => '99.999.999/9999-99',
+                                default    => '999.999.999-99',
+                            })
+                            ->length(fn (Forms\Get $get): int => match ($get('person_type')) {
+                                'Física'   => 14,
+                                'Jurídica' => 18,
+                                default    => 14,
+                            }),
+                        Forms\Components\Select::make('sex')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->options(Sexes::class),
+                        Forms\Components\TextInput::make('rg')
+                            ->label('RG')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->mask('99999999999999999999')
+                            ->maxLength(20),
+                        Forms\Components\DatePicker::make('birthday')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física'),
+                        Forms\Components\TextInput::make('father')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('mother')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->maxLength(255),
+                        Forms\Components\Select::make('marital_status')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->options(MaritalStatus::class),
+                        Forms\Components\TextInput::make('spouse')
+                            ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
+                            ->maxLength(255),
+                        Forms\Components\Grid::make()->columnSpan(1)->columns(2)->schema([
+                            Forms\Components\ToggleButtons::make('client')
+                                ->inline()
+                                ->label('Client Active')
+                                ->options([0 => 'Não', 1 => 'Sim']),
+                            Forms\Components\ToggleButtons::make('supplier')
+                                ->inline()
+                                ->label('Supplier Active')
+                                ->options([0 => 'Não', 1 => 'Sim']),
+                        ]),
+
+                    ]),
+                ]),
+                Forms\Components\Tabs\Tab::make(__('Address'))->schema([
+                    FormFields::setAddressFields(),
+                ]),
+                Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
+                    FormFields::setPhoneFields(),
+                ]),
+                Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
+                    FormFields::setAffiliateFields(),
+                ]),
+            ]),
+        ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
             ->columns(1)
             ->schema([
-                Forms\Components\Tabs::make('tabs')->tabs([
-                    Forms\Components\Tabs\Tab::make('Dados Pessoais')->schema([
-                        Forms\Components\Grid::make()->columns(['sm' => 1, 'md' => 2, 'lg' => 3])->schema([
-                            Forms\Components\TextInput::make('name')
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make('email')
-                                ->maxLength(255)
-                                ->rules(['email']),
-                            Forms\Components\ToggleButtons::make('person_type')
-                                ->rule('required')
-                                ->inline()
-                                ->label('Tipo de Pessoa')
-                                ->options(PersonType::class)
-                                ->live(),
-                            Forms\Components\TextInput::make('person_id')
-                                ->label(fn (Forms\Get $get): string => match ($get('person_type')) {
-                                    'Física'   => 'CPF',
-                                    'Jurídica' => 'CNPJ',
-                                    default    => 'CPF',
-                                })
-                                ->mask(fn (Forms\Get $get): string => match ($get('person_type')) {
-                                    'Física'   => '999.999.999-99',
-                                    'Jurídica' => '99.999.999/9999-99',
-                                    default    => '999.999.999-99',
-                                })
-                                ->length(fn (Forms\Get $get): int => match ($get('person_type')) {
-                                    'Física'   => 14,
-                                    'Jurídica' => 18,
-                                    default    => 14,
-                                }),
-                            Forms\Components\Select::make('sex')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->options(Sexes::class),
-                            Forms\Components\TextInput::make('rg')
-                                ->label('RG')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->mask('99999999999999999999')
-                                ->maxLength(20),
-                            Forms\Components\DatePicker::make('birthday')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física'),
-                            Forms\Components\TextInput::make('father')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make('mother')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->maxLength(255),
-                            Forms\Components\Select::make('marital_status')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->options(MaritalStatus::class),
-                            Forms\Components\TextInput::make('spouse')
-                                ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
-                                ->maxLength(255),
-                            Forms\Components\Grid::make()->columnSpan(1)->columns(2)->schema([
-                                Forms\Components\ToggleButtons::make('client')
-                                    ->inline()
-                                    ->label('Client Active')
-                                    ->options([0 => 'Não', 1 => 'Sim']),
-                                Forms\Components\ToggleButtons::make('supplier')
-                                    ->inline()
-                                    ->label('Supplier Active')
-                                    ->options([0 => 'Não', 1 => 'Sim']),
-                            ]),
-
-                        ]),
+                ImageEntry::make('photos.path')
+                    ->hiddenLabel()
+                    ->alignCenter()
+                    ->size('200px')
+                    ->extraAttributes([
+                        'class' => 'rounded-md',
                     ]),
-                    Forms\Components\Tabs\Tab::make(__('Address'))->schema([
-                        FormFields::setAddressFields(),
-                    ]),
-                    Forms\Components\Tabs\Tab::make(__('Phones'))->schema([
-                        FormFields::setPhoneFields(),
-                    ]),
-                    Forms\Components\Tabs\Tab::make(__('Affiliates'))->schema([
-                        FormFields::setAffiliateFields(),
-                    ]),
-                    Forms\Components\Tabs\Tab::make(__('Employment contract'))
-                        ->visibleOn('edit')
-                        ->schema(
-                            function ($livewire) {
-                                return [
-                                    Livewire::make(EmployeeRelationManager::class, ['pageClass' => static::class, 'ownerRecord' => $livewire->record, 'lazy' => true]),
-                                ];
-                            }
-                        ),
-                ]),
             ]);
     }
 
@@ -222,6 +233,7 @@ class PeopleResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('attach_user')
                     ->label('User')
@@ -298,6 +310,7 @@ class PeopleResource extends Resource
     {
         return [
             PhotosRelationManager::class,
+            EmployeeRelationManager::class,
         ];
     }
 

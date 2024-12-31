@@ -2,31 +2,35 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\VehicleExpenseResource\{Pages};
-use App\Forms\Components\MoneyInput;
 use App\Models\{Vehicle, VehicleExpense};
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\Form;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class VehicleExpenseResource extends Resource
 {
     protected static ?string $model = VehicleExpense::class;
 
-    protected static ?int $navigationSort = 14;
+    protected static ?string $cluster = FinancialCluster::class;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
+    protected static ?int $navigationSort = 33;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-down';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Financial');
-    }
 
     public static function getModelLabel(): string
     {
@@ -54,7 +58,7 @@ class VehicleExpenseResource extends Resource
                         ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
-                MoneyInput::make('value')
+                Money::make('value')
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->required()
@@ -105,11 +109,15 @@ class VehicleExpenseResource extends Resource
 
             Group::make([
                 // Value filters
-                MoneyInput::make('value_expense_min')
-                    ->label('Value expense min')
+                Money::make('value_expense_min')
+                    ->afterStateUpdated(
+                        fn ($set, $get) => $set('value_expense_min', number_format((float)string_money_to_float($get('value_expense_min')), 2, ',', ''))
+                    )
                     ->live(debounce: 1000),
-                MoneyInput::make('value_expense_max')
-                    ->label('Value expense max')
+                Money::make('value_expense_max')
+                    ->afterStateUpdated(
+                        fn ($set, $get) => $set('value_expense_max', number_format((float)string_money_to_float($get('value_expense_max')), 2, ',', ''))
+                    )
                     ->live(debounce: 1000),
             ])->columns(2),
 
@@ -123,12 +131,12 @@ class VehicleExpenseResource extends Resource
         ])
         ->query(function (Builder $query, array $data): Builder {
             // Filtering by dates
-            $query->when($data['expense_date_initial'], fn ($query, $value) => $query->where('date', '>=', $value))
-                  ->when($data['expense_date_final'], fn ($query, $value) => $query->where('date', '<=', $value));
+            $query->when($data['expense_date_initial'], fn ($query) => $query->where('date', '>=', $data['expense_date_initial']));
+            $query->when($data['expense_date_final'], fn ($query) => $query->where('date', '<=', $data['expense_date_final']));
 
             // Filtering by values
-            $query->when($data['value_expense_min'] > 0, fn ($query, $value) => $query->where('value', '>=', $value))
-                  ->when($data['value_expense_max'] > 0, fn ($query, $value) => $query->where('value', '<=', $value));
+            $query->when($data['value_expense_min'] > 0 && $data['value_expense_min'] !== "0,00", fn ($query) => $query->where('value', '>=', $data['value_expense_min']));
+            $query->when($data['value_expense_max'] > 0 && $data['value_expense_max'] !== "0,00", fn ($query) => $query->where('value', '<=', $data['value_expense_max']));
 
             // Filtering by model
             if (!empty($data['model'])) {
@@ -150,11 +158,11 @@ class VehicleExpenseResource extends Resource
             }
 
             // Indicators for value filters
-            if ($data['value_expense_min'] ?? null) {
+            if ($data['value_expense_min'] !== "0,00") {
                 $indicators[] = __('Value expense min') . ': ' . number_format((float)$data['value_expense_min'], 2, ',', '');
             }
 
-            if ($data['value_expense_max'] ?? null) {
+            if ($data['value_expense_max'] !== "0,00") {
                 $indicators[] = __('Value expense max') . ': ' . number_format((float)$data['value_expense_max'], 2, ',', '');
             }
 

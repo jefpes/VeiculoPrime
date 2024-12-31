@@ -14,7 +14,7 @@ class EmployeeRelationManager extends RelationManager
 {
     protected static string $relationship = 'employee';
 
-    protected static ?string $title = 'Contratos';
+    protected static ?string $title = 'Contratos de Trabalho';
 
     public function form(Form $form): Form
     {

@@ -23,7 +23,7 @@ return new class () extends Migration {
             $table->string('quinary_color')->nullable();
             $table->string('senary_color')->nullable();
             $table->string('font')->nullable();
-            $table->boolean('navigation_mode')->nullable()->default(true);
+            $table->boolean('navigation_mode')->default(true);
             $table->string('avatar_url')->nullable();
             $table->rememberToken();
             $table->softDeletes();
