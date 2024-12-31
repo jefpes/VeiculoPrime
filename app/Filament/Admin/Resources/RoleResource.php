@@ -2,12 +2,14 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\RoleResource\{Pages};
 use App\Models\Ability;
 use App\Models\{Role};
 use App\Policies\RolePolicy;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -17,16 +19,18 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
+    protected static ?string $cluster = ManagementCluster::class;
+
+    protected static ?int $navigationSort = 13;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
-    protected static ?int $navigationSort = 3;
-
     protected static bool $isScopedToTenant = false;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Management');
-    }
 
     public static function getModelLabel(): string
     {
@@ -46,6 +50,7 @@ class RoleResource extends Resource
                     ->required()
                     ->maxLength(100),
                 Forms\Components\Select::make('hierarchy')
+                    ->required()
                     ->options(
                         function () {
                             $user = Auth::user();

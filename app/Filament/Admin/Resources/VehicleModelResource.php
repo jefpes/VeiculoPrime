@@ -2,11 +2,13 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\VehicleModelResource\{Pages};
 use App\Models\Brand;
 use App\Models\{VehicleModel, VehicleType};
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -15,16 +17,18 @@ class VehicleModelResource extends Resource
 {
     protected static ?string $model = VehicleModel::class;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?string $cluster = VehicleCluster::class;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
+    protected static ?int $navigationSort = 23;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static bool $isScopedToTenant = false;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Vehicle');
-    }
 
     public static function getModelLabel(): string
     {

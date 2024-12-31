@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
+use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Models\{Accessory, Brand, Extra, People, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
@@ -10,6 +11,9 @@ use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Group, Section, Select, TextInput, Textarea};
 use Filament\Forms\{Form, Get};
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Infolist;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
 use Filament\Tables\Columns\TextColumn;
@@ -24,18 +28,20 @@ class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?int $navigationSort = 11;
+    protected static ?string $cluster = VehicleCluster::class;
+
+    protected static ?int $navigationSort = 24;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
 
     protected static ?string $navigationIcon = 'icon-car';
 
     protected static ?string $recordTitleAttribute = 'plate';
 
     protected bool $validPlate = false;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Vehicle');
-    }
 
     public static function getModelLabel(): string
     {
@@ -442,9 +448,9 @@ class VehicleResource extends Resource
                 }),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()->modalWidth('2xl'),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()->visible(fn ($record) => !$record->sold_date),
+                Tables\Actions\DeleteAction::make()->authorize(fn ($record) => !$record->sold_date),
                 Tables\Actions\Action::make('contract')
                     ->requiresConfirmation()
                     ->modalHeading(__('Contract'))
@@ -473,6 +479,21 @@ class VehicleResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->columns(1)
+            ->schema([
+                ImageEntry::make('photos.path')
+                    ->hiddenLabel()
+                    ->alignCenter()
+                    ->size('200px')
+                    ->extraAttributes([
+                        'class' => 'rounded-md',
+                    ]),
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -485,7 +506,6 @@ class VehicleResource extends Resource
         return [
             'index'  => Pages\ListVehicles::route('/'),
             'create' => Pages\CreateVehicle::route('/create'),
-            'view'   => Pages\ViewVehicle::route('/{record}'),
             'edit'   => Pages\EditVehicle::route('/{record}/edit'),
         ];
     }

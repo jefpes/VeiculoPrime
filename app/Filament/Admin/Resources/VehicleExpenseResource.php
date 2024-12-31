@@ -2,12 +2,14 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\VehicleExpenseResource\{Pages};
 use App\Forms\Components\MoneyInput;
 use App\Models\{Vehicle, VehicleExpense};
 use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\Form;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -19,14 +21,16 @@ class VehicleExpenseResource extends Resource
 {
     protected static ?string $model = VehicleExpense::class;
 
+    protected static ?string $cluster = FinancialCluster::class;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
     protected static ?int $navigationSort = 14;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-uturn-down';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Financial');
-    }
 
     public static function getModelLabel(): string
     {

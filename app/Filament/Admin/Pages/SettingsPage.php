@@ -3,17 +3,20 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
+use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Models\{Settings};
 use Filament\Forms\Components\{Section};
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
-use Filament\Pages\Page;
+use Filament\Pages\{Page, SubNavigationPosition};
 use Filament\{Forms};
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class SettingsPage extends Page
 {
     protected static string $view = 'filament.pages.settings-page';
+
+    protected static ?string $cluster = ManagementCluster::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
@@ -28,20 +31,16 @@ class SettingsPage extends Page
         return $user->hasAbility(Permission::MASTER->value);
     }
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 15;
 
     /** @var array<string, mixed> */
     public ?array $data = [];
 
     public function mount(): void
     {
-        $this->settings = Settings::query()->first();
+        static::$subNavigationPosition = auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+        $this->settings                = Settings::query()->first();
         $this->form->fill($this->settings->toArray()); //@phpstan-ignore-line
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Management');
     }
 
     public static function getNavigationLabel(): string

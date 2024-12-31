@@ -3,10 +3,12 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Permission;
+use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\UserResource\{Pages};
 use App\Models\{User};
 use Filament\Forms\Components\{CheckboxList};
 use Filament\Forms\Form;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -16,18 +18,20 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    protected static ?string $cluster = ManagementCluster::class;
+
+    protected static ?int $navigationSort = 12;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
 
     protected static bool $isScopedToTenant = false;
 
     protected static ?string $recordTitleAttribute = 'email';
-
-    protected static ?int $navigationSort = 2;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Management');
-    }
 
     public static function getModelLabel(): string
     {

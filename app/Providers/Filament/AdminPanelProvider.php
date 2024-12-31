@@ -29,9 +29,11 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(Store::class, 'slug')
             ->tenantMenu(fn () => auth_user()->stores()->count() > 1)
             ->login()
+            ->breadcrumbs(false)
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
+            ->discoverClusters(in: app_path('Filament/Admin/Clusters'), for: 'App\\Filament\\Admin\\Clusters')
             ->userMenuItems([
                 'profile' => MenuItem::make()->icon('heroicon-o-user'),
             ])
@@ -75,6 +77,6 @@ class AdminPanelProvider extends PanelProvider
                 ApplyTenantScopes::class,
             ], isPersistent: true)
             ->spa()
-            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge);
+            ->maxContentWidth(MaxWidth::Full);
     }
 }

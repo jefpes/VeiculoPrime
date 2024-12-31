@@ -16,4 +16,13 @@ class EditPeople extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    public function getSubNavigation(): array
+    {
+        if (filled($cluster = static::getCluster())) {
+            return $this->generateNavigationItems($cluster::getClusteredComponents());
+        }
+
+        return [];
+    }
 }
