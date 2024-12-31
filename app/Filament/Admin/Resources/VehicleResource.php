@@ -63,7 +63,19 @@ class VehicleResource extends Resource
                     DatePicker::make('purchase_date')->required(),
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
+                        ->relationship(
+                            'buyer',
+                            'name',
+                            modifyQueryUsing: function ($query, $record, $context) {
+                                $query->whereHas('employee', fn ($query) => $query->whereNull('resignation_date'));
+
+                                if ($context === 'edit' && $record?->buyer_id) {
+                                    $query->orWhere('id', $record->buyer_id);
+                                }
+
+                                return $query->orderBy('name');
+                            }
+                        )
                         ->optionsLimit(5)
                         ->searchable(),
                     Select::make('vehicle_model_id')
@@ -74,7 +86,19 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->where('supplier', true)->orWhere('id', $record?->supplier_id))
+                        ->relationship(
+                            'supplier',
+                            'name',
+                            modifyQueryUsing: function ($query, $record, $context) {
+                                $query->where('supplier', true);
+
+                                if ($context === 'edit' && $record?->supplier_id) {
+                                    $query->orWhere('id', $record->supplier_id);
+                                }
+
+                                return $query->orderBy('name');
+                            }
+                        )
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
