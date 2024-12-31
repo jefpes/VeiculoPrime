@@ -16,7 +16,7 @@ use Filament\Infolists\Infolist;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\{TextColumn, ToggleColumn};
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
@@ -185,6 +185,7 @@ class VehicleResource extends Resource
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
+                ToggleColumn::make('emphasis'),
                 TextColumn::make('plate')
                     ->searchable(),
                 TextColumn::make('model.name')

@@ -38,6 +38,7 @@ return new class () extends Migration {
             $table->string('crv_number')->nullable();
             $table->string('crv_code')->nullable();
             $table->date('sold_date')->nullable();
+            $table->boolean('emphasis')->default(false);
             $table->string('description')->nullable();
             $table->string('annotation')->nullable();
 
