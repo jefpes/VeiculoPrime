@@ -158,11 +158,11 @@ class VehicleExpenseResource extends Resource
             }
 
             // Indicators for value filters
-            if ($data['value_expense_min'] !== "0,00") {
+            if ($data['value_expense_min'] !== "0,00" && $data['value_expense_min'] !== null) {
                 $indicators[] = __('Value expense min') . ': ' . number_format((float)$data['value_expense_min'], 2, ',', '');
             }
 
-            if ($data['value_expense_max'] !== "0,00") {
+            if ($data['value_expense_max'] !== "0,00" && $data['value_expense_max'] !== null) {
                 $indicators[] = __('Value expense max') . ': ' . number_format((float)$data['value_expense_max'], 2, ',', '');
             }
 
