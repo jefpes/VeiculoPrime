@@ -53,7 +53,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Actions\Action::configureUsing(
             fn (Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->translateLabel()
                 ->closeModalByClickingAway(false)
         );
@@ -83,7 +83,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Tables\Actions\Action::configureUsing(
             fn (Tables\Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->closeModalByClickingAway(false)
         );
 
@@ -126,7 +126,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Forms\Components\Actions\Action::configureUsing(
             fn (Forms\Components\Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->closeModalByClickingAway(false)
         );
 
