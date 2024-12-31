@@ -294,8 +294,8 @@ class PaymentInstallmentResource extends Resource
                         ])->columns(2),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['due_date_initial'], fn ($query, $value) => $query->where('due_date', '>=', $value))
-                            ->when($data['due_date_final'], fn ($query, $value) => $query->where('due_date', '<=', $value));
+                            ->when($data['due_date_initial'], fn ($query) => $query->where('due_date', '>=', $data['due_date_initial']))
+                            ->when($data['due_date_final'], fn ($query) => $query->where('due_date', '<=', $data['due_date_final']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 
@@ -315,7 +315,7 @@ class PaymentInstallmentResource extends Resource
                             ->options(PaymentMethod::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
+                            ->when($data['payment_method'], fn ($query) => $query->where('payment_method', $data['payment_method']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 
@@ -331,7 +331,7 @@ class PaymentInstallmentResource extends Resource
                         ->options(StatusPayments::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
+                            ->when($data['status'], fn ($query) => $query->where('status', $data['status']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 

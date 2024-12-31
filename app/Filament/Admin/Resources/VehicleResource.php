@@ -324,8 +324,8 @@ class VehicleResource extends Resource
                                 fn (Get $get) => VehicleModel::query()
                                     ->orderBy('name')
                                     ->whereHas('vehicles')
-                                    ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
-                                    ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
+                                    ->when($get('type'), fn ($query) => $query->where('vehicle_type_id', $get('type')))
+                                    ->when($get('brand'), fn ($query) => $query->where('brand_id', $get('brand')))
                                     ->get()
                                     ->pluck('name', 'id')
                             )
@@ -374,38 +374,32 @@ class VehicleResource extends Resource
                 ])->query(function (Builder $query, array $data): Builder {
                     return $query
                         // Aplica o filtro de data de compra
-                        ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
-                        ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value))
+                        ->when($data['purchase_date_initial'], fn ($query) => $query->where('purchase_date', '>=', $data['purchase_date_initial']))
+                        ->when($data['purchase_date_final'], fn ($query) => $query->where('purchase_date', '<=', $data['purchase_date_final']))
 
                         // Aplica o filtro de ano
-                        ->when($data['year_one'], fn ($query, $value) => $query->where('year_one', '>=', $value))
+                        ->when($data['year_one'], fn ($query) => $query->where('year_one', '>=', $data['year_one']))
 
                         // Aplica o filtro de tipo
-                        ->when(
-                            $data['type'],
-                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $value))
-                        )
+                        ->when($data['type'], fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $data['type'])))
 
                         // Aplica o filtro de marca
-                        ->when(
-                            $data['brand'],
-                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $value))
-                        )
+                        ->when($data['brand'], fn ($query) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $data['brand'])))
 
                         // Aplica o filtro de modelo
-                        ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+                        ->when($data['model'], fn ($query) => $query->where('vehicle_model_id', $data['model']))
 
                         // Aplica o filtro de acessórios
-                        ->when($data['accessories'], fn ($query, $value) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $value)))
+                        ->when($data['accessories'], fn ($query) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $data['accessories'])))
 
                         // Aplica o filtro de extras
-                        ->when($data['extras'], fn ($query, $value) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $value)))
+                        ->when($data['extras'], fn ($query) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $data['extras'])))
 
                         // Aplica o filtro de fornecedor
-                        ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
+                        ->when($data['supplier'], fn ($query) => $query->where('supplier_id', $data['supplier']))
 
                         // Aplica o filtro de comprador
-                        ->when($data['buyer'], fn ($query, $value) => $query->where('buyer_id', $value));
+                        ->when($data['buyer'], fn ($query) => $query->where('buyer_id', $data['supplier']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 

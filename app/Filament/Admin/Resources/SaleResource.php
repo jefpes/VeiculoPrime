@@ -333,8 +333,8 @@ class SaleResource extends Resource
                         ])->columns(2),
                     ])->query(function ($query, array $data) {
                         return $query
-                            ->when($data['sale_date_initial'], fn ($query, $value) => $query->where('date_sale', '>=', $value))
-                            ->when($data['sale_date_final'], fn ($query, $value) => $query->where('date_sale', '<=', $value));
+                            ->when($data['sale_date_initial'], fn ($query) => $query->where('date_sale', '>=', $data['sale_date_initial']))
+                            ->when($data['sale_date_final'], fn ($query) => $query->where('date_sale', '<=', $data['sale_date_final']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 
@@ -353,7 +353,7 @@ class SaleResource extends Resource
                         ->searchable()
                         ->options(fn () => \App\Models\People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
-                    return $query->when($data['seller'], fn ($query, $value) => $query->where('seller_id', $value));
+                    return $query->when($data['seller'], fn ($query) => $query->where('seller_id', $data['seller']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
@@ -371,7 +371,7 @@ class SaleResource extends Resource
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
-                        ->when($data['client'], fn ($query, $value) => $query->where('client_id', $value));
+                        ->when($data['client'], fn ($query) => $query->where('client_id', $data['client']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
@@ -387,7 +387,7 @@ class SaleResource extends Resource
                             ->options(PaymentMethod::class),
                     ])->query(function ($query, array $data) {
                         return $query
-                            ->when($data['payment_method'], fn ($query, $value) => $query->where('payment_method', $value));
+                            ->when($data['payment_method'], fn ($query) => $query->where('payment_method', $data['payment_method']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 
@@ -403,7 +403,7 @@ class SaleResource extends Resource
                             ->options(StatusPayments::class),
                     ])->query(function ($query, array $data) {
                         return $query
-                            ->when($data['status'], fn ($query, $value) => $query->where('status', $value));
+                            ->when($data['status'], fn ($query) => $query->where('status', $data['status']));
                     })->indicateUsing(function (array $data): array {
                         $indicators = [];
 
