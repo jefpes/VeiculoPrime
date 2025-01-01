@@ -184,8 +184,7 @@ class StoreResource extends Resource
                             ->iconColor('success')
                             ->send();
                     }),
-                Tables\Actions\Action::make('delete')
-                    ->authorize('delete')
+                Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
                     ->modalHeading(__('Transfer all vehicles, not sale, to another store'))
                     ->modalDescription(__('Are you sure you want this? All vehicles that are not sold will be transferred to another store, this not be undone'))
