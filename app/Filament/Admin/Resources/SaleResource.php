@@ -536,7 +536,7 @@ class SaleResource extends Resource
                             }
                         }
 
-                        if ($sale->paymentInstallments()->exists()) { //@phpstan-ignore-line
+                        if ($sale->paymentInstallments()->exists()) {
                             foreach ($sale->paymentInstallments as $installment) { //@phpstan-ignore-line
                                 $installment->update(['store_id' => $newStore]);
                             }

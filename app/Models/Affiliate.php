@@ -30,6 +30,8 @@ class Affiliate extends Model
         'type',
         'name',
         'phone',
+        'affiliatable_id',
+        'affiliatable_type',
     ];
 
     public function affiliatable(): MorphTo

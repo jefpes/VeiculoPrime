@@ -30,6 +30,8 @@ class Photo extends Model
         'path',
         'is_main',
         'is_public',
+        'photoable_id',
+        'photoable_type',
     ];
 
     /**

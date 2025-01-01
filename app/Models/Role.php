@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  * @property \App\Models\User $users
  * @property \App\Models\Ability $abilities
  *
- * @method \App\Models\User users()
- * @method \App\Models\Ability abilities()
+ * @method BelongsToMany users()
+ * @method BelongsToMany abilities()
  *
  * @property string $id
  * @property string $name

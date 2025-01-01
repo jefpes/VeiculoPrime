@@ -17,11 +17,11 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\PaymentInstallment $paymentInstallments
  * @property \App\Models\Store $store
  *
- * @method \App\Models\Vehicle vehicle()
- * @method \App\Models\People client()
- * @method \App\Models\People seller()
- * @method \App\Models\PaymentInstallment paymentInstallments()
- * @method \App\Models\Store store()
+ * @method BelongsTo vehicle()
+ * @method BelongsTo client()
+ * @method BelongsTo seller()
+ * @method HasMany paymentInstallments()
+ * @method BelongsTo store()
  *
  * @property string $id
  * @property string $vehicle_id
