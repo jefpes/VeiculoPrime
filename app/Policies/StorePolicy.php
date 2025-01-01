@@ -44,6 +44,10 @@ class StorePolicy
      */
     public function delete(User $user, Store $store): bool
     {
+        if (Store::query()->count() === 1) {
+            return false;
+        }
+
         return $user->hasAbility(Permission::MASTER->value);
     }
 
