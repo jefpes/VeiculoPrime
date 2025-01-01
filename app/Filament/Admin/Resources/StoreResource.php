@@ -168,11 +168,13 @@ class StoreResource extends Resource
 
                         $vehicles = $store->vehicles()->where('sold_date', null)->with('expenses')->get(); //@phpstan-ignore-line
 
-                        foreach ($vehicles as $vehicle) {
-                            $vehicle->update(['store_id' => $newStoreId]);
+                        if ($vehicles->isNotEmpty()) {
+                            foreach ($vehicles as $vehicle) {
+                                $vehicle->update(['store_id' => $newStoreId]);
 
-                            if ($vehicle->expenses->isNotEmpty()) {
-                                $vehicle->expenses()->update(['store_id' => $newStoreId]);
+                                if ($vehicle->expenses->isNotEmpty()) {
+                                    $vehicle->expenses()->update(['store_id' => $newStoreId]);
+                                }
                             }
                         }
 
