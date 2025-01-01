@@ -166,14 +166,14 @@ class StoreResource extends Resource
                     ->action(function (array $data, Store $store) {
                         $newStoreId = $data['store'];
 
-                        $vehicles = $store->vehicles()->where('sold_date', null)->with('expenses')->get(); //@phpstan-ignore-line
+                        $vehicles = $store->vehicles()->where('sold_date', null)->with('expenses')->get();
 
                         if ($vehicles->isNotEmpty()) {
                             foreach ($vehicles as $vehicle) {
                                 $vehicle->update(['store_id' => $newStoreId]);
 
-                                if ($vehicle->expenses->isNotEmpty()) {
-                                    $vehicle->expenses()->update(['store_id' => $newStoreId]);
+                                if ($vehicle->expenses->isNotEmpty()) { //@phpstan-ignore-line
+                                    $vehicle->expenses()->update(['store_id' => $newStoreId]); //@phpstan-ignore-line
                                 }
                             }
                         }
@@ -209,7 +209,7 @@ class StoreResource extends Resource
                         if ($vehicles->isNotEmpty()) {
                             foreach ($vehicles as $vehicle) {
                                 if ($vehicle->expenses->isNotEmpty()) { //@phpstan-ignore-line
-                                    $vehicle->expenses()->update(['store_id' => $newStoreId]);
+                                    $vehicle->expenses()->update(['store_id' => $newStoreId]); //@phpstan-ignore-line
                                 }
 
                                 if ($vehicle->sale()->exists()) { //@phpstan-ignore-line
@@ -219,7 +219,7 @@ class StoreResource extends Resource
                                         }
                                     }
 
-                                    $vehicle->sale()->update(['store_id' => $newStoreId]);
+                                    $vehicle->sale()->update(['store_id' => $newStoreId]); //@phpstan-ignore-line
 
                                 }
                                 $vehicle->update(['store_id' => $newStoreId]);

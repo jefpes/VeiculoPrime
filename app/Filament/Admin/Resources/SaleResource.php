@@ -530,7 +530,7 @@ class SaleResource extends Resource
                     ->action(function (array $data, Sale $sale) {
                         $newStore = $data['store'];
 
-                        if ($sale->vehicle->expenses()->exists()) { //@phpstan-ignore-line
+                        if ($sale->vehicle->expenses()->exists()) {
                             foreach ($sale->vehicle->expenses as $expenses) { //@phpstan-ignore-line
                                 $expenses->update(['store_id' => $newStore]);
                             }

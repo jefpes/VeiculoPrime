@@ -490,14 +490,14 @@ class VehicleResource extends Resource
                     ->action(function (array $data, Vehicle $vehicle) {
                         $newStore = $data['store'];
 
-                        if ($vehicle->expenses()->exists()) { //@phpstan-ignore-line
+                        if ($vehicle->expenses()->exists()) {
                             foreach ($vehicle->expenses as $expenses) { //@phpstan-ignore-line
                                 $expenses->update(['store_id' => $newStore]);
                             }
                         }
 
-                        if ($vehicle->sale()->exists()) { //@phpstan-ignore-line
-                            if ($vehicle->paymentInstallments()->exists()) { //@phpstan-ignore-line
+                        if ($vehicle->sale()->exists()) {
+                            if ($vehicle->paymentInstallments()->exists()) {
                                 foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
                                     $installment->update(['store_id' => $newStore]);
                                 }
@@ -532,7 +532,7 @@ class VehicleResource extends Resource
                         $caminho = Contracts::generatePurchaseContract($template, $vehicle);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()), //@phpstan-ignore-line
+                    })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()),
             ]);
     }
 

@@ -18,10 +18,10 @@ use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
  * @property \App\Models\PaymentInstallment $paymentInstallments
  *
  * @method BelongsToMany users()
- * @method \App\Models\Vehicle vehicles()
- * @method \App\Models\VehicleExpense vehicleExpenses()
- * @method \App\Models\Sale sales()
- * @method \App\Models\PaymentInstallment paymentInstallments()
+ * @method HasMany vehicles()
+ * @method HasMany vehicleExpenses()
+ * @method HasMany sales()
+ * @method HasMany paymentInstallments()
  *
  * @property string $id
  * @property string $name

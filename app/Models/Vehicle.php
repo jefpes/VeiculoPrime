@@ -20,16 +20,18 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @property \App\Models\People $buyer
  * @property \App\Models\Accessory $accessories
  * @property \App\Models\Extra $extras
+ * @property \App\Models\Store $store
  *
- * @method \App\Models\VehicleModel model()
- * @method \App\Models\Photo photos()
- * @method \App\Models\Sale sale()
- * @method \App\Models\PaymentInstallment paymentInstallments()
- * @method \App\Models\VehicleExpense expenses()
- * @method \App\Models\People supplier()
- * @method \App\Models\People buyer()
- * @method \App\Models\Accessory accessories()
- * @method \App\Models\Extra extras()
+ * @method BelongsTo model()
+ * @method MorphMany photos()
+ * @method HasMany sale()
+ * @method HasManyThrough paymentInstallments()
+ * @method HasMany expenses()
+ * @method BelongsTo supplier()
+ * @method BelongsTo buyer()
+ * @method BelongsToMany accessories()
+ * @method BelongsToMany extras()
+ * @method BelongsTo store()
  *
  * @property string $id
  * @property string $vehicle_model_id
