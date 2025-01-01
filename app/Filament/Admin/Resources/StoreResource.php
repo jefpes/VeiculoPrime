@@ -8,7 +8,9 @@ use App\Forms\Components\{ZipCode};
 use App\Models\Store;
 use App\Tools\FormFields;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -144,6 +146,42 @@ class StoreResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('transfer')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Transfer all vehicles, not sale, to another store'))
+                    ->modalDescription(__('Are you sure you want this? All vehicles that are not sold will be transferred to another store, this not be undone'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('warning')
+                    ->form([
+                        Select::make('store')
+                            ->required()
+                            ->helperText(__('Select the store to which the vehicles will be transferred'))
+                            ->options(function ($record) {
+                                return Store::query()
+                                    ->whereNot('id', $record->id)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            }),
+                    ])
+                    ->action(function (array $data, Store $store) {
+                        $newStoreId = $data['store'];
+
+                        $vehicles = $store->vehicles()->where('sold_date', null)->with('expenses')->get(); //@phpstan-ignore-line
+
+                        foreach ($vehicles as $vehicle) {
+                            $vehicle->update(['store_id' => $newStoreId]);
+
+                            if ($vehicle->expenses->isNotEmpty()) {
+                                $vehicle->expenses()->update(['store_id' => $newStoreId]);
+                            }
+                        }
+
+                        Notification::make()
+                            ->body(__('Vehicles and their expenses transferred successfully'))
+                            ->icon('heroicon-o-check-circle')
+                            ->iconColor('success')
+                            ->send();
+                    }),
             ]);
     }
 

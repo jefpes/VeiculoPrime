@@ -134,4 +134,9 @@ class Vehicle extends Model
     {
         return $this->belongsTo(People::class, 'supplier_id');
     }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
 }

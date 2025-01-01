@@ -42,8 +42,6 @@ class VehicleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'plate';
 
-    protected bool $validPlate = false;
-
     public static function getModelLabel(): string
     {
         return __('Vehicle');
