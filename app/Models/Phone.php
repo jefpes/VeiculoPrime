@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Phone
+ *
+ * @method MorphTo phonable()
  *
  * @property string $id
  * @property string $type
@@ -29,9 +32,11 @@ class Phone extends Model
         'ddi',
         'ddd',
         'number',
+        'phonable_id',
+        'phonable_type',
     ];
 
-    public function phonable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function phonable(): MorphTo
     {
         return $this->morphTo();
     }

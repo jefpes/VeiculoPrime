@@ -10,9 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
+ * Class People
+ *
+ * @method HasMany employee()
+ * @method BelongsTo user()
+ * @method HasMany client()
+ * @method HasMany seller()
+ * @method HasMany receivedInstallments()
+ * @method HasMany vehiclesAsBuyer()
+ * @method HasMany vehiclesAsSupplier()
+ *
  * @property \App\Models\Employee $employee
  * @property \App\Models\User $user
- * @property \App\Models\Sale $sales
+ * @property \App\Models\Sale $client
+ * @property \App\Models\Sale $seller
+ * @property \App\Models\PaymentInstallment $receivedInstallments
  * @property \App\Models\Vehicle $vehiclesAsBuyer
  * @property \App\Models\Vehicle $vehiclesAsSupplier
  * @property string $id

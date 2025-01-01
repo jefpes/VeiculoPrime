@@ -12,9 +12,9 @@ use Illuminate\Support\Str;
 /**
  * Class Photo
  *
- * @method photoable()
+ * @method MorphTo photoable()
  *
- * @property \Illuminate\Database\Eloquent\Model $photoable
+ * @property Model $photoable
  *
  * @property string $id
  * @property string $path
