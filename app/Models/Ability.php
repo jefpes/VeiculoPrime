@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @method \App\Models\Role roles()
+ * Class Ability
+ *
+ * @package App\Models
+ * @method BelongsToMany roles()
  * @property \App\Models\Role $roles
  * @property string $id
  * @property string $name

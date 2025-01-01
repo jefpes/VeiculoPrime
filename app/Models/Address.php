@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Address
+ *
+ * @package App\Models
+ * @method MorphTo addressable()
  *
  * @property string $id
  * @property string $addressable_id
@@ -19,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $neighborhood
  * @property string $state
  * @property string $zip_code
+ * @property string $full_address
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
@@ -39,7 +44,7 @@ class Address extends Model
         'complement',
     ];
 
-    public function addressable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function addressable(): MorphTo
     {
         return $this->morphTo();
     }

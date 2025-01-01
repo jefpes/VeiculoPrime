@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * Class Brand
+ * @package App\Models
+ *
  * @property \App\Models\VehicleModel $models
- * @method \App\Models\VehicleModel models()
+ * @method HasMany models()
  * @property string $id
  * @property string $name
  */
