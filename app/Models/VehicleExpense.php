@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \App\Models\Vehicle $vehicle
  * @property \App\Models\User $user
  *
- * @method \App\Models\Vehicle vehicle()
- * @method \App\Models\User user()
+ * @method BelongsTo vehicle()
+ * @method BelongsTo user()
  *
  * @property string $id
  * @property string $vehicle_id

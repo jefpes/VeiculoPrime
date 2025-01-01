@@ -88,4 +88,9 @@ class Sale extends Model
     {
         return $this->hasMany(PaymentInstallment::class, 'sale_id');
     }
+
+    public function store(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
+    }
 }
