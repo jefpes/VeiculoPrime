@@ -15,14 +15,18 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property \App\Models\Role $roles
- * @property \App\Models\People $people
+ * @property Role $roles
+ * @property People $people
  * @property Collection $abilities
  * @property Collection $stores
+ * @property Sale $sales
  *
- * @method \App\Models\Role roles()
- * @method \App\Models\People people()
- * @method Collection abilities()
+ *
+ * @method BelongsToMany roles()
+ * @method HasOne people()
+ * @method Builder abilities()
+ * @method HasMany sales()
+ * @method BelongsToMany stores()
  *
  * @property string $id
  * @property string $name
@@ -113,14 +117,14 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         return $this->hasOne(People::class, 'user_id');
     }
 
-    public function abilities(): \Illuminate\Database\Eloquent\Builder
+    public function abilities(): Builder
     {
         return Ability::query()->whereHas('roles', fn ($query) => $query->whereIn('id', $this->roles->pluck('id'))); //@phpstan-ignore-line
     }
 
     public function hasAbility(string $ability): bool
     {
-        return $this->abilities()->where('name', $ability)->exists(); //@phpstan-ignore-line
+        return $this->abilities()->where('name', $ability)->exists();
     }
 
     public function sales(): HasMany

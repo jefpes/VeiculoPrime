@@ -44,6 +44,6 @@ class Role extends Model
 
     public function scopeHierarchy(Builder $q, User $user): Builder
     {
-        return $q->where('hierarchy', '>=', $user->roles()->query()->pluck('hierarchy')->max());
+        return $q->where('hierarchy', '>=', $user->roles()->pluck('hierarchy')->max());
     }
 }

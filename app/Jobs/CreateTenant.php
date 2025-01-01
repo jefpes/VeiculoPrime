@@ -32,12 +32,12 @@ class CreateTenant implements ShouldQueue
 
             Settings::query()->create(['name' => $this->tenant->name]);
 
-            $role = $user->roles()->create([ //@phpstan-ignore-line
+            $role = $user->roles()->create([
                 'name'      => 'master',
                 'hierarchy' => 0,
             ]);
 
-            $role->abilities()->sync(Ability::query()->pluck('id')->toArray());
+            $role->abilities()->sync(Ability::query()->pluck('id')->toArray()); //@phpstan-ignore-line
 
             (new BrandSeeder())->run();
             (new VehicleTypeSeeder())->run();
