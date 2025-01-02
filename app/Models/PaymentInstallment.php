@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  *
  * @property \App\Models\People $receiver
  * @property \App\Models\Sale $sale
+ * @property \App\Models\Store $store
  *
  * @method BelongsTo receiver()
  * @method BelongsTo sale()
+ * @method BelongsTo store()
  *
  * @property string $id
+ * @property string $store_id
  * @property string $received_by
  * @property string $sale_id
  * @property \Illuminate\Support\Carbon $due_date

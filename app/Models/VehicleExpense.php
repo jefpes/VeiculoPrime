@@ -12,11 +12,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class VehicleExpense
  * @property \App\Models\Vehicle $vehicle
  * @property \App\Models\User $user
+ * @property \App\Models\Store $store
  *
  * @method BelongsTo vehicle()
  * @method BelongsTo user()
+ * @method BelongsTo store()
  *
  * @property string $id
+ * @property string $store_id
  * @property string $vehicle_id
  * @property string $user_id
  * @property \Illuminate\Support\Carbon $date
