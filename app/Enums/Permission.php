@@ -30,6 +30,10 @@ enum Permission: string
     case VEHICLE_PHOTO_READ     = 'vehicle_photo_read';
     case VEHICLE_PHOTO_UPDATE   = 'vehicle_photo_update';
     case VEHICLE_PHOTO_DELETE   = 'vehicle_photo_delete';
+    case STORE_PHOTO_CREATE     = 'store_photo_create';
+    case STORE_PHOTO_READ       = 'store_photo_read';
+    case STORE_PHOTO_UPDATE     = 'store_photo_update';
+    case STORE_PHOTO_DELETE     = 'store_photo_delete';
     case PEOPLE_CREATE          = 'people_create';
     case PEOPLE_READ            = 'people_read';
     case PEOPLE_UPDATE          = 'people_update';

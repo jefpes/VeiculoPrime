@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasPhone;
+use App\Traits\{HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +41,7 @@ class Store extends Model
     use HasFactory;
     use HasUlids;
     use HasPhone;
+    use HasPhoto;
 
     protected $fillable = [
         'name',
