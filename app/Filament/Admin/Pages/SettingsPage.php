@@ -74,10 +74,11 @@ class SettingsPage extends Page
                         ->email()
                         ->maxLength(255)
                         ->prefixIcon('heroicon-m-envelope'),
-                    Forms\Components\Textarea::make('about')
+                    Forms\Components\MarkdownEditor::make('about')
                         ->label('About')
-                        ->maxLength(255)
-                        ->rows(3)
+                        ->disableToolbarButtons([
+                            'attachFiles',
+                        ])
                         ->columnSpanFull(),
                 ])->columns(3),
                 Section::make('Redes Sociais')->schema([

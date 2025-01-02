@@ -6,7 +6,7 @@ use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\StoreResource\{Pages};
 use App\Forms\Components\{ZipCode};
 use App\Models\Store;
-use App\Tools\FormFields;
+use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -141,9 +141,6 @@ class StoreResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('transfer')
@@ -256,7 +253,7 @@ class StoreResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PhotosRelationManager::class,
         ];
     }
 
