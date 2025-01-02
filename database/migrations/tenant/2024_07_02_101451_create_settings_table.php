@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->string('name')->nullable();
             $table->string('cnpj')->nullable();
             $table->date('opened_in')->nullable();
-            $table->string('about')->nullable();
+            $table->longText('about')->nullable();
             $table->string('email')->nullable();
             $table->string('logo')->nullable();
             $table->string('favicon')->nullable();
