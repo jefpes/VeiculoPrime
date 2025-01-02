@@ -12,14 +12,14 @@ use Illuminate\Support\Str;
 /**
  * Class Photo
  *
- * @method photoable()
+ * @method MorphTo photoable()
  *
- * @property \Illuminate\Database\Eloquent\Model $photoable
+ * @property Model $photoable
  *
  * @property string $id
  * @property string $path
- * @property bool $is_main
- * @property bool $is_public
+ * @property bool $main
+ * @property bool $public
  */
 class Photo extends Model
 {
@@ -28,8 +28,10 @@ class Photo extends Model
 
     protected $fillable = [
         'path',
-        'is_main',
-        'is_public',
+        'main',
+        'public',
+        'photoable_id',
+        'photoable_type',
     ];
 
     /**
@@ -40,8 +42,8 @@ class Photo extends Model
     protected function casts(): array
     {
         return [
-            'is_main'   => 'boolean',
-            'is_public' => 'boolean',
+            'main'   => 'boolean',
+            'public' => 'boolean',
         ];
     }
 

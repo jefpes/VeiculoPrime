@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 /**
  * Class Employee
  *
- * @property \App\Models\People $people
+ * @method BelongsTo people()
  *
- * @method \App\Models\People people()
+ * @property \App\Models\People $people
  *
  * @property string $id
  * @property string $people_id

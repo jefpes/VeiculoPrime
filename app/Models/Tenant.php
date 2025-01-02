@@ -8,6 +8,11 @@ use Stancl\Tenancy\Database\Concerns\{HasDatabase, HasDomains};
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 /**
+ * Class Tenant
+ *
+ * @method HasMany domains()
+ *
+ * @property \App\Models\Domain $domains
  * @property string $id
  * @property string $name
  * @property string $email

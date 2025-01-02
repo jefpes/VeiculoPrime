@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\Vehicle $vehicles
  * @property \App\Models\VehicleType $type
  *
- * @method \App\Models\Brand brand()
- * @method \App\Models\Vehicle vehicles()
- * @method \App\Models\VehicleType type()
+ * @method BelongsTo brand()
+ * @method HasMany vehicles()
+ * @method BelongsTo type()
  *
  * @property string $id
  * @property string $vehicle_type_id

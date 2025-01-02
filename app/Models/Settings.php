@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * Class setting
  *
  * @property \App\Models\Employee $ceo
- * @method \App\Models\Employee ceo()
+ * @method HasOne ceo()
  *
  * @property string $id
  * @property string|null $employee_id

@@ -5,7 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Class Accessory
+ *
+ * @package App\Models
+ * @method BelongsToMany vehicle()
+ * @property \App\Models\Vehicle $vehicle
+ * @property string $id
+ * @property string $name
+ */
 class Accessory extends Model
 {
     use HasUlids;
@@ -13,7 +23,7 @@ class Accessory extends Model
 
     protected $fillable = ['name'];
 
-    public function vehicle(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function vehicle(): BelongsToMany
     {
         return $this->belongsToMany(Vehicle::class);
     }

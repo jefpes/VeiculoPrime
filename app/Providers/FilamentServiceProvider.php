@@ -53,7 +53,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Actions\Action::configureUsing(
             fn (Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->translateLabel()
                 ->closeModalByClickingAway(false)
         );
@@ -83,22 +83,24 @@ class FilamentServiceProvider extends ServiceProvider
 
         Tables\Actions\Action::configureUsing(
             fn (Tables\Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->closeModalByClickingAway(false)
+                ->translateLabel()
         );
 
         Tables\Actions\CreateAction::configureUsing(
             fn (Tables\Actions\CreateAction $action) => $action
                 ->icon('heroicon-o-plus')
                 ->createAnother(false)
+                ->translateLabel()
         );
 
         Tables\Actions\EditAction::configureUsing(
-            fn (Tables\Actions\EditAction $action) => $action->icon('heroicon-o-pencil')
+            fn (Tables\Actions\EditAction $action) => $action->icon('heroicon-o-pencil')->translateLabel()
         );
 
         Tables\Actions\DeleteAction::configureUsing(
-            fn (Tables\Actions\DeleteAction $action) => $action->icon('heroicon-o-trash')
+            fn (Tables\Actions\DeleteAction $action) => $action->icon('heroicon-o-trash')->translateLabel()
         );
 
         Tables\Columns\ImageColumn::configureUsing(
@@ -126,7 +128,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Forms\Components\Actions\Action::configureUsing(
             fn (Forms\Components\Actions\Action $action) => $action
-                ->modalWidth(MaxWidth::Medium)
+                ->modalWidth(MaxWidth::Large)
                 ->closeModalByClickingAway(false)
         );
 

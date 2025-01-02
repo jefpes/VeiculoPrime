@@ -726,8 +726,8 @@ class VehicleSeeder extends Seeder
             foreach ($vehicleData['photos'] as $photoPath) {
                 Photo::withoutEvents(function () use ($vehicle, $photoPath) {
                     $vehicle->photos()->create([
-                        'path'      => $photoPath,
-                        'is_public' => true,
+                        'path'   => $photoPath,
+                        'public' => true,
                     ]);
                 });
             }

@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
 use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
-use App\Models\{Accessory, Brand, Extra, People, VehicleType};
+use App\Models\{Accessory, Brand, Extra, People, Store, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
 use App\Tools\{Contracts, PhotosRelationManager};
 use Carbon\Carbon;
@@ -13,10 +13,11 @@ use Filament\Forms\Components\{DatePicker, FileUpload, Grid, Group, Section, Sel
 use Filament\Forms\{Form, Get};
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\{TextColumn, ToggleColumn};
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Tables};
@@ -41,8 +42,6 @@ class VehicleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'plate';
 
-    protected bool $validPlate = false;
-
     public static function getModelLabel(): string
     {
         return __('Vehicle');
@@ -62,7 +61,19 @@ class VehicleResource extends Resource
                     DatePicker::make('purchase_date')->required(),
                     Select::make('employee_id')
                         ->label('Buyer')
-                        ->relationship('buyer', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->whereHas('employee', fn ($query) => $query->where('resignation_date', null)->orWhere('id', $record?->buyer_id)))
+                        ->relationship(
+                            'buyer',
+                            'name',
+                            modifyQueryUsing: function ($query, $record, $context) {
+                                $query->whereHas('employee', fn ($query) => $query->whereNull('resignation_date'));
+
+                                if ($context === 'edit' && $record?->buyer_id) {
+                                    $query->orWhere('id', $record->buyer_id);
+                                }
+
+                                return $query->orderBy('name');
+                            }
+                        )
                         ->optionsLimit(5)
                         ->searchable(),
                     Select::make('vehicle_model_id')
@@ -73,7 +84,19 @@ class VehicleResource extends Resource
                         ->native(false),
                     Select::make('supplier_id')
                         ->label('Supplier')
-                        ->relationship('supplier', 'name', modifyQueryUsing: fn ($query, $record) => $query->orderBy('name')->where('supplier', true)->orWhere('id', $record?->supplier_id))
+                        ->relationship(
+                            'supplier',
+                            'name',
+                            modifyQueryUsing: function ($query, $record, $context) {
+                                $query->where('supplier', true);
+
+                                if ($context === 'edit' && $record?->supplier_id) {
+                                    $query->orWhere('id', $record->supplier_id);
+                                }
+
+                                return $query->orderBy('name');
+                            }
+                        )
                         ->preload()
                         ->optionsLimit(5)
                         ->searchable(),
@@ -177,6 +200,7 @@ class VehicleResource extends Resource
     {
         return $table
             ->recordUrl(null)
+            ->recordAction(null)
             ->modifyQueryUsing(function ($query) {
                 return $query->with('buyer', 'model', 'supplier');
             })
@@ -185,6 +209,7 @@ class VehicleResource extends Resource
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
+                ToggleColumn::make('emphasis'),
                 TextColumn::make('plate')
                     ->searchable(),
                 TextColumn::make('model.name')
@@ -322,8 +347,8 @@ class VehicleResource extends Resource
                                 fn (Get $get) => VehicleModel::query()
                                     ->orderBy('name')
                                     ->whereHas('vehicles')
-                                    ->when($get('type'), fn ($query, $value) => $query->where('vehicle_type_id', $value))
-                                    ->when($get('brand'), fn ($query, $value) => $query->where('brand_id', $value))
+                                    ->when($get('type'), fn ($query) => $query->where('vehicle_type_id', $get('type')))
+                                    ->when($get('brand'), fn ($query) => $query->where('brand_id', $get('brand')))
                                     ->get()
                                     ->pluck('name', 'id')
                             )
@@ -372,38 +397,32 @@ class VehicleResource extends Resource
                 ])->query(function (Builder $query, array $data): Builder {
                     return $query
                         // Aplica o filtro de data de compra
-                        ->when($data['purchase_date_initial'], fn ($query, $value) => $query->where('purchase_date', '>=', $value))
-                        ->when($data['purchase_date_final'], fn ($query, $value) => $query->where('purchase_date', '<=', $value))
+                        ->when($data['purchase_date_initial'], fn ($query) => $query->where('purchase_date', '>=', $data['purchase_date_initial']))
+                        ->when($data['purchase_date_final'], fn ($query) => $query->where('purchase_date', '<=', $data['purchase_date_final']))
 
                         // Aplica o filtro de ano
-                        ->when($data['year_one'], fn ($query, $value) => $query->where('year_one', '>=', $value))
+                        ->when($data['year_one'], fn ($query) => $query->where('year_one', '>=', $data['year_one']))
 
                         // Aplica o filtro de tipo
-                        ->when(
-                            $data['type'],
-                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $value))
-                        )
+                        ->when($data['type'], fn ($query) => $query->whereHas('model', fn ($query) => $query->where('vehicle_type_id', $data['type'])))
 
                         // Aplica o filtro de marca
-                        ->when(
-                            $data['brand'],
-                            fn ($query, $value) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $value))
-                        )
+                        ->when($data['brand'], fn ($query) => $query->whereHas('model', fn ($query) => $query->where('brand_id', $data['brand'])))
 
                         // Aplica o filtro de modelo
-                        ->when($data['model'], fn ($query, $value) => $query->where('vehicle_model_id', $value))
+                        ->when($data['model'], fn ($query) => $query->where('vehicle_model_id', $data['model']))
 
                         // Aplica o filtro de acessórios
-                        ->when($data['accessories'], fn ($query, $value) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $value)))
+                        ->when($data['accessories'], fn ($query) => $query->whereHas('accessories', fn ($query) => $query->whereIn('accessory_id', $data['accessories'])))
 
                         // Aplica o filtro de extras
-                        ->when($data['extras'], fn ($query, $value) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $value)))
+                        ->when($data['extras'], fn ($query) => $query->whereHas('extras', fn ($query) => $query->whereIn('extra_id', $data['extras'])))
 
                         // Aplica o filtro de fornecedor
-                        ->when($data['supplier'], fn ($query, $value) => $query->where('supplier_id', $value))
+                        ->when($data['supplier'], fn ($query) => $query->where('supplier_id', $data['supplier']))
 
                         // Aplica o filtro de comprador
-                        ->when($data['buyer'], fn ($query, $value) => $query->where('buyer_id', $value));
+                        ->when($data['buyer'], fn ($query) => $query->where('buyer_id', $data['supplier']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
@@ -451,13 +470,51 @@ class VehicleResource extends Resource
                 Tables\Actions\ViewAction::make()->modalWidth('2xl'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()->authorize(fn ($record) => !$record->sold_date),
+                Tables\Actions\Action::make('transfer')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Transfer'))
+                    ->modalDescription(__('Are you sure you want to transfer this vehicle? The sale, expenses and installments records will also be transferred'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('warning')
+                    ->form([
+                        Select::make('store')
+                            ->required()
+                            ->helperText(__('Select the store to which the vehicle will be transferred.'))
+                            ->options(function ($record) {
+                                return Store::query()
+                                    ->whereNot('id', $record->store_id)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            }),
+                    ])
+                    ->action(function (array $data, Vehicle $vehicle) {
+                        $newStore = $data['store'];
+
+                        if ($vehicle->expenses()->exists()) {
+                            foreach ($vehicle->expenses as $expenses) { //@phpstan-ignore-line
+                                $expenses->update(['store_id' => $newStore]);
+                            }
+                        }
+
+                        if ($vehicle->sale()->exists()) {
+                            if ($vehicle->paymentInstallments()->exists()) {
+                                foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                    $installment->update(['store_id' => $newStore]);
+                                }
+                            }
+
+                            $vehicle->sale()->update(['store_id' => $newStore]);
+
+                            $vehicle->update(['store_id' => $newStore]);
+                        }
+
+                        Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
+                    }),
                 Tables\Actions\Action::make('contract')
                     ->requiresConfirmation()
                     ->modalHeading(__('Contract'))
                     ->label('Contract')
-                    ->translateLabel()
                     ->icon('heroicon-o-document')
-                    ->iconSize('md')
                     ->color('info')
                     ->form([
                         FileUpload::make('contract')
@@ -475,7 +532,7 @@ class VehicleResource extends Resource
                         $caminho = Contracts::generatePurchaseContract($template, $vehicle);
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
-                    })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()), //@phpstan-ignore-line
+                    })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()),
             ]);
     }
 

@@ -14,8 +14,8 @@ return new class () extends Migration {
             $table->ulid('id')->primary();
             $table->ulidMorphs('photoable');
             $table->string('path');
-            $table->boolean('is_main')->default(false);
-            $table->boolean('is_public')->default(false);
+            $table->boolean('main')->default(false);
+            $table->boolean('public')->default(false);
             $table->timestamps();
         });
     }

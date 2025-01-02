@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasStore;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\{Builder, Model};
 
 /**
@@ -12,11 +13,14 @@ use Illuminate\Database\Eloquent\{Builder, Model};
  *
  * @property \App\Models\People $receiver
  * @property \App\Models\Sale $sale
+ * @property \App\Models\Store $store
  *
- * @method \App\Models\People receiver()
- * @method \App\Models\Sale sale()
+ * @method BelongsTo receiver()
+ * @method BelongsTo sale()
+ * @method BelongsTo store()
  *
  * @property string $id
+ * @property string $store_id
  * @property string $received_by
  * @property string $sale_id
  * @property \Illuminate\Support\Carbon $due_date
@@ -54,12 +58,12 @@ class PaymentInstallment extends Model
         'discount',
     ];
 
-    public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function receiver(): BelongsTo
     {
         return $this->belongsTo(People::class, 'received_by');
     }
 
-    public function sale(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);
     }

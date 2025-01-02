@@ -12,9 +12,14 @@ class StoreSeeder extends Seeder
      */
     public function run(): void
     {
+        $id = 1;
+
+        if (Store::where('slug', 'loja-' . $id)->exists()) {
+            $id++;
+        }
         Store::create([
-            'name'         => 'Loja ' . rand(1, 10),
-            'slug'         => 'loja-' . rand(1, 10),
+            'name'         => 'Loja ' . $id,
+            'slug'         => 'loja-' . $id,
             'zip_code'     => '99999-999',
             'street'       => 'Rua Teste',
             'number'       => '1234',
