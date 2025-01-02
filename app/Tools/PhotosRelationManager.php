@@ -39,7 +39,7 @@ class PhotosRelationManager extends RelationManager
                     ->required()
                     ->directory($this->getOwnerRecord()->getPhotoDirectory()) //@phpstan-ignore-line
                     ->image(),
-                Forms\Components\ToggleButtons::make('is_public')
+                Forms\Components\ToggleButtons::make('public')
                     ->label('Visibilidade')
                     ->inline()
                     ->options([
@@ -81,14 +81,14 @@ class PhotosRelationManager extends RelationManager
                     ->using(function (array $data, $livewire): Model {
                         $model      = $livewire->getOwnerRecord();
                         $firstPhoto = $model->{static::$relationship}()->create([
-                            'path'      => $data['path'][0],
-                            'is_public' => $data['is_public'],
+                            'path'   => $data['path'][0],
+                            'public' => $data['public'],
                         ]);
 
                         foreach (array_slice($data['path'], 1) as $path) {
                             $model->{static::$relationship}()->create([
-                                'path'      => $path,
-                                'is_public' => $data['is_public'],
+                                'path'   => $path,
+                                'public' => $data['public'],
                             ]);
                         }
 
@@ -99,23 +99,23 @@ class PhotosRelationManager extends RelationManager
                 Tables\Actions\Action::make('setAsMain')
                     ->authorize('setMainPublic')
                     ->icon('heroicon-o-star')
-                    ->color(fn ($record) => $record->is_main ? 'success' : 'gray')
+                    ->color(fn ($record) => $record->main ? 'success' : 'gray')
                     ->label('Main')
                     ->hiddenLabel()
                     ->iconSize('lg')
                     ->action(function ($record) {
-                        $record->photoable->photos()->update(['is_main' => false]);
-                        $record->update(['is_main' => true]);
+                        $record->photoable->photos()->update(['main' => false]);
+                        $record->update(['main' => true]);
                     }),
                 Tables\Actions\Action::make('setAsPublic')
                     ->authorize('setMainPublic')
-                    ->icon(fn ($record) => $record->is_public ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
-                    ->color(fn ($record) => $record->is_public ? 'warning' : 'gray')
-                    ->label(fn ($record) => $record->is_public ? 'Public' : 'Private')
+                    ->icon(fn ($record) => $record->public ? 'heroicon-o-eye' : 'heroicon-o-eye-slash')
+                    ->color(fn ($record) => $record->public ? 'warning' : 'gray')
+                    ->label(fn ($record) => $record->public ? 'Public' : 'Private')
                     ->iconSize('lg')
                     ->hiddenLabel()
                     ->action(function ($record) {
-                        $record->update(['is_public' => !$record->is_public]);
+                        $record->update(['public' => !$record->public]);
                     }),
                 Tables\Actions\EditAction::make()
                     ->hiddenLabel()

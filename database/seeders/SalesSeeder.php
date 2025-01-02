@@ -56,8 +56,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -108,8 +108,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -159,8 +159,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -211,8 +211,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -279,8 +279,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -363,8 +363,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -447,8 +447,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }
@@ -569,8 +569,8 @@ class SalesSeeder extends Seeder
         foreach ($fotos as $caminhoFoto) {
             Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
                 $veiculo->photos()->create([
-                    'path'      => $caminhoFoto,
-                    'is_public' => true,
+                    'path'   => $caminhoFoto,
+                    'public' => true,
                 ]);
             });
         }

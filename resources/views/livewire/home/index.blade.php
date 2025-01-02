@@ -95,8 +95,8 @@
         <a href="{{ url('/show', $v->id) }}" class="block">
         <div class="h-56 w-full">
         @php
-            $mainPhoto = $v->photos->where('is_public', true)->where('is_main', true)->first();
-            $defaultPhoto = $v->photos->where('is_public', true)->first();
+            $mainPhoto = $v->photos->where('public', true)->where('main', true)->first();
+            $defaultPhoto = $v->photos->where('public', true)->first();
         @endphp
 
         @if ($mainPhoto && Storage::disk('public')->exists($mainPhoto->path))

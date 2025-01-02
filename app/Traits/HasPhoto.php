@@ -36,25 +36,25 @@ trait HasPhoto
 
     public function mainPhoto(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->morphOne(Photo::class, 'photoable')->where('is_main', true);
+        return $this->morphOne(Photo::class, 'photoable')->where('main', true);
     }
 
     public function publicPhotos(): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->morphMany(Photo::class, 'photoable')->where('is_public', true);
+        return $this->morphMany(Photo::class, 'photoable')->where('public', true);
     }
 
     public function scopeWithPublicPhotos(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->with(['photos' => function ($query) {
-            $query->where('is_public', true);
+            $query->where('public', true);
         }]);
     }
 
     public function scopeWithMainPhoto(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
     {
         return $query->with(['photos' => function ($query) {
-            $query->where('is_public', true)->where('is_main', true);
+            $query->where('public', true)->where('main', true);
         }]);
     }
 
