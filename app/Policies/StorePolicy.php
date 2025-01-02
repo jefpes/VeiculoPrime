@@ -54,8 +54,12 @@ class StorePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Store $store): bool
+    public function transfer(User $user, Store $store): bool
     {
+        if (Store::query()->count() === 1) {
+            return false;
+        }
+
         return $user->hasAbility(Permission::MASTER->value);
     }
 

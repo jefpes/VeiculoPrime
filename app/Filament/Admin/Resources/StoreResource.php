@@ -147,6 +147,7 @@ class StoreResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('transfer')
+                    ->authorize('transfer')
                     ->requiresConfirmation()
                     ->modalHeading(__('Transfer all vehicles, not sale, to another store'))
                     ->modalDescription(__('Are you sure you want this? All vehicles that are not sold will be transferred to another store, this not be undone'))
@@ -186,14 +187,14 @@ class StoreResource extends Resource
                     }),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->modalHeading(__('Transfer all vehicles, not sale, to another store'))
-                    ->modalDescription(__('Are you sure you want this? All vehicles that are not sold will be transferred to another store, this not be undone'))
+                    ->modalHeading(__('Delete store'))
+                    ->modalDescription(__('Are you sure you want this? All registers will be transferred to another store, this not be undone'))
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->form([
                         Select::make('store')
                             ->required()
-                            ->helperText(__('Select the store to which the vehicles will be transferred'))
+                            ->helperText(__('Select the store to which the registers will be transferred'))
                             ->options(function ($record) {
                                 return Store::query()
                                     ->whereNot('id', $record->id)
@@ -243,7 +244,7 @@ class StoreResource extends Resource
                         redirect()->route('filament.admin.auth.login');
 
                         Notification::make()
-                            ->body(__('Vehicles and their expenses transferred successfully'))
+                            ->body(__('Registers transferred successfully and store deleted'))
                             ->icon('heroicon-o-check-circle')
                             ->iconColor('success')
                             ->send();
