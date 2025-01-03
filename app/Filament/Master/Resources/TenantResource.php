@@ -34,11 +34,13 @@ class TenantResource extends Resource
                             ->maxLength(255),
                         Forms\Components\TextInput::make('name')
                             ->label('Name')
+                            ->visibleOn(['create'])
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
                             ->email()
+                            ->visibleOn(['create'])
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('password')
@@ -47,7 +49,8 @@ class TenantResource extends Resource
                             ->required()
                             ->visibleOn(['create'])
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('domain'),
+                        Forms\Components\TextInput::make('domain')
+                            ->visibleOn(['create']),
                         Money::make('monthly_fee')
                             ->label('Monthly fee')
                             ->required(),
