@@ -23,6 +23,7 @@ class MasterPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Master/Resources'), for: 'App\\Filament\\Master\\Resources')
             ->discoverPages(in: app_path('Filament/Master/Pages'), for: 'App\\Filament\\Master\\Pages')
+            ->discoverClusters(in: app_path('Filament/Master/Clusters'), for: 'App\\Filament\\Master\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
             ])
