@@ -1,5 +1,7 @@
 {
     "(and :count more error)": "(e mais :count erro)",
+    "Total tenants": "Total de inquilinos",
+    "Total in monthly fee": "Total em mensalidade",
     "Emphasis": "Ênfase",
     "Transfer": "Transferir",
     "Are you sure you want to transfer this vehicle? The sale, expenses and installments records will also be transferred": "Tem certeza de que deseja transferir este veículo? Os registros de venda, despesas e parcelas também serão transferidos",
@@ -158,6 +160,10 @@
     "Due date before": "Data de vencimento antes",
     "Overdue Payments": "Pagamentos em atraso",
     "Ability Updated": "Habilidade Atualizada",
+    "tenant_read": "Ver Inquilino",
+    "tenant_create": "Criar Inquilino",
+    "tenant_update": "Atualizar Inquilino",
+    "tenant_delete": "Apagar Inquilino",
     "vexpense_create": "Criar Despesa",
     "vexpense_read": "Ver Despesa",
     "vexpense_update": "Atualizar Despesa",

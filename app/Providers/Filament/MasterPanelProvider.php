@@ -27,6 +27,9 @@ class MasterPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            ->widgets([
+                \App\Filament\Widgets\TotalTenants::class,
+            ])
             ->login()
             ->middleware([
                 EncryptCookies::class,
