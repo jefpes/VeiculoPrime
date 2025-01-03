@@ -27,7 +27,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     use HasDatabase;
     use HasDomains;
 
-    protected $fillable = ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
+    protected $fillable = ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace', 'monthly_fee'];
 
     /**
      * Get the attributes that should be cast.
@@ -54,7 +54,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      */
     public static function getCustomColumns(): array
     {
-        return ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace'];
+        return ['id', 'name', 'email', 'password', 'data', 'active', 'marketplace', 'monthly_fee'];
     }
 
     protected $hidden = [

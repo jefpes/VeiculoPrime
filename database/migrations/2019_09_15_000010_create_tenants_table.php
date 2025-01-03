@@ -20,6 +20,7 @@ class CreateTenantsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->decimal('monthly_fee')->default(0);
             $table->boolean('active')->default(true);
             $table->boolean('marketplace')->default(true);
             $table->timestamps();
