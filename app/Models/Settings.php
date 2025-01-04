@@ -72,6 +72,9 @@ class Settings extends Model
         'interest_rate_installment',
         'late_fee',
 
+        'primary_color',
+        'secondary_color',
+        'tertiary_color',
         'font_family',
         'font_color',
         'promo_price_color',

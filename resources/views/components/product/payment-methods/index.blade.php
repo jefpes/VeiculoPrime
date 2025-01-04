@@ -27,6 +27,9 @@
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 @foreach($methods as $method)
+                    @php
+                        $method = (object) $method;
+                    @endphp
                     <x-product.payment-methods.card :method="$method"/>
                 @endforeach
             </div>

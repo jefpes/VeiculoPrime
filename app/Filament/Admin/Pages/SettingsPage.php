@@ -161,6 +161,12 @@ class SettingsPage extends Page
                         'font-family:Inter, sans-serif'                 => "<span style='font-family:Inter, sans-serif'>Inter</span>",
                     ])
                     ->native(false),
+                    Forms\Components\ColorPicker::make('primary_color')
+                        ->label('Primary color'),
+                    Forms\Components\ColorPicker::make('secondary_color')
+                        ->label('Secondary color'),
+                    Forms\Components\ColorPicker::make('tertiary_color')
+                        ->label('Tertiary color'),
                     Forms\Components\ColorPicker::make('font_color')
                         ->label('Font color'),
                     Forms\Components\ColorPicker::make('promo_price_color')

@@ -14,7 +14,7 @@
                 {{ trans('This product is in:') }}
             </p>
             <p class="text-[var(--f-text-variant-8)] font-semibold">
-                {{ $product->city }}
+                {{ $product->store->city }} - {{ $product->store->state }}
             </p>
         </div>
     </div>

@@ -2,7 +2,7 @@
 
 <div class="flex justify-between">
     <h4 class="text-[var(--f-text-variant-7)] font-semibold text-lg">
-        {{ strtoupper($product->brand) }}
+        {{ strtoupper($product->model->brand->name) }}
     </h4>
 
     <div class="flex gap-6">

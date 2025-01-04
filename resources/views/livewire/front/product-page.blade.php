@@ -1,5 +1,5 @@
 <div>
-    <x-product.banners :banners="$product->banners"/>
+    <x-product.banners :product="$product"/>
 
     <section class="container mt-6 mx-auto px-4">
         <x-product.header :product="$product"/>

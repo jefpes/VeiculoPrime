@@ -4,10 +4,10 @@
      x-data="{modalIsOpen: false}">
     <div>
         <p class="text-[var(--f-text-variant-6)] line-through text-sm">
-            R$ {{ number_format($product->price * 1.2, 2, ',', '.') }}
+            R$ {{ number_format($product->sale_price * 1.2, 2, ',', '.') }}
         </p>
         <p class="text-[var(--f-secondary-color)] text-3xl font-bold">
-            R$ {{ number_format($product->price, 2, ',', '.') }}
+            R$ {{ number_format($product->promotional_price ?? $product->sale_price, 2, ',', '.') }}
         </p>
 
         <button @click="modalIsOpen = true"
