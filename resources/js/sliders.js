@@ -1,6 +1,6 @@
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
-import '../../../jeff-front/resources/css/sliders.css';
+import '../css/sliders.css';
 
 const bannerSlider = new Swiper("#banner-slider", {
     centeredSlides: true,
