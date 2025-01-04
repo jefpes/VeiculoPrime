@@ -25,4 +25,10 @@ Route::middleware([
     Route::get('/', function () {
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
+
+    Route::prefix('front')->group(function () {
+        Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
+        Route::get('/products', \App\Livewire\Front\ProductsPage::class)->name('products');
+        Route::get('/product', \App\Livewire\Front\ProductPage::class)->name('product');
+    });
 });

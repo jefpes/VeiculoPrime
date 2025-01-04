@@ -34,7 +34,7 @@ trait HasPhoto
         return $this->morphMany(Photo::class, 'photoable');
     }
 
-    public function mainPhoto(): \Illuminate\Database\Eloquent\Builder
+    public function mainPhoto(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Photo::class, 'photoable')->where('main', true);
     }
