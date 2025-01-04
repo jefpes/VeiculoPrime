@@ -1,15 +1,15 @@
 <div>
     <section>
-        <x-banner :banners="$banners">
+        <x-banner :emphasingVehicles="$emphasingVehicles">
             <x-banner.search-bar/>
         </x-banner>
     </section>
 
     {{-- <x-categories :categories="$categories"/> --}}
 
-    @if($mostSearched)
-        <x-most-searched :mostSearched="$mostSearched"/>
+    @if($bestSellers)
+        <x-best-sellers :bestSellers="$bestSellers"/>
     @endif
 
-    <x-products-home :products="$products"/>
+    <x-vehicles-home :vehicles="$vehicles"/>
 </div>

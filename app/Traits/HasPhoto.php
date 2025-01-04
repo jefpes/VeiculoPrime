@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Traits;
 
 use App\Models\Photo;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\{MorphMany};
 
 /**
@@ -34,12 +35,12 @@ trait HasPhoto
         return $this->morphMany(Photo::class, 'photoable');
     }
 
-    public function mainPhoto(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function mainPhoto(): \Illuminate\Database\Eloquent\Relations\MorphOne | \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphOne(Photo::class, 'photoable')->where('main', true);
     }
 
-    public function publicPhotos(): \Illuminate\Database\Eloquent\Builder
+    public function publicPhotos(): \Illuminate\Database\Eloquent\Builder | \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Photo::class, 'photoable')->where('public', true);
     }
@@ -76,5 +77,15 @@ trait HasPhoto
 
         // Caso nenhum atributo seja encontrado, use o nome da classe como fallback
         return class_basename($this);
+    }
+
+    protected function photoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $photo = $this->mainPhoto ?? $this->publicPhotos->first();
+                return $photo ? image_path($photo->path) : 'https://placehold.co/600x400';
+            },
+        );
     }
 }

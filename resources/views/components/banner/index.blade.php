@@ -1,9 +1,10 @@
+@props(['emphasingVehicles'])
 <div class="lg:relative">
     <div class="swiper" id="banner-slider">
         <div class="swiper-wrapper">
-            @foreach ($banners as $banner)
+            @foreach ($emphasingVehicles as $vehicle)
                 <div class="swiper-slide">
-                    <img src="{{ $banner->mainPhoto->path }}" class="w-full h-auto object-cover max-h-[650px]" alt="Banner {{ $loop->index + 1 }}">
+                    <img src="{{ $vehicle->photoUrl }}" class="w-full h-auto object-cover max-h-[650px]" alt="Banner {{ $loop->index + 1 }}">
                 </div>
             @endforeach
         </div>

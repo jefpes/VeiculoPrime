@@ -28,7 +28,7 @@ Route::middleware([
 
     Route::prefix('front')->group(function () {
         Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
-        Route::get('/products', \App\Livewire\Front\ProductsPage::class)->name('products');
-        Route::get('/product', \App\Livewire\Front\ProductPage::class)->name('product');
+        Route::get('/vehicles', \App\Livewire\Front\ProductsPage::class)->name('vehicles');
+        Route::get('/vehicle', \App\Livewire\Front\ProductPage::class)->name('vehicle');
     });
 });

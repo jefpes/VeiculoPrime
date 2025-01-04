@@ -4,38 +4,33 @@ namespace App\Livewire\Front;
 
 use App\Models\Vehicle;
 use App\Models\VehicleModel;
-use App\Models\Brand;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class IndexPage extends Component
 {
-    public $banners = [];
+    public $emphasingVehicles = [];
 
-    public $categories = [];
+    public $bestSellers = [];
 
-    public $mostSearched = [];
-
-    public $products = [];
+    public $vehicles = [];
 
     public function mount()
     {
-        $this->banners = $this->getBanners();
+        $this->emphasingVehicles = $this->getEmphasingVehicles();
 
-        $this->categories = Brand::query()->get();
+        $this->bestSellers = $this->getBestSellers();
 
-        $this->mostSearched = $this->getMostSearched();
-
-        $this->products = Vehicle::whereNull('sold_date')
+        $this->vehicles = Vehicle::whereNull('sold_date')
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
-    private function getBanners()
+    private function getEmphasingVehicles()
     {
-        $banners = Vehicle::query()
+        $emphasingVehicles = Vehicle::query()
             ->where('emphasis', true)
             ->orderBy('created_at', 'desc')
             ->limit(5)
@@ -44,8 +39,8 @@ class IndexPage extends Component
             }])
             ->get(['id']);
 
-        if ($banners->isEmpty()) {
-            $banners = Vehicle::query()
+        if ($emphasingVehicles->isEmpty()) {
+            $emphasingVehicles = Vehicle::query()
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->with(['photos' => function ($query) {
@@ -54,10 +49,10 @@ class IndexPage extends Component
                 ->get(['id']);
         }
 
-        return $banners;
+        return $emphasingVehicles;
     }
 
-    private function getMostSearched()
+    private function getBestSellers()
     {
         return VehicleModel::query()
 //            ->withCount(['vehicles' => function ($query) {
