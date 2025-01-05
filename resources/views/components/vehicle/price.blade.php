@@ -4,13 +4,18 @@
      x-data="{modalIsOpen: false}">
     <div>
         @if($vehicle->promotional_price)
-            <p class="text-[var(--f-text-variant-6)] line-through text-sm">
+            <p class="text-[var(--f-text-variant-6)] line-through text-sm" >
                 R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
             </p>
+
+            <p class="text-lg font-bold text-[var(--f-secondary-color)]">
+                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+            </p>
+        @else
+            <p class="text-2xl font-bold text-[var(--f-text-variant-6)]">
+                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+            </p>
         @endif
-        <p class="text-[var(--f-secondary-color)] text-3xl font-bold">
-            R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
-        </p>
 
         <button @click="modalIsOpen = true"
                 class="font-medium text-black underline-offset-2 underline focus:outline-none mt-2">

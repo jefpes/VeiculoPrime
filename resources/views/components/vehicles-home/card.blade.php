@@ -23,14 +23,18 @@
                 </p>
 
                 @if($vehicle->promotional_price)
-                    <p class="text-[var(--f-text-variant-6)] line-through text-sm">
+                    <p class="text-[var(--f-text-variant-6)] line-through text-sm" >
                         R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
                     </p>
-                @endif
 
-                <p class="text-[var(--f-secondary-color)] text-lg font-bold">
-                    R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
-                </p>
+                    <p class="text-lg font-bold text-[var(--f-secondary-color)]">
+                        R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+                    </p>
+                @else
+                    <p class="text-lg font-bold text-[var(--f-text-variant-6)]">
+                        R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+                    </p>
+                @endif
 
                 <p class="mt-2 bg-[#f2f2f2] p-2 rounded-lg flex items-center gap-2">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
