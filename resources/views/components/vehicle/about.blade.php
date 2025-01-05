@@ -1,18 +1,27 @@
 @props(['vehicle'])
 
-<div class="mt-4">
-    <h3 class="text-[var(--f-text-variant-8)] font-semibold text-lg">
-        {{ trans('About this vehicle') }}
-    </h3>
+@if($vehicle->accessories->count() > 0)
+    <div class="mt-4">
+        <h3 class="text-[var(--f-text-variant-8)] font-semibold text-lg">
+            {{ trans('Accessories') }}
+        </h3>
 
-    <div class="mt-4 grid grid-cols-4 md:grid-cols-3 gap-4">
-        @foreach(range(1, 9) as $index)
-            <div class="py-3 px-4 text-center bg-[#f2f2f2] rounded-lg flex justify-center items-center flex-col">
-                <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M10.6 16q0-2.025.363-2.912T12.5 11.15q1.025-.9 1.563-1.562t.537-1.513q0-1.025-.687-1.7T12 5.7q-1.275 0-1.937.775T9.125 8.05L6.55 6.95q.525-1.6 1.925-2.775T12 3q2.625 0 4.038 1.463t1.412 3.512q0 1.25-.537 2.138t-1.688 2.012Q14 13.3 13.738 13.913T13.475 16zm1.4 6q-.825 0-1.412-.587T10 20t.588-1.412T12 18t1.413.588T14 20t-.587 1.413T12 22"/></svg>
-                <span class="block text-[var(--f-text-variant-6)] text-sm mt-2">
-                    Any Statistic
-                </span>
-            </div>
-        @endforeach
+        <div class="mt-4 grid grid-cols-2 gap-4">
+            @foreach($vehicle->accessories->chunk(ceil($vehicle->accessories->count() / 2)) as $accessories)
+                <div>
+                    @foreach($accessories as $accessory)
+                        <div class="flex gap-2 my-3">
+                            {{-- <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                      d="M14.6 8.075q0-1.075-.712-1.725T12 5.7q-.725 0-1.312.313t-1.013.912q-.4.575-1.088.663T7.4 7.225q-.35-.325-.387-.8t.237-.9q.8-1.2 2.038-1.862T12 3q2.425 0 3.938 1.375t1.512 3.6q0 1.125-.475 2.025t-1.75 2.125q-.925.875-1.25 1.363T13.55 14.6q-.1.6-.513 1t-.987.4t-.987-.387t-.413-.963q0-.975.425-1.787T12.5 11.15q1.275-1.125 1.688-1.737t.412-1.338M12 22q-.825 0-1.412-.587T10 20t.588-1.412T12 18t1.413.588T14 20t-.587 1.413T12 22"/>
+                            </svg> --}}
+                            <span class="text-[var(--f-text-variant-6)]">
+                            {{ $accessory->name }}
+                        </span>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
     </div>
-</div>
+@endif
