@@ -9,6 +9,7 @@ const bannerSlider = new Swiper("#banner-slider", {
         delay: 2500,
         disableOnInteraction: false,
     },
+    speed: 1000,
 });
 
 const productBannerSlider = new Swiper("#product-banner-slider", {
