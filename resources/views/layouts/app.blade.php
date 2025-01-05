@@ -66,10 +66,7 @@
     </style>
 </head>
 <body styles="{{ $bodyStyleString }}">
-@php
-    $logo = $settings->logo;
-@endphp
-<x-header :logo="$logo"/>
+<x-header :settings="$settings"/>
 
 <main class="bg-[var(--f-main-background-color)]">
     {{ $slot }}

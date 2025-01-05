@@ -1,5 +1,5 @@
 @props([
-    'logo',
+    'settings',
    ])
 <header id="app-header" class="bg-[var(--f-navbar-background-color)] border-[var(--f-navbar-border-color)] border-b">
     <nav id="app-header-navigation"
@@ -8,7 +8,7 @@
          class="container flex mx-auto justify-between px-6 py-4 shadow-sm">
 
         <!-- Brand Logo -->
-        <x-header.brand-logo logo="{{ $logo }}" />
+        <x-header.brand-logo :settings="$settings" />
 
         <!-- Desktop Menu -->
         <x-header.desktop-menu />
