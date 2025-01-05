@@ -21,11 +21,14 @@
                 <span class="text-[var(--f-text-variant-6)] pl-2">{{ $vehicle->km }} km</span>
             </p>
 
-            <p class="text-[var(--f-text-variant-6)] line-through text-sm">
-                R$ {{ number_format($vehicle->sale_price * 1.2, 2, ',', '.') }}
-            </p>
+            @if($vehicle->promotional_price)
+                <p class="text-[var(--f-text-variant-6)] line-through text-sm">
+                    R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
+                </p>
+            @endif
+
             <p class="text-[var(--f-secondary-color)] text-lg font-bold">
-                R$ {{ number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.') }}
+                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
             </p>
 
             <p class="mt-2 bg-[#f2f2f2] p-2 rounded-lg flex items-center gap-2">

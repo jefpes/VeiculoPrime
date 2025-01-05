@@ -3,11 +3,13 @@
 <div class="border-b py-4 border-[var(--f-text-variant-5)] flex justify-between items-center"
      x-data="{modalIsOpen: false}">
     <div>
-        <p class="text-[var(--f-text-variant-6)] line-through text-sm">
-            R$ {{ number_format($vehicle->sale_price * 1.2, 2, ',', '.') }}
-        </p>
+        @if($vehicle->promotional_price)
+            <p class="text-[var(--f-text-variant-6)] line-through text-sm">
+                R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
+            </p>
+        @endif
         <p class="text-[var(--f-secondary-color)] text-3xl font-bold">
-            R$ {{ number_format($vehicle->promotional_price ?? $vehicle->sale_price, 2, ',', '.') }}
+            R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
         </p>
 
         <button @click="modalIsOpen = true"
