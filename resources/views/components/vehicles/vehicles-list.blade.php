@@ -11,8 +11,8 @@
             @php
                 $vehicle = (object) $vehicle;
             @endphp
-            <div class="flex justify-center">
-                <x-vehicles.vehicle-card :vehicle="$vehicle" />
+            <div class="min-w-full">
+                <x-vehicles-home.card :vehicle="$vehicle" />
             </div>
         @endforeach
     </div>
