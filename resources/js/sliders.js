@@ -14,6 +14,7 @@ const bannerSlider = new Swiper("#banner-slider", {
 const productBannerSlider = new Swiper("#product-banner-slider", {
     centeredSlides: true,
     loop: true,
+    slidesPerView: 1,
     autoplay: {
         delay: 2500,
         disableOnInteraction: false,
@@ -21,6 +22,12 @@ const productBannerSlider = new Swiper("#product-banner-slider", {
     pagination: {
         el: ".swiper-pagination",
     },
+    breakpoints: {
+        640: {
+            slidesPerView: 3,
+            spaceBetween: 10,
+        }
+    }
 });
 
 const similarProductsSlider = new Swiper("#similarProductsSlider", {
