@@ -9,7 +9,7 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class ProductPage extends Component
 {
-    public mixed $vehicle;
+    public Vehicle $vehicle;
 
     public mixed $paymentMethods = [
         [
@@ -50,12 +50,6 @@ class ProductPage extends Component
 
     public function mount()
     {
-        $this->vehicle        = Vehicle::whereNull('sold_date')
-            ->with(['model.brand', 'photos', 'store'])
-            ->orderBy('created_at', 'desc')
-            ->where('plate', 'AAA-0018')
-            ->first();
-
         $this->similarVehicles = Vehicle::whereNull('sold_date')
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')

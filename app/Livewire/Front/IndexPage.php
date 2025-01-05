@@ -34,18 +34,14 @@ class IndexPage extends Component
             ->where('emphasis', true)
             ->orderBy('created_at', 'desc')
             ->limit(5)
-            ->with(['photos' => function ($query) {
-                $query->where('main', true);
-            }])
+            ->with(['photos'])
             ->get(['id']);
 
         if ($emphasingVehicles->isEmpty()) {
             $emphasingVehicles = Vehicle::query()
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
-                ->with(['photos' => function ($query) {
-                    $query->where('main', true);
-                }])
+                ->with(['photos'])
                 ->get(['id']);
         }
 

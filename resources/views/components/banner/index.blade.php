@@ -3,9 +3,13 @@
     <div class="swiper" id="banner-slider">
         <div class="swiper-wrapper">
             @foreach ($emphasingVehicles as $vehicle)
-                <div class="swiper-slide">
-                    <img src="{{ $vehicle->photoUrl }}" class="w-full h-auto object-cover max-h-[650px]" alt="Banner {{ $loop->index + 1 }}">
-                </div>
+                @if($vehicle->photoUrl)
+                    <a class="swiper-slide" href="{{route('vehicle', $vehicle)}}">
+                        <img src="{{ $vehicle->photoUrl }}"
+                             class="w-full h-auto object-cover max-h-[650px]"
+                             alt="Banner {{ $loop->index + 1 }}">
+                    </a>
+                @endif
             @endforeach
         </div>
     </div>
