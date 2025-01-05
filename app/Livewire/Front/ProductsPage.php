@@ -9,11 +9,11 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class ProductsPage extends Component
 {
-    public $products = [];
+    public $vehicles = [];
 
     public function mount()
     {
-        $this->products = Vehicle::whereNull('sold_date')
+        $this->vehicles = Vehicle::whereNull('sold_date')
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->get();

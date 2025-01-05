@@ -30,7 +30,7 @@
                     @php
                         $method = (object) $method;
                     @endphp
-                    <x-product.payment-methods.card :method="$method"/>
+                    <x-vehicle.payment-methods.card :method="$method"/>
                 @endforeach
             </div>
         </div>

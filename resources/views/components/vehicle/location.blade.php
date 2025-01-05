@@ -1,4 +1,4 @@
-@props(['product'])
+@props(['vehicle'])
 
 <div class="border-y border-[var(--f-text-variant-4)] py-2 flex justify-between items-center mt-4">
     <div class="flex items-center gap-3">
@@ -11,10 +11,10 @@
         </div>
         <div class="flex flex-col gap-1">
             <p class="text-[var(--f-text-variant-6)]">
-                {{ trans('This product is in:') }}
+                {{ trans('This vehicle is in:') }}
             </p>
             <p class="text-[var(--f-text-variant-8)] font-semibold">
-                {{ $product->store->city }} - {{ $product->store->state }}
+                {{ $vehicle->store->city }} - {{ $vehicle->store->state }}
             </p>
         </div>
     </div>

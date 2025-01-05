@@ -1,7 +1,7 @@
 <div>
     <section class="container mx-auto px-4 md:px-0 pt-12">
-        <x-products.title />
-        <x-products.order-by />
-        <x-products.products-list :products="$products" />
+        <x-vehicles.title />
+        <x-vehicles.order-by />
+        <x-vehicles.vehicles-list :vehicles="$vehicles" />
     </section>
 </div>

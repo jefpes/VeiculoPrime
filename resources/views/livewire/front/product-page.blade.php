@@ -1,20 +1,20 @@
 <div>
-    <x-product.banners :product="$product"/>
+    <x-vehicle.banners :vehicle="$vehicle"/>
 
     <section class="container mt-6 mx-auto px-4">
-        <x-product.header :product="$product"/>
-        <x-product.title :product="$product"/>
+        <x-vehicle.header :vehicle="$vehicle"/>
+        <x-vehicle.title :vehicle="$vehicle"/>
 
-        <x-product.header-details :product="$product"/>
+        <x-vehicle.header-details :vehicle="$vehicle"/>
 
-        <x-product.location :product="$product"/>
+        <x-vehicle.location :vehicle="$vehicle"/>
 
-        <x-product.price :product="$product" :paymentMethods="$paymentMethods"/>
+        <x-vehicle.price :vehicle="$vehicle" :paymentMethods="$paymentMethods"/>
 
-        <x-product.about :product="$product"/>
+        <x-vehicle.about :vehicle="$vehicle"/>
 
-        <x-product.characteristics :product="$product"/>
+        <x-vehicle.characteristics :vehicle="$vehicle"/>
 
-        <x-product.similar-products :products="$similarProducts"/>
+        <x-vehicle.similar-vehicles :vehicles="$similarVehicles"/>
     </section>
 </div>

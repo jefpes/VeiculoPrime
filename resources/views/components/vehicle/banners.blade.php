@@ -1,9 +1,12 @@
-@props(['product'])
+@props(['vehicle'])
 <div class="lg:relative">
     <div class="swiper" id="product-banner-slider">
         <div class="swiper-wrapper">
             @php
-                $banners = $product->photos->pluck('path')->toArray();
+                $banners = $vehicle->photos
+                        ->where('public', true)
+                        ->pluck('path')
+                        ->toArray();
             @endphp
             @foreach ($banners as $banner)
                 <div class="swiper-slide">

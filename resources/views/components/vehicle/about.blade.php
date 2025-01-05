@@ -1,8 +1,8 @@
-@props(['product'])
+@props(['vehicle'])
 
 <div class="mt-4">
     <h3 class="text-[var(--f-text-variant-8)] font-semibold text-lg">
-        {{ trans('About this product') }}
+        {{ trans('About this vehicle') }}
     </h3>
 
     <div class="mt-4 grid grid-cols-4 md:grid-cols-3 gap-4">

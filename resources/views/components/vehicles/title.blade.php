@@ -13,5 +13,5 @@
         {{ trans('Filter') }}
     </button>
 
-    <x-products.drawer />
+    <x-vehicles.drawer />
 </div>

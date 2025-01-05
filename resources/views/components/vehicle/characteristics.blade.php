@@ -1,4 +1,4 @@
-@props(['product'])
+@props(['vehicle'])
 
 <div class="mt-4">
     <h3 class="text-[var(--f-text-variant-8)] font-semibold text-lg">
