@@ -1,7 +1,11 @@
+:root {
+    --swiper-navigation-sides-offset: 60px !important;
+}
+
 .swiper-pagination-bullet-active {
-    background: #18181b;
+    background: var(--f-primary-color);
 }
 
 .swiper-button-prev, .swiper-button-next {
-    color: #18181b !important;
+    color: var(--f-primary-color) !important;
 }

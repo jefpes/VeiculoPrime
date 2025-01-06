@@ -5,16 +5,16 @@
 <div class="">
     <div class="flex flex-col min-w-full max-w-md bg-[var(--f-background-variant-1)] border border-[var(--f-text-variant-2)] rounded-lg shadow h-full">
         <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}">
-            <img class="object-cover object-center w-full h-64 rounded-t-lg" src="{{ $vehicle->photoUrl }}" alt=""/>
+            <img class="object-cover object-center w-full h-64 rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
         </a>
 
         <div class="px-5 py-1 flex flex-col flex-grow">
             <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}" class="mb-4">
-                <h4 class="flex flex-col mb-2 text-md font-bold tracking-tight text-[var(--f-text-variant-5)] ">
+                <h4 class="flex justify-between mb-2 text-md font-bold tracking-tight text-[var(--f-text-variant-5)] ">
                     <span class="text-[var(--f-secondary-color)]">{{ strtoupper($vehicle->model->brand->name) }}</span>
-                    <strong class="-mt-2">
+                    <span>
                         {{strtoupper($vehicle->model->name)}}
-                    </strong>
+                    </span>
                 </h4>
 
                 <p class="mb-2">

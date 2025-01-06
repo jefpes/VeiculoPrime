@@ -16,17 +16,17 @@ const productBannerSlider = new Swiper("#product-banner-slider", {
     centeredSlides: true,
     loop: true,
     slidesPerView: 1,
-    autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
-    },
     pagination: {
         el: ".swiper-pagination",
+    },
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
     },
     breakpoints: {
         640: {
             slidesPerView: 3,
-            spaceBetween: 10,
+            spaceBetween: 5,
         }
     }
 });
