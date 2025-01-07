@@ -50,7 +50,8 @@ class ProductPage extends Component
 
     public function mount(): void
     {
-        $this->similarVehicles = Vehicle::whereNull('sold_date') //@phpstan-ignore-line
+        $this->similarVehicles = Vehicle::query()
+            ->where('sold_date', null)
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->limit(4)

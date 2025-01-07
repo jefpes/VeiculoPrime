@@ -22,7 +22,8 @@ class IndexPage extends Component
 
         $this->bestSellers = $this->getBestSellers();
 
-        $this->vehicles = Vehicle::whereNull('sold_date') //@phpstan-ignore-line
+        $this->vehicles = Vehicle::query()
+            ->where('sold_date', null)
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -39,6 +40,7 @@ class IndexPage extends Component
 
         if ($emphasingVehicles->isEmpty()) {
             $emphasingVehicles = Vehicle::query()
+                ->where('sold_date', null)
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->with(['photos'])

@@ -5,9 +5,9 @@
         {{ strtoupper($vehicle->model->brand->name) }}
     </h4>
 
-    <div class="flex gap-6">
+    {{-- <div class="flex gap-6">
         <x-vehicle.header.save/>
 
         <x-vehicle.header.share/>
-    </div>
+    </div> --}}
 </div>

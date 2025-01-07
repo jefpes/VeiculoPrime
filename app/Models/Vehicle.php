@@ -42,7 +42,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @property float $fipe_price
  * @property float $purchase_price
  * @property float $sale_price
- * @property float $promotional_price
+ * @property float|null $promotional_price
  * @property string $year_one
  * @property string $year_two
  * @property int $km
