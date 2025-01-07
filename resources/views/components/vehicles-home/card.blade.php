@@ -16,16 +16,16 @@
 
                 <p class="mb-2">
                     <span class="text-[var(--f-text-variant-6)] border-r border-[var(--f-text-variant-3)] pr-2">{{ $vehicle->year_one }} / {{ $vehicle->year_two }}</span>
-                    <span class="text-[var(--f-text-variant-6)] pl-2">{{ $vehicle->km }} km</span>
+                    <span class="text-[var(--f-text-variant-6)] pl-2">{{ number_format($vehicle->km, 0, '', '.')  }} km</span>
                 </p>
 
                 @if($vehicle->promotional_price)
                     <p class="text-[var(--f-text-variant-6)] line-through text-sm">
-                        R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
+                        R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
                     </p>
 
                     <p class="text-lg mb-auto font-bold text-[var(--f-secondary-color)]">
-                        R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+                        R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
                     </p>
                 @else
                     <p class="text-lg mb-auto font-bold text-[var(--f-text-variant-6)]">

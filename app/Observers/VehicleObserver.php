@@ -9,17 +9,21 @@ class VehicleObserver
     /**
      * Handle the Vehicle "created" event.
      */
-    public function created(Vehicle $vehicle): void
+    public function creating(Vehicle $vehicle): void
     {
-        //
+        if ($vehicle->promotional_price <= 0) {
+            $vehicle->promotional_price = null;
+        }
     }
 
     /**
      * Handle the Vehicle "updated" event.
      */
-    public function updated(Vehicle $vehicle): void
+    public function updating(Vehicle $vehicle): void
     {
-        //
+        if ($vehicle->promotional_price <= 0) {
+            $vehicle->promotional_price = null;
+        }
     }
 
     /**

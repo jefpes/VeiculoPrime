@@ -5,11 +5,11 @@
     <div>
         @if($vehicle->promotional_price && $vehicle->promotional_price != '0.00')
             <p class="text-[var(--f-text-variant-6)] line-through text-sm" >
-                R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
+                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
             </p>
 
             <p class="text-lg font-bold text-[var(--f-secondary-color)]">
-                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+                R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
             </p>
         @else
             <p class="text-2xl font-bold text-[var(--f-text-variant-6)]">
