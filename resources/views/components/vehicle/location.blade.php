@@ -9,7 +9,7 @@
                       color="currentColor"/>
             </svg>
         </div>
-        <div class="flex flex-col gap-1">
+        <div class="flex gap-1">
             <p class="text-[var(--f-text-variant-6)]">
                 {{ trans('This vehicle is in:') }}
             </p>
