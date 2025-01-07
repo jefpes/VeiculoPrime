@@ -8,5 +8,5 @@
     </x-header.desktop-menu.dropdown>
 
     <!-- CTA Button -->
-    <x-header.desktop-menu.button text="Call To Action" href="#" />
+    <x-header.desktop-menu.button text="Login" href="{{ route('filament.admin.auth.login') }}" />
 </ul>
