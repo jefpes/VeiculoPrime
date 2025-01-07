@@ -3,7 +3,7 @@
 <div class="border-b py-4 border-[var(--f-text-variant-5)] flex justify-between items-center"
      x-data="{modalIsOpen: false}">
     <div>
-        @if($vehicle->promotional_price)
+        @if($vehicle->promotional_price && $vehicle->promotional_price != '0.00')
             <p class="text-[var(--f-text-variant-6)] line-through text-sm" >
                 R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
             </p>

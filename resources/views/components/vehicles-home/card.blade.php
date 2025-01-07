@@ -10,11 +10,8 @@
 
         <div class="px-5 py-1 flex flex-col flex-grow">
             <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}" class="mb-4">
-                <h4 class="flex justify-between mb-2 text-md font-bold tracking-tight text-[var(--f-text-variant-5)] ">
-                    <span class="text-[var(--f-secondary-color)]">{{ strtoupper($vehicle->model->brand->name) }}</span>
-                    <span>
-                        {{strtoupper($vehicle->model->name)}}
-                    </span>
+                <h4 class="flex flex-col mt-1 text-md font-bold tracking-tight text-[var(--f-text-variant-5)] ">
+                    <span class="">{{ strtoupper($vehicle->model->brand->name) }} {{strtoupper($vehicle->model->name)}}</span>
                 </h4>
 
                 <p class="mb-2">
