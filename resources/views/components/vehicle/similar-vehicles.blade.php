@@ -8,8 +8,8 @@
     <div class="swiper mt-4" id="similarProductsSlider">
         <div class="swiper-wrapper">
             @foreach ($vehicles as $vehicle)
-                <div class="swiper-slide">
-                    <x-vehicles.vehicle-card :vehicle="$vehicle" />
+                <div class="swiper-slide h-full">
+                    <x-vehicles-home.card :vehicle="$vehicle" />
                 </div>
             @endforeach
         </div>
