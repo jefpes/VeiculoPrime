@@ -48,9 +48,9 @@ class ProductPage extends Component
 
     public mixed $similarVehicles;
 
-    public function mount()
+    public function mount(): void
     {
-        $this->similarVehicles = Vehicle::whereNull('sold_date')
+        $this->similarVehicles = Vehicle::whereNull('sold_date') //@phpstan-ignore-line
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->limit(4)

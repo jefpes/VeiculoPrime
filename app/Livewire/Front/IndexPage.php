@@ -4,31 +4,32 @@ namespace App\Livewire\Front;
 
 use App\Models\Vehicle;
 use App\Models\VehicleModel;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class IndexPage extends Component
 {
-    public $emphasingVehicles = [];
+    public Collection $emphasingVehicles;
 
-    public $bestSellers = [];
+    public Collection $bestSellers;
 
-    public $vehicles = [];
+    public Collection $vehicles;
 
-    public function mount()
+    public function mount(): void
     {
         $this->emphasingVehicles = $this->getEmphasingVehicles();
 
         $this->bestSellers = $this->getBestSellers();
 
-        $this->vehicles = Vehicle::whereNull('sold_date')
+        $this->vehicles = Vehicle::whereNull('sold_date') //@phpstan-ignore-line
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
-    private function getEmphasingVehicles()
+    private function getEmphasingVehicles(): Collection
     {
         $emphasingVehicles = Vehicle::query()
             ->where('emphasis', true)
@@ -48,7 +49,7 @@ class IndexPage extends Component
         return $emphasingVehicles;
     }
 
-    private function getBestSellers()
+    private function getBestSellers(): Collection
     {
         return VehicleModel::query()
 //            ->withCount(['vehicles' => function ($query) {

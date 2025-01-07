@@ -35,7 +35,7 @@ trait HasPhoto
         return $this->morphMany(Photo::class, 'photoable');
     }
 
-    public function mainPhoto(): \Illuminate\Database\Eloquent\Relations\MorphOne | \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function mainPhoto(): \Illuminate\Database\Eloquent\Builder | \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Photo::class, 'photoable')->where('main', true);
     }
@@ -83,7 +83,7 @@ trait HasPhoto
     {
         return Attribute::make(
             get: function () {
-                $photo = $this->mainPhoto ?? $this->publicPhotos->first();
+                $photo = $this->mainPhoto ?? $this->publicPhotos->first(); //@phpstan-ignore-line
                 return $photo ? image_path($photo->path) : 'https://placehold.co/600x400';
             },
         );
