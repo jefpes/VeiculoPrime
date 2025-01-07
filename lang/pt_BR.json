@@ -801,5 +801,6 @@
     "Attention: If this role has skills, it is necessary to remove them before deleting, otherwise deletion will not be possible.": "Atenção: Caso está função tenha habilidades é necessário retira-los antes de deletar, caso não o faça não será possivel a exclusão",
     "New": "Novo",
     "This action is unauthorized." : "Esta ação é não autorizada.",
-    "Back": "Voltar"
+    "Back": "Voltar",
+    "End of plate:": "Final da placa:"
 }
