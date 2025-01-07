@@ -18,7 +18,7 @@
 
                             <img src="{{ asset($image) }}" class="w-6 h-6" alt="{{ $extra->name }}">
                             <span class="text-[var(--f-text-variant-6)] font-normal text-base ">
-                            {{ $extra->name }}
+                            {{ trans($extra->name) }}
                         </span>
                         </div>
                     @endforeach
