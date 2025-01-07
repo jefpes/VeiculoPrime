@@ -2,10 +2,10 @@
     'vehicle' => []
 ])
 
-<div class="">
+<div class="h-full">
     <div class="flex flex-col min-w-full max-w-md bg-[var(--f-background-variant-1)] border border-[var(--f-text-variant-2)] rounded-lg shadow h-full">
         <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}">
-            <img class="object-cover object-center w-full h-64 rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
+            <img class="object-cover object-center w-full h-80 rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
         </a>
 
         <div class="px-5 py-1 flex flex-col flex-grow">
