@@ -26,6 +26,7 @@ class IndexPage extends Component
             ->where('sold_date', null)
             ->with(['model.brand', 'photos', 'store'])
             ->orderBy('created_at', 'desc')
+            ->limit(15)
             ->get();
     }
 

@@ -1,6 +1,6 @@
 @props(['vehicle'])
 <div class="lg:relative" x-data="{ imageModalIsOpen: false, image: '', openModal(image) { this.image = image; this.imageModalIsOpen = true; } }">
-    <div class="swiper" id="product-banner-slider">
+    <div class="swiper h-auto" id="product-banner-slider">
         <div class="swiper-wrapper">
             @php
                 $banners = $vehicle->photos
@@ -10,7 +10,7 @@
             @endphp
             @foreach ($banners as $banner)
                 <div class="swiper-slide" @click="openModal('{{ image_path($banner) }}')">
-                    <img src="{{ image_path($banner) }}" class="w-full h-auto object-cover max-h-[550px] cursor-pointer"
+                    <img src="{{ image_path($banner) }}" class="object-fill aspect-video cursor-pointer"
                          alt="Banner {{ $loop->index + 1 }}">
                 </div>
             @endforeach
