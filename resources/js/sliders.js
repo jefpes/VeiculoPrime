@@ -6,10 +6,20 @@ const bannerSlider = new Swiper("#banner-slider", {
     centeredSlides: true,
     loop: true,
     autoplay: {
-        delay: 2500,
+        delay: 3000,
         disableOnInteraction: false,
     },
-    speed: 1500,
+    breakpoints: {
+        640: {
+            slidesPerView: 1,
+            spaceBetween: 5,
+        },
+        768: {
+            slidesPerView: 3,
+            spaceBetween: 5,
+        },
+    },
+    speed: 2000,
 });
 
 const productBannerSlider = new Swiper("#product-banner-slider", {
