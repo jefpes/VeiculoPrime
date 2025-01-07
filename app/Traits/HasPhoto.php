@@ -84,6 +84,7 @@ trait HasPhoto
         return Attribute::make(
             get: function () {
                 $photo = $this->mainPhoto ?? $this->publicPhotos->first(); //@phpstan-ignore-line
+
                 return $photo ? image_path($photo->path) : 'https://placehold.co/600x400';
             },
         );

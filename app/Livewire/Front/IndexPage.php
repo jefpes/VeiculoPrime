@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Front;
 
-use App\Models\Vehicle;
-use App\Models\VehicleModel;
+use App\Models\{Vehicle, VehicleModel};
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
