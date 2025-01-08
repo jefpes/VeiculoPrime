@@ -6,35 +6,20 @@
     /> --}}
 
     <div class="flex gap-2 mt-2">
-        <x-vehicles.filters.select
-            name="Select 1"
-            id="select"
-            label="Select 1"
-            optionSelected="Select one"
+        <x-vehicles.filters.select name="select-year-ini" id="select-year-ini" label="Year initial" optionSelected="Select one"
             :options="['Option 1', 'Option 2', 'Option 3']" />
 
-        <x-vehicles.filters.select
-            name="Select 2"
-            id="select"
-            label="Select 2"
-            optionSelected="Select one"
+        <x-vehicles.filters.select name="select-year-final" id="select-year-final" label="Year final" optionSelected="Select one"
             :options="['Option 1', 'Option 2', 'Option 3']" />
     </div>
 
-    <x-vehicles.filters.select
-        name="Select 3"
-        id="select-3"
-        label="Select 3"
-        optionSelected="Select one"
+    <x-vehicles.filters.select name="select-type" id="select-type" label="Select a Type" optionSelected="Select one"
         :options="['Option 1', 'Option 2', 'Option 3']" />
 
-    <x-vehicles.filters.select
-        name="Select 4"
-        id="select-4"
-        label="Select 4"
-        optionSelected="Select one"
+    <x-vehicles.filters.select name="select-model" id="select-model" label="Select a Model" optionSelected="Select one"
         :options="['Option 1', 'Option 2', 'Option 3']" />
 
+    {{--
     <div class="mt-2">
         <x-vehicles.filters.range
             name="Range"
@@ -42,7 +27,7 @@
         />
     </div>
 
-    {{-- <div class="mt-2">
+     <div class="mt-2">
         <x-vehicles.filters.toggle
             name="Toggle"
             id="toggle"
@@ -52,7 +37,8 @@
 
     <div class="mt-2">
         <x-vehicles.filters.rating />
-    </div> --}}
+    </div>
+    --}}
 
     <div class="mt-2">
         <x-vehicles.filters.clean-filters />
