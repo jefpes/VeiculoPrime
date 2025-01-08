@@ -33,6 +33,7 @@ class IndexPage extends Component
     private function getEmphasingVehicles(): Collection
     {
         $emphasingVehicles = Vehicle::query()
+            ->where('sold_date', null)
             ->where('emphasis', true)
             ->orderBy('created_at', 'desc')
             ->limit(5)
