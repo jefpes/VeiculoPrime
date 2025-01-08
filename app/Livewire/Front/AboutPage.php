@@ -16,10 +16,10 @@ class AboutPage extends Component
 
     public function mount(): void
     {
-        $this->banners = Photo::where('public', true) //@phpstan-ignore-line
-            ->where('photoable_id', Store::firstWhere('active', true)->id) //@phpstan-ignore-line
+        $this->banners = Photo::query()->where('public', true)
+            ->whereHasMorph('photoable', Store::class)
             ->get();
 
-        $this->about = Settings::first()->about; //@phpstan-ignore-line
+        $this->about = Settings::query()->first()->about;
     }
 }

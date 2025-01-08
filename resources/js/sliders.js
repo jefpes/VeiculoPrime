@@ -60,3 +60,23 @@ const similarProductsSlider = new Swiper("#similarProductsSlider", {
         },
     },
 });
+
+const storeSlider = new Swiper("#store-slider", {
+    centeredSlides: true,
+    loop: true,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
+    breakpoints: {
+        640: {
+            slidesPerView: 1,
+            spaceBetween: 1,
+        },
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 1,
+        },
+    },
+    speed: 2000,
+});
