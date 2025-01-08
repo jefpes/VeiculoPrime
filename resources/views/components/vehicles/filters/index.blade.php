@@ -1,9 +1,9 @@
 <div class="flex flex-col gap-2">
-    <x-vehicles.filters.text-input
+    {{-- <x-vehicles.filters.text-input
         name="Text Input"
         placeholder="Search for..."
         id="text-input"
-    />
+    /> --}}
 
     <div class="flex gap-2 mt-2">
         <x-vehicles.filters.select
@@ -42,7 +42,7 @@
         />
     </div>
 
-    <div class="mt-2">
+    {{-- <div class="mt-2">
         <x-vehicles.filters.toggle
             name="Toggle"
             id="toggle"
@@ -52,7 +52,7 @@
 
     <div class="mt-2">
         <x-vehicles.filters.rating />
-    </div>
+    </div> --}}
 
     <div class="mt-2">
         <x-vehicles.filters.clean-filters />
