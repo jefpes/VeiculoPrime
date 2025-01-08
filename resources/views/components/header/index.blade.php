@@ -10,6 +10,12 @@
         <!-- Brand Logo -->
         <x-header.brand-logo :settings="$settings" />
 
+        <ul class="hidden items-center gap-4 sm:flex">
+            <x-header.desktop-menu.link href="{{ route('index') }}" text="Home page" :bold="true" />
+            <x-header.desktop-menu.link href="{{ route('vehicles') }}" text="Vehicles" :bold="true" />
+            <x-header.desktop-menu.link href="{{ route('about') }}" text="About" :bold="true" />
+        </ul>
+
         <!-- Desktop Menu -->
         <x-header.desktop-menu />
 
