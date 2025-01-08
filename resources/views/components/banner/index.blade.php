@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="hidden lg:block absolute top-[16rem] left-32 ">
+    <div class="hidden lg:block absolute top-[24rem] left-32 ">
         {{ $slot }}
     </div>
 </div>
