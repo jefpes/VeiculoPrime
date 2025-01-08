@@ -1,6 +1,6 @@
 <div>
     <section>
-        <x-banner :emphasingVehicles="$emphasingVehicles">
+        <x-banner :items="$emphasingVehicles">
             <x-banner.search-bar/>
         </x-banner>
     </section>

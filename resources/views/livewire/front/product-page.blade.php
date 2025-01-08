@@ -17,6 +17,18 @@
 
         <x-vehicle.extras :vehicle="$vehicle"/>
 
+        @if($vehicle->description)
+        <div class="mt-2">
+            <h3 class="text-[var(--f-text-variant-8)] font-semibold text-lg">
+                {{ trans('Description') }}
+            </h3>
+
+            <p class="text-[var(--f-text-variant-6)] font-normal text-base mt-1">
+                {{ $vehicle->description }}
+            </p>
+        </div>
+        @endif
+
         <x-vehicle.similar-vehicles :vehicles="$similarVehicles"/>
     </section>
 </div>
