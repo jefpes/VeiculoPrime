@@ -4,6 +4,6 @@
     </section>
 
     <section class="container mx-auto mt-24">
-        {{{ $about }}}
+       {!! str($about)->markdown()->sanitizeHtml() !!}
     </section>
 </div>
