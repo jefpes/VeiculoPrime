@@ -3,7 +3,6 @@
 namespace App\Livewire\Front;
 
 use App\Models\{Brand, Vehicle, VehicleType};
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, Layout, Url};
 use Livewire\Component;
@@ -11,8 +10,6 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class ProductsPage extends Component
 {
-    public Collection $vehicles;
-
     /** @var array<int> */
     #[Url(except: '', as: 'brands', history: true)]
     public ?array $selectedBrands = [];
@@ -35,15 +32,6 @@ class ProductsPage extends Component
     #[Url(except: '', as: 'type_name', history: true)]
     public ?string $vehicle_type = null;
 
-    public function mount(): void
-    {
-        $this->vehicles = Vehicle::query()
-            ->where('sold_date', null)
-            ->with(['model.brand', 'photos', 'store'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
     #[Computed()]
     public function types(): Collection
     {
@@ -56,7 +44,7 @@ class ProductsPage extends Component
     }
 
     #[Computed()]
-    public function vehicles(): Builder
+    public function vehicles(): Collection
     {
         return Vehicle::with('model.type', 'model.brand', 'photos')
             ->whereNull('sold_date')
@@ -68,7 +56,8 @@ class ProductsPage extends Component
             ->when(
                 $this->vehicle_type,
                 fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
-            );
+            )
+            ->get();
     }
 
     #[Computed()]
