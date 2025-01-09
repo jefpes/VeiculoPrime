@@ -20,6 +20,7 @@
                 </p>
 
                 @if($vehicle->promotional_price)
+                <div class="flex gap-2">
                     <p class="text-[var(--f-text-variant-6)] line-through text-sm">
                         R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
                     </p>
@@ -27,6 +28,7 @@
                     <p class="text-lg mb-auto font-bold text-[var(--f-secondary-color)]">
                         R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
                     </p>
+                </div>
                 @else
                     <p class="text-lg mb-auto font-bold text-[var(--f-text-variant-6)]">
                         R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
