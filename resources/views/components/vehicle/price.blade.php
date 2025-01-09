@@ -4,13 +4,15 @@
      x-data="{modalIsOpen: false}">
     <div>
         @if($vehicle->promotional_price && $vehicle->promotional_price != '0.00')
-            <p class="text-[var(--f-text-variant-6)] line-through text-sm" >
-                R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
-            </p>
+            <div class="flex gap-x-2">
+                <p class="text-[var(--f-text-variant-6)] line-through" >
+                    R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
+                </p>
 
-            <p class="text-lg font-bold text-[var(--f-secondary-color)]">
-                R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
-            </p>
+                <p class="text-2xl font-bold text-[var(--f-secondary-color)]">
+                    R$ {{ number_format($vehicle->promotional_price, 2, ',', '.') }}
+                </p>
+            </div>
         @else
             <p class="text-2xl font-bold text-[var(--f-text-variant-6)]">
                 R$ {{ number_format($vehicle->sale_price, 2, ',', '.') }}
@@ -25,8 +27,8 @@
         <x-vehicle.payment-methods :methods="$paymentMethods"/>
     </div>
     <div>
-        <button class="bg-[var(--f-secondary-color)] text-[var(--f-text-variant-1)] font-semibold px-6 py-2 rounded-lg focus:outline-none">
+        <a href="{{ $vehicle->store->phones->random()->gerarLinkWhatsApp() }}" target="_blank" class="bg-[var(--f-secondary-color)] text-[var(--f-text-variant-1)] font-semibold px-6 py-2 rounded-lg focus:outline-none">
             {{ trans('Buy') }}
-        </button>
+        </a>
     </div>
 </div>
