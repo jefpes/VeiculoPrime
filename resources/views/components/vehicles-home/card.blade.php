@@ -15,7 +15,7 @@
                 </h4>
 
                 <p class="mb-2">
-                    <span class="text-[var(--f-text-variant-6)] border-r border-[var(--f-text-variant-3)] pr-2">{{ $vehicle->year_one }} / {{ $vehicle->year_two }}</span>
+                    <span class="text-[var(--f-text-variant-6)] border-r border-[var(--f-text-variant-3)] pr-2 tracking-wide">{{ $vehicle->year_one }}/{{ $vehicle->year_two }}</span>
                     <span class="text-[var(--f-text-variant-6)] pl-2">{{ number_format($vehicle->km, 0, '', '.')  }} KM</span>
                 </p>
 
@@ -36,17 +36,16 @@
                 @endif
             </a>
 
-            <div class="mt-auto">
-                <p class="bg-[#f2f2f2] p-2 rounded-lg flex items-center gap-2">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                              d="M12 12c-1.1 0-2-.9-2-2s.9-2 2 2s2 .9 2 2s-.9 2-2 2m6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14c4.05-3.7 6-6.8 6-9.14M12 2c4.2 0 8 3.22 8 8.2c0 3.32-2.67 7.25-8 11.8c-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2"/>
-                    </svg>
-                    <span class="text-[var(--f-text-variant-6)]">
-                    {{ $vehicle->store->city }} - {{ $vehicle->store->state }}
-                </span>
-                </p>
-            </div>
+            <a href="{{ $vehicle->store->gerarLinkGoogleMaps() }}"
+                class="text-[var(--f-text-variant-6)] cursor-pointer p-2 rounded-lg flex items-center justify-center gap-2 hover:text-blue-700 hover:underline"
+                target="_blank">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round"
+                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <span > {{ $vehicle->store->city }} - {{ $vehicle->store->state }} </span>
+            </a>
         </div>
     </div>
 </div>

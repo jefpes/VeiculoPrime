@@ -15,9 +15,7 @@
                 <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
             </svg>
 
-            <span class="text-[var(--f-text-variant-8)]">
-                        {{ $vehicle->km }} km
-            </span>
+            <span class="text-[var(--f-text-variant-8)]"> {{ number_format($vehicle->km, 0, '', '.') }} KM </span>
         </div>
 
         <div

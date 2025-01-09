@@ -2,10 +2,7 @@
     <x-vehicle.banners :vehicle="$vehicle"/>
 
     <section class="container mt-6 mx-auto px-4">
-        <x-vehicle.header :vehicle="$vehicle"/>
         <x-vehicle.title :vehicle="$vehicle"/>
-
-        {{--        <x-vehicle.header-details :vehicle="$vehicle"/>--}}
 
         <x-vehicle.location :vehicle="$vehicle"/>
 
