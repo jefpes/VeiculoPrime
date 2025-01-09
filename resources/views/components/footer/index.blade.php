@@ -5,7 +5,7 @@
             <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                 <x-footer.column title="Addresses">
                     @foreach ($stores as $s)
-                        <x-footer.column.link href="#" text="{{ $s->fullAddress }}" />
+                        <x-footer.column.link :href="$s->gerarLinkGoogleMaps()" text="{{ $s->fullAddress }}" />
                     @endforeach
                 </x-footer.column>
                 <x-footer.column title="Phones">
@@ -23,7 +23,7 @@
 
         <x-footer.divider />
 
-        <div class="sm:flex sm:items-center sm:justify-between">
+        <div class="flex items-center justify-center">
           <span class="text-sm text-[var(--f-text-variant-5)] sm:text-center">© {{ now()->year }}
               <a href="#" class="hover:underline">
                   {{ config('app.name') }}
