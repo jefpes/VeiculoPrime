@@ -6,7 +6,7 @@
     @if($settings->logo)
         <img src="{{ image_path($settings->logo) }}"
              alt="Application Logo"
-             class="w-32 h-6"
+             class="max-w-[150px]"
         />
     @else
         <h1 class="text-lg font-bold text-[var(--f-neutral-900)]">
