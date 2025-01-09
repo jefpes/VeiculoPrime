@@ -30,6 +30,19 @@ return new class () extends Migration {
             $table->decimal('interest_rate_installment', 10, 2)->nullable();
             $table->decimal('late_fee', 10, 2)->nullable();
 
+            //Styles frontend
+            $table->string('primary_color')
+                ->default('#000000')
+                ->nullable();
+
+            $table->string('secondary_color')
+                ->default('#10b981')
+                ->nullable();
+
+            $table->string('tertiary_color')
+                ->default('#dc2626')
+                ->nullable();
+
             $table->string('font_family')->nullable();
             $table->string('font_color')->nullable()->default('white');
             $table->string('promo_price_color')->nullable()->default('green');
