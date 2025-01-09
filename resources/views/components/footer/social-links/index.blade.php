@@ -1,7 +1,7 @@
 @props(['settings'])
-<div class="grid grid-cols-2 gap-2 mt-4 sm:justify-center sm:mt-0">
+<div class="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-2 mt-4 sm:justify-center sm:mt-0">
     @if($settings->whatsapp)
-        <x-footer.social-links.link href="https://api.whatsapp.com/send?phone={{ $settings->whatsapp }}" text="Whatsapp">
+        <x-footer.social-links.link href="{{ $settings->whatsapp }}" text="Whatsapp">
             <x-icons.whatsapp class="w-4 h-4"/>
         </x-footer.social-links.link>
     @endif

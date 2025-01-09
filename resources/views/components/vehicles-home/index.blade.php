@@ -1,14 +1,10 @@
 @props(['vehicles'])
 
-<section class="container mx-auto mt-24">
+<section class="container mx-auto mt-10">
     <x-vehicles-home.title/>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4 px-4 md:px-0">
+    <div class="grid justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 w-full">
         @foreach($vehicles as $vehicle)
-            @php
-                $vehicle = (object) $vehicle;
-            @endphp
-
             <x-vehicles-home.card :vehicle="$vehicle"/>
         @endforeach
     </div>

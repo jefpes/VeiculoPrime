@@ -5,7 +5,7 @@
 <div class="h-full">
     <div class="flex flex-col min-w-full max-w-md bg-[var(--f-background-variant-1)] border border-[var(--f-text-variant-2)] rounded-lg shadow h-auto">
         <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}">
-            <img class="object-fill object-center w-full h-56 rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
+            <img class="object-fill w-full h-full aspect-video rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
         </a>
 
         <div class="px-5 py-1 flex flex-col flex-grow">
@@ -16,7 +16,7 @@
 
                 <p class="mb-2">
                     <span class="text-[var(--f-text-variant-6)] border-r border-[var(--f-text-variant-3)] pr-2">{{ $vehicle->year_one }} / {{ $vehicle->year_two }}</span>
-                    <span class="text-[var(--f-text-variant-6)] pl-2">{{ number_format($vehicle->km, 0, '', '.')  }} km</span>
+                    <span class="text-[var(--f-text-variant-6)] pl-2">{{ number_format($vehicle->km, 0, '', '.')  }} KM</span>
                 </p>
 
                 @if($vehicle->promotional_price)

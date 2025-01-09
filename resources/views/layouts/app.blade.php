@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    @livewireStyles
     @php
         $settings = \App\Models\Settings::first();
 
         $stores = \App\Models\Store::with('phones')->get();
 
+        $bgStyles = [];
         $bodyStyles[] = "{$settings?->font_family};";
         $bodyStyleString = implode(' ', $bodyStyles);
+
+        if ($settings?->bg_img) {
+            $bgStyles[] = "background-image: url('" . image_path($settings?->bg_img) . "');";
+            $bgStyles[] = "background-repeat: repeat;";
+            $bgStyles[] = "opacity: {$settings?->bg_img_opacity};";
+        }
+        $bgStyleString = implode(' ', $bgStyles);
     @endphp
 
     <title>{{ $settings?->name ?? 'Motor Market' }}</title>
@@ -64,13 +72,31 @@
             --f-neutral-800: {{ $settings->variant_color_9 ?? '#262626' }} !important;
             --f-neutral-900: {{ $settings->variant_color_10 ?? '#171717' }} !important;
             --f-neutral-950: {{ $settings->variant_color_11 ?? '#0a0a0a' }} !important;
+
+            --bg-overlay-opacity: {{ $settings?->bg_img_opacity ?? '0.3' }};
+
+            .bg-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                background-repeat: repeat;
+                opacity: var(--bg-overlay-opacity);
+            }
         }
     </style>
 </head>
 <body style="{{ $bodyStyleString }}">
+    @if($settings && $settings->bg_img)
+        <div class="bg-overlay" style="background-image: url('{{ image_path($settings->bg_img) }}');"></div>
+    @endif
+
 <x-header :settings="$settings"/>
 
 <main class="bg-[var(--f-main-background-color)]">
+
     {{ $slot }}
 </main>
 
