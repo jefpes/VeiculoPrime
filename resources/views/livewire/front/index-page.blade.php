@@ -1,8 +1,6 @@
 <div>
     <section>
-        <x-banner :items="$emphasingVehicles">
-            {{-- <x-banner.search-bar/> --}}
-        </x-banner>
+        <x-banner :items="$emphasingVehicles" />
     </section>
 
     {{-- <x-categories :categories="$categories"/> --}}

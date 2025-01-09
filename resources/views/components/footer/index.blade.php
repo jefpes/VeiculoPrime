@@ -11,7 +11,7 @@
                 <x-footer.column title="Phones">
                     @foreach ($stores as $s)
                         @foreach ($s->phones as $p)
-                            <x-footer.column.link href="#" text="{{ $p->fullNumber }}" />
+                            <x-footer.column.link href="{{ $p->gerarLinkWhatsApp() }}" text="{{ $p->fullNumber }}" />
                         @endforeach
                     @endforeach
                 </x-footer.column>

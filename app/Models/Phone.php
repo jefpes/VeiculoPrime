@@ -49,4 +49,14 @@ class Phone extends Model
 
         return "+{$this->ddi} ({$this->ddd}) {$this->number}";
     }
+
+    public function gerarLinkWhatsApp(): string
+    {
+        // Formata o número
+        $numero = preg_replace('/[^\d]/', '', ($this->ddi . $this->ddd . $this->number));
+
+        // Monta o link do WhatsApp
+        return "https://wa.me/$numero";
+    }
+
 }
