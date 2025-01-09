@@ -7,7 +7,7 @@
     @endif
 
     @if($settings->x)
-        <x-footer.social-links.link href="{{ $settings->x }}" text="X">
+        <x-footer.social-links.link href="{{ url($settings->x) }}" text="X">
             <x-icons.x class="w-4 h-4"/>
         </x-footer.social-links.link>
     @endif

@@ -17,12 +17,12 @@ class SettingsSeeder extends Seeder
             'cnpj'      => '99.999.999/9999-99',
             'about'     => 'Somos uma empresa de venda de veículos, na qual prezamos pela qualidade e satisfação do cliente.',
             'email'     => 'google@gmail.com',
-            'x'         => 'x.com',
-            'instagram' => 'instagram.com',
-            'facebook'  => 'facebook.com',
-            'linkedin'  => 'linkedin.com',
-            'youtube'   => 'youtube.com',
-            'whatsapp'  => 'whatsapp.com',
+            'x'         => 'http://x.com',
+            'instagram' => 'http://instagram.com',
+            'facebook'  => 'http://facebook.com',
+            'linkedin'  => 'http://linkedin.com',
+            'youtube'   => 'http://youtube.com',
+            'whatsapp'  => 'http://whatsapp.com',
         ]);
     }
 }
