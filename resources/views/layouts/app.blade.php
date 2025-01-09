@@ -9,6 +9,8 @@
     @php
         $settings = \App\Models\Settings::first();
 
+        $stores = \App\Models\Store::with('phones')->get();
+
         $bodyStyles[] = "{$settings?->font_family};";
         $bodyStyleString = implode(' ', $bodyStyles);
     @endphp
@@ -72,6 +74,6 @@
     {{ $slot }}
 </main>
 
-<x-footer :settings="$settings"/>
+<x-footer :settings="$settings" :stores="$stores"/>
 </body>
 </html>

@@ -40,4 +40,13 @@ class Phone extends Model
     {
         return $this->morphTo();
     }
+
+    public function getFullNumberAttribute(): string
+    {
+        if ($this->type) {
+            return "+{$this->ddi} ({$this->ddd}) {$this->number} ({$this->type})";
+        }
+
+        return "+{$this->ddi} ({$this->ddd}) {$this->number}";
+    }
 }

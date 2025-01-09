@@ -80,4 +80,13 @@ class Store extends Model
     {
         return $this->hasMany(PaymentInstallment::class);
     }
+
+    public function getFullAddressAttribute(): string
+    {
+        if ($this->complement) {
+            return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state} ({$this->complement})";
+        }
+
+        return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state}";
+    }
 }
