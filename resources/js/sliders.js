@@ -12,11 +12,11 @@ const bannerSlider = new Swiper("#banner-slider", {
     breakpoints: {
         640: {
             slidesPerView: 1,
-            spaceBetween: 5,
+            spaceBetween: 1,
         },
         768: {
             slidesPerView: 2,
-            spaceBetween: 5,
+            spaceBetween: 1,
         },
     },
     speed: 2000,
@@ -25,6 +25,10 @@ const bannerSlider = new Swiper("#banner-slider", {
 const productBannerSlider = new Swiper("#product-banner-slider", {
     centeredSlides: true,
     loop: true,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+    },
     slidesPerView: 1,
     pagination: {
         el: ".swiper-pagination",
@@ -36,7 +40,7 @@ const productBannerSlider = new Swiper("#product-banner-slider", {
     breakpoints: {
         640: {
             slidesPerView: 3,
-            spaceBetween: 5,
+            spaceBetween: 1,
         }
     }
 });
@@ -46,7 +50,7 @@ const similarProductsSlider = new Swiper("#similarProductsSlider", {
     slidesPerView: 1,
     spaceBetween: 10,
     autoplay: {
-        delay: 2500,
+        delay: 3000,
         disableOnInteraction: false,
     },
     breakpoints: {
