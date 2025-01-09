@@ -15,31 +15,65 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * @method HasOne ceo()
  *
  * @property string $id
- * @property string|null $employee_id
- * @property string|null $name
- * @property string|null $cnpj
- * @property string|null $opened_in
+ * @property ?string $employee_id
+ * @property ?string $name
+ * @property ?string $cnpj
+ * @property ?string $opened_in
  * @property string $zip_code
  * @property string $street
  * @property string $number
  * @property string $neighborhood
  * @property string $city
  * @property string $state
- * @property string|null $complement
- * @property string|null $about
- * @property string|null $phone
- * @property string|null $email
- * @property string|null $logo
- * @property string|null $favicon
- * @property string|null $x
- * @property string|null $instagram
- * @property string|null $facebook
- * @property string|null $linkedin
- * @property string|null $youtube
- * @property string|null $whatsapp
- * @property float|null $interest_rate_sale
- * @property float|null $interest_rate_installment
- * @property float|null $late_fee
+ * @property ?string $complement
+ * @property ?string $about
+ * @property ?string $phone
+ * @property ?string $email
+ * @property ?string $logo
+ * @property ?string $favicon
+ * @property ?string $x
+ * @property ?string $instagram
+ * @property ?string $facebook
+ * @property ?string $linkedin
+ * @property ?string $youtube
+ * @property ?string $whatsapp
+ * @property ?float $interest_rate_sale
+ * @property ?float $interest_rate_installment
+ * @property ?float $late_fee
+ *
+ * @property ?string $font_family
+ * @property ?string $primary_color
+ * @property ?string $secondary_color
+ * @property ?string $tertiary_color
+ * @property ?string $nav_color
+ * @property ?string $nav_border_color
+ * @property ?string $footer_color
+ * @property ?string $body_bg_color
+ * @property ?string $text_variant_color_1
+ * @property ?string $text_variant_color_2
+ * @property ?string $text_variant_color_3
+ * @property ?string $text_variant_color_4
+ * @property ?string $text_variant_color_5
+ * @property ?string $text_variant_color_6
+ * @property ?string $text_variant_color_7
+ * @property ?string $text_variant_color_8
+ * @property ?string $text_variant_color_9
+ * @property ?string $text_variant_color_10
+ * @property ?string $card_color
+ * @property ?string $variant_color_1
+ * @property ?string $variant_color_2
+ * @property ?string $variant_color_3
+ * @property ?string $variant_color_4
+ * @property ?string $variant_color_5
+ * @property ?string $variant_color_6
+ * @property ?string $variant_color_7
+ * @property ?string $variant_color_8
+ * @property ?string $variant_color_9
+ * @property ?string $variant_color_10
+ * @property ?string $variant_color_11
+ * @property ?string $bg_img
+ * @property ?string $bg_img_opacity
+ *
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
@@ -68,36 +102,51 @@ class Settings extends Model
         'linkedin',
         'youtube',
         'whatsapp',
+
         'interest_rate_sale',
         'interest_rate_installment',
         'late_fee',
 
+        'font_family',
+
         'primary_color',
         'secondary_color',
         'tertiary_color',
-        'font_family',
-        'font_color',
-        'promo_price_color',
-        'body_bg_color',
-        'card_color',
-        'card_text_color',
+
         'nav_color',
+        'nav_border_color',
+
         'footer_color',
-        'footer_text_color',
-        'link_color',
-        'link_text_color',
-        'btn_1_color',
-        'btn_1_text_color',
-        'btn_2_color',
-        'btn_2_text_color',
-        'btn_3_color',
-        'btn_3_text_color',
-        'select_color',
-        'select_text_color',
-        'check_color',
-        'check_text_color',
-        'bg_img',
-        'bg_img_opacity',
+
+        'body_bg_color',
+
+        'text_variant_color_1',
+        'text_variant_color_2',
+        'text_variant_color_3',
+        'text_variant_color_4',
+        'text_variant_color_5',
+        'text_variant_color_6',
+        'text_variant_color_7',
+        'text_variant_color_8',
+        'text_variant_color_9',
+        'text_variant_color_10',
+
+        'card_color',
+
+        'variant_color_1',
+        'variant_color_2',
+        'variant_color_3',
+        'variant_color_4',
+        'variant_color_5',
+        'variant_color_6',
+        'variant_color_7',
+        'variant_color_8',
+        'variant_color_9',
+        'variant_color_10',
+        'variant_color_11',
+
+        'bg-img',
+        'bg-img-opacity',
     ];
 
     public function ceo(): HasOne
