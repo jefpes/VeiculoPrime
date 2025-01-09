@@ -145,8 +145,8 @@ class Settings extends Model
         'variant_color_10',
         'variant_color_11',
 
-        'bg-img',
-        'bg-img-opacity',
+        'bg_img',
+        'bg_img_opacity',
     ];
 
     public function ceo(): HasOne
