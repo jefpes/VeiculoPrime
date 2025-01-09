@@ -117,5 +117,4 @@ class Store extends Model
 
         return $texto;
     }
-
 }
