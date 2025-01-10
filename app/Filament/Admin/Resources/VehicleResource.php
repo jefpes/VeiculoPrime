@@ -468,49 +468,50 @@ class VehicleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->modalWidth('2xl'),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()->authorize(fn ($record) => !$record->sold_date),
-                Tables\Actions\Action::make('transfer')
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Transfer'))
-                    ->modalDescription(__('Are you sure you want to transfer this vehicle? The sale, expenses and installments records will also be transferred'))
-                    ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->color('warning')
-                    ->form([
-                        Select::make('store')
-                            ->required()
-                            ->helperText(__('Select the store to which the vehicle will be transferred.'))
-                            ->options(function ($record) {
-                                return Store::query()
-                                    ->whereNot('id', $record->store_id)
-                                    ->orderBy('name')
-                                    ->pluck('name', 'id');
-                            }),
-                    ])
-                    ->action(function (array $data, Vehicle $vehicle) {
-                        $newStore = $data['store'];
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make()->authorize(fn ($record) => !$record->sold_date),
+                    Tables\Actions\Action::make('transfer')
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Transfer'))
+                        ->modalDescription(__('Are you sure you want to transfer this vehicle? The sale, expenses and installments records will also be transferred'))
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->color('warning')
+                        ->form([
+                            Select::make('store')
+                                ->required()
+                                ->helperText(__('Select the store to which the vehicle will be transferred.'))
+                                ->options(function ($record) {
+                                    return Store::query()
+                                        ->whereNot('id', $record->store_id)
+                                        ->orderBy('name')
+                                        ->pluck('name', 'id');
+                                }),
+                        ])
+                        ->action(function (array $data, Vehicle $vehicle) {
+                            $newStore = $data['store'];
 
-                        if ($vehicle->expenses()->exists()) {
-                            foreach ($vehicle->expenses as $expenses) { //@phpstan-ignore-line
-                                $expenses->update(['store_id' => $newStore]);
-                            }
-                        }
-
-                        if ($vehicle->sale()->exists()) {
-                            if ($vehicle->paymentInstallments()->exists()) {
-                                foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
-                                    $installment->update(['store_id' => $newStore]);
+                            if ($vehicle->expenses()->exists()) {
+                                foreach ($vehicle->expenses as $expenses) { //@phpstan-ignore-line
+                                    $expenses->update(['store_id' => $newStore]);
                                 }
                             }
 
-                            $vehicle->sale()->update(['store_id' => $newStore]);
+                            if ($vehicle->sale()->exists()) {
+                                if ($vehicle->paymentInstallments()->exists()) {
+                                    foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                        $installment->update(['store_id' => $newStore]);
+                                    }
+                                }
 
-                            $vehicle->update(['store_id' => $newStore]);
-                        }
+                                $vehicle->sale()->update(['store_id' => $newStore]);
 
-                        Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
-                    }),
-                Tables\Actions\Action::make('contract')
+                                $vehicle->update(['store_id' => $newStore]);
+                            }
+
+                            Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
+                        }),
+                    Tables\Actions\Action::make('contract')
                     ->requiresConfirmation()
                     ->modalHeading(__('Contract'))
                     ->label('Contract')
@@ -533,6 +534,7 @@ class VehicleResource extends Resource
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
                     })->visible(fn (Vehicle $vehicle): bool => $vehicle->supplier()->exists()),
+                ]),
             ]);
     }
 

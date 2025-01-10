@@ -453,102 +453,103 @@ class SaleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('sale_cancel')
-                    ->authorize('saleCancel')
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Cancel sale'))
-                    ->modalDescription(function (Sale $sale) {
-                        return new HtmlString(
-                            Blade::render(
-                                '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
-                                <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
-                                <p>Data da venda: {{ $dateSale }}</p>
-                                <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
-                                <p>Cliente: {{ $sale->client->name }}</p>
-                                @if ($sale->discount > 0)
-                                    <p>Desconto: R$ {{ number_format($sale->discount, 2, ",", ".") }} </p>
-                                @endif
-                                @if ($sale->interest > 0)
-                                    <p>Acrescimo: R$ {{ number_format($sale->interest, 2, ",", ".") }} </p>
-                                @endif
-                                @if ($sale->down_payment > 0)
-                                    <p>Entrada: R$ {{ number_format($sale->down_payment, 2, ",", ".") }} </p>
-                                @endif
-                                @if ($sale->number_installments > 1)
-                                    <p>N° Parcelas: {{ $sale->paymentInstallments->count() }}</p>
-                                    <p>Valor: R$ {{ number_format($sale->paymentInstallments[0]->value, 2, ",", ".") }}</p>
-                                    <p>Parcelas pagas: {{ $sale->paymentInstallments->where("status", "PAGO")->count() }}</p>
-                                    <p>Valor das parcelas pago: R$ {{ number_format($sale->paymentInstallments->where("status", "PAGO")->sum("value"), 2, ",", ".") }} </p>
-                                @endif
-                                    <p>Total recebido: R$ {{ number_format(($sale->paymentInstallments->where("status", "PAGO")->sum("value") ?? 0)+($sale->down_payment ?? 0), 2, ",", ".") }} </p>',
-                                [
-                                    'sale'          => $sale,
-                                    'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
-                                    'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
-                                    'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
-                                ]
-                            )
-                        );
+                Tables\Actions\ActionGroup::make([
+                    Action::make('sale_cancel')
+                        ->authorize('saleCancel')
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Cancel sale'))
+                        ->modalDescription(function (Sale $sale) {
+                            return new HtmlString(
+                                Blade::render(
+                                    '<p>{{ __("Are you sure you want to cancel this sale?") }}</p>
+                                    <p>Veículo: {{ $sale->vehicle->plate }} - {{ $sale->vehicle->model->name }} ({{ $sale->vehicle->year_one }}/{{ $sale->vehicle->year_two }})</p>
+                                    <p>Data da venda: {{ $dateSale }}</p>
+                                    <p>Valor total: R$ {{ number_format($sale->total, 2, ",", ".") }}</p>
+                                    <p>Cliente: {{ $sale->client->name }}</p>
+                                    @if ($sale->discount > 0)
+                                        <p>Desconto: R$ {{ number_format($sale->discount, 2, ",", ".") }} </p>
+                                    @endif
+                                    @if ($sale->interest > 0)
+                                        <p>Acrescimo: R$ {{ number_format($sale->interest, 2, ",", ".") }} </p>
+                                    @endif
+                                    @if ($sale->down_payment > 0)
+                                        <p>Entrada: R$ {{ number_format($sale->down_payment, 2, ",", ".") }} </p>
+                                    @endif
+                                    @if ($sale->number_installments > 1)
+                                        <p>N° Parcelas: {{ $sale->paymentInstallments->count() }}</p>
+                                        <p>Valor: R$ {{ number_format($sale->paymentInstallments[0]->value, 2, ",", ".") }}</p>
+                                        <p>Parcelas pagas: {{ $sale->paymentInstallments->where("status", "PAGO")->count() }}</p>
+                                        <p>Valor das parcelas pago: R$ {{ number_format($sale->paymentInstallments->where("status", "PAGO")->sum("value"), 2, ",", ".") }} </p>
+                                    @endif
+                                        <p>Total recebido: R$ {{ number_format(($sale->paymentInstallments->where("status", "PAGO")->sum("value") ?? 0)+($sale->down_payment ?? 0), 2, ",", ".") }} </p>',
+                                    [
+                                        'sale'          => $sale,
+                                        'valueReceived' => $sale->paymentInstallments->sum('value'), //@phpstan-ignore-line
+                                        'datePayment'   => $sale->date_payment === null ? null : Carbon::parse($sale->date_payment)->format('d/m/Y'),
+                                        'dateSale'      => $sale->date_sale === null ? null : Carbon::parse($sale->date_sale)->format('d/m/Y'),
+                                    ]
+                                )
+                            );
 
-                    })
-                    ->label('Cancel')
-                    ->translateLabel()
-                    ->icon('heroicon-o-x-circle')
-                    ->iconSize('md')
-                    ->color('danger')
-                    ->form([
-                        Money::make('reimbursement')
-                            ->label('Reimbursement')
-                            ->live(debounce: 500),
-                    ])
-                    ->action(function (Sale $sale, array $data) {
-                        $sale->update([
-                            'date_cancel'   => Carbon::now()->format('Y-m-d'),
-                            'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
-                            'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
-                        ]);
+                        })
+                        ->label('Cancel')
+                        ->translateLabel()
+                        ->icon('heroicon-o-x-circle')
+                        ->iconSize('md')
+                        ->color('danger')
+                        ->form([
+                            Money::make('reimbursement')
+                                ->label('Reimbursement')
+                                ->live(debounce: 500),
+                        ])
+                        ->action(function (Sale $sale, array $data) {
+                            $sale->update([
+                                'date_cancel'   => Carbon::now()->format('Y-m-d'),
+                                'reimbursement' => $data['reimbursement'] !== "" ? $data['reimbursement'] : 0,
+                                'status'        => $data['reimbursement'] !== null ? 'REEMBOLSADO' : 'CANCELADO',
+                            ]);
 
-                        Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
-                    }),
-                Tables\Actions\Action::make('transfer')
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Transfer'))
-                    ->modalDescription(__('Are you sure you want to transfer this sale? The vehicle, expenses and installments records will also be transferred'))
-                    ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->color('warning')
-                    ->form([
-                        Select::make('store')
-                            ->required()
-                            ->helperText(__('Select the store to which the sale will be transferred.'))
-                            ->options(function ($record) {
-                                return Store::query()
-                                    ->whereNot('id', $record->store_id)
-                                    ->orderBy('name')
-                                    ->pluck('name', 'id');
-                            }),
-                    ])
-                    ->action(function (array $data, Sale $sale) {
-                        $newStore = $data['store'];
+                            Vehicle::find($sale->vehicle_id)->update(['sold_date' => null]); //@phpstan-ignore-line
+                        }),
+                    Tables\Actions\Action::make('transfer')
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Transfer'))
+                        ->modalDescription(__('Are you sure you want to transfer this sale? The vehicle, expenses and installments records will also be transferred'))
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->color('warning')
+                        ->form([
+                            Select::make('store')
+                                ->required()
+                                ->helperText(__('Select the store to which the sale will be transferred.'))
+                                ->options(function ($record) {
+                                    return Store::query()
+                                        ->whereNot('id', $record->store_id)
+                                        ->orderBy('name')
+                                        ->pluck('name', 'id');
+                                }),
+                        ])
+                        ->action(function (array $data, Sale $sale) {
+                            $newStore = $data['store'];
 
-                        if ($sale->vehicle->expenses()->exists()) {
-                            foreach ($sale->vehicle->expenses as $expenses) { //@phpstan-ignore-line
-                                $expenses->update(['store_id' => $newStore]);
+                            if ($sale->vehicle->expenses()->exists()) {
+                                foreach ($sale->vehicle->expenses as $expenses) { //@phpstan-ignore-line
+                                    $expenses->update(['store_id' => $newStore]);
+                                }
                             }
-                        }
 
-                        if ($sale->paymentInstallments()->exists()) {
-                            foreach ($sale->paymentInstallments as $installment) { //@phpstan-ignore-line
-                                $installment->update(['store_id' => $newStore]);
+                            if ($sale->paymentInstallments()->exists()) {
+                                foreach ($sale->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                    $installment->update(['store_id' => $newStore]);
+                                }
                             }
-                        }
 
-                        $sale->vehicle->update(['store_id' => $newStore]);
-                        $sale->store_id = $newStore;
-                        $sale->save();
+                            $sale->vehicle->update(['store_id' => $newStore]);
+                            $sale->store_id = $newStore;
+                            $sale->save();
 
-                        Notification::make()->body(__('Sale transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
-                    }),
-                Action::make('contract')
+                            Notification::make()->body(__('Sale transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
+                        }),
+                    Action::make('contract')
                     ->requiresConfirmation()
                     ->modalHeading(__('Contract'))
                     ->label('Contract')
@@ -573,6 +574,7 @@ class SaleResource extends Resource
 
                         return response()->download($caminho)->deleteFileAfterSend(true);
                     }),
+                ]),
             ]);
     }
 
