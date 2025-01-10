@@ -22,7 +22,8 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
+    Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
+    Route::get('/about', \App\Livewire\Front\AboutPage::class)->name('about');
+    Route::get('/vehicles', \App\Livewire\Front\ProductsPage::class)->name('vehicles');
+    Route::get('/vehicle/{vehicle}', \App\Livewire\Front\ProductPage::class)->name('vehicle');
 });

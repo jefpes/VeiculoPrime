@@ -12,4 +12,10 @@ export default defineConfig({
             ],
         }),
     ],
+    server: {
+        host: 'motormarket.test',
+        hmr: {
+            host: 'motormarket.test',
+        },
+    },
 });

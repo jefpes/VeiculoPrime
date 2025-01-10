@@ -80,4 +80,41 @@ class Store extends Model
     {
         return $this->hasMany(PaymentInstallment::class);
     }
+
+    public function getFullAddressAttribute(): string
+    {
+        if ($this->complement) {
+            return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state} ({$this->complement})";
+        }
+
+        return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state}";
+    }
+
+    public function gerarLinkGoogleMaps(): string
+    {
+        // Monta o endereço completo
+        $enderecoCompleto = trim("$this->street, $this->neighborhood, $this->city, $this->state, $this->zip_code");
+
+        // Remove acentos e caracteres especiais
+        $enderecoSemAcentos = $this->removerCaracteresEspeciais($enderecoCompleto);
+
+        // Codifica o endereço para ser usado na URL
+        $enderecoCodificado = urlencode($enderecoSemAcentos);
+
+        // Monta a URL do Google Maps
+        $urlGoogleMaps = "https://www.google.com/maps?q=$enderecoCodificado";
+
+        return $urlGoogleMaps;
+    }
+
+    public function removerCaracteresEspeciais(string $texto): string
+    {
+        // Remove acentos
+        $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto);
+
+        // Remove caracteres não permitidos (ex: cedilha que pode ser convertido em '?')
+        $texto = preg_replace('/[^a-zA-Z0-9,.\s-]/', '', $texto);
+
+        return $texto;
+    }
 }
