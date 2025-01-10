@@ -22,13 +22,11 @@ class MasterPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Master/Resources'), for: 'App\\Filament\\Master\\Resources')
+            ->discoverWidgets(in: app_path('Filament/Master/Widgets'), for: 'App\\Filament\\Master\\Widgets')
             ->discoverPages(in: app_path('Filament/Master/Pages'), for: 'App\\Filament\\Master\\Pages')
             ->discoverClusters(in: app_path('Filament/Master/Clusters'), for: 'App\\Filament\\Master\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
-            ])
-            ->widgets([
-                \App\Filament\Widgets\TotalTenants::class,
             ])
             ->login()
             ->middleware([

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Master\Widgets;
 
 use App\Models\Tenant;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
