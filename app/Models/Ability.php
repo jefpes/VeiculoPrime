@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Class Ability
  *
  * @package App\Models
+ *
  * @method BelongsToMany roles()
+ *
  * @property \App\Models\Role $roles
  * @property string $id
  * @property string $name

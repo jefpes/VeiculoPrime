@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Storage;
  * @property Collection $stores
  * @property Sale $sales
  *
- *
  * @method BelongsToMany roles()
  * @method HasOne people()
  * @method Builder abilities()

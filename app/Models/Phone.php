@@ -10,8 +10,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * Class Phone
  *
+ * @package App\Models
+ *
  * @method MorphTo phonable()
  *
+ * @property Model $phonable
  * @property string $id
  * @property string $type
  * @property string $ddi

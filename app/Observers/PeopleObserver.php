@@ -27,7 +27,7 @@ class PeopleObserver
      */
     public function deleting(People $people): void
     {
-        if ($people->photos()->exists()) { //@phpstan-ignore-line
+        if ($people->photos()->exists()) {
             foreach ($people->photos as $photo) { //@phpstan-ignore-line
                 $photo->delete();
             }

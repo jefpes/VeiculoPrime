@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Traits;
 
 use App\Models\Photo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\{MorphMany};
+use Illuminate\Database\Eloquent\Relations\{MorphMany, MorphOne};
 
 /**
  * Trait HasPhoto
@@ -15,12 +16,12 @@ use Illuminate\Database\Eloquent\Relations\{MorphMany};
  * @property \App\Models\Photo $mainPhoto
  * @property \App\Models\Photo $publicPhotos
  *
- * @method \App\Models\Photo photos()
- * @method \App\Models\Photo mainPhoto()
- * @method \App\Models\Photo publicPhotos()
+ * @method MorphMany photos()
+ * @method Builder mainPhoto()
+ * @method Builder publicPhotos()
  *
- * @method \Illuminate\Database\Eloquent\Builder withPublicPhotos()
- * @method \Illuminate\Database\Eloquent\Builder withMainPhoto()
+ * @method Builder withPublicPhotos()
+ * @method Builder withMainPhoto()
  *
  * @method string getPhotoDirectory()
  * @method string getPhotoNamePrefix()
@@ -35,24 +36,24 @@ trait HasPhoto
         return $this->morphMany(Photo::class, 'photoable');
     }
 
-    public function mainPhoto(): \Illuminate\Database\Eloquent\Builder | \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function mainPhoto(): Builder | MorphOne
     {
         return $this->morphOne(Photo::class, 'photoable')->where('main', true);
     }
 
-    public function publicPhotos(): \Illuminate\Database\Eloquent\Builder | \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function publicPhotos(): Builder | MorphMany
     {
         return $this->morphMany(Photo::class, 'photoable')->where('public', true);
     }
 
-    public function scopeWithPublicPhotos(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    public function scopeWithPublicPhotos(Builder $query): Builder
     {
         return $query->with(['photos' => function ($query) {
             $query->where('public', true);
         }]);
     }
 
-    public function scopeWithMainPhoto(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    public function scopeWithMainPhoto(Builder $query): Builder
     {
         return $query->with(['photos' => function ($query) {
             $query->where('public', true)->where('main', true);
