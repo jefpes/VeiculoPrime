@@ -98,11 +98,7 @@ class RoleResource extends Resource
                     ->icon('heroicon-o-shield-check')
                     ->iconSize('md')
                     ->color('success')
-                    ->fillForm(function ($record) {
-                        $abilities = Role::find($record->id)->abilities->pluck('id')->toArray(); //@phpstan-ignore-line
-
-                        return ['abilities' => $abilities];
-                    })
+                    ->fillForm(fn (Role $record) => ['abilities' => $record->abilities()->pluck('id')->toArray()])
                     ->form([
                         Forms\Components\ToggleButtons::make('abilities')
                             ->options(
