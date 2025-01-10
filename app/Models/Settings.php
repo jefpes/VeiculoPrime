@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\SettingsObserver;
 use App\Traits\{HasAddress, HasPhone};
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,7 +79,7 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-
+#[ObservedBy(SettingsObserver::class)]
 class Settings extends Model
 {
     use HasFactory;
