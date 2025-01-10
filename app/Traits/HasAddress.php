@@ -6,10 +6,19 @@ namespace App\Traits;
 
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * Trait HasAddress
+ *
+ * @package App\Traits
+ * @method MorphMany addresses()
+ *
+ * @property \App\Models\Address $mainAddress
+ */
 trait HasAddress
 {
-    public function addresses(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function addresses(): MorphMany
     {
         return $this->morphMany(Address::class, 'addressable');
     }

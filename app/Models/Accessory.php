@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Class Accessory
  *
  * @package App\Models
+ *
  * @method BelongsToMany vehicle()
+ *
  * @property \App\Models\Vehicle $vehicle
  * @property string $id
  * @property string $name

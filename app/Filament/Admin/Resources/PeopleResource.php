@@ -235,52 +235,53 @@ class PeopleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('attach_user')
-                    ->label('User')
-                    ->authorize('attach-user')
-                    ->icon('heroicon-o-user')
-                    ->form([
-                        Forms\Components\Select::make('user_id')
-                            ->label('User')
-                            ->relationship('user', 'name', modifyQueryUsing: function ($query, $record) {
-                                if ($record->user !== null) {
-                                    return $query->whereDoesntHave('people')->orWhere('id', $record->user->id);
-                                }
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\Action::make('attach_user')
+                        ->label('User')
+                        ->authorize('attach-user')
+                        ->icon('heroicon-o-user')
+                        ->form([
+                            Forms\Components\Select::make('user_id')
+                                ->label('User')
+                                ->relationship('user', 'name', modifyQueryUsing: function ($query, $record) {
+                                    if ($record->user !== null) {
+                                        return $query->whereDoesntHave('people')->orWhere('id', $record->user->id);
+                                    }
 
-                                return $query->whereDoesntHave('people');
-                            }),
-                    ])
-                    ->fillForm(fn ($record) => ['user_id' => $record->user_id])
-                    ->action(function ($record, array $data) {
-                        $record->update(['user_id' => $data['user_id']]);
-                    }),
-                Tables\Actions\Action::make('dismiss')
-                    ->label('Dismiss')
-                    ->icon('heroicon-o-arrow-left-start-on-rectangle')
-                    ->color('danger')
-                    ->authorize(function ($record) {
-                        if ($record->employee->isEmpty()) {
-                            return false;
-                        }
+                                    return $query->whereDoesntHave('people');
+                                }),
+                        ])
+                        ->fillForm(fn ($record) => ['user_id' => $record->user_id])
+                        ->action(function ($record, array $data) {
+                            $record->update(['user_id' => $data['user_id']]);
+                        }),
+                    Tables\Actions\Action::make('dismiss')
+                        ->label('Dismiss')
+                        ->icon('heroicon-o-arrow-left-start-on-rectangle')
+                        ->color('danger')
+                        ->authorize(function ($record) {
+                            if ($record->employee->isEmpty()) {
+                                return false;
+                            }
 
-                        return $record->employee->last()->resignation_date === null && auth_user()->hasAbility(Permission::PEOPLE_DELETE->value);
-                    })
-                    ->requiresConfirmation()
-                    ->form([
-                        Forms\Components\DatePicker::make('resignation_date')
-                            ->label('Resignation Date'),
-                    ])
-                    ->action(function ($record, array $data) {
-                        if ($record->user !== null) {
-                            $record->user->delete();
-                        }
+                            return $record->employee->last()->resignation_date === null && auth_user()->hasAbility(Permission::PEOPLE_DELETE->value);
+                        })
+                        ->requiresConfirmation()
+                        ->form([
+                            Forms\Components\DatePicker::make('resignation_date')
+                                ->label('Resignation Date'),
+                        ])
+                        ->action(function ($record, array $data) {
+                            if ($record->user !== null) {
+                                $record->user->delete();
+                            }
 
-                        if ($record->employee->isNotEmpty()) {
-                            $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
-                        }
-                    }),
-                Tables\Actions\Action::make('rehire')
+                            if ($record->employee->isNotEmpty()) {
+                                $record->employee->last()->update(['resignation_date' => ($data['resignation_date'] ?? now())]);
+                            }
+                        }),
+                    Tables\Actions\Action::make('rehire')
                     ->label('Rehire')
                     ->icon('heroicon-o-arrow-left-end-on-rectangle')
                     ->color('warning')
@@ -304,6 +305,7 @@ class PeopleResource extends Resource
                             $record->employee->last()->update(['resignation_date' => null]);
                         }
                     }),
+                ]),
             ]);
     }
 

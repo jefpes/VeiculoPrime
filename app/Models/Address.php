@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @package App\Models
  * @method MorphTo addressable()
  *
+ * @property Model $addressable
  * @property string $id
  * @property string $addressable_id
  * @property string $addressable_type

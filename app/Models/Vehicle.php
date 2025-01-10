@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\VehicleObserver;
 use App\Traits\{HasPhoto, HasStore};
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,6 +64,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
+#[ObservedBy(VehicleObserver::class)]
 class Vehicle extends Model
 {
     use HasUlids;

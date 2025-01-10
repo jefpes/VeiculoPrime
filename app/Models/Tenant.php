@@ -18,8 +18,11 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string $email
  * @property string $password
  * @property string $data
+ * @property float $monthly_fee
  * @property bool $active
  * @property bool $marketplace
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
  */
 
 class Tenant extends BaseTenant implements TenantWithDatabase

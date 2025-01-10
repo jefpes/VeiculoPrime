@@ -3,6 +3,7 @@
 namespace App\Forms\Components;
 
 use Filament\Forms\Components\{TextInput};
+use Filament\Support\RawJs;
 
 class PhoneInput extends TextInput
 {
@@ -12,6 +13,14 @@ class PhoneInput extends TextInput
     {
         parent::setUp();
 
-        $this->mask('9 9999-9999');
+        $this->label('Phone');
+
+        $this->type('tel');
+
+        $this->mask(
+            RawJs::make(<<<'JS'
+                    $input.replace(/\D/g, '').length === 9 ? '9 9999-9999' : '9999-9999'
+                JS)
+        );
     }
 }

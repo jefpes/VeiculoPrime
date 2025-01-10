@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\{PersonType, Sexes};
+use App\Observers\PeopleObserver;
 use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +47,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
+#[ObservedBy(PeopleObserver::class)]
 class People extends Model
 {
     use HasFactory;

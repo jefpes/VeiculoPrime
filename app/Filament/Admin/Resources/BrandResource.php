@@ -25,7 +25,7 @@ class BrandResource extends Resource
 
     protected static ?int $navigationSort = 22;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-wrench';
 
     protected static bool $isScopedToTenant = false;
 

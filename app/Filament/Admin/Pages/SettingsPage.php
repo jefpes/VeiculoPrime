@@ -125,116 +125,130 @@ class SettingsPage extends Page
                                 Money::make('late_fee')->label('Late fee'),
                             ])->columns(3),
 
-                        Forms\Components\Tabs\Tab::make('Home Page')->schema([
-                            Forms\Components\FileUpload::make('logo')
-                                ->image()
-                                ->directory('settings'),
-                            Forms\Components\FileUpload::make('bg_img')
-                                ->label('Backgroud image')
-                                ->image()
-                                ->directory('settings'),
-                            Forms\Components\FileUpload::make('favicon')
-                                ->image()
-                                ->directory('settings'),
-                            Forms\Components\Select::make('bg_img_opacity')
-                                ->label('Backgroud image opacity')
-                                ->options([
-                                    '0'   => '0%',
-                                    '0.1' => '10%',
-                                    '0.2' => '20%',
-                                    '0.3' => '30%',
-                                    '0.4' => '40%',
-                                    '0.5' => '50%',
-                                    '0.6' => '60%',
-                                    '0.7' => '70%',
-                                    '0.8' => '80%',
-                                    '0.9' => '90%',
-                                    '1'   => '100%',
-                                ])
-                                ->native(false),
-                            Forms\Components\Select::make('font_family')
-                            ->label('Font type')
-                            ->allowHtml()
-                            ->options([
-                                "font-family:Times New Roman, Times, serif"     => "<span style='font-family:Times New Roman, Times, serif'>Times New Roman</span>",
-                                'font-family:Roboto, sans-serif'                => "<span style='font-family:Roboto, sans-serif'>Roboto</span>",
-                                'font-family:Arial, sans-serif'                 => "<span style='font-family:Arial, sans-serif'>Arial</span>",
-                                'font-family:Courier New, Courier, monospace'   => "<span style='font-family:Courier New, Courier, monospace'>Courier New</span>",
-                                'font-family:Georgia, serif'                    => "<span style='font-family:Georgia, serif'>Georgia</span>",
-                                'font-family:Lucida Console, Monaco, monospace' => "<span style='font-family:Lucida Console, Monaco, monospace'>Lucida Console</span>",
-                                'font-family:Tahoma, Geneva, sans-serif'        => "<span style='font-family:Tahoma, Geneva, sans-serif'>Tahoma</span>",
-                                'font-family:Trebuchet MS, sans-serif'          => "<span style='font-family:Trebuchet MS, sans-serif'>Trebuchet MS</span>",
-                                'font-family:Verdana, Geneva, sans-serif'       => "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
-                                'font-family:Open Sans, sans-serif'             => "<span style='font-family:Open Sans, sans-serif'>Open Sans</span>",
-                                'font-family:Inter, sans-serif'                 => "<span style='font-family:Inter, sans-serif'>Inter</span>",
-                            ])
-                            ->native(false),
+                        Forms\Components\Tabs\Tab::make('Home Page')
+                        ->columns(5)
+                        ->schema([
+                            Forms\Components\Grid::make()
+                            ->schema([
+                                Forms\Components\FileUpload::make('logo')
+                                    ->image()
+                                    ->directory('settings'),
+                                Forms\Components\FileUpload::make('bg_img')
+                                    ->label('Backgroud image')
+                                    ->image()
+                                    ->directory('settings'),
+                                Forms\Components\FileUpload::make('favicon')
+                                    ->image()
+                                    ->directory('settings'),
+                                Forms\Components\Grid::make()
+                                ->columnSpan(1)
+                                ->columns(3)
+                                ->schema([
+                                    Forms\Components\Select::make('bg_img_opacity')
+                                    ->label('Backgroud image opacity')
+                                    ->options([
+                                        '0'   => '0%',
+                                        '0.1' => '10%',
+                                        '0.2' => '20%',
+                                        '0.3' => '30%',
+                                        '0.4' => '40%',
+                                        '0.5' => '50%',
+                                        '0.6' => '60%',
+                                        '0.7' => '70%',
+                                        '0.8' => '80%',
+                                        '0.9' => '90%',
+                                        '1'   => '100%',
+                                    ])
+                                    ->native(false),
+                                    Forms\Components\Select::make('font_family')
+                                    ->columnSpan(2)
+                                    ->label('Font type')
+                                    ->allowHtml()
+                                    ->options([
+                                        "font-family:Times New Roman, Times, serif"     => "<span style='font-family:Times New Roman, Times, serif'>Times New Roman</span>",
+                                        'font-family:Roboto, sans-serif'                => "<span style='font-family:Roboto, sans-serif'>Roboto</span>",
+                                        'font-family:Arial, sans-serif'                 => "<span style='font-family:Arial, sans-serif'>Arial</span>",
+                                        'font-family:Courier New, Courier, monospace'   => "<span style='font-family:Courier New, Courier, monospace'>Courier New</span>",
+                                        'font-family:Georgia, serif'                    => "<span style='font-family:Georgia, serif'>Georgia</span>",
+                                        'font-family:Lucida Console, Monaco, monospace' => "<span style='font-family:Lucida Console, Monaco, monospace'>Lucida Console</span>",
+                                        'font-family:Tahoma, Geneva, sans-serif'        => "<span style='font-family:Tahoma, Geneva, sans-serif'>Tahoma</span>",
+                                        'font-family:Trebuchet MS, sans-serif'          => "<span style='font-family:Trebuchet MS, sans-serif'>Trebuchet MS</span>",
+                                        'font-family:Verdana, Geneva, sans-serif'       => "<span style='font-family:Verdana, Geneva, sans-serif'>Verdana</span>",
+                                        'font-family:Open Sans, sans-serif'             => "<span style='font-family:Open Sans, sans-serif'>Open Sans</span>",
+                                        'font-family:Inter, sans-serif'                 => "<span style='font-family:Inter, sans-serif'>Inter</span>",
+                                    ])
+                                    ->native(false),
+                                ]),
+                            ]),
+                            Forms\Components\Grid::make()
+                            ->columns(['sm' => 1, 'md' => 2, 'lg' => 3, 'xl' => 4, '2xl' => 5])
+                            ->schema([
+                                Forms\Components\ColorPicker::make('body_bg_color')
+                                    ->label('Background color'),
 
-                            Forms\Components\ColorPicker::make('body_bg_color')
-                                ->label('Background color'),
+                                Forms\Components\ColorPicker::make('primary_color')
+                                    ->label('Primary color'),
+                                Forms\Components\ColorPicker::make('secondary_color')
+                                    ->label('Secondary color'),
+                                Forms\Components\ColorPicker::make('tertiary_color')
+                                    ->label('Tertiary color'),
 
-                            Forms\Components\ColorPicker::make('primary_color')
-                                ->label('Primary color'),
-                            Forms\Components\ColorPicker::make('secondary_color')
-                                ->label('Secondary color'),
-                            Forms\Components\ColorPicker::make('tertiary_color')
-                                ->label('Tertiary color'),
+                                Forms\Components\ColorPicker::make('text_variant_color_1')
+                                    ->label('Text variant color 1'),
+                                Forms\Components\ColorPicker::make('text_variant_color_2')
+                                    ->label('Text variant color 2'),
+                                Forms\Components\ColorPicker::make('text_variant_color_3')
+                                    ->label('Text variant color 3'),
+                                Forms\Components\ColorPicker::make('text_variant_color_4')
+                                    ->label('Text variant color 4'),
+                                Forms\Components\ColorPicker::make('text_variant_color_5')
+                                    ->label('Text variant color 5'),
+                                Forms\Components\ColorPicker::make('text_variant_color_6')
+                                    ->label('Text variant color 6'),
+                                Forms\Components\ColorPicker::make('text_variant_color_7')
+                                    ->label('Text variant color 7'),
+                                Forms\Components\ColorPicker::make('text_variant_color_8')
+                                    ->label('Text variant color 8'),
+                                Forms\Components\ColorPicker::make('text_variant_color_9')
+                                    ->label('Text variant color 9'),
+                                Forms\Components\ColorPicker::make('text_variant_color_10')
+                                    ->label('Text variant color 10'),
 
-                            Forms\Components\ColorPicker::make('text_variant_color_1')
-                                ->label('Text variant color 1'),
-                            Forms\Components\ColorPicker::make('text_variant_color_2')
-                                ->label('Text variant color 2'),
-                            Forms\Components\ColorPicker::make('text_variant_color_3')
-                                ->label('Text variant color 3'),
-                            Forms\Components\ColorPicker::make('text_variant_color_4')
-                                ->label('Text variant color 4'),
-                            Forms\Components\ColorPicker::make('text_variant_color_5')
-                                ->label('Text variant color 5'),
-                            Forms\Components\ColorPicker::make('text_variant_color_6')
-                                ->label('Text variant color 6'),
-                            Forms\Components\ColorPicker::make('text_variant_color_7')
-                                ->label('Text variant color 7'),
-                            Forms\Components\ColorPicker::make('text_variant_color_8')
-                                ->label('Text variant color 8'),
-                            Forms\Components\ColorPicker::make('text_variant_color_9')
-                                ->label('Text variant color 9'),
-                            Forms\Components\ColorPicker::make('text_variant_color_10')
-                                ->label('Text variant color 10'),
+                                Forms\Components\ColorPicker::make('card_color')
+                                    ->label('Card background color'),
 
-                            Forms\Components\ColorPicker::make('card_color')
-                                ->label('Card background color'),
+                                Forms\Components\ColorPicker::make('variant_color_1')
+                                    ->label('Variant color 1'),
+                                Forms\Components\ColorPicker::make('variant_color_2')
+                                    ->label('Variant color 2'),
+                                Forms\Components\ColorPicker::make('variant_color_3')
+                                    ->label('Variant color 3'),
+                                Forms\Components\ColorPicker::make('variant_color_4')
+                                    ->label('Variant color 4'),
+                                Forms\Components\ColorPicker::make('variant_color_5')
+                                    ->label('Variant color 5'),
+                                Forms\Components\ColorPicker::make('variant_color_6')
+                                    ->label('Variant color 6'),
+                                Forms\Components\ColorPicker::make('variant_color_7')
+                                    ->label('Variant color 7'),
+                                Forms\Components\ColorPicker::make('variant_color_8')
+                                    ->label('Variant color 8'),
+                                Forms\Components\ColorPicker::make('variant_color_9')
+                                    ->label('Variant color 9'),
+                                Forms\Components\ColorPicker::make('variant_color_10')
+                                    ->label('Variant color 10'),
+                                Forms\Components\ColorPicker::make('variant_color_11')
+                                    ->label('Variant color 11'),
 
-                            Forms\Components\ColorPicker::make('variant_color_1')
-                                ->label('Variant color 1'),
-                            Forms\Components\ColorPicker::make('variant_color_2')
-                                ->label('Variant color 2'),
-                            Forms\Components\ColorPicker::make('variant_color_3')
-                                ->label('Variant color 3'),
-                            Forms\Components\ColorPicker::make('variant_color_4')
-                                ->label('Variant color 4'),
-                            Forms\Components\ColorPicker::make('variant_color_5')
-                                ->label('Variant color 5'),
-                            Forms\Components\ColorPicker::make('variant_color_6')
-                                ->label('Variant color 6'),
-                            Forms\Components\ColorPicker::make('variant_color_7')
-                                ->label('Variant color 7'),
-                            Forms\Components\ColorPicker::make('variant_color_8')
-                                ->label('Variant color 8'),
-                            Forms\Components\ColorPicker::make('variant_color_9')
-                                ->label('Variant color 9'),
-                            Forms\Components\ColorPicker::make('variant_color_10')
-                                ->label('Variant color 10'),
-                            Forms\Components\ColorPicker::make('variant_color_11')
-                                ->label('Variant color 11'),
+                                Forms\Components\ColorPicker::make('nav_color')
+                                    ->label('Heading background color'),
+                                Forms\Components\ColorPicker::make('nav_border_color')
+                                    ->label('Heading border color'),
 
-                            Forms\Components\ColorPicker::make('nav_color')
-                                ->label('Heading background color'),
-                            Forms\Components\ColorPicker::make('nav_border_color')
-                                ->label('Heading border color'),
-
-                            Forms\Components\ColorPicker::make('footer_color')
-                                ->label('Footer background color'),
-                        ])->columns(3),
+                                Forms\Components\ColorPicker::make('footer_color')
+                                    ->label('Footer background color'),
+                            ]),
+                        ]),
                     ]),
             ])
             ->statePath('data');

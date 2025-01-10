@@ -10,6 +10,7 @@ class FormFields
     public static function setAddressFields(): Component
     {
         return Repeater::make('addresses')
+                ->defaultItems(0)
                 ->grid(2)
                 ->columnSpanFull()
                 ->hiddenLabel()
@@ -49,6 +50,7 @@ class FormFields
     public static function setAffiliateFields(): Component
     {
         return Repeater::make('affiliates')
+            ->defaultItems(0)
             ->grid(2)
             ->columnSpanFull()
             ->hiddenLabel()
@@ -75,6 +77,7 @@ class FormFields
     public static function setPhoneFields(): Repeater
     {
         return Repeater::make('phones')
+                ->defaultItems(0)
                 ->grid(2)
                 ->columnSpanFull()
                 ->hiddenLabel()
@@ -105,7 +108,6 @@ class FormFields
                                     ->length(2),
                             ]),
                             PhoneInput::make('number')
-                                ->columnSpan(2)
                                 ->required(),
                             TextInput::make('type')
                                 ->columnSpan(['md' => 1, 'sm' => 'full'])

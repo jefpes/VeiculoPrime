@@ -31,6 +31,14 @@ class VehicleObserver
      */
     public function deleting(Vehicle $vehicle): void
     {
+        if ($vehicle->extras()->exists()) {
+            $vehicle->extras()->detach();
+        }
+
+        if ($vehicle->accessories()->exists()) {
+            $vehicle->accessories()->detach();
+        }
+
         if ($vehicle->photos()->exists()) { //@phpstan-ignore-line
             foreach ($vehicle->photos as $photo) { //@phpstan-ignore-line
                 $photo->delete();

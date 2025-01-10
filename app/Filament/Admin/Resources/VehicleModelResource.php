@@ -26,7 +26,7 @@ class VehicleModelResource extends Resource
 
     protected static ?int $navigationSort = 23;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
     protected static bool $isScopedToTenant = false;
 

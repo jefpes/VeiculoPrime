@@ -11,7 +11,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * Class Affiliate
  *
  * @package App\Models
+ *
  * @method MorphTo affiliatable()
+ *
+ * @property Model $affiliatable
  * @property string $id
  * @property string $type
  * @property string $name
