@@ -102,16 +102,10 @@ class RoleResource extends Resource
                     ->form([
                         Forms\Components\ToggleButtons::make('abilities')
                             ->options(
-                                function () {
-                                    // Carregar as habilidades com o id e nome
-                                    $abilities = Ability::query()->orderBy('id')->pluck('name', 'id')->toArray();
-
-                                    // Traduzir os nomes das habilidades usando os arquivos de tradução
-                                    return collect($abilities)->mapWithKeys(function ($name, $id) {
-                                        // Retornar a chave como o id e o valor como o nome traduzido
-                                        return [$id => __($name)];
-                                    })->toArray();
-                                }
+                                fn () => Ability::query()
+                                        ->orderBy('id')
+                                        ->get()
+                                        ->mapWithKeys(fn (Ability $ability) => [$ability->getKey() => __($ability->name)]) //@phpstan-ignore-line
                             )
                             ->multiple()
                             ->columns([
