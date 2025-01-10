@@ -10,7 +10,7 @@
             @endphp
             @foreach ($banners as $banner)
                 <div class="swiper-slide" @click="openModal('{{ image_path($banner) }}')">
-                    <img src="{{ image_path($banner) }}" class="object-fill aspect-video cursor-pointer"
+                    <img src="{{ image_path($banner) }}" class="w-full aspect-video object-fill cursor-pointer"
                          alt="Banner {{ $loop->index + 1 }}">
                 </div>
             @endforeach
