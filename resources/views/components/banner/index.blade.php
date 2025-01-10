@@ -12,6 +12,7 @@
                 @endif
             @endforeach
         </div>
+        <div class="swiper-scrollbar"></div>
     </div>
 
     <div class="hidden lg:block absolute top-[24rem] left-32 ">

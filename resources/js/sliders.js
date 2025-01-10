@@ -9,6 +9,10 @@ const bannerSlider = new Swiper("#banner-slider", {
         delay: 3000,
         disableOnInteraction: false,
     },
+    scrollbar: {
+        el: ".swiper-scrollbar",
+        hide: false,
+      },
     breakpoints: {
         640: {
             slidesPerView: 1,
@@ -30,10 +34,10 @@ const productBannerSlider = new Swiper("#product-banner-slider", {
         disableOnInteraction: false,
     },
     slidesPerView: 1,
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
+    scrollbar: {
+        el: ".swiper-scrollbar",
+        hide: false,
+      },
     navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
