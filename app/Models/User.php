@@ -48,6 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     use SoftDeletes;
     use HasUlids;
 
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
         'email',
