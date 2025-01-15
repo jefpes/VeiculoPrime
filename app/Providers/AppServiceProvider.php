@@ -6,8 +6,8 @@ use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Support\Facades\{Schema, URL};
-use Illuminate\Support\{Pluralizer, ServiceProvider};
+use Illuminate\Support\Facades\{URL};
+use Illuminate\Support\{ServiceProvider};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,9 +42,6 @@ class AppServiceProvider extends ServiceProvider
         if (env("APP_ENV") == "production") {
             setlocale(LC_TIME, 'pt_BR.utf8');
         }
-        \Carbon\Carbon::setLocale('pt_BR');
-
-        Schema::defaultStringLength(191);
 
         if (env('APP_AMBIENT') == 'production') {
             URL::forceScheme('https');
@@ -59,7 +56,5 @@ class AppServiceProvider extends ServiceProvider
         AuthenticationException::redirectUsing(
             fn (): string => Filament::getLoginUrl()
         );
-
-        Pluralizer::useLanguage('portuguese');
     }
 }
