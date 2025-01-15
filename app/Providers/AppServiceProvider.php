@@ -6,7 +6,7 @@ use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Support\Facades\{URL};
+use Illuminate\Support\Facades\{Config, URL};
 use Illuminate\Support\{ServiceProvider};
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
         ini_set('upload_max_size', '256M');
         ini_set('post_max_size', '256M');
         ini_set('max_execution_time', '600');
+
+        $domain = $_SERVER["HTTP_HOST"] ?? null;
+
+        Config::set("APP_URL", $domain);
 
         date_default_timezone_set("America/Sao_Paulo");
 
