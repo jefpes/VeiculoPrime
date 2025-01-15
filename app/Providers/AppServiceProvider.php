@@ -33,9 +33,7 @@ class AppServiceProvider extends ServiceProvider
         ini_set('post_max_size', '256M');
         ini_set('max_execution_time', '600');
 
-        $domain = $_SERVER["HTTP_HOST"] ?? null;
-
-        Config::set("APP_URL", $domain);
+        $domain = $_SERVER["HTTP_ORIGIN"] ?? null;
 
         date_default_timezone_set("America/Sao_Paulo");
 
@@ -44,11 +42,10 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if (env("APP_ENV") == "production") {
-            setlocale(LC_TIME, 'pt_BR.utf8');
-        }
-
-        if (env('APP_AMBIENT') == 'production') {
             URL::forceScheme('https');
+            Config::set("APP_URL", $domain);
+            Config::set("ASSET_URL", $domain);
+            setlocale(LC_TIME, 'pt_BR.utf8');
         }
 
         Authenticate::redirectUsing(fn (): string => Filament::getLoginUrl());
