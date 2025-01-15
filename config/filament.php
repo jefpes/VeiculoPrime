@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'assets_path' => null,
+    'assets_path' => env('ASSET_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
