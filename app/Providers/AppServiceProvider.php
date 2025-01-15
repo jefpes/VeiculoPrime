@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         ini_set('post_max_size', '256M');
         ini_set('max_execution_time', '600');
 
-        $domain = $_SERVER["HTTP_ORIGIN"] ?? null;
+        $domain = $_SERVER["HTTP_HOST"] ? "https://" . $_SERVER["HTTP_HOST"] : null;
 
         date_default_timezone_set("America/Sao_Paulo");
 
