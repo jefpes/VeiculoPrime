@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Http\Middleware\{ApplyTenantScopes, FilamentSettings};
+use App\Http\Middleware\{ApplyTenantScopes, CheckTenant, FilamentSettings};
 use App\Livewire\UserProfile;
 use App\Models\Store;
 use Filament\Http\Middleware\{Authenticate, DisableBladeIconComponents, DispatchServingFilamentEvent};
@@ -64,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentSettings::class,
+                CheckTenant::class,
             ])
             ->middleware([
                 'universal',

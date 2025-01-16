@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Front;
+namespace App\Livewire\Home;
 
 use App\Models\Vehicle;
 use Livewire\Attributes\Layout;
