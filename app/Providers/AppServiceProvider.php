@@ -38,11 +38,16 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set("America/Sao_Paulo");
 
         if (env("APP_ENV") == "local") {
+            config([
+                'tenancy.filesystem.suffix_storage_path'  => false,
+                'tenancy.filesystem.asset_helper_tenancy' => false,
+            ]);
             $domain = "http://$domain";
             setlocale(LC_ALL, "pt_BR", "pt_BR.utf-8", "pt_BR.utf-8", "portuguese");
         }
 
         if (env("APP_ENV") == "production") {
+
             $domain = "https://$domain";
             URL::forceScheme('https');
             setlocale(LC_TIME, 'pt_BR.utf8');
