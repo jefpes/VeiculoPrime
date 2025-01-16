@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Vehicle;
+use App\Models\{Accessory, Extra, People, Photo, Store, Vehicle, VehicleModel};
 use Illuminate\Database\Seeder;
 
 class SalesSeeder extends Seeder
@@ -12,11 +12,24 @@ class SalesSeeder extends Seeder
      */
     public function run(): void
     {
-        Vehicle::create([
+        $models      = VehicleModel::query()->pluck('id', 'name');
+        $extras      = Extra::all()->pluck('id', 'name');
+        $accessories = Accessory::all()->pluck('id', 'name');
+
+        $sellers   = People::where('supplier', true)->get();
+        $clients   = People::where('client', true)->get();
+        $buyers    = People::whereHas('employee')->get();
+        $suppliers = People::where('supplier', true)->get();
+        $stores    = Store::all();
+
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
             'purchase_price'   => 10500.00,
             'sale_price'       => 13000.00,
-            'vehicle_model_id' => 34,
+            'vehicle_model_id' => $models['Titan'],
             'year_one'         => 2015,
             'year_two'         => 2016,
             'km'               => 25000,
@@ -29,24 +42,46 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000101',
             'sold_date'        => '2024-03-01',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
-            [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
-                'payment_method' => 'DINHEIRO',
-                'status'         => 'PAGO',
-                'date_sale'      => '2024-03-01',
-                'date_payment'   => '2024-03-01',
-                'discount'       => 200,
-                'total'          => 12800,
-            ]
-        );
+        ]);
 
-        Vehicle::create([
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/titan-vermelha-2015-1.webp',
+            'photos/vehicle/titan-vermelha-2015-2.webp',
+            'photos/vehicle/titan-vermelha-2015-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
+            'seller_id'      => $sellers->random()->id,
+            'client_id'      => $clients->random()->id,
+            'payment_method' => 'DINHEIRO',
+            'status'         => 'PAGO',
+            'date_sale'      => '2024-03-01',
+            'date_payment'   => '2024-03-01',
+            'discount'       => 200,
+            'total'          => 12800,
+        ]);
+
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-02-03',
             'purchase_price'   => 12500.00,
             'sale_price'       => 16000.00,
-            'vehicle_model_id' => 34,
+            'vehicle_model_id' => $models['Titan'],
             'year_one'         => 2018,
             'year_two'         => 2018,
             'km'               => 25000,
@@ -59,23 +94,45 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000102',
             'sold_date'        => '2024-03-03',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
-            [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
-                'payment_method' => 'DINHEIRO',
-                'status'         => 'PAGO',
-                'date_sale'      => '2024-03-03',
-                'date_payment'   => '2024-03-03',
-                'total'          => 16000,
-            ]
-        );
+        ]);
 
-        Vehicle::create([
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/titan-vermelha-2018-1.webp',
+            'photos/vehicle/titan-vermelha-2018-2.webp',
+            'photos/vehicle/titan-vermelha-2018-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
+            'seller_id'      => $sellers->random()->id,
+            'client_id'      => $clients->random()->id,
+            'payment_method' => 'DINHEIRO',
+            'status'         => 'PAGO',
+            'date_sale'      => '2024-03-03',
+            'date_payment'   => '2024-03-03',
+            'total'          => 16000,
+        ]);
+
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-01',
             'purchase_price'   => 9500.00,
             'sale_price'       => 12000.00,
-            'vehicle_model_id' => 34,
+            'vehicle_model_id' => $models['Titan'],
             'year_one'         => 2014,
             'year_two'         => 2014,
             'km'               => 20000,
@@ -88,24 +145,46 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000103',
             'sold_date'        => '2024-03-04',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
-            [
-                'user_id'        => 2,
-                'client_id'      => rand(1, 10),
-                'payment_method' => 'PIX',
-                'status'         => 'PAGO',
-                'date_sale'      => '2024-03-04',
-                'date_payment'   => '2024-03-04',
-                'discount'       => 200,
-                'total'          => 12800,
-            ]
-        );
+        ]);
 
-        Vehicle::create([
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/titan-vermelha-2014-1.webp',
+            'photos/vehicle/titan-vermelha-2014-2.webp',
+            'photos/vehicle/titan-vermelha-2014-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $veiculo->sale()->create([
+            'store_id'       => $veiculo->store_id,
+            'seller_id'      => $sellers->random()->id,
+            'client_id'      => $clients->random()->id,
+            'payment_method' => 'PIX',
+            'status'         => 'PAGO',
+            'date_sale'      => '2024-03-04',
+            'date_payment'   => '2024-03-04',
+            'discount'       => 200,
+            'total'          => 12800,
+        ]);
+
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 10000.00,
             'sale_price'       => 13000.00,
-            'vehicle_model_id' => 34,
+            'vehicle_model_id' => $models['Titan'],
             'year_one'         => 2015,
             'year_two'         => 2016,
             'km'               => 25000,
@@ -118,36 +197,62 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000104',
             'sold_date'        => '2024-03-07',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
+        ]);
+
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/titan-vermelha-2015-1.webp',
+            'photos/vehicle/titan-vermelha-2015-2.webp',
+            'photos/vehicle/titan-vermelha-2015-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+            'status'              => 'PENDENTE',
+            'date_sale'           => '2024-03-07',
+            'date_payment'        => '2024-03-07',
+            'number_installments' => 2,
+            'discount'            => 0,
+            'total'               => 13000,
+        ]);
+
+        $venda->paymentInstallments()->createMany([
             [
-                'user_id'             => 2,
-                'client_id'           => rand(1, 10),
-                'payment_method'      => 'CREDIÁRIO PRÓPRIO',
-                'status'              => 'PENDENTE',
-                'date_sale'           => '2024-03-07',
-                'date_payment'        => '2024-03-07',
-                'number_installments' => 2,
-                'discount'            => 0,
-                'total'               => 13000,
-            ]
-        )->paymentInstallments()->createMany([
-            [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-04-07',
                 'value'    => 6500,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-05-07',
                 'value'    => 6500,
                 'status'   => 'PENDENTE',
             ],
         ]);
 
-        Vehicle::create([
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
-            'vehicle_model_id' => 1,
+            'vehicle_model_id' => $models['Strada'],
             'year_one'         => 2015,
             'year_two'         => 2016,
             'km'               => 26000,
@@ -160,54 +265,78 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000105',
             'sold_date'        => '2024-03-07',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
+        ]);
+
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/strada-vermelha-2015-1.webp',
+            'photos/vehicle/strada-vermelha-2015-2.webp',
+            'photos/vehicle/strada-vermelha-2015-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+            'status'              => 'PAGO',
+            'date_sale'           => '2024-03-07',
+            'date_payment'        => '2024-03-07',
+            'number_installments' => 3,
+            'down_payment'        => 40000,
+            'discount'            => 0,
+            'total'               => 46000,
+        ]);
+
+        $venda->paymentInstallments()->createMany([
             [
-                'user_id'             => 2,
-                'client_id'           => rand(1, 10),
-                'payment_method'      => 'CREDIÁRIO PRÓPRIO',
-                'status'              => 'PAGO',
-                'date_sale'           => '2024-03-07',
-                'date_payment'        => '2024-03-07',
-                'number_installments' => 3,
-                'down_payment'        => 40000,
-                'discount'            => 0,
-                'total'               => 46000,
-            ]
-        )->paymentInstallments()->createMany([
-            [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-04-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-04-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'TRANSFERÊNCIA',
-                'user_id'        => 2,
             ],
         ]);
 
-        Vehicle::create([
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
-            'vehicle_model_id' => 1,
+            'vehicle_model_id' => $models['Strada'],
             'year_one'         => 2015,
             'year_two'         => 2016,
             'km'               => 26000,
@@ -220,54 +349,78 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000106',
             'sold_date'        => '2024-03-07',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
+        ]);
+
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/strada-vermelha-2015-1.webp',
+            'photos/vehicle/strada-vermelha-2015-2.webp',
+            'photos/vehicle/strada-vermelha-2015-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+            'status'              => 'PENDENTE',
+            'date_sale'           => '2024-03-07',
+            'date_payment'        => '2024-03-07',
+            'number_installments' => 3,
+            'down_payment'        => 40000,
+            'discount'            => 0,
+            'total'               => 46000,
+        ]);
+
+        $venda->paymentInstallments()->createMany([
             [
-                'user_id'             => 2,
-                'client_id'           => rand(1, 10),
-                'payment_method'      => 'CREDIÁRIO PRÓPRIO',
-                'status'              => 'PENDENTE',
-                'date_sale'           => '2024-03-07',
-                'date_payment'        => '2024-03-07',
-                'number_installments' => 3,
-                'down_payment'        => 40000,
-                'discount'            => 0,
-                'total'               => 46000,
-            ]
-        )->paymentInstallments()->createMany([
-            [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-04-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-04-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'TRANSFERÊNCIA',
-                'user_id'        => 2,
             ],
         ]);
 
-        Vehicle::create([
-            'purchase_date'    => '2024-04-03',
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
+            'purchase_date'    => '2024-03-03',
             'purchase_price'   => 40500.00,
             'sale_price'       => 46000.00,
-            'vehicle_model_id' => 1,
+            'vehicle_model_id' => $models['Strada'],
             'year_one'         => 2015,
             'year_two'         => 2016,
             'km'               => 26000,
@@ -280,84 +433,116 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000107',
             'sold_date'        => '2024-04-07',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
+        ]);
+
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/strada-preta-2015-1.webp',
+            'photos/vehicle/strada-preta-2015-2.webp',
+            'photos/vehicle/strada-preta-2015-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+            'status'              => 'PENDENTE',
+            'date_sale'           => '2024-04-07',
+            'number_installments' => 10,
+            'down_payment'        => 30000,
+            'discount'            => 0,
+            'total'               => 46000,
+        ]);
+
+        $venda->paymentInstallments()->createMany([
             [
-                'user_id'             => 2,
-                'client_id'           => rand(1, 10),
-                'payment_method'      => 'CREDIÁRIO PRÓPRIO',
-                'status'              => 'PENDENTE',
-                'date_sale'           => '2024-04-07',
-                'number_installments' => 10,
-                'down_payment'        => 30000,
-                'discount'            => 0,
-                'total'               => 46000,
-            ]
-        )->paymentInstallments()->createMany([
-            [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-05-07',
                 'value'          => 1600,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-05-07',
                 'payment_value'  => 1600,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
             ],
             [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 1600,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 1600,
                 'payment_method' => 'DINHEIRO',
-                'user_id'        => 2,
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-07-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-08-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-09-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-10-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-11-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-12-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-01-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-02-07',
                 'value'    => 1600,
                 'status'   => 'PENDENTE',
             ],
         ]);
 
-        Vehicle::create([
+        $veiculo = Vehicle::create([
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
             'purchase_date'    => '2024-04-15',
             'purchase_price'   => 36500.00,
             'sale_price'       => 46000.00,
-            'vehicle_model_id' => 1,
+            'vehicle_model_id' => $models['Strada'],
             'year_one'         => 2013,
             'year_two'         => 2013,
             'km'               => 26000,
@@ -370,65 +555,92 @@ class SalesSeeder extends Seeder
             'chassi'           => '000000108',
             'sold_date'        => '2024-05-07',
             'description'      => 'Veículo em ótimo estado de conservação.',
-        ])->sale()->create(
+        ]);
+
+        $veiculo->accessories()->attach($accessories->random(rand(1, 5)));
+        $veiculo->extras()->attach($extras->random(rand(1, 5)));
+
+        $fotos = [
+            'photos/vehicle/strada-azul-2013-1.webp',
+            'photos/vehicle/strada-azul-2013-2.webp',
+            'photos/vehicle/strada-azul-2013-3.webp',
+        ];
+
+        foreach ($fotos as $caminhoFoto) {
+            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
+                $veiculo->photos()->create([
+                    'path'   => $caminhoFoto,
+                    'public' => true,
+                ]);
+            });
+        }
+
+        $venda = $veiculo->sale()->create([
+            'store_id'            => $veiculo->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+            'status'              => 'PENDENTE',
+            'date_sale'           => '2024-05-07',
+            'date_payment'        => '2024-05-07',
+            'number_installments' => 8,
+            'down_payment'        => 30000,
+            'discount'            => 0,
+            'total'               => 46000,
+        ]);
+
+        $venda->paymentInstallments()->createMany([
             [
-                'user_id'             => 2,
-                'client_id'           => rand(1, 10),
-                'payment_method'      => 'CREDIÁRIO PRÓPRIO',
-                'status'              => 'PENDENTE',
-                'date_sale'           => '2024-05-07',
-                'date_payment'        => '2024-05-07',
-                'number_installments' => 8,
-                'down_payment'        => 30000,
-                'discount'            => 0,
-                'total'               => 46000,
-            ]
-        )->paymentInstallments()->createMany([
-            [
+                'store_id'       => $veiculo->store_id,
                 'due_date'       => '2024-06-07',
                 'value'          => 2000,
                 'status'         => 'PAGO',
                 'payment_date'   => '2024-06-07',
                 'payment_value'  => 2000,
                 'payment_method' => 'CARTÃO DE CRÉDITO',
-                'user_id'        => 2,
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-07-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-08-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-09-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-10-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-11-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2024-12-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
             [
+                'store_id' => $veiculo->store_id,
                 'due_date' => '2025-01-07',
                 'value'    => 2000,
                 'status'   => 'PENDENTE',
             ],
         ]);
-
     }
 }

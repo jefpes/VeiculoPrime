@@ -2,13 +2,38 @@
 
 namespace App\Models;
 
+use App\Observers\RoleObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\{Builder, Model};
 
+/**
+ * Class Role
+ *
+ * @property \App\Models\User $users
+ * @property \App\Models\Ability $abilities
+ *
+ * @method BelongsToMany users()
+ * @method BelongsToMany abilities()
+ *
+ * @property string $id
+ * @property string $name
+ * @property int $hierarchy
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
+#[ObservedBy(RoleObserver::class)]
 class Role extends Model
 {
+    use HasUlids;
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'hierarchy',
+    ];
 
     public function users(): BelongsToMany
     {
@@ -23,6 +48,5 @@ class Role extends Model
     public function scopeHierarchy(Builder $q, User $user): Builder
     {
         return $q->where('hierarchy', '>=', $user->roles()->pluck('hierarchy')->max());
-
     }
 }

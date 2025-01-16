@@ -2,12 +2,26 @@
 
 namespace App\Enums;
 
-enum MaritalStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum MaritalStatus: string implements HasLabel
 {
-    case SOLTEIRO      = 'Solteiro (a)';
-    case CASADO        = 'Casado (a)';
-    case DIVORCIADO    = 'Divorciado (a)';
-    case VIUVO         = 'Viúvo (a)';
+    case SOLTEIRO      = 'Solteiro';
+    case CASADO        = 'Casado';
+    case DIVORCIADO    = 'Divorciado';
+    case VIUVO         = 'Viúvo';
     case UNIAO_ESTAVEL = 'União Estável';
-    case SEPARADO      = 'Separado (a)';
+    case SEPARADO      = 'Separado';
+
+    public function getLabel(): ?string
+    {
+        return match ($this) {
+            self::SOLTEIRO      => 'Solteiro',
+            self::CASADO        => 'Casado',
+            self::DIVORCIADO    => 'Divorciado',
+            self::VIUVO         => 'Viúvo',
+            self::UNIAO_ESTAVEL => 'União Estável',
+            self::SEPARADO      => 'Separado',
+        };
+    }
 }

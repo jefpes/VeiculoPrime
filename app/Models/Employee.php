@@ -2,31 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo};
 
+/**
+ * Class Employee
+ *
+ * @method BelongsTo people()
+ *
+ * @property \App\Models\People $people
+ *
+ * @property string $id
+ * @property string $people_id
+ * @property float $salary
+ * @property \Illuminate\Support\Carbon $admission_date
+ * @property \Illuminate\Support\Carbon|null $resignation_date
+ *
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class Employee extends Model
 {
-    use HasFactory;
+    use HasUlids;
 
-    public function address(): HasOne
-    {
-        return $this->hasOne(EmployeeAddress::class);
-    }
+    protected $fillable = [
+        'people_id',
+        'salary',
+        'admission_date',
+        'resignation_date',
+    ];
 
-    public function company(): HasMany
+    public function people(): BelongsTo
     {
-        return $this->hasMany(Company::class);
-    }
-
-    public function photos(): HasMany
-    {
-        return $this->hasMany(EmployeePhotos::class);
-    }
-
-    public function user(): HasOne
-    {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(People::class);
     }
 }

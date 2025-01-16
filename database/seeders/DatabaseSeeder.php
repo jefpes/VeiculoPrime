@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Permission;
-use App\Models\{Ability, User};
+use App\Models\{Ability, Store, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,8 +21,11 @@ class DatabaseSeeder extends Seeder
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
-            'remember_token'    => Str::random(10),
         ]);
+
+        $this->call(StoreSeeder::class);
+
+        $user->stores()->sync(Store::pluck('id')->toArray());
 
         // Criar a role 'master'
         $role = $user->roles()->create([
@@ -32,17 +33,21 @@ class DatabaseSeeder extends Seeder
             'hierarchy' => 0,
         ]);
 
-        foreach (Permission::cases() as $permission) {
-            $role->abilities()->create(['name' => $permission->value]);
-        }
+        $this->call(AbilitySeeder::class);
+
+        $role->abilities()->sync(Ability::pluck('id')->toArray());
 
         $user = User::create([
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),
-            'password'          => Hash::make('admin'),
-            'remember_token'    => Str::random(10),
+            'password'          => '$2y$12$./r6VDrmKTNOxFte58tY..03PmNJgc856574gU8toIftu.KZ6Scwi',
+            'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
         ]);
+
+        $this->call(StoreSeeder::class);
+
+        $user->stores()->sync(Store::pluck('id')->toArray());
 
         $role = $user->roles()->create([
             'name'      => 'admin',
@@ -51,7 +56,15 @@ class DatabaseSeeder extends Seeder
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
-        $this->call([CitySeeder::class, BrandSeeder::class, VehicleTypeSeeder::class,  VehicleModelSeeder::class, CompanySeeder::class]);
-        $this->call([ClientSeeder::class, SuppliersSeeder::class, VehicleSeeder::class, SalesSeeder::class, VehicleExpenseSeeder::class, EmployeeSeeder::class]);
+        $this->call(SettingsSeeder::class);
+        $this->call(BrandSeeder::class);
+        $this->call(VehicleTypeSeeder::class);
+        $this->call(VehicleModelSeeder::class);
+        $this->call(AccessorySeeder::class);
+        $this->call(ExtraSeeder::class);
+        $this->call(PeopleSeeder::class);
+        $this->call(VehicleSeeder::class);
+        $this->call(SalesSeeder::class);
+        $this->call(VehicleExpenseSeeder::class);
     }
 }
