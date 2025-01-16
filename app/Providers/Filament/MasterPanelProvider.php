@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\EnsureCentralDomain;
 use Filament\Http\Middleware\{Authenticate, AuthenticateSession, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Support\Colors\Color;
 use Filament\{Pages, Panel, PanelProvider};
@@ -39,6 +40,7 @@ class MasterPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                EnsureCentralDomain::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
