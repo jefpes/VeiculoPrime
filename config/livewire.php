@@ -12,6 +12,12 @@ return [
 
     'lazy_placeholder' => null,
 
+    'middleware_group' => [
+        'web',
+        'universal',
+        InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
+    ],
+
     'temporary_file_upload' => [
         'disk'          => null,        // Example: 'local', 's3'              | Default: 'default'
         'rules'         => null,       // Example: ['file', 'mimes:png,jpg']  | Default: ['required', 'file', 'max:12288'] (12MB)

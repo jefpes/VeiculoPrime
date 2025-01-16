@@ -24,10 +24,6 @@ class TenantStoreUrl
             ),
         ]);
 
-        if (!Storage::directoryExists('livewire-tmp')) {
-            Storage::makeDirectory('livewire-tmp');
-        }
-
         // TODO: This is not working
         // config([
         //     'livewire.temporary_file_upload.directory' => sprintf(
