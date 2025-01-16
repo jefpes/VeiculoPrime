@@ -24,8 +24,8 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     CheckTenant::class,
 ])->group(function () {
-    Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
-    Route::get('/about', \App\Livewire\Front\AboutPage::class)->name('about');
-    Route::get('/vehicles', \App\Livewire\Front\ProductsPage::class)->name('vehicles');
-    Route::get('/vehicle/{vehicle}', \App\Livewire\Front\ProductPage::class)->name('vehicle');
+    Route::get('/', \App\Livewire\Home\IndexPage::class)->name('index');
+    Route::get('/about', \App\Livewire\Home\AboutPage::class)->name('about');
+    Route::get('/vehicles', \App\Livewire\Home\ProductsPage::class)->name('vehicles');
+    Route::get('/vehicle/{vehicle}', \App\Livewire\Home\ProductPage::class)->name('vehicle');
 });

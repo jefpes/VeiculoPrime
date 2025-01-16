@@ -2,19 +2,14 @@
 
 namespace App\Livewire\Home;
 
-use App\Models\{Brand, Settings, Vehicle, VehicleType};
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\View\View;
+use App\Models\{Brand, Vehicle, VehicleType};
 use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, Layout, Url};
-use Livewire\{Component, WithPagination};
+use Livewire\Component;
 
-class Index extends Component
+#[Layout('layouts.app')]
+class ProductsPage extends Component
 {
-    use WithPagination;
-
-    public bool $modal = false;
-
     /** @var array<int> */
     #[Url(except: '', as: 'brands', history: true)]
     public ?array $selectedBrands = [];
@@ -37,12 +32,6 @@ class Index extends Component
     #[Url(except: '', as: 'type_name', history: true)]
     public ?string $vehicle_type = null;
 
-    #[Layout('components.layouts.home')]
-    public function render(): View
-    {
-        return view('livewire.home.index', ['company' => Settings::query()->first()]);
-    }
-
     #[Computed()]
     public function types(): Collection
     {
@@ -55,7 +44,7 @@ class Index extends Component
     }
 
     #[Computed()]
-    public function vehicles(): LengthAwarePaginator
+    public function vehicles(): Collection
     {
         return Vehicle::with('model.type', 'model.brand', 'photos')
             ->whereNull('sold_date')
@@ -68,7 +57,7 @@ class Index extends Component
                 $this->vehicle_type,
                 fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('vehicle_type_id', $this->getTypes($this->vehicle_type)))
             )
-            ->paginate();
+            ->get();
     }
 
     #[Computed()]
@@ -136,35 +125,21 @@ class Index extends Component
     public function updatedVehicleType(): void
     {
         $this->reset(['selectedBrands', 'order', 'max_price', 'year_ini', 'year_end']);
-        $this->resetPage();
     }
 
     public function updatedSelectedBrands(): void
     {
         $this->reset(['order', 'max_price', 'year_ini', 'year_end']);
-        $this->resetPage();
     }
 
     public function updatedYearIni(): void
     {
         $this->reset(['order', 'max_price']);
-        $this->resetPage();
     }
 
     public function updatedYearEnd(): void
     {
         $this->reset(['order', 'max_price']);
-        $this->resetPage();
-    }
-
-    public function updatedOrder(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedMaxPrice(): void
-    {
-        $this->resetPage();
     }
 
     public function clearFilters(): void
@@ -177,6 +152,5 @@ class Index extends Component
             'year_ini',
             'year_end',
         ]);
-        $this->resetPage();
     }
 }
