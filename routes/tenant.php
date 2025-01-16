@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Http\Middleware\CheckTenant;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, PreventAccessFromCentralDomains};
 
@@ -21,6 +22,7 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    CheckTenant::class,
 ])->group(function () {
     Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
     Route::get('/about', \App\Livewire\Front\AboutPage::class)->name('about');

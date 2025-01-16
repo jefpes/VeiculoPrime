@@ -16,7 +16,7 @@ class CheckTenant
     public function handle(Request $request, Closure $next): Response
     {
         if (!tenant()->active) {
-            return abort(403, 'Inactive, access forbidden.');
+            return abort(403, 'Inactive, access forbidden');
         }
 
         return $next($request);

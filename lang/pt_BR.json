@@ -15,6 +15,7 @@
     "Select the store to which the vehicles will be transferred": "Selecione a loja para a qual os veículos serão transferidos",
     "Select the store to which the registers will be transferred": "Selecione a loja para a qual os registros serão transferidos",
     "Delete store": "Excluir loja",
+    "Inactive, access forbidden": "Inativo, acesso proibido",
     "Registers transferred successfully and store deleted": "Registros transferidos com sucesso e loja excluída",
     "Vehicles transferred successfully": "Veículos transferidos com sucesso",
     "Vehicles and their expenses transferred successfully": "Veículos e suas despesas transferidos com sucesso",
