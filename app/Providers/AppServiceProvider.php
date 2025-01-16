@@ -35,15 +35,15 @@ class AppServiceProvider extends ServiceProvider
 
         $domain = $_SERVER["HTTP_HOST"] ?? null;
 
-        $domain = "https://$domain";
-
         date_default_timezone_set("America/Sao_Paulo");
 
         if (env("APP_ENV") == "local") {
+            $domain = "http://$domain";
             setlocale(LC_ALL, "pt_BR", "pt_BR.utf-8", "pt_BR.utf-8", "portuguese");
         }
 
         if (env("APP_ENV") == "production") {
+            $domain = "https://$domain";
             URL::forceScheme('https');
             setlocale(LC_TIME, 'pt_BR.utf8');
         }
