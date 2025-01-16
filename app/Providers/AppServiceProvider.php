@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
 
         $domain = $_SERVER["HTTP_HOST"] ?? null;
 
-        $domain = "http://$domain";
+        $domain = "https://$domain";
 
         date_default_timezone_set("America/Sao_Paulo");
 
@@ -45,19 +45,17 @@ class AppServiceProvider extends ServiceProvider
 
         if (env("APP_ENV") == "production") {
             URL::forceScheme('https');
-            Config::set("APP_URL", $domain);
-            Config::set("ASSET_URL", $domain);
             setlocale(LC_TIME, 'pt_BR.utf8');
         }
 
+        Config::set("APP_URL", $domain);
+
+        Config::set("ASSET_URL", $domain);
+
         Authenticate::redirectUsing(fn (): string => Filament::getLoginUrl());
 
-        AuthenticateSession::redirectUsing(
-            fn (): string => Filament::getLoginUrl()
-        );
+        AuthenticateSession::redirectUsing(fn (): string => Filament::getLoginUrl());
 
-        AuthenticationException::redirectUsing(
-            fn (): string => Filament::getLoginUrl()
-        );
+        AuthenticationException::redirectUsing(fn (): string => Filament::getLoginUrl());
     }
 }
