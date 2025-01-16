@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $domain = $_SERVER["HTTP_HOST"] ?? null;
 
         $domain = "http://$domain";
+
         date_default_timezone_set("America/Sao_Paulo");
 
         if (env("APP_ENV") == "local") {
