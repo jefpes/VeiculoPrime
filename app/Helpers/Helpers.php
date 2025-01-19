@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use App\Models\Tenant;
+use App\Rules\UniqueWithinTenant;
 use Carbon\Carbon;
 use Illuminate\Support\Number;
 
@@ -217,7 +219,7 @@ if (!function_exists('spell_date')) {
 
 //tools end
 
-/**tenant begin
+//tenant begin
 
 if (!function_exists('tenant')) {
     function tenant(): ?Tenant
@@ -278,23 +280,23 @@ if (!function_exists('clean_string')) {
 if (!function_exists('check_cpf')) {
     function check_cpf(string $cpf): bool
     {
-        // Extrai somente os números
+        //Extrai somente os números
         $cpf = preg_replace('/[^0-9]/is', '', $cpf);
 
-        // Verifica se foi informado todos os digitos corretamente
+        //Verifica se foi informado todos os digitos corretamente
         if (strlen($cpf) != 11) {
             return false;
         }
 
-        // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
+        //Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
         if (preg_match('/(\d)\1{10}/', $cpf)) {
             return false;
         }
 
-        // Faz o calculo para validar o CPF
+        //Faz o calculo para validar o CPF
         for ($t = 9; $t < 11; $t++) {
             for ($d = 0, $c = 0; $c < $t; $c++) {
-                $d += $cpf[$c] * (($t + 1) - $c);
+                $d += $cpf[$c] * (($t + 1) - $c); //@phpstan-ignore-line
             }
             $d = ((10 * $d) % 11) % 10;
 
@@ -320,5 +322,4 @@ if (!function_exists('check_cpf')) {
 
     }
 }
-tenant end
-*/
+// tenant end
