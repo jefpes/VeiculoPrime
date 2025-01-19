@@ -15,7 +15,7 @@ class EnsureCentralDomain
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->getHost() != config('tenants.central_domain')) {
+        if ($request->getHost() != env('CENTRAL_DOMAIN')) {
             abort(404);
         }
 
