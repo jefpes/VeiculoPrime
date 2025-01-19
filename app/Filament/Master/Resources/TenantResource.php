@@ -15,6 +15,8 @@ class TenantResource extends Resource
 {
     protected static ?string $model = Tenant::class;
 
+    public static ?string $navigationIcon = 'heroicon-o-building-office';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -105,9 +107,9 @@ class TenantResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->authorize(fn () => auth_user()->roles()->pluck('hierarchy')->min() === 0),
-                Tables\Actions\DeleteAction::make()->authorize(fn () => auth_user()->roles()->pluck('hierarchy')->min() === 0),
-                Tables\Actions\RestoreAction::make()->authorize(fn () => auth_user()->roles()->pluck('hierarchy')->min() === 0),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ]);
     }
 
