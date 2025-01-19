@@ -24,10 +24,6 @@ if (!function_exists('image_path')) {
      */
     function image_path(?string $path): string
     {
-        if ($_SERVER["HTTP_HOST"] === 'exemplo.veiculoprime.com.br') {
-            return asset($path);
-        }
-
         return asset('storage/' . $path);
     }
 }
