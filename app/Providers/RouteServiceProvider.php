@@ -40,6 +40,6 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::middleware('web')
             ->domain(config('tenants.central_domain'))
-            ->group(base_path('routes/tenants.php'));
+            ->group(base_path('routes/tenant.php'));
     }
 }
