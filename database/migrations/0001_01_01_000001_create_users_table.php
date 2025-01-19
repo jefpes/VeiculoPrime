@@ -12,6 +12,7 @@ return new class () extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
