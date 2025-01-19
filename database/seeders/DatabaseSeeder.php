@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, Store, User};
+use App\Models\{Ability, Store, Tenant, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -14,16 +14,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $domain = 'exemplo.veiculoprime.test';
+
+        if (env('APP_ENV') === 'production') {
+            $domain = 'exemplo.veiculoprime.com.br';
+        }
+
+        $tenant = Tenant::create([
+            'name'   => 'admin',
+            'domain' => $domain,
+        ]);
 
         // Criar o usuário 'master'
         $user = User::create([
+            'tenant_id'         => $tenant->id,
             'name'              => 'master',
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
         ]);
 
-        $this->call(StoreSeeder::class);
+        (new StoreSeeder())->run($tenant->id);
 
         $user->stores()->sync(Store::pluck('id')->toArray());
 
@@ -33,11 +44,12 @@ class DatabaseSeeder extends Seeder
             'hierarchy' => 0,
         ]);
 
-        $this->call(AbilitySeeder::class);
+        (new AbilitySeeder())->run();
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
         $user = User::create([
+            'tenant_id'         => $tenant->id,
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),
@@ -45,7 +57,7 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
         ]);
 
-        $this->call(StoreSeeder::class);
+        (new StoreSeeder())->run($tenant->id);
 
         $user->stores()->sync(Store::pluck('id')->toArray());
 
@@ -56,15 +68,15 @@ class DatabaseSeeder extends Seeder
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
-        $this->call(SettingsSeeder::class);
-        $this->call(BrandSeeder::class);
-        $this->call(VehicleTypeSeeder::class);
-        $this->call(VehicleModelSeeder::class);
-        $this->call(AccessorySeeder::class);
-        $this->call(ExtraSeeder::class);
-        $this->call(PeopleSeeder::class);
-        $this->call(VehicleSeeder::class);
-        $this->call(SalesSeeder::class);
-        $this->call(VehicleExpenseSeeder::class);
+        (new SettingsSeeder())->run($tenant->id);
+        (new BrandSeeder())->run($tenant->id);
+        (new VehicleTypeSeeder())->run($tenant->id);
+        (new VehicleModelSeeder())->run($tenant->id);
+        (new AccessorySeeder())->run($tenant->id);
+        (new ExtraSeeder())->run($tenant->id);
+        (new PeopleSeeder())->run($tenant->id);
+        (new VehicleSeeder())->run($tenant->id);
+        (new SalesSeeder())->run($tenant->id);
+        (new VehicleExpenseSeeder())->run();
     }
 }

@@ -12,7 +12,7 @@ class TenantScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         if (filled(tenant())) {
-            $builder->where('tenant_id', tenant()->id); //@phpstan-ignore-line
+            $builder->where('tenant_id', tenant()->id);
         }
     }
 }

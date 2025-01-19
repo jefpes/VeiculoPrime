@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(['domain' => "{subdomain}." . config('tenants.central_domain')], function () {
 
     Route::get('/', function ($subdomain) {

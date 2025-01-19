@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 /**
  * Class Tenant
  *
- * @property string $code
+ * @property string $id
  * @property string $name
  * @property string $domain
  * @property float $monthly_fee
@@ -48,7 +48,6 @@ class Tenant extends Model
     use HasUlids;
 
     protected $fillable = [
-        'code',
         'name',
         'domain',
         'monthly_fee',

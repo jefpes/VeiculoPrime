@@ -10,7 +10,7 @@ class StoreSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
         $id = 1;
 
@@ -18,6 +18,7 @@ class StoreSeeder extends Seeder
             $id++;
         }
         Store::create([
+            'tenant_id'    => $tenant_id,
             'name'         => 'Loja ' . $id,
             'slug'         => 'loja-' . $id,
             'zip_code'     => '99999-999',
