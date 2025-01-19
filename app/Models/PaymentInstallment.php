@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @method BelongsTo tenant()
  *
  * @property string $id
- * @property string $tenant_id
+ * @property ?string $tenant_id
  * @property string $store_id
  * @property string $received_by
  * @property string $sale_id

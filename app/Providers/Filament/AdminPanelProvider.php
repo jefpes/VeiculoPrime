@@ -65,9 +65,6 @@ class AdminPanelProvider extends PanelProvider
                 FilamentSettings::class,
                 CheckTenant::class,
             ])
-            ->middleware([
-                'universal',
-            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ])

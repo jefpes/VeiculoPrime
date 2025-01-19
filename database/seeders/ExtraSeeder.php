@@ -10,7 +10,7 @@ class ExtraSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
         $data = [
             'Leilão',
@@ -32,11 +32,7 @@ class ExtraSeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            if ($tenant_id) {
-                Extra::create(['name' => $d, 'tenant_id' => $tenant_id]);
-            } else {
-                Extra::create(['name' => $d]);
-            }
+            Extra::create(['name' => $d]);
         }
     }
 }

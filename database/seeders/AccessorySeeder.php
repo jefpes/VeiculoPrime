@@ -10,7 +10,7 @@ class AccessorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
         $data = [
             'Airbag',
@@ -36,11 +36,7 @@ class AccessorySeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            if ($tenant_id) {
-                Accessory::create(['name' => $d, 'tenant_id' => $tenant_id]);
-            } else {
-                Accessory::create(['name' => $d]);
-            }
+            Accessory::create(['name' => $d]);
         }
     }
 }

@@ -8,303 +8,303 @@ use Illuminate\Database\Seeder;
 class SalesSeeder extends Seeder
 {
     /**
-     * Executa os seeds do banco de dados.
+     * Run the database seeds.
      */
     public function run(?string $tenant_id = null): void
     {
-        $modelosVeiculos = VehicleModel::pluck('id', 'name')->toArray();
-        $extras          = Extra::all()->pluck('id', 'name');
-        $acessorios      = Accessory::all()->pluck('id', 'name');
-        $vendedores      = People::where('supplier', true)->get();
-        $clientes        = People::where('client', true)->get();
-        $compradores     = People::whereHas('employee')->get();
-        $fornecedores    = People::where('supplier', true)->get();
-        $lojas           = Store::all();
+        $vehicleModels = VehicleModel::pluck('id', 'name')->toArray();
+        $extras        = Extra::all()->pluck('id', 'name');
+        $accessories   = Accessory::all()->pluck('id', 'name');
+        $sellers       = People::where('supplier', true)->get();
+        $clients       = People::where('client', true)->get();
+        $buyers        = People::whereHas('employee')->get();
+        $suppliers     = People::where('supplier', true)->get();
+        $stores        = Store::all();
 
-        $vendas = [
+        $sales = [
             [
-                'veiculo' => [
-                    'data_compra'    => '2024-02-03',
-                    'preco_compra'   => 10500.00,
-                    'preco_venda'    => 13000.00,
-                    'modelo'         => 'Titan',
-                    'ano_um'         => 2015,
-                    'ano_dois'       => 2016,
+                'vehicle' => [
+                    'purchase_date'  => '2024-02-03',
+                    'purchase_price' => 10500.00,
+                    'sale_price'     => 13000.00,
+                    'model'          => 'Titan',
+                    'year_one'       => 2015,
+                    'year_two'       => 2016,
                     'km'             => 25000,
-                    'combustivel'    => 'FLEX',
-                    'potencia_motor' => '1.0',
-                    'transmissao'    => 'AUTOMÁTICA',
-                    'cor'            => 'Vermelha',
-                    'placa'          => 'AAA-0101',
+                    'fuel'           => 'FLEX',
+                    'engine_power'   => '1.0',
+                    'transmission'   => 'AUTOMÁTICA',
+                    'color'          => 'Vermelha',
+                    'plate'          => 'AAA-0101',
                     'renavam'        => '000000101',
                     'chassi'         => '000000101',
-                    'data_venda'     => '2024-03-01',
-                    'descricao'      => 'Veículo em ótimo estado de conservação.',
-                    'fotos'          => [
+                    'sold_date'      => '2024-03-01',
+                    'description'    => 'Veículo em ótimo estado de conservação.',
+                    'photos'         => [
                         'photos/vehicle/titan-vermelha-2015-1.webp',
                         'photos/vehicle/titan-vermelha-2015-2.webp',
                         'photos/vehicle/titan-vermelha-2015-3.webp',
                     ],
                 ],
-                'venda' => [
-                    'metodo_pagamento' => 'DINHEIRO',
-                    'status'           => 'PAGO',
-                    'data_venda'       => '2024-03-01',
-                    'data_pagamento'   => '2024-03-01',
-                    'desconto'         => 200,
-                    'total'            => 12800,
+                'sale' => [
+                    'payment_method' => 'DINHEIRO',
+                    'status'         => 'PAGO',
+                    'date_sale'      => '2024-03-01',
+                    'date_payment'   => '2024-03-01',
+                    'discount'       => 200,
+                    'total'          => 12800,
                 ],
             ],
             [
-                'veiculo' => [
-                    'data_compra'    => '2024-02-03',
-                    'preco_compra'   => 12500.00,
-                    'preco_venda'    => 16000.00,
-                    'modelo'         => 'Titan',
-                    'ano_um'         => 2018,
-                    'ano_dois'       => 2018,
+                'vehicle' => [
+                    'purchase_date'  => '2024-02-03',
+                    'purchase_price' => 12500.00,
+                    'sale_price'     => 16000.00,
+                    'model'          => 'Titan',
+                    'year_one'       => 2018,
+                    'year_two'       => 2018,
                     'km'             => 25000,
-                    'combustivel'    => 'FLEX',
-                    'potencia_motor' => '1.0',
-                    'transmissao'    => 'AUTOMÁTICA',
-                    'cor'            => 'Vermelha',
-                    'placa'          => 'AAA-0102',
+                    'fuel'           => 'FLEX',
+                    'engine_power'   => '1.0',
+                    'transmission'   => 'AUTOMÁTICA',
+                    'color'          => 'Vermelha',
+                    'plate'          => 'AAA-0102',
                     'renavam'        => '000000102',
                     'chassi'         => '000000102',
-                    'data_venda'     => '2024-03-03',
-                    'descricao'      => 'Veículo em ótimo estado de conservação.',
-                    'fotos'          => [
+                    'sold_date'      => '2024-03-03',
+                    'description'    => 'Veículo em ótimo estado de conservação.',
+                    'photos'         => [
                         'photos/vehicle/titan-vermelha-2018-1.webp',
                         'photos/vehicle/titan-vermelha-2018-2.webp',
                         'photos/vehicle/titan-vermelha-2018-3.webp',
                     ],
                 ],
-                'venda' => [
-                    'metodo_pagamento' => 'DINHEIRO',
-                    'status'           => 'PAGO',
-                    'data_venda'       => '2024-03-03',
-                    'data_pagamento'   => '2024-03-03',
-                    'total'            => 16000,
+                'sale' => [
+                    'payment_method' => 'DINHEIRO',
+                    'status'         => 'PAGO',
+                    'date_sale'      => '2024-03-03',
+                    'date_payment'   => '2024-03-03',
+                    'total'          => 16000,
                 ],
             ],
             [
-                'veiculo' => [
-                    'data_compra'    => '2024-03-01',
-                    'preco_compra'   => 9500.00,
-                    'preco_venda'    => 12000.00,
-                    'modelo'         => 'Titan',
-                    'ano_um'         => 2014,
-                    'ano_dois'       => 2014,
+                'vehicle' => [
+                    'purchase_date'  => '2024-03-01',
+                    'purchase_price' => 9500.00,
+                    'sale_price'     => 12000.00,
+                    'model'          => 'Titan',
+                    'year_one'       => 2014,
+                    'year_two'       => 2014,
                     'km'             => 20000,
-                    'combustivel'    => 'FLEX',
-                    'potencia_motor' => '1.0',
-                    'transmissao'    => 'AUTOMÁTICA',
-                    'cor'            => 'Vermelha',
-                    'placa'          => 'AAA-0103',
+                    'fuel'           => 'FLEX',
+                    'engine_power'   => '1.0',
+                    'transmission'   => 'AUTOMÁTICA',
+                    'color'          => 'Vermelha',
+                    'plate'          => 'AAA-0103',
                     'renavam'        => '000000103',
                     'chassi'         => '000000103',
-                    'data_venda'     => '2024-03-04',
-                    'descricao'      => 'Veículo em ótimo estado de conservação.',
-                    'fotos'          => [
+                    'sold_date'      => '2024-03-04',
+                    'description'    => 'Veículo em ótimo estado de conservação.',
+                    'photos'         => [
                         'photos/vehicle/titan-vermelha-2014-1.webp',
                         'photos/vehicle/titan-vermelha-2014-2.webp',
                         'photos/vehicle/titan-vermelha-2014-3.webp',
                     ],
                 ],
-                'venda' => [
-                    'metodo_pagamento' => 'PIX',
-                    'status'           => 'PAGO',
-                    'data_venda'       => '2024-03-04',
-                    'data_pagamento'   => '2024-03-04',
-                    'desconto'         => 200,
-                    'total'            => 12800,
+                'sale' => [
+                    'payment_method' => 'PIX',
+                    'status'         => 'PAGO',
+                    'date_sale'      => '2024-03-04',
+                    'date_payment'   => '2024-03-04',
+                    'discount'       => 200,
+                    'total'          => 12800,
                 ],
             ],
             [
-                'veiculo' => [
-                    'data_compra'    => '2024-03-03',
-                    'preco_compra'   => 10000.00,
-                    'preco_venda'    => 13000.00,
-                    'modelo'         => 'Titan',
-                    'ano_um'         => 2015,
-                    'ano_dois'       => 2016,
+                'vehicle' => [
+                    'purchase_date'  => '2024-03-03',
+                    'purchase_price' => 10000.00,
+                    'sale_price'     => 13000.00,
+                    'model'          => 'Titan',
+                    'year_one'       => 2015,
+                    'year_two'       => 2016,
                     'km'             => 25000,
-                    'combustivel'    => 'FLEX',
-                    'potencia_motor' => '1.0',
-                    'transmissao'    => 'AUTOMÁTICA',
-                    'cor'            => 'Vermelha',
-                    'placa'          => 'AAA-0104',
+                    'fuel'           => 'FLEX',
+                    'engine_power'   => '1.0',
+                    'transmission'   => 'AUTOMÁTICA',
+                    'color'          => 'Vermelha',
+                    'plate'          => 'AAA-0104',
                     'renavam'        => '000000104',
                     'chassi'         => '000000104',
-                    'data_venda'     => '2024-03-07',
-                    'descricao'      => 'Veículo em ótimo estado de conservação.',
-                    'fotos'          => [
+                    'sold_date'      => '2024-03-07',
+                    'description'    => 'Veículo em ótimo estado de conservação.',
+                    'photos'         => [
                         'photos/vehicle/titan-vermelha-2015-1.webp',
                         'photos/vehicle/titan-vermelha-2015-2.webp',
                         'photos/vehicle/titan-vermelha-2015-3.webp',
                     ],
                 ],
-                'venda' => [
-                    'metodo_pagamento' => 'CREDIÁRIO PRÓPRIO',
-                    'status'           => 'PENDENTE',
-                    'data_venda'       => '2024-03-07',
-                    'data_pagamento'   => '2024-03-07',
-                    'numero_parcelas'  => 2,
-                    'desconto'         => 0,
-                    'total'            => 13000,
+                'sale' => [
+                    'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+                    'status'              => 'PENDENTE',
+                    'date_sale'           => '2024-03-07',
+                    'date_payment'        => '2024-03-07',
+                    'number_installments' => 2,
+                    'discount'            => 0,
+                    'total'               => 13000,
                 ],
-                'parcelas' => [
+                'installments' => [
                     [
-                        'data_vencimento' => '2024-04-07',
-                        'valor'           => 6500,
-                        'status'          => 'PENDENTE',
+                        'due_date' => '2024-04-07',
+                        'value'    => 6500,
+                        'status'   => 'PENDENTE',
                     ],
                     [
-                        'data_vencimento' => '2024-05-07',
-                        'valor'           => 6500,
-                        'status'          => 'PENDENTE',
+                        'due_date' => '2024-05-07',
+                        'value'    => 6500,
+                        'status'   => 'PENDENTE',
                     ],
                 ],
             ],
             [
-                'veiculo' => [
-                    'data_compra'    => '2024-03-03',
-                    'preco_compra'   => 40500.00,
-                    'preco_venda'    => 46000.00,
-                    'modelo'         => 'Strada',
-                    'ano_um'         => 2015,
-                    'ano_dois'       => 2016,
+                'vehicle' => [
+                    'purchase_date'  => '2024-03-03',
+                    'purchase_price' => 40500.00,
+                    'sale_price'     => 46000.00,
+                    'model'          => 'Strada',
+                    'year_one'       => 2015,
+                    'year_two'       => 2016,
                     'km'             => 26000,
-                    'combustivel'    => 'FLEX',
-                    'potencia_motor' => '1.0',
-                    'transmissao'    => 'AUTOMÁTICA',
-                    'cor'            => 'Vermelha',
-                    'placa'          => 'AAA-0105',
+                    'fuel'           => 'FLEX',
+                    'engine_power'   => '1.0',
+                    'transmission'   => 'AUTOMÁTICA',
+                    'color'          => 'Vermelha',
+                    'plate'          => 'AAA-0105',
                     'renavam'        => '000000105',
                     'chassi'         => '000000105',
-                    'data_venda'     => '2024-03-07',
-                    'descricao'      => 'Veículo em ótimo estado de conservação.',
-                    'fotos'          => [
+                    'sold_date'      => '2024-03-07',
+                    'description'    => 'Veículo em ótimo estado de conservação.',
+                    'photos'         => [
                         'photos/vehicle/strada-vermelha-2015-1.webp',
                         'photos/vehicle/strada-vermelha-2015-2.webp',
                         'photos/vehicle/strada-vermelha-2015-3.webp',
                     ],
                 ],
-                'venda' => [
-                    'metodo_pagamento' => 'CREDIÁRIO PRÓPRIO',
-                    'status'           => 'PAGO',
-                    'data_venda'       => '2024-03-07',
-                    'data_pagamento'   => '2024-03-07',
-                    'numero_parcelas'  => 3,
-                    'entrada'          => 40000,
-                    'desconto'         => 0,
-                    'total'            => 46000,
+                'sale' => [
+                    'payment_method'      => 'CREDIÁRIO PRÓPRIO',
+                    'status'              => 'PAGO',
+                    'date_sale'           => '2024-03-07',
+                    'date_payment'        => '2024-03-07',
+                    'number_installments' => 3,
+                    'down_payment'        => 40000,
+                    'discount'            => 0,
+                    'total'               => 46000,
                 ],
-                'parcelas' => [
+                'installments' => [
                     [
-                        'data_vencimento'  => '2024-04-07',
-                        'valor'            => 2000,
-                        'status'           => 'PAGO',
-                        'data_pagamento'   => '2024-04-07',
-                        'valor_pagamento'  => 2000,
-                        'metodo_pagamento' => 'CARTÃO DE CRÉDITO',
+                        'due_date'       => '2024-04-07',
+                        'value'          => 2000,
+                        'status'         => 'PAGO',
+                        'payment_date'   => '2024-04-07',
+                        'payment_value'  => 2000,
+                        'payment_method' => 'CARTÃO DE CRÉDITO',
                     ],
                     [
-                        'data_vencimento'  => '2024-05-07',
-                        'valor'            => 2000,
-                        'status'           => 'PAGO',
-                        'data_pagamento'   => '2024-05-07',
-                        'valor_pagamento'  => 2000,
-                        'metodo_pagamento' => 'DINHEIRO',
+                        'due_date'       => '2024-05-07',
+                        'value'          => 2000,
+                        'status'         => 'PAGO',
+                        'payment_date'   => '2024-05-07',
+                        'payment_value'  => 2000,
+                        'payment_method' => 'DINHEIRO',
                     ],
                     [
-                        'data_vencimento'  => '2024-06-07',
-                        'valor'            => 2000,
-                        'status'           => 'PAGO',
-                        'data_pagamento'   => '2024-06-07',
-                        'valor_pagamento'  => 2000,
-                        'metodo_pagamento' => 'TRANSFERÊNCIA',
+                        'due_date'       => '2024-06-07',
+                        'value'          => 2000,
+                        'status'         => 'PAGO',
+                        'payment_date'   => '2024-06-07',
+                        'payment_value'  => 2000,
+                        'payment_method' => 'TRANSFERÊNCIA',
                     ],
                 ],
             ],
         ];
 
-        foreach ($vendas as $dadosVenda) {
-            $veiculo = $this->criarVeiculo($dadosVenda['veiculo'], $modelosVeiculos, $lojas, $compradores, $fornecedores, $acessorios, $extras, $tenant_id);
-            $venda   = $this->criarVenda($dadosVenda['venda'], $veiculo, $vendedores, $clientes, $tenant_id);
+        foreach ($sales as $saleData) {
+            $vehicle = $this->createVehicle($saleData['vehicle'], $vehicleModels, $stores, $buyers, $suppliers, $accessories, $extras, $tenant_id);
+            $sale    = $this->createSale($saleData['sale'], $vehicle, $sellers, $clients, $tenant_id);
 
-            if (isset($dadosVenda['parcelas'])) {
-                $this->criarParcelas($dadosVenda['parcelas'], $venda, $tenant_id);
+            if (isset($saleData['installments'])) {
+                $this->createInstallments($saleData['installments'], $sale, $tenant_id);
             }
         }
     }
 
-    private function criarVeiculo(array $dados, array $modelosVeiculos, $lojas, $compradores, $fornecedores, $acessorios, $extras, $tenant_id): Vehicle
+    private function createVehicle(array $data, array $vehicleModels, $stores, $buyers, $suppliers, $accessories, $extras, $tenant_id): Vehicle
     {
-        $veiculo = Vehicle::create([
+        $vehicle = Vehicle::create([
             'tenant_id'        => $tenant_id,
-            'store_id'         => $lojas->random()->id,
-            'buyer_id'         => $compradores->random()->id,
-            'supplier_id'      => $fornecedores->random()->id,
-            'purchase_date'    => $dados['data_compra'],
-            'purchase_price'   => $dados['preco_compra'],
-            'sale_price'       => $dados['preco_venda'],
-            'vehicle_model_id' => $modelosVeiculos[$dados['modelo']] ?? null,
-            'year_one'         => $dados['ano_um'],
-            'year_two'         => $dados['ano_dois'],
-            'km'               => $dados['km'],
-            'fuel'             => $dados['combustivel'],
-            'engine_power'     => $dados['potencia_motor'],
-            'transmission'     => $dados['transmissao'],
-            'color'            => $dados['cor'],
-            'plate'            => $dados['placa'],
-            'renavam'          => $dados['renavam'],
-            'chassi'           => $dados['chassi'],
-            'sold_date'        => $dados['data_venda'],
-            'description'      => $dados['descricao'],
+            'store_id'         => $stores->random()->id,
+            'buyer_id'         => $buyers->random()->id,
+            'supplier_id'      => $suppliers->random()->id,
+            'purchase_date'    => $data['purchase_date'],
+            'purchase_price'   => $data['purchase_price'],
+            'sale_price'       => $data['sale_price'],
+            'vehicle_model_id' => $vehicleModels[$data['model']] ?? null,
+            'year_one'         => $data['year_one'],
+            'year_two'         => $data['year_two'],
+            'km'               => $data['km'],
+            'fuel'             => $data['fuel'],
+            'engine_power'     => $data['engine_power'],
+            'transmission'     => $data['transmission'],
+            'color'            => $data['color'],
+            'plate'            => $data['plate'],
+            'renavam'          => $data['renavam'],
+            'chassi'           => $data['chassi'],
+            'sold_date'        => $data['sold_date'],
+            'description'      => $data['description'],
         ]);
 
-        $veiculo->accessories()->attach($acessorios->random(rand(1, 20)));
-        $veiculo->extras()->attach($extras->random(rand(1, 16)));
+        $vehicle->accessories()->attach($accessories->random(rand(1, 5)));
+        $vehicle->extras()->attach($extras->random(rand(1, 5)));
 
-        foreach ($dados['fotos'] as $caminhoFoto) {
-            Photo::withoutEvents(function () use ($veiculo, $caminhoFoto) {
-                $veiculo->photos()->create([
-                    'path'   => $caminhoFoto,
+        foreach ($data['photos'] as $photoPath) {
+            Photo::withoutEvents(function () use ($vehicle, $photoPath) {
+                $vehicle->photos()->create([
+                    'path'   => $photoPath,
                     'public' => true,
                 ]);
             });
         }
 
-        return $veiculo;
+        return $vehicle;
     }
 
-    private function criarVenda(array $dados, Vehicle $veiculo, $vendedores, $clientes, $tenant_id): Sale
+    private function createSale(array $data, Vehicle $vehicle, $sellers, $clients, $tenant_id): Sale
     {
-        return $veiculo->sale()->create([
+        return $vehicle->sale()->create([
             'tenant_id'           => $tenant_id,
-            'store_id'            => $veiculo->store_id,
-            'seller_id'           => $vendedores->random()->id,
-            'client_id'           => $clientes->random()->id,
-            'payment_method'      => $dados['metodo_pagamento'],
-            'status'              => $dados['status'],
-            'date_sale'           => $dados['data_venda'],
-            'date_payment'        => $dados['data_pagamento'] ?? null,
-            'number_installments' => $dados['numero_parcelas'] ?? null,
-            'down_payment'        => $dados['entrada'] ?? null,
-            'discount'            => $dados['desconto'] ?? 0,
-            'total'               => $dados['total'],
+            'store_id'            => $vehicle->store_id,
+            'seller_id'           => $sellers->random()->id,
+            'client_id'           => $clients->random()->id,
+            'payment_method'      => $data['payment_method'],
+            'status'              => $data['status'],
+            'date_sale'           => $data['date_sale'],
+            'date_payment'        => $data['date_payment'] ?? null,
+            'number_installments' => $data['number_installments'] ?? null,
+            'down_payment'        => $data['down_payment'] ?? null,
+            'discount'            => $data['discount'] ?? 0,
+            'total'               => $data['total'],
         ]);
     }
 
-    private function criarParcelas(array $parcelas, Sale $venda, $tenant_id): void
+    private function createInstallments(array $installments, Sale $sale, $tenant_id): void
     {
-        foreach ($parcelas as $dadosParcela) {
-            $venda->paymentInstallments()->create(array_merge(
-                $dadosParcela,
+        foreach ($installments as $installmentData) {
+            $sale->paymentInstallments()->create(array_merge(
+                $installmentData,
                 [
+                    'store_id'  => $sale->store_id,
                     'tenant_id' => $tenant_id,
-                    'store_id'  => $venda->store_id,
                 ]
             ));
         }

@@ -72,8 +72,8 @@ class DatabaseSeeder extends Seeder
         (new BrandSeeder())->run($tenant->id);
         (new VehicleTypeSeeder())->run($tenant->id);
         (new VehicleModelSeeder())->run($tenant->id);
-        (new AccessorySeeder())->run($tenant->id);
-        (new ExtraSeeder())->run($tenant->id);
+        (new AccessorySeeder())->run();
+        (new ExtraSeeder())->run();
         (new PeopleSeeder())->run($tenant->id);
         (new VehicleSeeder())->run($tenant->id);
         (new SalesSeeder())->run($tenant->id);
