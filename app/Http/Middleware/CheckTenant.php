@@ -33,7 +33,7 @@ class CheckTenant
         }
 
         // Verifica se o tenant está ativo
-        if (!$tenant->is_active) {
+        if (!$tenant->active) {
             abort(403, 'Tenant is inactive. Access forbidden.');
         }
 
