@@ -77,5 +77,5 @@ password: `admin`
 #### Copiar as fotos para exemplo
 
 ```bash
-cp -r photos_exemplo storage/app/public/ && mv .\storage\app\public\photos_exemplo .\storage\app\public\photos
+cp -r photos_exemplo storage/app/public/ && mv ./storage/app/public/photos_exemplo ./storage/app/public/photos
 ```
