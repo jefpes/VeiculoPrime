@@ -13,17 +13,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
 /**
  * Class Vehicle
  *
- * @property \App\Models\VehicleModel $model
- * @property \App\Models\Photo $photos
- * @property \App\Models\Sale $sale
- * @property \App\Models\PaymentInstallment $paymentInstallments
- * @property \App\Models\VehicleExpense $expenses
- * @property \App\Models\People $supplier
- * @property \App\Models\People $buyer
- * @property \App\Models\Accessory $accessories
- * @property \App\Models\Extra $extras
- * @property \App\Models\Store $store
- *
  * @method BelongsTo model()
  * @method MorphMany photos()
  * @method HasMany sale()
@@ -34,8 +23,22 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @method BelongsToMany accessories()
  * @method BelongsToMany extras()
  * @method BelongsTo store()
+ * @method BelongsTo tenant()
+ *
+ * @property \App\Models\VehicleModel $model
+ * @property \App\Models\Photo $photos
+ * @property \App\Models\Sale $sale
+ * @property \App\Models\PaymentInstallment $paymentInstallments
+ * @property \App\Models\VehicleExpense $expenses
+ * @property \App\Models\People $supplier
+ * @property \App\Models\People $buyer
+ * @property \App\Models\Accessory $accessories
+ * @property \App\Models\Extra $extras
+ * @property \App\Models\Store $store
+ * @property \App\Models\Tenant $tenant
  *
  * @property string $id
+ * @property string $tenant_id
  * @property string $vehicle_model_id
  * @property string $supplier_id
  * @property string $buyer_id
@@ -65,7 +68,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @property \Illuminate\Support\Carbon $updated_at
  */
 #[ObservedBy(VehicleObserver::class)]
-class Vehicle extends Model
+class Vehicle extends BaseModel
 {
     use HasUlids;
     use HasFactory;
@@ -73,6 +76,7 @@ class Vehicle extends Model
     use HasStore;
 
     protected $fillable = [
+        'tenant_id',
         'store_id',
         'buyer_id',
         'vehicle_model_id',

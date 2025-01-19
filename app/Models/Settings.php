@@ -7,16 +7,18 @@ use App\Traits\{HasAddress, HasPhone};
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\{HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
 
 /**
  * Class setting
  *
- * @property \App\Models\Employee $ceo
+ * @method BelongsTo tenant()
  * @method HasOne ceo()
  *
+ * @property \App\Models\Employee $ceo
+ * @property \App\Models\Tenant $tenant
  * @property string $id
+ * @property string $tenant_id
  * @property ?string $employee_id
  * @property ?string $name
  * @property ?string $cnpj
@@ -80,7 +82,7 @@ use Illuminate\Database\Eloquent\Relations\{HasOne};
  * @property \Carbon\Carbon $updated_at
  */
 #[ObservedBy(SettingsObserver::class)]
-class Settings extends Model
+class Settings extends BaseModel
 {
     use HasFactory;
     use HasAddress;
@@ -90,6 +92,7 @@ class Settings extends Model
     protected $table = 'settings';
 
     protected $fillable = [
+        'tenant_id',
         'employee_id',
         'name',
         'cnpj',
