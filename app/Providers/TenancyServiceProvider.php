@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportFileUploads\FilePreviewController;
 use Livewire\Livewire;
 use Stancl\JobPipeline\JobPipeline;
-use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, InitializeTenancyByDomainOrSubdomain};
+use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain};
 use Stancl\Tenancy\{Events, Jobs, Listeners, Middleware};
 
 class TenancyServiceProvider extends ServiceProvider
@@ -108,18 +108,14 @@ class TenancyServiceProvider extends ServiceProvider
 
         FilePreviewController::$middleware = ['web', 'universal', InitializeTenancyByDomain::class];
 
-        $host = request()?->getHost(); //@phpstan-ignore-line
-
-        if (!in_array($host, config('tenancy.central_domains'), true)) {
-            Livewire::setUpdateRoute(static function ($handle) {
-                return Route::post('/livewire/update', $handle)
-                    ->middleware([
-                        'web',
-                        'universal',
-                        InitializeTenancyByDomainOrSubdomain::class,
-                    ]);
-            });
-        }
+        Livewire::setUpdateRoute(function ($handle) {
+            return Route::post('/livewire/update', $handle)
+                ->middleware(
+                    'web',
+                    'universal',
+                    InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
+                );
+        });
 
     }
 

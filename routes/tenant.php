@@ -2,6 +2,7 @@
 
 declare(strict_types = 1);
 
+use App\Http\Middleware\CheckTenant;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\{InitializeTenancyByDomain, PreventAccessFromCentralDomains};
 
@@ -21,9 +22,10 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    CheckTenant::class,
 ])->group(function () {
-    Route::get('/', \App\Livewire\Front\IndexPage::class)->name('index');
-    Route::get('/about', \App\Livewire\Front\AboutPage::class)->name('about');
-    Route::get('/vehicles', \App\Livewire\Front\ProductsPage::class)->name('vehicles');
-    Route::get('/vehicle/{vehicle}', \App\Livewire\Front\ProductPage::class)->name('vehicle');
+    Route::get('/', \App\Livewire\Home\IndexPage::class)->name('index');
+    Route::get('/about', \App\Livewire\Home\AboutPage::class)->name('about');
+    Route::get('/vehicles', \App\Livewire\Home\ProductsPage::class)->name('vehicles');
+    Route::get('/vehicle/{vehicle}', \App\Livewire\Home\ProductPage::class)->name('vehicle');
 });

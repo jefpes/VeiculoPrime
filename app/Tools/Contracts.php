@@ -372,11 +372,21 @@ class Contracts
 
     public static function generatePurchaseContract(TemplateProcessor $template, Vehicle $vehicle): string
     {
-        //Substitui os placeholders com os dados do veiculo
         self::setVehicleValues($template, $vehicle->id ?? null);
 
-        //Substitui os placeholders com os dados das despesas
         self::setExpensesValues($template, $vehicle->id ?? null);
+
+        self::setPeopleValues($template, $vehicle->supplier->id ?? null, 'fornecedor');
+
+        self::setAddressesValues($template, $vehicle->supplier->addresses(), 'fornecedor');
+
+        self::setAffiliatesValues($template, $vehicle->supplier->affiliates(), 'fornecedor');
+
+        self::setPeopleValues($template, $vehicle->buyer_id ?? null, 'comprador');
+
+        self::setAddressesValues($template, $vehicle->buyer->addresses(), 'comprador');
+
+        self::setAffiliatesValues($template, $vehicle->buyer->affiliates(), 'comprador');
 
         // Salva o contrato preenchido
         file_exists(public_path('storage\contracts')) ?: Storage::makeDirectory('public\contracts');
@@ -389,55 +399,38 @@ class Contracts
 
     public static function generateSaleContract(TemplateProcessor $template, Sale $sale): string
     {
-        // dump('setando user');
         self::setUserValues($template, $sale->seller_id);
 
-        // dump('setando people-client');
         self::setPeopleValues($template, $sale->client_id, 'cliente');
 
-        // dump('setando addresses-client');
         self::setAddressesValues($template, $sale->client->addresses(), 'cliente');
 
-        // dump('setando affiliates-client');
         self::setAffiliatesValues($template, $sale->client->affiliates(), 'cliente');
 
-        // dump('setando people-employee');
         self::setPeopleValues($template, $sale->seller_id, 'vendedor');
 
-        // dump('setando addresses-employee');
         self::setAddressesValues($template, $sale->seller->addresses(), 'vendedor');
 
-        // dump('setando affiliates-employee');
         self::setAffiliatesValues($template, $sale->seller->affiliates(), 'vendedor');
 
-        // dump('setando supplier');
         self::setPeopleValues($template, $sale->vehicle->supplier->id, 'fornecedor');
 
-        // dump('setando supplier-addresses');
         self::setAddressesValues($template, $sale->vehicle->supplier->addresses(), 'fornecedor');
 
-        // dump('setando supplier-affiliates');
         self::setAffiliatesValues($template, $sale->vehicle->supplier->affiliates(), 'fornecedor');
 
-        // dump('setando buyer');
         self::setPeopleValues($template, $sale->vehicle->buyer_id, 'comprador');
 
-        // dump('setando buyer-addresses');
         self::setAddressesValues($template, $sale->vehicle->buyer->addresses(), 'comprador');
 
-        // dump('setando buyer-affiliates');
         self::setAffiliatesValues($template, $sale->vehicle->buyer->affiliates(), 'comprador');
 
-        // dump('setando vehicle');
         self::setVehicleValues($template, $sale->vehicle->id ?? null);
 
-        //Substitui os placeholders com os dados da venda
         self::setSaleValues($template, $sale->id ?? null);
 
-        //Substitui os placeholders com os dados das parcelas
         self::setInstallmentsValues($template, $sale->id ?? null);
 
-        //Substitui os placeholders com os dados das despesas
         self::setExpensesValues($template, $sale->vehicle->id ?? null);
 
         // Salva o contrato preenchido
@@ -450,28 +443,46 @@ class Contracts
 
     public static function generateReceiptContract(TemplateProcessor $template, PaymentInstallment $installment): string
     {
-        // Substitui os placeholders com os dados do usuario
         self::setUserValues($template);
 
-        //TODO: Fix this
-        //self::setClientValues($template, $installment->sale->people->id ?? null);
+        self::setPeopleValues($template, $installment->sale->client->id ?? null, 'cliente');
 
-        //Substitui os placeholders com os dados do veiculo
+        self::setAddressesValues($template, $installment->sale->client->addresses(), 'cliente');
+
+        self::setAffiliatesValues($template, $installment->sale->client->affiliates(), 'cliente');
+
+        self::setPeopleValues($template, $installment->sale->seller_id ?? null, 'vendedor');
+
+        self::setAddressesValues($template, $installment->sale->seller->addresses(), 'vendedor');
+
+        self::setAffiliatesValues($template, $installment->sale->seller->affiliates(), 'vendedor');
+
+        self::setPeopleValues($template, $installment->sale->vehicle->supplier->id ?? null, 'fornecedor');
+
+        self::setAddressesValues($template, $installment->sale->vehicle->supplier->addresses(), 'fornecedor');
+
+        self::setAffiliatesValues($template, $installment->sale->vehicle->supplier->affiliates(), 'fornecedor');
+
+        self::setPeopleValues($template, $installment->sale->vehicle->buyer_id ?? null, 'comprador');
+
+        self::setAddressesValues($template, $installment->sale->vehicle->buyer->addresses(), 'comprador');
+
+        self::setAffiliatesValues($template, $installment->sale->vehicle->buyer->affiliates(), 'comprador');
+
+        self::setPeopleValues($template, $installment->receiver->id ?? null, 'recebedor');
+
+        self::setAddressesValues($template, $installment->receiver->addresses(), 'recebedor');
+
+        self::setAffiliatesValues($template, $installment->receiver->affiliates(), 'recebedor');
+
         self::setVehicleValues($template, $installment->sale->vehicle->id ?? null);
 
-        //TODO: Fix this
-        //self::setSupplierValues($template, $installment->sale->vehicle->supplier->id ?? null);
-
-        //Substitui os placeholders com os dados da venda
         self::setSaleValues($template, $installment->sale->id ?? null);
 
-        //Substitui os placeholders com os dados da parcela
         self::setInstallmentValues($template, $installment->id ?? null);
 
-        //Substitui os placeholders com os dados das parcelas
         self::setInstallmentsValues($template, $installment->sale->id ?? null);
 
-        //Substitui os placeholders com os dados das despesas
         self::setExpensesValues($template, $installment->sale->vehicle->id ?? null);
 
         // Salva o contrato preenchido
