@@ -14,20 +14,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $domain = 'exemplo.veiculoprime.test';
-
-        if (env('APP_ENV') === 'production') {
-            $domain = 'exemplo.veiculoprime.com.br';
-        }
-
         $tenant = Tenant::create([
             'name'   => 'admin',
-            'domain' => $domain,
+            'domain' => 'exemplo',
         ]);
 
         // Criar o usuário 'master'
         $user = User::create([
-            'tenant_id'         => $tenant->id,
             'name'              => 'master',
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
@@ -40,6 +33,7 @@ class DatabaseSeeder extends Seeder
 
         // Criar a role 'master'
         $role = $user->roles()->create([
+            'tenant_id' => $tenant->id,
             'name'      => 'master',
             'hierarchy' => 0,
         ]);
@@ -49,7 +43,6 @@ class DatabaseSeeder extends Seeder
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
         $user = User::create([
-            'tenant_id'         => $tenant->id,
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),
@@ -62,6 +55,7 @@ class DatabaseSeeder extends Seeder
         $user->stores()->sync(Store::pluck('id')->toArray());
 
         $role = $user->roles()->create([
+            'tenant_id' => $tenant->id,
             'name'      => 'admin',
             'hierarchy' => 1,
         ]);

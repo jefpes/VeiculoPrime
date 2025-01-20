@@ -154,6 +154,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'master' && $this->tenant_id !== null) {
+            return false;
+        }
+
         return true;
     }
 
