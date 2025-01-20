@@ -218,6 +218,7 @@ class SaleResource extends Resource
         return $table
             ->recordUrl(null)
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('seller.name')
                     ->label('Seller')
                     ->sortable()

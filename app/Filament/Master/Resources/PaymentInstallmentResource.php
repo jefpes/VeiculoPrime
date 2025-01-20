@@ -94,6 +94,7 @@ class PaymentInstallmentResource extends Resource
         return $table
             ->recordUrl(null)
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('receiver.name')
                     ->label('Responsible')
                     ->sortable()

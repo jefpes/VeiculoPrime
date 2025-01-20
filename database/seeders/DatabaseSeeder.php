@@ -73,6 +73,6 @@ class DatabaseSeeder extends Seeder
         (new PeopleSeeder())->run($tenant->id);
         (new VehicleSeeder())->run($tenant->id);
         (new SalesSeeder())->run($tenant->id);
-        (new VehicleExpenseSeeder())->run();
+        (new VehicleExpenseSeeder())->run($tenant->id);
     }
 }

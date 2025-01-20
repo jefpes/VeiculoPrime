@@ -196,6 +196,7 @@ class VehicleResource extends Resource
                 return $query->with('buyer', 'model', 'supplier');
             })
             ->columns([
+                TextColumn::make('tenant.name')->sortable()->searchable(),
                 TextColumn::make('buyer.name')
                     ->label('Buyer')
                     ->toggleable(isToggledHiddenByDefault: true)

@@ -46,6 +46,7 @@ class BrandResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
             ])

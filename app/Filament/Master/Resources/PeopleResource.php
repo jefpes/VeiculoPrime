@@ -144,6 +144,7 @@ class PeopleResource extends Resource
                 return $query->with(['user', 'phones', 'employee']);
             })
             ->columns([
+                Tables\Columns\TextColumn::make('tenant.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->description(fn ($record): string|null => $record->user?->email)
                     ->label('User')
