@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $tenant = Tenant::create([
-            'name'   => 'admin',
+            'name'   => 'exemplo',
             'domain' => 'exemplo',
         ]);
 
@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
+        ])->roles()->create([
+            'name'      => 'master',
+            'hierarchy' => 0,
         ]);
 
         (new StoreSeeder())->run($tenant->id);
@@ -33,7 +36,6 @@ class DatabaseSeeder extends Seeder
 
         // Criar a role 'master'
         $role = $user->roles()->create([
-            'tenant_id' => $tenant->id,
             'name'      => 'master',
             'hierarchy' => 0,
         ]);
@@ -43,11 +45,11 @@ class DatabaseSeeder extends Seeder
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
         $user = User::create([
+            'tenant_id'         => $tenant->id,
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),
-            'password'          => '$2y$12$./r6VDrmKTNOxFte58tY..03PmNJgc856574gU8toIftu.KZ6Scwi',
-            'remember_token'    => 'ulju8vGmyW7Ju2YXZLhYradlbIBVK1kUWG7Moow0ENieWYwbSKpiXJSfNMXc',
+            'password'          => Hash::make('admin'),
         ]);
 
         (new StoreSeeder())->run($tenant->id);
