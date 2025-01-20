@@ -13,6 +13,7 @@ return new class () extends Migration {
         Schema::create('extras', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
+            $table->longText('icon')->nullable();
             $table->timestamps();
         });
     }

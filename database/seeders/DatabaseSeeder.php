@@ -25,11 +25,9 @@ class DatabaseSeeder extends Seeder
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
-        ])->roles()->create([
-            'name'      => 'master',
-            'hierarchy' => 0,
         ]);
 
+        (new StoreSeeder())->run($tenant->id);
         (new StoreSeeder())->run($tenant->id);
 
         $user->stores()->sync(Store::pluck('id')->toArray());
@@ -51,8 +49,6 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
         ]);
-
-        (new StoreSeeder())->run($tenant->id);
 
         $user->stores()->sync(Store::pluck('id')->toArray());
 
