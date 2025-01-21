@@ -66,6 +66,7 @@ class PeopleResource extends Resource
                             ->options(PersonType::class)
                             ->live(),
                         Forms\Components\TextInput::make('person_id')
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->label(fn (Forms\Get $get): string => match ($get('person_type')) {
                                 'Física'   => 'CPF',
                                 'Jurídica' => 'CNPJ',
@@ -85,6 +86,7 @@ class PeopleResource extends Resource
                             ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                             ->options(Sexes::class),
                         Forms\Components\TextInput::make('rg')
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->label('RG')
                             ->visible(fn (Forms\Get $get): bool => $get('person_type') === 'Física')
                             ->mask('99999999999999999999')
@@ -113,7 +115,6 @@ class PeopleResource extends Resource
                                 ->label('Supplier Active')
                                 ->options([0 => 'Não', 1 => 'Sim']),
                         ]),
-
                     ]),
                 ]),
                 Forms\Components\Tabs\Tab::make(__('Address'))->schema([

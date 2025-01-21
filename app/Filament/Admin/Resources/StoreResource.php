@@ -54,12 +54,13 @@ class StoreResource extends Resource
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->unique(ignoreRecord: true)
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->live(onBlur: true, debounce: 1000)
                             ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state, '-')))
                             ->unique(ignoreRecord: true)
                             ->required(),
                         Forms\Components\TextInput::make('slug')
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->label('Subdomain')
                             ->required()
                             ->readOnly()

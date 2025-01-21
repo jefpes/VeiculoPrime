@@ -48,11 +48,10 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
+                    ->rules(['required', unique_within_tenant_rule(static::$model)])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
+                    ->rules(['required', 'email', unique_within_tenant_rule(static::$model)])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
