@@ -497,17 +497,19 @@ class VehicleResource extends Resource
                                 }
                             }
 
-                            if ($vehicle->sale()->exists()) {
-                                if ($vehicle->paymentInstallments()->exists()) {
-                                    foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
-                                        $installment->update(['store_id' => $newStore]);
+                            if ($vehicle->sale !== null) {
+                                foreach ($vehicle->sale as $sale) { //@phpstan-ignore-line
+                                    if ($sale->paymentInstallments !== null) {
+                                        foreach ($sale->paymentInstallments as $installment) {
+                                            $installment->update(['store_id' => $newStore]);
+                                        }
                                     }
+
+                                    $sale->update(['store_id' => $newStore]);
                                 }
-
-                                $vehicle->sale()->update(['store_id' => $newStore]);
-
-                                $vehicle->update(['store_id' => $newStore]);
                             }
+
+                            $vehicle->update(['store_id' => $newStore]);
 
                             Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
                         }),

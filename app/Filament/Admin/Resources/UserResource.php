@@ -48,11 +48,12 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
+                    ->rules(['required', unique_within_tenant_rule(static::$model)])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->unique()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
@@ -60,13 +61,13 @@ class UserResource extends Resource
                     ->dehydrated(fn (?string $state) => filled($state))
                     ->visibleOn('create')
                     ->confirmed()
-                    ->maxLength(8),
+                    ->maxLength(15),
                 Forms\Components\TextInput::make('password_confirmation')
                     ->visibleOn('create')
                     ->password()
                     ->requiredWith('password')
                     ->dehydrated(false)
-                    ->maxLength(8),
+                    ->maxLength(15),
                 Forms\Components\Grid::make()
                     ->columns(1)
                     ->columnSpanFull()

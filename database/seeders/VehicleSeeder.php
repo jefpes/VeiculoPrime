@@ -10,14 +10,14 @@ class VehicleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
-        $vehicleModels = VehicleModel::pluck('id', 'name')->toArray();
+        $vehicleModels = VehicleModel::query()->where('tenant_id', $tenant_id)->pluck('id', 'name')->toArray();
         $extras        = Extra::all()->pluck('id', 'name');
         $accessories   = Accessory::all()->pluck('id', 'name');
-        $buyers        = People::whereHas('employee')->get();
-        $suppliers     = People::where('supplier', true)->get();
-        $stores        = Store::all();
+        $buyers        = People::query()->where('tenant_id', $tenant_id)->whereHas('employee')->get();
+        $suppliers     = People::query()->where('tenant_id', $tenant_id)->where('supplier', true)->get();
+        $stores        = Store::query()->where('tenant_id', $tenant_id)->get();
 
         $vehicles = [
             [
@@ -695,6 +695,7 @@ class VehicleSeeder extends Seeder
 
         foreach ($vehicles as $vehicleData) {
             $vehicle = Vehicle::create([
+                'tenant_id'         => $tenant_id,
                 'store_id'          => $stores->random()->id,
                 'buyer_id'          => $buyers->random()->id,
                 'supplier_id'       => $suppliers->random()->id,

@@ -5,25 +5,27 @@ namespace App\Models;
 use App\Traits\{HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 
 /**
  * Class Store
- *
- * @property \App\Models\User $users
- * @property \App\Models\Vehicle $vehicles
- * @property \App\Models\VehicleExpense $vehicleExpenses
- * @property \App\Models\Sale $sales
- * @property \App\Models\PaymentInstallment $paymentInstallments
  *
  * @method BelongsToMany users()
  * @method HasMany vehicles()
  * @method HasMany vehicleExpenses()
  * @method HasMany sales()
  * @method HasMany paymentInstallments()
+ * @method BelongsToMany tenant()
+ *
+ * @property \App\Models\User $users
+ * @property \App\Models\Vehicle $vehicles
+ * @property \App\Models\VehicleExpense $vehicleExpenses
+ * @property \App\Models\Sale $sales
+ * @property \App\Models\PaymentInstallment $paymentInstallments
+ * @property \App\Models\Tenant $tenant
  *
  * @property string $id
+ * @property string $tenant_id
  * @property string $name
  * @property string $slug
  * @property string $zip_code
@@ -36,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
  * @property bool $active
  * @property \Illuminate\Support\Carbon $created_at
  */
-class Store extends Model
+class Store extends BaseModel
 {
     use HasFactory;
     use HasUlids;
@@ -44,6 +46,7 @@ class Store extends Model
     use HasPhoto;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'slug',
         'zip_code',

@@ -59,20 +59,12 @@ class VehicleModelSeeder extends Seeder
         ];
 
         foreach ($models as $model) {
-            if ($tenant_id) {
-                VehicleModel::create([
-                    'name'            => $model['name'],
-                    'brand_id'        => $brands[$model['brand']] ?? null,
-                    'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
-                    'tenant_id'       => $tenant_id,
-                ]);
-            } else {
-                VehicleModel::create([
-                    'name'            => $model['name'],
-                    'brand_id'        => $brands[$model['brand']] ?? null,
-                    'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
-                ]);
-            }
+            VehicleModel::create([
+                'name'            => $model['name'],
+                'brand_id'        => $brands[$model['brand']] ?? null,
+                'vehicle_type_id' => $vehicleTypes[$model['type']] ?? null,
+                'tenant_id'       => $tenant_id,
+            ]);
         }
 
     }

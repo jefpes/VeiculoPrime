@@ -8,7 +8,6 @@ use App\Traits\{HasAddress, HasAffiliate, HasPhone, HasPhoto};
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
@@ -21,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @method HasMany receivedInstallments()
  * @method HasMany vehiclesAsBuyer()
  * @method HasMany vehiclesAsSupplier()
+ * @method BelongsTo tenant()
  *
  * @property \App\Models\Employee $employee
  * @property \App\Models\User $user
@@ -29,26 +29,28 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \App\Models\PaymentInstallment $receivedInstallments
  * @property \App\Models\Vehicle $vehiclesAsBuyer
  * @property \App\Models\Vehicle $vehiclesAsSupplier
+ * @property \App\Models\Tenant $tenant
  * @property string $id
+ * @property ?string $tenant_id
  * @property string $user_id
  * @property string $name
- * @property string $sex
- * @property string $email
- * @property string $rg
+ * @property ?string $sex
+ * @property ?string $email
+ * @property ?string $rg
  * @property string $person_type
  * @property string $person_id
- * @property string $birthday
- * @property string $father
- * @property string $mother
- * @property string $marital_status
- * @property string $spouse
+ * @property ?string $birthday
+ * @property ?string $father
+ * @property ?string $mother
+ * @property ?string $marital_status
+ * @property ?string $spouse
  * @property bool $client
  * @property bool $supplier
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
 #[ObservedBy(PeopleObserver::class)]
-class People extends Model
+class People extends BaseModel
 {
     use HasFactory;
     use HasPhone;
@@ -58,6 +60,7 @@ class People extends Model
     use HasAffiliate;
 
     protected $fillable = [
+        'tenant_id',
         'user_id',
         'name',
         'sex',

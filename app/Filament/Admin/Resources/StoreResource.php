@@ -54,12 +54,13 @@ class StoreResource extends Resource
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->unique(ignoreRecord: true)
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->live(onBlur: true, debounce: 1000)
                             ->afterStateUpdated(fn (Forms\Set $set, ?string $state) => $set('slug', Str::slug($state, '-')))
                             ->unique(ignoreRecord: true)
                             ->required(),
                         Forms\Components\TextInput::make('slug')
+                            ->rules(['required', unique_within_tenant_rule(static::$model)])
                             ->label('Subdomain')
                             ->required()
                             ->readOnly()
@@ -150,6 +151,7 @@ class StoreResource extends Resource
                     ->modalDescription(__('Are you sure you want this? All vehicles that are not sold will be transferred to another store, this not be undone'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('warning')
+                    ->tooltip(__('Transfer all vehicles, not sale, to another store'))
                     ->form([
                         Select::make('store')
                             ->required()
@@ -210,15 +212,16 @@ class StoreResource extends Resource
                                     $vehicle->expenses()->update(['store_id' => $newStoreId]); //@phpstan-ignore-line
                                 }
 
-                                if ($vehicle->sale()->exists()) { //@phpstan-ignore-line
-                                    if ($vehicle->paymentInstallments()->exists()) { //@phpstan-ignore-line
-                                        foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
-                                            $installment->update(['store_id' => $newStoreId]);
+                                if ($vehicle->sale !== null) { //@phpstan-ignore-line
+                                    foreach ($vehicle->sale as $sale) {
+                                        if ($sale->paymentInstallments !== null) {
+                                            foreach ($sale->paymentInstallments as $installment) {
+                                                $installment->update(['store_id' => $newStoreId]);
+                                            }
                                         }
+
+                                        $sale->update(['store_id' => $newStoreId]);
                                     }
-
-                                    $vehicle->sale()->update(['store_id' => $newStoreId]); //@phpstan-ignore-line
-
                                 }
                                 $vehicle->update(['store_id' => $newStoreId]);
                             }

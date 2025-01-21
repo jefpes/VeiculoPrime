@@ -17,13 +17,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property \App\Models\Vehicle $vehicle
  * @property string $id
  * @property string $name
+ * @property string $icon
  */
 class Accessory extends Model
 {
     use HasUlids;
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'icon'];
 
     public function vehicle(): BelongsToMany
     {

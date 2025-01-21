@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\TenantScopeTrait;
 use Filament\Models\Contracts\{FilamentUser, HasAvatar, HasTenants};
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne};
 use Illuminate\Database\Eloquent\{Builder, Model, SoftDeletes};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,29 +16,34 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @property Role $roles
- * @property People $people
- * @property Collection $abilities
- * @property Collection $stores
- * @property Sale $sales
+ * Class User
  *
  * @method BelongsToMany roles()
  * @method HasOne people()
  * @method Builder abilities()
  * @method HasMany sales()
  * @method BelongsToMany stores()
+ * @method BelongsTo tenant()
+ *
+ * @property Role $roles
+ * @property People $people
+ * @property Collection $abilities
+ * @property Collection $stores
+ * @property Sale $sales
+ * @property Tenant $tenant
  *
  * @property string $id
+ * @property ?string $tenant_id
  * @property string $name
  * @property string $email
  * @property string $password
- * @property string|null $primary_color
- * @property string|null $secondary_color
- * @property string|null $tertiary_color
- * @property string|null $quaternary_color
- * @property string|null $quinary_color
- * @property string|null $senary_color
- * @property string|null $font
+ * @property ?string $primary_color
+ * @property ?string $secondary_color
+ * @property ?string $tertiary_color
+ * @property ?string $quaternary_color
+ * @property ?string $quinary_color
+ * @property ?string $senary_color
+ * @property ?string $font
  * @property bool $navigation_mode
  * @property string|null $avatar_url
  */
@@ -47,8 +53,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     use Notifiable;
     use SoftDeletes;
     use HasUlids;
+    use TenantScopeTrait;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'email',
         'remember_token',
@@ -86,6 +94,16 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
             'password'        => 'hashed',
             'navigation_mode' => 'bool',
         ];
+    }
+
+    /**
+     * @var array<string>
+     */
+    protected $with = ['tenant'];
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
     public function getFilamentAvatarUrl(): ?string
@@ -143,6 +161,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'master' && $this->tenant_id !== null) {
+            return false;
+        }
+
         return true;
     }
 

@@ -4,12 +4,12 @@
 
 <div class="h-full">
     <div class="flex flex-col min-w-full max-w-md bg-[var(--f-background-variant-1)] border border-[var(--f-text-variant-2)] rounded-lg shadow h-auto">
-        <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}">
+        <a href="{{ url('/vehicle', ['vehicle' => $vehicle]) }}">
             <img class="object-fill w-full h-full aspect-video rounded-t-lg transform" src="{{ $vehicle->photoUrl }}" alt=""/>
         </a>
 
         <div class="px-5 py-1 flex flex-col flex-grow">
-            <a href="{{ route('vehicle', ['vehicle' => $vehicle]) }}" class="mb-4">
+            <a href="{{ url('/vehicle', ['vehicle' => $vehicle]) }}" class="mb-4">
                 <h4 class="flex flex-col mt-1 text-md font-bold tracking-tight text-[var(--f-text-variant-5)] ">
                     <span class="">{{ strtoupper($vehicle->model->brand->name) }} {{strtoupper($vehicle->model->name)}}</span>
                 </h4>

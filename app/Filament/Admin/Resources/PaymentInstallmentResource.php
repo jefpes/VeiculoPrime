@@ -365,7 +365,7 @@ class PaymentInstallmentResource extends Resource
                         $indicators = [];
 
                         if (!empty($data['client'])) {
-                            $modelName = \App\Models\People::find($data['client'])->name ?? null; //@phpstan-ignore-line
+                            $modelName = People::find($data['client'])->name ?? null; //@phpstan-ignore-line
 
                             if ($modelName) {
                                 $indicators[] = __('Client') . ': ' . $modelName;
