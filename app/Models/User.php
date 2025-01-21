@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\TenantScopeTrait;
 use Filament\Models\Contracts\{FilamentUser, HasAvatar, HasTenants};
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -52,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     use Notifiable;
     use SoftDeletes;
     use HasUlids;
+    use TenantScopeTrait;
 
     protected $fillable = [
         'tenant_id',
@@ -94,6 +96,16 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         ];
     }
 
+    /**
+     * @var array<string>
+     */
+    protected $with = ['tenant'];
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->avatar_url ? Storage::url("$this->avatar_url") : null;
@@ -110,11 +122,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function scopeSearch(Builder $q, string $val): Builder
     {
         return $q->where('name', 'like', "%{$val}%");
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
     }
 
     public function roles(): BelongsToMany
