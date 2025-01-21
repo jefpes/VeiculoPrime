@@ -13,8 +13,8 @@ return new class () extends Migration {
         Schema::create('stores', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name');
+            $table->string('slug');
             $table->string('zip_code')->nullable();
             $table->string('street')->nullable();
             $table->string('number')->nullable();

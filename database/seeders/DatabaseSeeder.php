@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        (new TestSeeder())->run();
+        (new TestSeeder())->run(name: 'exemplo', domain: 'exemplo');
+        (new TestSeeder())->run(name: 'rato', domain: 'rato');
     }
 }

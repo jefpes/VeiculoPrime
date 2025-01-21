@@ -12,11 +12,11 @@ class TestSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    public function run(string $name, string $domain): void
     {
         $tenant = Tenant::create([
-            'name'   => 'exemplo',
-            'domain' => 'exemplo',
+            'name'   => $name,
+            'domain' => $domain,
         ]);
 
         // Criar o usuário 'master'
@@ -38,7 +38,9 @@ class TestSeeder extends Seeder
             'hierarchy' => 0,
         ]);
 
-        (new AbilitySeeder())->run();
+        if (Ability::count() === 0) {
+            (new AbilitySeeder())->run();
+        }
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
