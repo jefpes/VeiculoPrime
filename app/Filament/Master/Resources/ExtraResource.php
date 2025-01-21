@@ -18,6 +18,7 @@ class ExtraResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(1)
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -33,7 +34,7 @@ class ExtraResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon'),
+                Tables\Columns\TextColumn::make('icon')->html(true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

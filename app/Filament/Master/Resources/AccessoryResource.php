@@ -34,7 +34,7 @@ class AccessoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon'),
+                Tables\Columns\TextColumn::make('icon')->html(true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
