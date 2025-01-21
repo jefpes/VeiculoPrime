@@ -46,7 +46,7 @@ class ProductsPage extends Component
     #[Computed()]
     public function vehicles(): Collection
     {
-        return Vehicle::with('model.type', 'model.brand', 'photos')
+        return Vehicle::with('model.type', 'model.brand', 'photos', 'store')
             ->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model.brand', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))

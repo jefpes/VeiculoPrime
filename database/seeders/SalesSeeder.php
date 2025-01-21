@@ -12,14 +12,14 @@ class SalesSeeder extends Seeder
      */
     public function run(?string $tenant_id = null): void
     {
-        $vehicleModels = VehicleModel::pluck('id', 'name')->toArray();
+        $vehicleModels = VehicleModel::query()->where('tenant_id', $tenant_id)->pluck('id', 'name')->toArray();
         $extras        = Extra::all()->pluck('id', 'name');
         $accessories   = Accessory::all()->pluck('id', 'name');
-        $sellers       = People::where('supplier', true)->get();
-        $clients       = People::where('client', true)->get();
-        $buyers        = People::whereHas('employee')->get();
-        $suppliers     = People::where('supplier', true)->get();
-        $stores        = Store::all();
+        $sellers       = People::query()->where('tenant_id', $tenant_id)->where('supplier', true)->get();
+        $clients       = People::query()->where('tenant_id', $tenant_id)->where('client', true)->get();
+        $buyers        = People::query()->where('tenant_id', $tenant_id)->whereHas('employee')->get();
+        $suppliers     = People::query()->where('tenant_id', $tenant_id)->where('supplier', true)->get();
+        $stores        = Store::query()->where('tenant_id', $tenant_id)->get();
 
         $sales = [
             [

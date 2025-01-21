@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, Settings, Store, Tenant, User};
+use App\Models\{Ability, Accessory, Settings, Store, Tenant, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -66,12 +66,15 @@ class TestSeeder extends Seeder
             (new SettingsSeeder())->run();
         }
 
+        if (Accessory::count() === 0) {
+            (new AccessorySeeder())->run();
+            (new ExtraSeeder())->run();
+        }
+
         (new SettingsSeeder())->run($tenant->id);
         (new BrandSeeder())->run($tenant->id);
         (new VehicleTypeSeeder())->run($tenant->id);
         (new VehicleModelSeeder())->run($tenant->id);
-        (new AccessorySeeder())->run();
-        (new ExtraSeeder())->run();
         (new PeopleSeeder())->run($tenant->id);
         (new VehicleSeeder())->run($tenant->id);
         (new SalesSeeder())->run($tenant->id);
