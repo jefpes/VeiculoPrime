@@ -7,7 +7,6 @@ Route::middleware([
     'web',
     CheckTenant::class,
 ])->group(function () {
-    // Route::get('/', fn () => 'tamo em casa')->name('index');
     Route::get('/', \App\Livewire\Home\IndexPage::class)->name('index');
     Route::get('/about', \App\Livewire\Home\AboutPage::class)->name('about');
     Route::get('/vehicles', \App\Livewire\Home\ProductsPage::class)->name('vehicles');
