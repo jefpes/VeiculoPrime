@@ -33,18 +33,17 @@ class CreateTenant extends CreateRecord
         $setting->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
         $store = Store::query()->create([
-            'name'      => $this->record->name, // @phpstan-ignore-line
-            'slug'      => Str::slug($this->record->domain), // @phpstan-ignore-line
-            'tenant_id' => $this->record->id, // @phpstan-ignore-line
+            'name' => $this->record->name, // @phpstan-ignore-line
+            'slug' => Str::slug($this->record->domain), // @phpstan-ignore-line
         ]);
+
+        $store->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
         $user = User::create($this->user); // @phpstan-ignore-line
 
         $user->update(['tenant_id' => $this->record->id]); // @phpstan-ignore-line
 
         $store->users()->attach($user->id);
-
-        Settings::create(['user_id' => $user->id]); // @phpstan-ignore-line
 
         $role = $user->roles()->create([
             'name'      => 'admin',
