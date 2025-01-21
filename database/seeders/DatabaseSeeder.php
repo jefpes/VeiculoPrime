@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,25 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Criar o usuário 'master'
-        $user = User::create([
-            'name'              => 'master',
-            'email'             => 'master@admin.com',
-            'email_verified_at' => now(),
-            'password'          => '$2y$12$2/ijnnwmsos7UyWX8k3XR.FJBrxSnGkvsT6EHDgHVTrNn4MmKHpS.',
-        ]);
+        if (app()->environment('production')) {
+            (new ProductionSeeder())->run();
 
-        $role = $user->roles()->create([
-            'name'      => 'master',
-            'hierarchy' => 0,
-        ]);
+            return;
+        }
 
-        (new AbilitySeeder())->run();
-
-        $role->abilities()->sync(Ability::pluck('id')->toArray());
-
-        (new SettingsSeeder())->run();
-        (new AccessorySeeder())->run();
-        (new ExtraSeeder())->run();
+        (new TestSeeder())->run();
     }
 }
