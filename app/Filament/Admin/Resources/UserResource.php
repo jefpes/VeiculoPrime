@@ -51,7 +51,9 @@ class UserResource extends Resource
                     ->rules(['required', unique_within_tenant_rule(static::$model)])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
-                    ->rules(['required', 'email', unique_within_tenant_rule(static::$model)])
+                    ->email()
+                    ->required()
+                    ->unique()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()

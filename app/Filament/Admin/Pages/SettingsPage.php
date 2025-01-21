@@ -38,7 +38,7 @@ class SettingsPage extends Page
     public function mount(): void
     {
         static::$subNavigationPosition = auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-        $this->settings                = Settings::query()->first();
+        $this->settings                = Settings::query()->where('tenant_id', tenant()->id)->firstOrFail();
         $this->form->fill($this->settings->toArray()); //@phpstan-ignore-line
     }
 

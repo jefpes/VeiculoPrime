@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Middleware\CheckTenant;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'web',
+    CheckTenant::class,
 ])->group(function () {
     // Route::get('/', fn () => 'tamo em casa')->name('index');
     Route::get('/', \App\Livewire\Home\IndexPage::class)->name('index');

@@ -34,7 +34,7 @@ class SettingsPage extends Page
 
     public function mount(): void
     {
-        $this->settings = Settings::query()->first();
+        $this->settings = Settings::query()->where('tenant_id', tenant()?->id)->firstOrFail();
         $this->form->fill($this->settings->toArray()); //@phpstan-ignore-line
     }
 

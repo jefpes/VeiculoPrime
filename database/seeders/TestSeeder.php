@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Ability, Store, Tenant, User};
+use App\Models\{Ability, Settings, Store, Tenant, User};
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -19,10 +19,20 @@ class TestSeeder extends Seeder
             'domain' => $domain,
         ]);
 
+        if (User::count() === 0) {
+            $user = User::create([
+                'name'              => 'master',
+                'email'             => 'master@admin.com',
+                'email_verified_at' => now(),
+                'password'          => Hash::make('admin'),
+            ]);
+        }
+
         // Criar o usuário 'master'
         $user = User::create([
-            'name'              => 'master',
-            'email'             => 'master@admin.com',
+            'tenant_id'         => $tenant->id,
+            'name'              => $name,
+            'email'             => "$name@admin.com",
             'email_verified_at' => now(),
             'password'          => Hash::make('admin'),
         ]);
@@ -44,23 +54,9 @@ class TestSeeder extends Seeder
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
 
-        $user = User::create([
-            'tenant_id'         => $tenant->id,
-            'name'              => 'admin',
-            'email'             => 'admin@admin.com',
-            'email_verified_at' => now(),
-            'password'          => Hash::make('admin'),
-        ]);
-
-        $user->stores()->sync(Store::pluck('id')->toArray());
-
-        $role = $user->roles()->create([
-            'tenant_id' => $tenant->id,
-            'name'      => 'admin',
-            'hierarchy' => 1,
-        ]);
-
-        $role->abilities()->sync(Ability::pluck('id')->toArray());
+        if (Settings::where('tenant_id', null)->count() === 0) {
+            (new SettingsSeeder())->run();
+        }
 
         (new SettingsSeeder())->run($tenant->id);
         (new BrandSeeder())->run($tenant->id);
