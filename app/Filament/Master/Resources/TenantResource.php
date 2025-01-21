@@ -62,13 +62,13 @@ class TenantResource extends Resource
                                     ->required(fn (string $operation): bool => $operation === 'create')
                                     ->dehydrated(fn (?string $state) => filled($state))
                                     ->confirmed()
-                                    ->maxLength(8),
+                                    ->maxLength(15),
                                 Forms\Components\TextInput::make('user_password_confirmation')
                                     ->label('Password Confirmation')
                                     ->password()
                                     ->requiredWith('password')
                                     ->dehydrated(false)
-                                    ->maxLength(8),
+                                    ->maxLength(15),
                             ]),
                     ]),
             ]);
