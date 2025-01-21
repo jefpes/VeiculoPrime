@@ -19,15 +19,6 @@ class TestSeeder extends Seeder
             'domain' => $domain,
         ]);
 
-        if (User::count() === 0) {
-            $user = User::create([
-                'name'              => 'master',
-                'email'             => 'master@admin.com',
-                'email_verified_at' => now(),
-                'password'          => Hash::make('admin'),
-            ]);
-        }
-
         // Criar o usuário 'master'
         $user = User::create([
             'tenant_id'         => $tenant->id,
@@ -44,6 +35,7 @@ class TestSeeder extends Seeder
 
         // Criar a role 'master'
         $role = $user->roles()->create([
+            'tenant_id' => $tenant->id,
             'name'      => 'master',
             'hierarchy' => 0,
         ]);
@@ -53,6 +45,22 @@ class TestSeeder extends Seeder
         }
 
         $role->abilities()->sync(Ability::pluck('id')->toArray());
+
+        if (User::where('email', 'master@admin.com')->count() === 0) {
+            $user = User::create([
+                'name'              => 'master',
+                'email'             => 'master@admin.com',
+                'email_verified_at' => now(),
+                'password'          => Hash::make('admin'),
+            ]);
+
+            $role = $user->roles()->create([
+                'name'      => 'master',
+                'hierarchy' => 0,
+            ]);
+
+            $role->abilities()->sync(Ability::pluck('id')->toArray());
+        }
 
         if (Settings::where('tenant_id', null)->count() === 0) {
             (new SettingsSeeder())->run();
