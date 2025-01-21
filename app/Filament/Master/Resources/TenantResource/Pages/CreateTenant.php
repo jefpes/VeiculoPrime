@@ -34,6 +34,7 @@ class CreateTenant extends CreateRecord
 
         $store = Store::query()->create([
             'name'      => $this->record->name, // @phpstan-ignore-line
+            'slug'      => Str::slug($this->record->domain), // @phpstan-ignore-line
             'tenant_id' => $this->record->id, // @phpstan-ignore-line
         ]);
 
