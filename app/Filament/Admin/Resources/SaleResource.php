@@ -352,14 +352,14 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(fn () => \App\Models\People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
+                        ->options(fn () => People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
                     return $query->when($data['seller'], fn ($query) => $query->where('seller_id', $data['seller']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
                     if ($data['seller'] ?? null) {
-                        $indicators[] = __('Seller') . ': ' . \App\Models\People::find($data['seller'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Seller') . ': ' . People::find($data['seller'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
@@ -368,7 +368,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
+                            return People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
@@ -377,7 +377,7 @@ class SaleResource extends Resource
                     $indicators = [];
 
                     if ($data['client'] ?? null) {
-                        $indicators[] = __('Client') . ': ' . \App\Models\People::find($data['client'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Client') . ': ' . People::find($data['client'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
