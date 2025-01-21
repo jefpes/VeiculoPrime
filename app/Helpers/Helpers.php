@@ -217,17 +217,6 @@ if (!function_exists('spell_date')) {
     }
 }
 
-if (!function_exists('home_page_url')) {
-    function home_page_url(): string
-    {
-        if (env("APP_ENV") == "local") {
-            return "http://" . $_SERVER["HTTP_HOST"];
-        }
-
-        return "https://" . $_SERVER["HTTP_HOST"];
-    }
-}
-
 //tools end
 
 //tenant begin
