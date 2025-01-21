@@ -47,6 +47,3 @@ jobs:
 
       - name: Execute Laravel Pint
         run: vendor/bin/pint --test
-
-      - name: PHP optimize
-        run: php artisan optimize
