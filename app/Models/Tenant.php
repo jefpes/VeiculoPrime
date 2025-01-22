@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 /**
@@ -41,6 +41,10 @@ use Illuminate\Database\Eloquent\{Model, SoftDeletes};
  * @method HasMany vehicleModels()
  * @property \App\Models\VehicleType $vehicleTypes
  * @method HasMany vehicleTypes()
+ * @property \App\Models\Settings $setting
+ * @method HasMany setting()
+ * @property string $getTenantUrl
+ * @method string getTenantUrl()
  */
 class Tenant extends Model
 {
@@ -126,6 +130,11 @@ class Tenant extends Model
     public function vehicleTypes(): HasMany
     {
         return $this->hasMany(VehicleType::class);
+    }
+
+    public function setting(): HasOne
+    {
+        return $this->hasOne(Settings::class);
     }
 
     public function getTenantUrl(): string

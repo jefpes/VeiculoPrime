@@ -7,6 +7,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @php
+        $tenants = \App\Models\Tenant::with('setting')->get();
+
         $settings = \App\Models\Settings::first();
 
         $stores = \App\Models\Store::with('phones')->get();
@@ -100,6 +102,6 @@
     {{ $slot }}
 </main>
 
-<x-footer :settings="$settings" :stores="$stores"/>
+<x-footer :settings="$settings" :stores="$stores" :tenants="$tenants"/>
 </body>
 </html>

@@ -1,4 +1,4 @@
-@props(['settings', 'stores'])
+@props(['settings', 'stores', 'tenants'])
 <footer class="bg-[var(--f-footer-background-color)] pt-8 mx-auto">
     <div class="container mx-auto w-full p-4 py-6">
         @if (tenant())
@@ -22,16 +22,24 @@
                 @endif
             </div>
             @else
-            <div class="md:flex space-x-2 md:space-y-2 md:flex-auto md:justify-between ">
-                @php
-                   $tenants = \App\Models\Tenant::all();
-                @endphp
-                    <x-footer.column title="Lojas Parceiras">
-                    @foreach ($tenants as $t)
-                        <x-footer.column.link :href="$t->getTenantUrl()" text="{{ $t->name }}" />
-                    @endforeach
-                    </x-footer.column>
-                    @if ($settings->facebook || $settings->instagram || $settings->twitter || $settings->linkedin || $settings->youtube || $settings->whatsapp)
+            <div class="md:flex space-x-2 md:space-y-2">
+                <div class="w-full">
+                <h2 class="mb-6 text-md font-semibold text-[var(--f-text-variant-9)] uppercase"> Lojas Parceiras </h2>
+                <div class="flex flex-wrap grow">
+                    <ul class="text-[var(--f-text-variant-5)] text-2xl">
+                        @foreach ($tenants as $t)
+                            <a href="{{ $t->getTenantUrl() }}" target="_blank" >
+                                @if ($t->setting->logo)
+                                <img class="object-fill w-80 max-h-12 rounded-t-lg " src="{{ image_path($t->setting->logo) }}" alt=""/>
+                                @else
+                                <li class="hover:underline"> {{ $t->name }} </li>
+                                @endif
+                            </a>
+                        @endforeach
+                    </ul>
+                </div>
+                </div>
+                @if ($settings->facebook || $settings->instagram || $settings->twitter || $settings->linkedin || $settings->youtube || $settings->whatsapp)
                     <x-footer.column title="Social">
                         <x-footer.social-links :settings="$settings" />
                     </x-footer.column>
