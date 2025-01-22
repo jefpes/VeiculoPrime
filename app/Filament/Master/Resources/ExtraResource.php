@@ -3,6 +3,7 @@
 namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\ExtraResource\{Pages};
+use App\Forms\Components\SvgColumn;
 use App\Models\Extra;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -34,6 +35,9 @@ class ExtraResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                SvgColumn::make('icon')
+                    ->label('Ícone')
+                    ->svg(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
