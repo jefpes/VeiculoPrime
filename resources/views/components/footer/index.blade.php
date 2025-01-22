@@ -24,20 +24,18 @@
             @else
             <div class="md:flex space-x-2 md:space-y-2">
                 <div class="w-full">
-                <h2 class="mb-6 text-md font-semibold text-[var(--f-text-variant-9)] uppercase"> Lojas Parceiras </h2>
-                <div class="flex flex-wrap grow">
-                    <ul class="text-[var(--f-text-variant-5)] text-2xl">
+                <h2 class="mb-4 text-md font-semibold text-[var(--f-text-variant-9)] uppercase"> Lojas Parceiras </h2>
+                    <ul class="text-[var(--f-text-variant-5)] text-2xl flex flex-wrap gap-2">
                         @foreach ($tenants as $t)
-                            <a href="{{ $t->getTenantUrl() }}" target="_blank" >
+                            <a href="{{ $t->getTenantUrl() }}" target="_blank">
                                 @if ($t->setting->logo)
-                                <img class="object-fill w-80 max-h-12 rounded-t-lg " src="{{ image_path($t->setting->logo) }}" alt=""/>
+                                    <img class="object-fill max-w-80 max-h-12 rounded-t-lg" src="{{ image_path($t->setting->logo) }}" alt=""/>
                                 @else
-                                <li class="hover:underline"> {{ $t->name }} </li>
+                                    <li class="hover:underline"> {{ $t->name }} </li>
                                 @endif
                             </a>
                         @endforeach
                     </ul>
-                </div>
                 </div>
                 @if ($settings->facebook || $settings->instagram || $settings->twitter || $settings->linkedin || $settings->youtube || $settings->whatsapp)
                     <x-footer.column title="Social">
@@ -49,11 +47,7 @@
         <x-footer.divider />
 
         <div class="flex items-center justify-center">
-          <span class="text-sm text-[var(--f-text-variant-5)] sm:text-center">© {{ now()->year }}
-              <a href="#" class="hover:underline">
-                  {{ config('app.name') }}
-              </a>. {{ trans('All Rights Reserved.') }}
-          </span>
+            <a class="text-sm text-[var(--f-text-variant-5)] hover:text-[var(--f-text-variant-10)] sm:text-center hover:underline" href="{{ config('app.url') }}">© {{ now()->year }} {{ config('app.name') }} . {{ trans('All Rights Reserved.') }}</a>
         </div>
     </div>
 </footer>
