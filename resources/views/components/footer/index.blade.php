@@ -24,9 +24,18 @@
             @else
             <div class="md:flex space-x-2 md:space-y-2 md:flex-auto md:justify-between ">
                 @php
-                   $tenant = \App\Models\Tenant::all();
+                   $tenants = \App\Models\Tenant::all();
                 @endphp
-
+                    <x-footer.column title="Lojas Parceiras">
+                    @foreach ($tenants as $t)
+                        <x-footer.column.link :href="$t->getTenantUrl()" text="{{ $t->name }}" />
+                    @endforeach
+                    </x-footer.column>
+                    @if ($settings->facebook || $settings->instagram || $settings->twitter || $settings->linkedin || $settings->youtube || $settings->whatsapp)
+                    <x-footer.column title="Social">
+                        <x-footer.social-links :settings="$settings" />
+                    </x-footer.column>
+                @endif
             </div>
         @endif
         <x-footer.divider />

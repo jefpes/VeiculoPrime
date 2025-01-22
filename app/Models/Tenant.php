@@ -127,4 +127,13 @@ class Tenant extends Model
     {
         return $this->hasMany(VehicleType::class);
     }
+
+    public function getTenantUrl(): string
+    {
+        if (config('app.env') === 'local') {
+            return 'http://' . $this->domain . '.' . $_SERVER["HTTP_HOST"];
+        }
+
+        return 'https://' . $this->domain . '.' . $_SERVER["HTTP_HOST"];
+    }
 }
