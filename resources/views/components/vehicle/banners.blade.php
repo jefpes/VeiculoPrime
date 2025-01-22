@@ -16,8 +16,6 @@
             @endforeach
         </div>
         <div class="swiper-scrollbar"></div>
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
     </div>
 
     <div x-cloak x-show="imageModalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="imageModalIsOpen" @keydown.esc.window="imageModalIsOpen = false" @click.self="imageModalIsOpen = false" class="fixed inset-0 z-30 flex items-center justify-center bg-black/20 p-4 backdrop-blur-md lg:p-8" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">

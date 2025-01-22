@@ -3,6 +3,7 @@
 namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\AccessoryResource\{Pages};
+use App\Forms\Components\SvgColumn;
 use App\Models\Accessory;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -34,13 +35,9 @@ class AccessoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon')
-                    ->badge()
-                    ->icon(function ($state) {
-                        return "data:image/svg+xml;utf8,{$state}";
-                    })
-                    ->searchable()
-                    ->sortable(),
+                SvgColumn::make('icon')
+                    ->label('Ícone')
+                    ->svg(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

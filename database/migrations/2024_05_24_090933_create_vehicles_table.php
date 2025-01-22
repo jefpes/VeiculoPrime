@@ -29,7 +29,7 @@ return new class () extends Migration {
             $table->string('fuel');
             $table->string('engine_power');
             $table->string('steering')->nullable();
-            $table->string('transmission');
+            $table->string('transmission')->nullable();
             $table->string('doors')->nullable();
             $table->string('seats')->nullable();
             $table->string('color');
