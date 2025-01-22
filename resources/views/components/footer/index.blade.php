@@ -2,7 +2,7 @@
 <footer class="bg-[var(--f-footer-background-color)] pt-8 mx-auto">
     <div class="container mx-auto w-full p-4 py-6">
         <div class="md:flex md:justify-between">
-            <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+            <div class="md:flex space-x-2 md:space-y-2 md:flex-auto md:justify-between ">
                 <x-footer.column title="Addresses">
                     @foreach ($stores as $s)
                         <x-footer.column.link :href="$s->gerarLinkGoogleMaps()" text="{{ $s->fullAddress }}" />
@@ -15,9 +15,11 @@
                         @endforeach
                     @endforeach
                 </x-footer.column>
-                <x-footer.column title="Social">
-                    <x-footer.social-links :settings="$settings" />
-                </x-footer.column>
+                @if ($settings->facebook || $settings->instagram || $settings->twitter || $settings->linkedin || $settings->youtube || $settings->whatsapp)
+                    <x-footer.column title="Social">
+                        <x-footer.social-links :settings="$settings" />
+                    </x-footer.column>
+                @endif
             </div>
         </div>
 
