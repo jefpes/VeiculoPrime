@@ -28,7 +28,7 @@
                     <ul class="text-[var(--f-text-variant-5)] text-2xl flex flex-wrap gap-2">
                         @foreach ($tenants as $t)
                             <a href="{{ $t->getTenantUrl() }}" target="_blank">
-                                @if ($t->setting->logo)
+                                @if ($t->setting->logo && Storage::disk('public')->exists($t->setting->logo))
                                     <img class="object-fill max-w-80 max-h-12 rounded-t-lg" src="{{ image_path($t->setting->logo) }}" alt=""/>
                                 @else
                                     <li class="hover:underline"> {{ $t->name }} </li>
