@@ -12,5 +12,7 @@
     <x-header.mobile-menu.link href="{{ url('/vehicles') }}" text="Vehicles" :bold="true" />
     <x-header.mobile-menu.link href="{{ url('/about') }}" text="About" :bold="true" />
 
-    <x-header.mobile-menu.button text="Login" href="{{ route('filament.admin.auth.login') }}" />
+    @if (tenant())
+        <x-header.mobile-menu.button text="Login" href="{{ route('filament.admin.auth.login') }}" />
+    @endif
 </ul>

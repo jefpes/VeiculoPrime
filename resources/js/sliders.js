@@ -38,10 +38,6 @@ const productBannerSlider = new Swiper("#product-banner-slider", {
         el: ".swiper-scrollbar",
         hide: false,
       },
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
     breakpoints: {
         640: {
             slidesPerView: 3,
