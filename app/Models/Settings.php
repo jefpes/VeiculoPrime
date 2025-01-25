@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
  * @property ?float $interest_rate_sale
  * @property ?float $interest_rate_installment
  * @property ?float $late_fee
+ * @property ?bool $marketplace
  *
  * @property ?string $font_family
  * @property ?string $primary_color

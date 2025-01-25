@@ -89,7 +89,6 @@ class TenantResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('due_day')
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('marketplace'),
                 Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
