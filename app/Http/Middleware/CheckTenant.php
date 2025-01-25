@@ -25,8 +25,8 @@ class CheckTenant
 
         $tenant = $this->validTenancyExists($request);
 
-        // Se não há tenant, permite acesso direto.
-        if (is_null($tenant)) {
+        // Se não há subdomain, permite acesso direto.
+        if ($tenant === true) {
             session()->put('is_master', true); // Define que está no modo master.
 
             return $next($request);
@@ -70,11 +70,15 @@ class CheckTenant
     {
         list($subdomain) = explode('.', $request->getHost(), 2);
 
+        // Se não há subdomain, retorna true para indicar acesso master
+        if (empty($subdomain)) {
+            return true;
+        }
+
         $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
         if ($tenant === null) {
-
-            return null;
+            abort(403, 'Tenant not found. Access forbidden.');
         }
 
         return $tenant;
