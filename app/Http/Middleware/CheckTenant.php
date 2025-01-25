@@ -51,7 +51,7 @@ class CheckTenant
         }
 
         // Verifica se o tenant do usuário logado corresponde ao tenant da sessão
-        if (Auth::user()->tenant?->id !== $tenant->id) { //@phpstan-ignore-line
+        if (auth_user()->tenant_id !== $tenant->id) {
             Auth::logout();
 
             return redirect('/login')->with('no_access', true);
@@ -73,7 +73,7 @@ class CheckTenant
         $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
         if ($tenant === null) {
-            // Retorna null caso não encontre um tenant válido.
+
             return null;
         }
 

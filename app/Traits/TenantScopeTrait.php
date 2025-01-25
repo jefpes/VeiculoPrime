@@ -28,7 +28,7 @@ trait TenantScopeTrait
     private static function defineTenant($model): void //@phpstan-ignore-line
     {
         if (Auth::check()) {
-            $model->tenant_id = Auth::user()->tenant_id; //@phpstan-ignore-line
+            $model->tenant_id = auth_user()->tenant_id;
         } else {
             if (session()->get('tenant') !== null) {
                 $model->tenant_id = session()->get('tenant')->id;

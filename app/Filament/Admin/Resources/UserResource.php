@@ -20,6 +20,10 @@ class UserResource extends Resource
 
     protected static ?string $cluster = ManagementCluster::class;
 
+    public static null|string $tenantOwnershipRelationshipName = "stores";
+
+    protected static ?string  $tenantRelationshipName = "users";
+
     protected static ?int $navigationSort = 12;
 
     public static function getSubNavigationPosition(): SubNavigationPosition

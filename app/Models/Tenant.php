@@ -73,9 +73,9 @@ class Tenant extends Model
         ];
     }
 
-    public function user(): BelongsToMany
+    public function user(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
 
     public function brands(): HasMany

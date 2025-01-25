@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Observers\RoleObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\{ObservedBy};
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\{Builder};
 
 /**
  * Class Role
@@ -46,10 +45,5 @@ class Role extends BaseModel
     public function abilities(): BelongsToMany
     {
         return $this->belongsToMany(Ability::class);
-    }
-
-    public function scopeHierarchy(Builder $q, User $user): Builder
-    {
-        return $q->where('hierarchy', '>=', $user->roles()->pluck('hierarchy')->max());
     }
 }

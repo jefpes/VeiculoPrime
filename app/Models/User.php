@@ -119,11 +119,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         return $h_user_loged <= $h_user_param;
     }
 
-    public function scopeSearch(Builder $q, string $val): Builder
-    {
-        return $q->where('name', 'like', "%{$val}%");
-    }
-
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
