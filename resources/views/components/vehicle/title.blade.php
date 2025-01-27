@@ -13,7 +13,7 @@
                 />
             @else
                 <h1 class="text-lg font-bold text-[var(--f-neutral-900)]">
-                    {{ $settings->name ?? 'Veiculo Prime' }}
+                    {{ $vehicle->store->tenant->setting->name ?? 'Veiculo Prime' }}
                 </h1>
             @endif
         </a>

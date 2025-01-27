@@ -31,7 +31,7 @@
                                 @if ($t->setting->logo && Storage::disk('public')->exists($t->setting->logo))
                                     <img class="object-fill max-w-80 max-h-12 rounded-t-lg" src="{{ image_path($t->setting->logo) }}" alt=""/>
                                 @else
-                                    <li class="hover:underline"> {{ $t->name }} </li>
+                                    <li class="hover:underline"> {{ $t->setting->name }} </li>
                                 @endif
                             </a>
                         @endforeach
