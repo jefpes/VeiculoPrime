@@ -140,10 +140,10 @@ class SettingsPage extends Page
                                 Forms\Components\FileUpload::make('logo')
                                     ->image()
                                     ->directory('settings'),
-                                Forms\Components\FileUpload::make('bg_img')
-                                    ->label('Backgroud image')
-                                    ->image()
-                                    ->directory('settings'),
+                                // Forms\Components\FileUpload::make('bg_img')
+                                //     ->label('Backgroud image')
+                                //     ->image()
+                                //     ->directory('settings'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->image()
                                     ->directory('settings'),
@@ -151,22 +151,22 @@ class SettingsPage extends Page
                                 ->columnSpan(1)
                                 ->columns(3)
                                 ->schema([
-                                    Forms\Components\Select::make('bg_img_opacity')
-                                    ->label('Backgroud image opacity')
-                                    ->options([
-                                        '0'   => '0%',
-                                        '0.1' => '10%',
-                                        '0.2' => '20%',
-                                        '0.3' => '30%',
-                                        '0.4' => '40%',
-                                        '0.5' => '50%',
-                                        '0.6' => '60%',
-                                        '0.7' => '70%',
-                                        '0.8' => '80%',
-                                        '0.9' => '90%',
-                                        '1'   => '100%',
-                                    ])
-                                    ->native(false),
+                                    // Forms\Components\Select::make('bg_img_opacity')
+                                    // ->label('Backgroud image opacity')
+                                    // ->options([
+                                    //     '0'   => '0%',
+                                    //     '0.1' => '10%',
+                                    //     '0.2' => '20%',
+                                    //     '0.3' => '30%',
+                                    //     '0.4' => '40%',
+                                    //     '0.5' => '50%',
+                                    //     '0.6' => '60%',
+                                    //     '0.7' => '70%',
+                                    //     '0.8' => '80%',
+                                    //     '0.9' => '90%',
+                                    //     '1'   => '100%',
+                                    // ])
+                                    // ->native(false),
                                     Forms\Components\Select::make('font_family')
                                     ->columnSpan(2)
                                     ->label('Font type')

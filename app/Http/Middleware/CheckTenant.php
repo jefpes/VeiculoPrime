@@ -78,7 +78,7 @@ class CheckTenant
         $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
         if ($tenant === null && config('app.url') !== env('APP_URL')) {
-            abort(403, 'Tenant not found. Access forbidden.');
+            abort(404);
         }
 
         return $tenant;
