@@ -4,10 +4,8 @@ namespace App\Livewire\Home;
 
 use App\Models\{Vehicle};
 use Illuminate\Support\Collection;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
 class IndexPage extends Component
 {
     public Collection $emphasingVehicles;

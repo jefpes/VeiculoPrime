@@ -4,10 +4,9 @@ namespace App\Livewire\Home;
 
 use App\Models\{Brand, Vehicle, VehicleType};
 use Illuminate\Support\Collection;
-use Livewire\Attributes\{Computed, Layout, Url};
+use Livewire\Attributes\{Computed, Url};
 use Livewire\Component;
 
-#[Layout('layouts.app')]
 class ProductsPage extends Component
 {
     /** @var array<int> */
