@@ -97,7 +97,7 @@ class ProductsPage extends Component
         }
 
         return $v->whereNull('sold_date')
-            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
+            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
             ->when(
