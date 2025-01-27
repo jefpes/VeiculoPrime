@@ -13,7 +13,7 @@ class SettingsSeeder extends Seeder
     {
         \App\Models\Settings::create([
             'tenant_id' => $tenant_id,
-            'name'      => 'Motor Market',
+            'name'      => 'Veiculo Prime',
             'opened_in' => '2021-07-02',
             'cnpj'      => '99.999.999/9999-99',
             'about'     => 'Somos uma empresa de venda de veículos, na qual prezamos pela qualidade e satisfação do cliente.',

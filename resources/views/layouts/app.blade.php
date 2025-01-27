@@ -25,7 +25,7 @@
         $bgStyleString = implode(' ', $bgStyles);
     @endphp
 
-    <title>{{ $settings?->name ?? 'Motor Market' }}</title>
+    <title>{{ $settings?->name ?? 'Veiculo Prime' }}</title>
 
     @if($settings && $settings->favicon)
         <link rel="icon" type="image/x-icon" href="{{ image_path($settings->favicon) }}">

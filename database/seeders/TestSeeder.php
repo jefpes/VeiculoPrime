@@ -19,7 +19,6 @@ class TestSeeder extends Seeder
             'domain' => $domain,
         ]);
 
-        // Criar o usuário 'master'
         $user = User::create([
             'tenant_id'         => $tenant->id,
             'name'              => $name,

@@ -16,7 +16,7 @@ class StoreFactory extends Factory
     {
         return [
             'name'         => $this->faker->company,
-            'slug'         => $this->faker->slug,
+            'slug'         => $this->faker->unique()->word(),
             'active'       => true,
             'zip_code'     => $this->faker->postcode,
             'state'        => $this->faker->state,

@@ -79,9 +79,10 @@ class SettingsPage extends Page
                                 Forms\Components\Select::make('marketplace')
                                     ->label('Marketplace')
                                     ->options([
-                                        '0' => 'Exibir no marketplace',
-                                        '1' => 'Não exibir no marketplace',
-                                    ]),
+                                        '0' => 'Não exibir no marketplace',
+                                        '1' => 'Exibir no marketplace',
+                                    ])
+                                    ->required(),
                                 Forms\Components\MarkdownEditor::make('about')
                                     ->label('About')
                                     ->disableToolbarButtons([
