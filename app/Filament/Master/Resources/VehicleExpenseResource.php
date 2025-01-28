@@ -37,16 +37,17 @@ class VehicleExpenseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('vehicle_id')
-                        ->relationship('vehicle', 'id')
-                        ->options(function () {
-                            return Vehicle::get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
-                                return [
-                                    $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})",
-                                ];
-                            });
-                        })
-                        ->required(),
+                Select::make('vehicle_id')
+                    ->searchable()
+                    ->relationship('vehicle', 'id')
+                    ->options(function () {
+                        return Vehicle::get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
+                            return [
+                                $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})",
+                            ];
+                        });
+                    })
+                    ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
                 Money::make('value')
@@ -120,6 +121,17 @@ class VehicleExpenseResource extends Resource
                 ->options(fn () => \App\Models\VehicleModel::all()->mapWithKeys(fn ($model) => [
                     $model->id => "{$model->name}",
                 ])),
+
+            Select::make('vehicle_id')
+                ->searchable()
+                ->relationship('vehicle', 'id')
+                ->options(function () {
+                    return Vehicle::get()->mapWithKeys(function (Vehicle $vehicle) { //@phpstan-ignore-line
+                        return [
+                            $vehicle->id => "{$vehicle->plate} - {$vehicle->model->name} ({$vehicle->year_one}/{$vehicle->year_two})",
+                        ];
+                    });
+                }),
         ])
         ->query(function (Builder $query, array $data): Builder {
             // Filtering by dates
@@ -133,6 +145,10 @@ class VehicleExpenseResource extends Resource
             // Filtering by model
             if (!empty($data['model'])) {
                 $query->whereHas('vehicle', fn ($query) => $query->where('vehicle_model_id', $data['model']));
+            }
+
+            if (!empty($data['vehicle_id'])) {
+                $query->whereHas('vehicle', fn ($query) => $query->where('vehicle_id', $data['vehicle_id']));
             }
 
             return $query;
@@ -164,6 +180,14 @@ class VehicleExpenseResource extends Resource
 
                 if ($modelName) {
                     $indicators[] = __('Model') . ': ' . $modelName;
+                }
+            }
+
+            if (!empty($data['vehicle_id'])) {
+                $plate = Vehicle::query()->find($data['vehicle_id'])->plate ?? null;
+
+                if ($plate) {
+                    $indicators[] = __('Plate') . ': ' . $plate;
                 }
             }
 
