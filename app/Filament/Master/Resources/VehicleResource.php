@@ -252,6 +252,11 @@ class VehicleResource extends Resource
                     ->money('BRL')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->summarize(Sum::make()->money('BRL')),
+                TextColumn::make('expenses.value')
+                    ->label('Expenses')
+                    ->money('BRL')
+                    ->state(fn ($record) => $record->expenses()->exists() ? $record->expenses()->sum('value') : 0)
+                    ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('model.name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
