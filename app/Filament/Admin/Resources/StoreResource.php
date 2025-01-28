@@ -96,6 +96,8 @@ class StoreResource extends Resource
                                     ->maxLength(255)
                                     ->rows(1)
                                     ->columnSpanFull(),
+                                Forms\Components\Textarea::make('link_google_maps')
+                                    ->columnSpanFull(),
                             ]),
                             Forms\Components\Grid::make()->columnSpan(1)->columns(1)->schema([
                                 FormFields::setPhoneFields()->grid(1),

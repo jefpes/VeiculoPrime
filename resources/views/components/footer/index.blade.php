@@ -5,7 +5,13 @@
             <div class="md:flex space-x-2 md:space-y-2 md:flex-auto md:justify-between ">
                 <x-footer.column title="Addresses">
                     @foreach ($stores as $s)
-                        <x-footer.column.link :href="$s->gerarLinkGoogleMaps()" text="{{ $s->fullAddress }}" />
+                        @if ($s->link_google_maps)
+                            <x-footer.column.link :href="$s->link_google_maps" text="{{ $s->fullAddress }}" />
+                            @else
+                            <li class="mb-4">
+                                {{ $s->fullAddress }}
+                            </li>
+                        @endif
                     @endforeach
                 </x-footer.column>
                 <x-footer.column title="Phones">

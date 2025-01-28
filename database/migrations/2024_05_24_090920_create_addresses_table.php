@@ -20,6 +20,7 @@ return new class () extends Migration {
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('complement')->nullable();
+            $table->longText('link_google_maps')->nullable();
             $table->timestamps();
         });
     }
