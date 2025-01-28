@@ -55,4 +55,9 @@ class VehicleExpense extends BaseModel
     {
         return $this->belongsTo(User::class);
     }
+
+    public function expenseCategory(): BelongsTo
+    {
+        return $this->belongsTo(VehicleExpenseCategory::class);
+    }
 }
