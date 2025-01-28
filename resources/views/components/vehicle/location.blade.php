@@ -2,7 +2,8 @@
 
 <div class="hover:text-blue-700 hover:underline">
     @if ($vehicle->store->link_google_maps)
-        <a href="{{ $vehicle->store->link_google_maps }}" class="border-y border-[var(--f-text-variant-4)] py-2 flex justify-between items-center mt-4">
+        <a href="{{ $vehicle->store->link_google_maps }}" class="border-y border-[var(--f-text-variant-4)] py-2 flex justify-between items-center mt-4"
+            target="_blank">
             <div class="flex items-center gap-3">
                 <div class="">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
