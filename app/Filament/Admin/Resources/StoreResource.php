@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\StoreResource\{Pages};
 use App\Forms\Components\{ZipCode};
 use App\Models\Store;
@@ -11,7 +10,6 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Tables};
@@ -21,20 +19,18 @@ class StoreResource extends Resource
 {
     protected static ?string $model = Store::class;
 
-    protected static ?string $cluster = ManagementCluster::class;
-
     protected static ?int $navigationSort = 11;
-
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-    }
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static bool $isScopedToTenant = false;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Settings');
+    }
 
     public static function getModelLabel(): string
     {

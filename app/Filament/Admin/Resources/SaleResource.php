@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
-use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
 use App\Models\{People, Sale, Store, Vehicle, VehicleModel};
@@ -13,7 +12,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
@@ -29,16 +27,14 @@ class SaleResource extends Resource
 {
     protected static ?string $model = Sale::class;
 
-    protected static ?string $cluster = FinancialCluster::class;
-
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-    }
-
     protected static ?int $navigationSort = 31;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Financial');
+    }
 
     public static function getModelLabel(): string
     {

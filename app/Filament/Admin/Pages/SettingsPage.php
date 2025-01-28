@@ -3,19 +3,16 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
-use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Models\{Settings};
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
-use Filament\Pages\{Page, SubNavigationPosition};
+use Filament\Pages\{Page};
 use Filament\{Forms};
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class SettingsPage extends Page
 {
     protected static string $view = 'filament.pages.settings-page';
-
-    protected static ?string $cluster = ManagementCluster::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
@@ -32,13 +29,17 @@ class SettingsPage extends Page
 
     protected static ?int $navigationSort = 15;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Settings');
+    }
+
     /** @var array<string, mixed> */
     public ?array $data = [];
 
     public function mount(): void
     {
-        static::$subNavigationPosition = auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-        $this->settings                = Settings::query()->where('tenant_id', tenant()->id)->firstOrFail();
+        $this->settings = Settings::query()->where('tenant_id', tenant()->id)->firstOrFail();
         $this->form->fill($this->settings->toArray()); //@phpstan-ignore-line
     }
 
