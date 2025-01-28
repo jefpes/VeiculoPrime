@@ -10,11 +10,11 @@ class PeopleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(?string $tenant_id = null): void
     {
         for ($i = 1; $i <= 10; $i++) {
             $photo = "people_$i.webp";
-            $model = People::factory()
+            $model = People::factory(state: ['tenant_id' => $tenant_id])
                         ->withAddress()
                         ->withAffiliate()
                         ->withPhone()

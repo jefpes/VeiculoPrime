@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
-use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\PaymentInstallmentResource\{Pages};
 use App\Models\{PaymentInstallment, People, Settings};
 use App\Tools\Contracts;
@@ -12,7 +11,6 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\{Get, Set};
 use Filament\Notifications\Notification;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Average, Sum};
 use Filament\Tables\Enums\FiltersLayout;
@@ -27,16 +25,14 @@ class PaymentInstallmentResource extends Resource
 {
     protected static ?string $model = PaymentInstallment::class;
 
-    protected static ?string $cluster = FinancialCluster::class;
-
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-    }
-
     protected static ?int $navigationSort = 32;
 
     protected static ?string $navigationIcon = 'heroicon-o-swatch';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Financial');
+    }
 
     public static function getModelLabel(): string
     {
@@ -365,7 +361,7 @@ class PaymentInstallmentResource extends Resource
                         $indicators = [];
 
                         if (!empty($data['client'])) {
-                            $modelName = \App\Models\People::find($data['client'])->name ?? null; //@phpstan-ignore-line
+                            $modelName = People::find($data['client'])->name ?? null; //@phpstan-ignore-line
 
                             if ($modelName) {
                                 $indicators[] = __('Client') . ': ' . $modelName;

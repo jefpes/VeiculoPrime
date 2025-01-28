@@ -7,22 +7,12 @@ use App\Traits\{HasPhoto, HasStore};
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasManyThrough};
+use Illuminate\Database\Eloquent\{Builder, Model};
+use Illuminate\Support\Carbon;
 
 /**
  * Class Vehicle
- *
- * @property \App\Models\VehicleModel $model
- * @property \App\Models\Photo $photos
- * @property \App\Models\Sale $sale
- * @property \App\Models\PaymentInstallment $paymentInstallments
- * @property \App\Models\VehicleExpense $expenses
- * @property \App\Models\People $supplier
- * @property \App\Models\People $buyer
- * @property \App\Models\Accessory $accessories
- * @property \App\Models\Extra $extras
- * @property \App\Models\Store $store
  *
  * @method BelongsTo model()
  * @method MorphMany photos()
@@ -34,38 +24,55 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, H
  * @method BelongsToMany accessories()
  * @method BelongsToMany extras()
  * @method BelongsTo store()
+ * @method BelongsTo tenant()
+ * @method void scopeVehicleMarketPlace()
+ *
+ * @property \App\Models\VehicleModel $model
+ * @property \App\Models\Photo $photos
+ * @property \App\Models\Sale $sale
+ * @property \App\Models\PaymentInstallment $paymentInstallments
+ * @property \App\Models\VehicleExpense $expenses
+ * @property \App\Models\People $supplier
+ * @property \App\Models\People $buyer
+ * @property \App\Models\Accessory $accessories
+ * @property \App\Models\Extra $extras
+ * @property \App\Models\Store $store
+ * @property \App\Models\Tenant $tenant
  *
  * @property string $id
+ * @property ?string $tenant_id
  * @property string $vehicle_model_id
- * @property string $supplier_id
- * @property string $buyer_id
- * @property string $store_id
- * @property \Illuminate\Support\Carbon $purchase_date
- * @property float $fipe_price
+ * @property ?string $supplier_id
+ * @property ?string $buyer_id
+ * @property ?string $store_id
+ * @property Carbon $purchase_date
+ * @property ?float $fipe_price
  * @property float $purchase_price
  * @property float $sale_price
- * @property float|null $promotional_price
+ * @property ?float $promotional_price
  * @property string $year_one
  * @property string $year_two
  * @property int $km
  * @property string $fuel
  * @property string $engine_power
- * @property string $steering
- * @property string $transmission
- * @property int $doors
- * @property int $seats
+ * @property ?string $steering
+ * @property ?string $transmission
+ * @property ?int $doors
+ * @property ?int $seats
  * @property string $color
  * @property string $plate
- * @property string $chassi
- * @property string $renavam
- * @property \Illuminate\Support\Carbon $sold_date
- * @property string $description
- * @property string $annotation
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
+ * @property ?string $chassi
+ * @property ?string $renavam
+ * @property ?string $crv_number
+ * @property ?string $crv_code
+ * @property ?Carbon $sold_date
+ * @property ?string $description
+ * @property ?string $annotation
+ * @property ?Carbon $created_at
+ * @property ?Carbon $updated_at
  */
 #[ObservedBy(VehicleObserver::class)]
-class Vehicle extends Model
+class Vehicle extends BaseModel
 {
     use HasUlids;
     use HasFactory;
@@ -73,6 +80,7 @@ class Vehicle extends Model
     use HasStore;
 
     protected $fillable = [
+        'tenant_id',
         'store_id',
         'buyer_id',
         'vehicle_model_id',
@@ -95,10 +103,21 @@ class Vehicle extends Model
         'plate',
         'chassi',
         'renavam',
+        'crv_number',
+        'crv_code',
         'sold_date',
         'description',
         'annotation',
     ];
+
+    public function scopeVehicleMarketPlace(Builder $query): void
+    {
+        $query->whereHas('tenant', function ($query) {
+            $query->whereHas('setting', function ($query) {
+                $query->where('marketplace', true);
+            });
+        });
+    }
 
     public function model(): BelongsTo
     {

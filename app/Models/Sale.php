@@ -5,17 +5,10 @@ namespace App\Models;
 use App\Traits\HasStore;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
 
 /**
  * Class Sale
- *
- * @property \App\Models\Vehicle $vehicle
- * @property \App\Models\People $client
- * @property \App\Models\People $seller
- * @property \App\Models\PaymentInstallment $paymentInstallments
- * @property \App\Models\Store $store
  *
  * @method BelongsTo vehicle()
  * @method BelongsTo client()
@@ -23,6 +16,11 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @method HasMany paymentInstallments()
  * @method BelongsTo store()
  *
+ * @property \App\Models\Vehicle $vehicle
+ * @property \App\Models\People $client
+ * @property \App\Models\People $seller
+ * @property \App\Models\PaymentInstallment $paymentInstallments
+ * @property \App\Models\Store $store
  * @property string $id
  * @property string $vehicle_id
  * @property string $client_id
@@ -43,13 +41,14 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
-class Sale extends Model
+class Sale extends BaseModel
 {
     use HasUlids;
     use HasFactory;
     use HasStore;
 
     protected $fillable = [
+        'tenant_id',
         'store_id',
         'vehicle_id',
         'client_id',

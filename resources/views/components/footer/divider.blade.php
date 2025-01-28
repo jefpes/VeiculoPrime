@@ -1,1 +1,1 @@
-<hr class="my-6 border-[var(--f-text-variant-2)] sm:mx-auto lg:my-8" />
+<hr class="my-4 border-[var(--f-text-variant-2)] sm:mx-auto" />

@@ -4,10 +4,9 @@ namespace App\Livewire\Home;
 
 use App\Models\{Brand, Vehicle, VehicleType};
 use Illuminate\Support\Collection;
-use Livewire\Attributes\{Computed, Layout, Url};
+use Livewire\Attributes\{Computed, Url};
 use Livewire\Component;
 
-#[Layout('layouts.app')]
 class ProductsPage extends Component
 {
     /** @var array<int> */
@@ -46,8 +45,13 @@ class ProductsPage extends Component
     #[Computed()]
     public function vehicles(): Collection
     {
-        return Vehicle::with('model.type', 'model.brand', 'photos')
-            ->whereNull('sold_date')
+        $v = Vehicle::with('model.type', 'model.brand', 'photos', 'store');
+
+        if (tenant() === null) {
+            $v->vehicleMarketPlace(); // @phpstan-ignore-line
+        }
+
+        return $v->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model.brand', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
@@ -63,8 +67,13 @@ class ProductsPage extends Component
     #[Computed()]
     public function years(): Collection
     {
-        return Vehicle::with('model.type')
-            ->whereNull('sold_date')
+        $v = Vehicle::with('model.type');
+
+        if (tenant() === null) {
+            $v->vehicleMarketPlace(); // @phpstan-ignore-line
+        }
+
+        return $v->whereNull('sold_date')
             ->when($this->selectedBrands, fn ($query) => $query->whereHas('model.brand', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when(
                 $this->vehicle_type,
@@ -80,9 +89,14 @@ class ProductsPage extends Component
     #[Computed()]
     public function prices(): Collection
     {
-        return Vehicle::with('model.type')
-            ->whereNull('sold_date')
-            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->selectedBrands)))
+        $v = Vehicle::with('model.type');
+
+        if (tenant() === null) {
+            $v->vehicleMarketPlace(); // @phpstan-ignore-line
+        }
+
+        return $v->whereNull('sold_date')
+            ->when($this->selectedBrands, fn ($query) => $query->whereHas('model', fn ($query) => $query->whereIn('brand_id', $this->getBrands($this->selectedBrands))))
             ->when($this->year_ini, fn ($query) => $query->where('year_one', '>=', $this->year_ini))
             ->when($this->year_end, fn ($query) => $query->where('year_one', '<=', $this->year_end))
             ->when(
@@ -101,7 +115,7 @@ class ProductsPage extends Component
         return Brand::query()
             ->whereHas('models', function ($query) {
                 $query->whereHas('vehicles', function ($query) {
-                    $query->whereNull('vehicles.sold_date');
+                    $query->vehicleMarketPlace()->whereNull('vehicles.sold_date');
                 });
 
                 if ($this->vehicle_type) {

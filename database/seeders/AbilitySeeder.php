@@ -14,7 +14,7 @@ class AbilitySeeder extends Seeder
     public function run(?string $tenant_id = null): void
     {
         foreach (Permission::cases() as $permission) {
-            Ability::create(['name' => $permission->value]);
+            Ability::updateOrCreate(['name' => $permission->value]);
         }
     }
 }

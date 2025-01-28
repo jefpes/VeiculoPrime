@@ -6,5 +6,7 @@
     </x-header.desktop-menu.dropdown> --}}
 
     <!-- CTA Button -->
-    <x-header.desktop-menu.button text="Login" href="{{ route('filament.admin.auth.login') }}" />
+    @if (tenant())
+        <x-header.desktop-menu.button text="Login" href="{{ route('filament.admin.auth.login') }}" />
+    @endif
 </ul>
