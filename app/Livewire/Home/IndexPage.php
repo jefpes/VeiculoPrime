@@ -2,12 +2,10 @@
 
 namespace App\Livewire\Home;
 
-use App\Models\{Vehicle, VehicleModel};
+use App\Models\{Vehicle};
 use Illuminate\Support\Collection;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
 class IndexPage extends Component
 {
     public Collection $emphasingVehicles;
@@ -20,14 +18,7 @@ class IndexPage extends Component
     {
         $this->emphasingVehicles = $this->getEmphasingVehicles();
 
-        $this->bestSellers = $this->getBestSellers();
-
-        $this->vehicles = Vehicle::query()
-            ->where('sold_date', null)
-            ->with(['model.brand', 'photos', 'store'])
-            ->orderBy('created_at', 'desc')
-            ->limit(16)
-            ->get();
+        $this->vehicles = $this->getVehicles();
     }
 
     private function getEmphasingVehicles(): Collection
@@ -37,30 +28,43 @@ class IndexPage extends Component
             ->where('emphasis', true)
             ->orderBy('created_at', 'desc')
             ->limit(5)
-            ->with(['photos'])
-            ->get(['id']);
+            ->with(['photos']);
 
-        if ($emphasingVehicles->isEmpty()) {
+        if ($emphasingVehicles->get(['id'])->isEmpty()) {
             $emphasingVehicles = Vehicle::query()
                 ->where('sold_date', null)
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
-                ->with(['photos'])
-                ->get(['id']);
+                ->with(['photos']);
         }
 
-        return $emphasingVehicles;
+        if (tenant() == null) {
+            $emphasingVehicles = $emphasingVehicles->whereHas('tenant', function ($query) {
+                $query->whereHas('setting', function ($query) {
+                    $query->where('marketplace', true);
+                });
+            });
+        }
+
+        return $emphasingVehicles->get(['id']);
     }
 
-    private function getBestSellers(): Collection
+    private function getVehicles(): Collection
     {
-        return VehicleModel::query()
-//            ->withCount(['vehicles' => function ($query) {
-//                $query->whereNotNull('sold_date');
-//            }])
-//            ->orderBy('vehicles_count', 'desc')
-            ->with('brand:id,name')
-            ->limit(5)
-            ->get();
+        $v = Vehicle::query()
+            ->with(['model.brand', 'photos', 'store'])
+            ->where('sold_date', null)
+            ->orderBy('created_at', 'desc')
+            ->limit(16);
+
+        if (tenant() == null) {
+            $v = $v->whereHas('tenant', function ($query) {
+                $query->whereHas('setting', function ($query) {
+                    $query->where('marketplace', true);
+                });
+            });
+        }
+
+        return $v->get();
     }
 }

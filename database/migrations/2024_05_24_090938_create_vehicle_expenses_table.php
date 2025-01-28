@@ -15,6 +15,7 @@ return new class () extends Migration {
             $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('store_id')->nullable()->constrained(table: 'stores', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('vehicle_id')->nullable()->constrained(table: 'vehicles', column: 'id')->cascadeOnDelete();
+            $table->foreignUlid('vehicle_expense_category_id')->nullable()->constrained();
             $table->foreignUlid('user_id')->nullable()->constrained(table: 'users', column: 'id');
             $table->date('date');
             $table->string('description');

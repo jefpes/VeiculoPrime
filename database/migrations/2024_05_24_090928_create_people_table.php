@@ -15,7 +15,7 @@ return new class () extends Migration {
             $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->foreignUlid('user_id')->unique()->nullable()->constrained(table: 'users', column: 'id');
             $table->string('name');
-            $table->string('sex');
+            $table->string('sex')->nullable();
             $table->string('person_type')->nullable();
             $table->string('person_id')->nullable();
             $table->string('rg', 20)->nullable();

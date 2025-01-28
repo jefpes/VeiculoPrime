@@ -7,8 +7,8 @@ use App\Traits\{HasPhoto, HasStore};
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasManyThrough};
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Support\Carbon;
 
 /**
@@ -25,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @method BelongsToMany extras()
  * @method BelongsTo store()
  * @method BelongsTo tenant()
+ * @method void scopeVehicleMarketPlace()
  *
  * @property \App\Models\VehicleModel $model
  * @property \App\Models\Photo $photos
@@ -108,6 +109,15 @@ class Vehicle extends BaseModel
         'description',
         'annotation',
     ];
+
+    public function scopeVehicleMarketPlace(Builder $query): void
+    {
+        $query->whereHas('tenant', function ($query) {
+            $query->whereHas('setting', function ($query) {
+                $query->where('marketplace', true);
+            });
+        });
+    }
 
     public function model(): BelongsTo
     {

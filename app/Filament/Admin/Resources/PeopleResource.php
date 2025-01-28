@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{MaritalStatus, Permission, PersonType, Sexes};
-use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Filament\Admin\Resources\PeopleResource\RelationManagers\EmployeeRelationManager;
 use App\Filament\Admin\Resources\PeopleResource\{Pages};
 use App\Models\{People};
@@ -11,7 +10,6 @@ use App\Tools\{FormFields, PhotosRelationManager};
 use Filament\Forms\Form;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Infolist;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -20,20 +18,18 @@ class PeopleResource extends Resource
 {
     protected static ?string $model = People::class;
 
-    protected static ?string $cluster = ManagementCluster::class;
-
     protected static ?int $navigationSort = 14;
-
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
-    }
 
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static bool $isScopedToTenant = false;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Settings');
+    }
 
     public static function getModelLabel(): string
     {

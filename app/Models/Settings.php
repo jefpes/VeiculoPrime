@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
  * @property ?float $interest_rate_sale
  * @property ?float $interest_rate_installment
  * @property ?float $late_fee
+ * @property ?bool $marketplace
  *
  * @property ?string $font_family
  * @property ?string $primary_color
@@ -111,6 +112,7 @@ class Settings extends BaseModel
         'interest_rate_sale',
         'interest_rate_installment',
         'late_fee',
+        'marketplace',
 
         'font_family',
 
@@ -153,6 +155,18 @@ class Settings extends BaseModel
         'bg_img',
         'bg_img_opacity',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'martketplace' => 'bool',
+        ];
+    }
 
     public function ceo(): HasOne
     {

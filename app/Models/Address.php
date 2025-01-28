@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $neighborhood
  * @property string $state
  * @property string $zip_code
+ * @property string $link_google_maps
  * @property string $full_address
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
@@ -43,6 +44,7 @@ class Address extends Model
         'city',
         'state',
         'complement',
+        'link_google_maps',
     ];
 
     public function addressable(): MorphTo
@@ -57,33 +59,5 @@ class Address extends Model
         }
 
         return "{$this->street}, {$this->number} - {$this->neighborhood}, {$this->city} - {$this->state}";
-    }
-
-    public function gerarLinkGoogleMaps(): string
-    {
-        // Monta o endereço completo
-        $enderecoCompleto = trim("$this->street, $this->neighborhood, $this->city, $this->state, $this->zip_code");
-
-        // Remove acentos e caracteres especiais
-        $enderecoSemAcentos = $this->removerCaracteresEspeciais($enderecoCompleto);
-
-        // Codifica o endereço para ser usado na URL
-        $enderecoCodificado = urlencode($enderecoSemAcentos);
-
-        // Monta a URL do Google Maps
-        $urlGoogleMaps = "https://www.google.com/maps?q=$enderecoCodificado";
-
-        return $urlGoogleMaps;
-    }
-
-    public function removerCaracteresEspeciais(string $texto): string
-    {
-        // Remove acentos
-        $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto);
-
-        // Remove caracteres não permitidos (ex: cedilha que pode ser convertido em '?')
-        $texto = preg_replace('/[^a-zA-Z0-9,.\s-]/', '', $texto);
-
-        return $texto;
     }
 }

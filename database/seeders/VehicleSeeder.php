@@ -10,7 +10,7 @@ class VehicleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(?string $tenant_id = null, ?string $vehicle_type = null): void
     {
         $vehicleModels = VehicleModel::query()->where('tenant_id', $tenant_id)->pluck('id', 'name')->toArray();
         $extras        = Extra::all()->pluck('id', 'name');
@@ -694,32 +694,70 @@ class VehicleSeeder extends Seeder
         ];
 
         foreach ($vehicles as $vehicleData) {
-            $vehicle = Vehicle::create([
-                'tenant_id'         => $tenant_id,
-                'store_id'          => $stores->random()->id,
-                'buyer_id'          => $buyers->random()->id,
-                'supplier_id'       => $suppliers->random()->id,
-                'purchase_date'     => $vehicleData['purchase_date'],
-                'fipe_price'        => $vehicleData['fipe_price'],
-                'purchase_price'    => $vehicleData['purchase_price'],
-                'sale_price'        => $vehicleData['sale_price'],
-                'promotional_price' => $vehicleData['promotional_price'] ?? null,
-                'vehicle_model_id'  => $vehicleModels[$vehicleData['model']] ?? null,
-                'year_one'          => $vehicleData['year_one'],
-                'year_two'          => $vehicleData['year_two'],
-                'km'                => $vehicleData['km'],
-                'engine_power'      => $vehicleData['engine_power'],
-                'fuel'              => $vehicleData['fuel'],
-                'steering'          => $vehicleData['steering'] ?? null,
-                'transmission'      => $vehicleData['transmission'],
-                'doors'             => $vehicleData['doors'] ?? null,
-                'seats'             => $vehicleData['seats'] ?? null,
-                'color'             => $vehicleData['color'],
-                'plate'             => $vehicleData['plate'],
-                'chassi'            => $vehicleData['chassi'],
-                'renavam'           => $vehicleData['renavam'],
-                'description'       => $vehicleData['description'],
-            ]);
+
+            if ($vehicle_type === null) {
+                $vehicle = Vehicle::create([
+                    'tenant_id'         => $tenant_id,
+                    'store_id'          => $stores->random()->id,
+                    'buyer_id'          => $buyers->random()->id,
+                    'supplier_id'       => $suppliers->random()->id,
+                    'purchase_date'     => $vehicleData['purchase_date'],
+                    'fipe_price'        => $vehicleData['fipe_price'],
+                    'purchase_price'    => $vehicleData['purchase_price'],
+                    'sale_price'        => $vehicleData['sale_price'],
+                    'promotional_price' => $vehicleData['promotional_price'] ?? null,
+                    'vehicle_model_id'  => $vehicleModels[$vehicleData['model']] ?? null,
+                    'year_one'          => $vehicleData['year_one'],
+                    'year_two'          => $vehicleData['year_two'],
+                    'km'                => $vehicleData['km'],
+                    'engine_power'      => $vehicleData['engine_power'],
+                    'fuel'              => $vehicleData['fuel'],
+                    'steering'          => $vehicleData['steering'] ?? null,
+                    'transmission'      => $vehicleData['transmission'],
+                    'doors'             => $vehicleData['doors'] ?? null,
+                    'seats'             => $vehicleData['seats'] ?? null,
+                    'color'             => $vehicleData['color'],
+                    'plate'             => $vehicleData['plate'],
+                    'chassi'            => $vehicleData['chassi'],
+                    'renavam'           => $vehicleData['renavam'],
+                    'description'       => $vehicleData['description'],
+                ]);
+            } else {
+                $vehicleModelId = $vehicleModels[$vehicleData['model']] ?? null;
+
+                if ($vehicleModelId) {
+                    $vehicleModel = VehicleModel::find($vehicleModelId);
+
+                    if ($vehicleModel && $vehicleModel->vehicle_type_id == $vehicle_type) {
+                        $vehicle = Vehicle::create([
+                            'tenant_id'         => $tenant_id,
+                            'store_id'          => $stores->random()->id,
+                            'buyer_id'          => $buyers->random()->id,
+                            'supplier_id'       => $suppliers->random()->id,
+                            'purchase_date'     => $vehicleData['purchase_date'],
+                            'fipe_price'        => $vehicleData['fipe_price'],
+                            'purchase_price'    => $vehicleData['purchase_price'],
+                            'sale_price'        => $vehicleData['sale_price'],
+                            'promotional_price' => $vehicleData['promotional_price'] ?? null,
+                            'vehicle_model_id'  => $vehicleModelId,
+                            'year_one'          => $vehicleData['year_one'],
+                            'year_two'          => $vehicleData['year_two'],
+                            'km'                => $vehicleData['km'],
+                            'engine_power'      => $vehicleData['engine_power'],
+                            'fuel'              => $vehicleData['fuel'],
+                            'steering'          => $vehicleData['steering'] ?? null,
+                            'transmission'      => $vehicleData['transmission'],
+                            'doors'             => $vehicleData['doors'] ?? null,
+                            'seats'             => $vehicleData['seats'] ?? null,
+                            'color'             => $vehicleData['color'],
+                            'plate'             => $vehicleData['plate'],
+                            'chassi'            => $vehicleData['chassi'],
+                            'renavam'           => $vehicleData['renavam'],
+                            'description'       => $vehicleData['description'],
+                        ]);
+                    }
+                }
+            }
 
             $vehicle->accessories()->attach($accessories->random(rand(1, 5)));
             $vehicle->extras()->attach($extras->random(rand(1, 5)));

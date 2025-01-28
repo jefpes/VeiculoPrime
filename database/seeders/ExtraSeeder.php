@@ -80,7 +80,7 @@ class ExtraSeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            Extra::create(['name' => $d['name'], 'icon' => $d['icon']]);
+            Extra::updateOrCreate(['name' => $d['name'], 'icon' => $d['icon']]);
         }
     }
 }

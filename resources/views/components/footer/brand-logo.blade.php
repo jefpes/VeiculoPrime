@@ -6,7 +6,7 @@
             <img src="{{ image_path($settings->logo) }}" alt="{{$settings->name}} Logo" class="max-w-[150px] me-3" />
         @else
             <h1 class="text-lg font-bold text-[var(--f-neutral-900)]">
-                {{ $settings->name ?? 'Motor Market' }}
+                {{ $settings->name ?? 'Veiculo Prime' }}
             </h1>
         @endif
     </a>

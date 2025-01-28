@@ -18,7 +18,7 @@ class ProductionSeeder extends Seeder
             'name'              => 'master',
             'email'             => 'master@admin.com',
             'email_verified_at' => now(),
-            'password'          => '$2y$12$2/ijnnwmsos7UyWX8k3XR.FJBrxSnGkvsT6EHDgHVTrNn4MmKHpS.',
+            'password'          => '$2y$12$DzxeahiROwwm9RfZbcNstOMOYj1WriCq/RGmdYQ/.mwD/Ot9KIRqG',
         ]);
 
         $role = $user->roles()->create([

@@ -21,7 +21,6 @@ class CreateTenantsTable extends Migration
             $table->string('domain')->unique();
             $table->decimal('monthly_fee', places: 2)->nullable()->default(null);
             $table->integer('due_day')->nullable()->default(5);
-            $table->boolean('marketplace')->default(true);
             $table->boolean('active')->default(true);
             $table->softDeletes();
             $table->timestamps();

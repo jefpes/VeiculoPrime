@@ -96,7 +96,7 @@ class AccessorySeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            Accessory::create(['name' => $d['name'], 'icon' => $d['icon']]);
+            Accessory::updateOrCreate(['name' => $d['name'], 'icon' => $d['icon']]);
         }
     }
 }

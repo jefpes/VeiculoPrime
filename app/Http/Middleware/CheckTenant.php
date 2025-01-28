@@ -25,15 +25,15 @@ class CheckTenant
 
         $tenant = $this->validTenancyExists($request);
 
-        // Se não há tenant, permite acesso direto.
-        if (is_null($tenant)) {
+        // Se não há subdomain, permite acesso direto.
+        if ($tenant === true) {
             session()->put('is_master', true); // Define que está no modo master.
 
             return $next($request);
         }
 
         // Verifica se o tenant está ativo
-        if (!$tenant->active) {
+        if (!$tenant?->active && config('app.url') !== env('APP_URL')) {
             abort(403, 'Tenant is inactive. Access forbidden.');
         }
 
@@ -51,7 +51,7 @@ class CheckTenant
         }
 
         // Verifica se o tenant do usuário logado corresponde ao tenant da sessão
-        if (Auth::user()->tenant?->id !== $tenant->id) { //@phpstan-ignore-line
+        if (auth_user()->tenant_id !== $tenant->id) {
             Auth::logout();
 
             return redirect('/login')->with('no_access', true);
@@ -70,11 +70,15 @@ class CheckTenant
     {
         list($subdomain) = explode('.', $request->getHost(), 2);
 
+        // Se não há subdomain, retorna true para indicar acesso master
+        if (empty($subdomain)) {
+            return true;
+        }
+
         $tenant = $this->tenant->where('domain', $subdomain)->first(); //@phpstan-ignore-line
 
-        if ($tenant === null) {
-            // Retorna null caso não encontre um tenant válido.
-            return null;
+        if ($tenant === null && config('app.url') !== env('APP_URL')) {
+            abort(404);
         }
 
         return $tenant;

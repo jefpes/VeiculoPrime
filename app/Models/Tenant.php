@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\{Model, SoftDeletes};
  * @property string $domain
  * @property float $monthly_fee
  * @property int $due_day
- * @property bool $marketplace
  * @property bool $active
  *
  * @property \App\Models\User $user
@@ -56,7 +55,6 @@ class Tenant extends Model
         'domain',
         'monthly_fee',
         'due_day',
-        'marketplace',
         'active',
     ];
 
@@ -68,14 +66,13 @@ class Tenant extends Model
     protected function casts(): array
     {
         return [
-            'include_in_marketplace' => 'boolean',
-            'active'                 => 'boolean',
+            'active' => 'boolean',
         ];
     }
 
-    public function user(): BelongsToMany
+    public function user(): HasMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
 
     public function brands(): HasMany
