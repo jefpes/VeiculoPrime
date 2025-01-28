@@ -25,6 +25,6 @@ class VehicleExpenseCategory extends BaseModel
 
     public function expenses(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(VehicleExpense::class);
+        return $this->hasMany(VehicleExpense::class, 'vehicle_expense_category_id');
     }
 }

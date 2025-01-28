@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Filament\Forms\Components\{DatePicker, Group, Select};
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -52,6 +53,9 @@ class VehicleExpenseResource extends Resource
                             });
                         })
                         ->required(),
+                Forms\Components\Select::make('vehicle_expense_category_id')
+                        ->relationship('expenseCategory', 'name')
+                        ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
                 Money::make('value')
@@ -81,6 +85,11 @@ class VehicleExpenseResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('expenseCategory.name')
+                    ->label('Category')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable()
@@ -92,19 +101,18 @@ class VehicleExpenseResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('value')
                     ->money('BRL')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Sum::make()->money('BRL')),
             ])
             ->filters([
                 Filter::make('filter')
         ->form([
             Group::make([
-                // Date filters
                 DatePicker::make('expense_date_initial')->label('Expense date after'),
                 DatePicker::make('expense_date_final')->label('Expense date before'),
             ])->columns(2),
 
             Group::make([
-                // Value filters
                 Money::make('value_expense_min')
                     ->afterStateUpdated(
                         fn ($set, $get) => $set('value_expense_min', number_format((float)string_money_to_float($get('value_expense_min')), 2, ',', ''))
@@ -125,6 +133,11 @@ class VehicleExpenseResource extends Resource
                     $model->id => "{$model->name}",
                 ])),
 
+            Select::make('expense_category_id')
+                ->label('Expense category')
+                ->searchable()
+                ->relationship('expenseCategory', 'name'),
+
             Select::make('vehicle_id')
                 ->searchable()
                 ->relationship('vehicle', 'id')
@@ -144,6 +157,8 @@ class VehicleExpenseResource extends Resource
             // Filtering by values
             $query->when($data['value_expense_min'] > 0 && $data['value_expense_min'] !== "0,00", fn ($query) => $query->where('value', '>=', $data['value_expense_min']));
             $query->when($data['value_expense_max'] > 0 && $data['value_expense_max'] !== "0,00", fn ($query) => $query->where('value', '<=', $data['value_expense_max']));
+
+            $query->when($data['expense_category_id'], fn ($query) => $query->where('vehicle_expense_category_id', $data['expense_category_id']));
 
             // Filtering by model
             if (!empty($data['model'])) {
