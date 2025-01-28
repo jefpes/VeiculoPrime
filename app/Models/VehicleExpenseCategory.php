@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class VehicleExpenseCategory
  *
+ * @method HasMany expenses()
+ *
  * @property string $id
  * @property ?string $tenant_id
  * @property string $name
+ * @property VehicleExpense $expenses
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
