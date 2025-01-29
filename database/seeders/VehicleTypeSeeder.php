@@ -18,7 +18,11 @@ class VehicleTypeSeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            VehicleType::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            if ($tenant_id) {
+                VehicleType::create(['name' => $d, 'tenant_id' => $tenant_id]);
+            } else {
+                VehicleType::create(['name' => $d]);
+            }
         }
     }
 }

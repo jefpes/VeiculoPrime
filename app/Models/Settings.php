@@ -7,18 +7,16 @@ use App\Traits\{HasAddress, HasPhone};
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\{HasOne};
 
 /**
  * Class setting
  *
- * @method BelongsTo tenant()
+ * @property \App\Models\Employee $ceo
  * @method HasOne ceo()
  *
- * @property \App\Models\Employee $ceo
- * @property \App\Models\Tenant $tenant
  * @property string $id
- * @property string $tenant_id
  * @property ?string $employee_id
  * @property ?string $name
  * @property ?string $cnpj
@@ -44,7 +42,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
  * @property ?float $interest_rate_sale
  * @property ?float $interest_rate_installment
  * @property ?float $late_fee
- * @property ?bool $marketplace
  *
  * @property ?string $font_family
  * @property ?string $primary_color
@@ -83,7 +80,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasOne};
  * @property \Carbon\Carbon $updated_at
  */
 #[ObservedBy(SettingsObserver::class)]
-class Settings extends BaseModel
+class Settings extends Model
 {
     use HasFactory;
     use HasAddress;
@@ -93,7 +90,6 @@ class Settings extends BaseModel
     protected $table = 'settings';
 
     protected $fillable = [
-        'tenant_id',
         'employee_id',
         'name',
         'cnpj',
@@ -112,7 +108,6 @@ class Settings extends BaseModel
         'interest_rate_sale',
         'interest_rate_installment',
         'late_fee',
-        'marketplace',
 
         'font_family',
 
@@ -155,18 +150,6 @@ class Settings extends BaseModel
         'bg_img',
         'bg_img_opacity',
     ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'martketplace' => 'bool',
-        ];
-    }
 
     public function ceo(): HasOne
     {

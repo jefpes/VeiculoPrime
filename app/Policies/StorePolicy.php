@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Enums\Permission;
 use App\Models\{Store, User};
-use Filament\Facades\Filament;
 
 class StorePolicy
 {
@@ -45,12 +44,6 @@ class StorePolicy
      */
     public function delete(User $user, Store $store): bool
     {
-        if (auth_user()->tenant_id !== null) {
-            if ($store->id !== Filament::getTenant()->id) { //@phpstan-ignore-line
-                return false;
-            }
-        }
-
         if (Store::query()->count() === 1) {
             return false;
         }
@@ -63,12 +56,6 @@ class StorePolicy
      */
     public function transfer(User $user, Store $store): bool
     {
-        if (auth_user()->tenant_id !== null) {
-            if ($store->id !== Filament::getTenant()->id) { //@phpstan-ignore-line
-                return false;
-            }
-        }
-
         if (Store::query()->count() === 1) {
             return false;
         }

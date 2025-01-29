@@ -10,8 +10,28 @@ class StoreSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
-        Store::factory(state: ['tenant_id' => $tenant_id])->withPhone()->create();
+        $id = 1;
+
+        if (Store::where('slug', 'loja-' . $id)->exists()) {
+            $id++;
+        }
+        Store::create([
+            'name'         => 'Loja ' . $id,
+            'slug'         => 'loja-' . $id,
+            'zip_code'     => '99999-999',
+            'street'       => 'Rua Teste',
+            'number'       => '1234',
+            'neighborhood' => 'Neighborhood',
+            'city'         => 'Pentecoste',
+            'state'        => 'Ceará',
+            'complement'   => 'Complement test',
+        ])->phones()->create([
+            'type'   => 'Casa',
+            'ddi'    => '55',
+            'ddd'    => '88',
+            'number' => '99999-9999',
+        ]);
     }
 }

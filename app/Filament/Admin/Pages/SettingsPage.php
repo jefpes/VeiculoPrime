@@ -3,16 +3,19 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Enums\{Permission};
+use App\Filament\Admin\Clusters\ManagementCluster;
 use App\Models\{Settings};
 use Filament\Forms\{Form};
 use Filament\Notifications\Notification;
-use Filament\Pages\{Page};
+use Filament\Pages\{Page, SubNavigationPosition};
 use Filament\{Forms};
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class SettingsPage extends Page
 {
     protected static string $view = 'filament.pages.settings-page';
+
+    protected static ?string $cluster = ManagementCluster::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
@@ -29,17 +32,13 @@ class SettingsPage extends Page
 
     protected static ?int $navigationSort = 15;
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Settings');
-    }
-
     /** @var array<string, mixed> */
     public ?array $data = [];
 
     public function mount(): void
     {
-        $this->settings = Settings::query()->where('tenant_id', tenant()->id)->firstOrFail();
+        static::$subNavigationPosition = auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+        $this->settings                = Settings::query()->first();
         $this->form->fill($this->settings->toArray()); //@phpstan-ignore-line
     }
 
@@ -77,13 +76,6 @@ class SettingsPage extends Page
                                     ->email()
                                     ->maxLength(255)
                                     ->prefixIcon('heroicon-m-envelope'),
-                                Forms\Components\Select::make('marketplace')
-                                    ->label('Marketplace')
-                                    ->options([
-                                        '0' => 'Não exibir no marketplace',
-                                        '1' => 'Exibir no marketplace',
-                                    ])
-                                    ->required(),
                                 Forms\Components\MarkdownEditor::make('about')
                                     ->label('About')
                                     ->disableToolbarButtons([
@@ -141,10 +133,10 @@ class SettingsPage extends Page
                                 Forms\Components\FileUpload::make('logo')
                                     ->image()
                                     ->directory('settings'),
-                                // Forms\Components\FileUpload::make('bg_img')
-                                //     ->label('Backgroud image')
-                                //     ->image()
-                                //     ->directory('settings'),
+                                Forms\Components\FileUpload::make('bg_img')
+                                    ->label('Backgroud image')
+                                    ->image()
+                                    ->directory('settings'),
                                 Forms\Components\FileUpload::make('favicon')
                                     ->image()
                                     ->directory('settings'),
@@ -152,22 +144,22 @@ class SettingsPage extends Page
                                 ->columnSpan(1)
                                 ->columns(3)
                                 ->schema([
-                                    // Forms\Components\Select::make('bg_img_opacity')
-                                    // ->label('Backgroud image opacity')
-                                    // ->options([
-                                    //     '0'   => '0%',
-                                    //     '0.1' => '10%',
-                                    //     '0.2' => '20%',
-                                    //     '0.3' => '30%',
-                                    //     '0.4' => '40%',
-                                    //     '0.5' => '50%',
-                                    //     '0.6' => '60%',
-                                    //     '0.7' => '70%',
-                                    //     '0.8' => '80%',
-                                    //     '0.9' => '90%',
-                                    //     '1'   => '100%',
-                                    // ])
-                                    // ->native(false),
+                                    Forms\Components\Select::make('bg_img_opacity')
+                                    ->label('Backgroud image opacity')
+                                    ->options([
+                                        '0'   => '0%',
+                                        '0.1' => '10%',
+                                        '0.2' => '20%',
+                                        '0.3' => '30%',
+                                        '0.4' => '40%',
+                                        '0.5' => '50%',
+                                        '0.6' => '60%',
+                                        '0.7' => '70%',
+                                        '0.8' => '80%',
+                                        '0.9' => '90%',
+                                        '1'   => '100%',
+                                    ])
+                                    ->native(false),
                                     Forms\Components\Select::make('font_family')
                                     ->columnSpan(2)
                                     ->label('Font type')

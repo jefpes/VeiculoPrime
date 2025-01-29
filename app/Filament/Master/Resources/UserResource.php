@@ -49,13 +49,13 @@ class UserResource extends Resource
                     ->dehydrated(fn (?string $state) => filled($state))
                     ->visibleOn('create')
                     ->confirmed()
-                    ->maxLength(15),
+                    ->maxLength(8),
                 Forms\Components\TextInput::make('password_confirmation')
                     ->visibleOn('create')
                     ->password()
                     ->requiredWith('password')
                     ->dehydrated(false)
-                    ->maxLength(15),
+                    ->maxLength(8),
                 Forms\Components\Grid::make()
                     ->columns(1)
                     ->columnSpanFull()
@@ -78,7 +78,6 @@ class UserResource extends Resource
         return $table
             ->recordAction(null)
             ->columns([
-                Tables\Columns\TextColumn::make('tenant.name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')

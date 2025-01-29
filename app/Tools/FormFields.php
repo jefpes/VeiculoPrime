@@ -43,10 +43,6 @@ class FormFields
                             ->maxLength(255)
                             ->rows(1)
                             ->columnSpanFull(),
-                        Textarea::make('link_google_maps')
-                            ->maxLength(255)
-                            ->rows(1)
-                            ->columnSpanFull(),
                     ]),
                 ]);
     }
@@ -112,7 +108,6 @@ class FormFields
                                     ->length(2),
                             ]),
                             PhoneInput::make('number')
-                                ->columnSpan(['md' => 2, 'sm' => 'full'])
                                 ->required(),
                             TextInput::make('type')
                                 ->columnSpan(['md' => 1, 'sm' => 'full'])

@@ -11,9 +11,12 @@
                 <div>
                     @foreach($accessories as $accessory)
                         <div class="flex gap-2 my-3">
-                            <div class="w-6 h-6">
-                                {!! $accessory->icon !!}
-                            </div>
+                            @php
+                                $image = Str::slug($accessory->name);
+                                $image = 'icons/' . $image . '.svg';
+                            @endphp
+
+                            <img src="{{ asset($image) }}" class="w-6 h-6" alt="{{ $accessory->name }}">
                             <span class="text-[var(--f-text-variant-6)]">
                             {{ trans($accessory->name) }}
                         </span>

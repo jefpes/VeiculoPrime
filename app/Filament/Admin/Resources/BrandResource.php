@@ -2,10 +2,12 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\BrandResource\{Pages};
 use App\Models\Brand;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
@@ -14,16 +16,18 @@ class BrandResource extends Resource
 {
     protected static ?string $model = Brand::class;
 
+    protected static ?string $cluster = VehicleCluster::class;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
     protected static ?int $navigationSort = 22;
 
     protected static ?string $navigationIcon = 'heroicon-o-wrench';
 
     protected static bool $isScopedToTenant = false;
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Vehicle');
-    }
 
     public static function getModelLabel(): string
     {
@@ -41,7 +45,7 @@ class BrandResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->maxLength(255)
-                    ->rules(['required', unique_within_tenant_rule(static::$model)])
+                    ->required()
                     ->columnSpanFull(),
             ]);
     }

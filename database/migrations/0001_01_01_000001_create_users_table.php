@@ -12,19 +12,11 @@ return new class () extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('tenant_id')->nullable()->constrained(table: 'tenants', column: 'id')->cascadeOnDelete();
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('primary_color')->nullable();
-            $table->string('secondary_color')->nullable();
-            $table->string('tertiary_color')->nullable();
-            $table->string('quaternary_color')->nullable();
-            $table->string('quinary_color')->nullable();
-            $table->string('senary_color')->nullable();
-            $table->string('font')->nullable();
-            $table->boolean('navigation_mode')->default(true);
+            $table->json('custom_fields')->nullable();
             $table->string('avatar_url')->nullable();
             $table->rememberToken();
             $table->softDeletes();

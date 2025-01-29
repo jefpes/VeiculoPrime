@@ -38,7 +38,7 @@ class Contracts
         }
     }
 
-    public static function setPeopleValues(TemplateProcessor $template, ?string $people_id = null, ?string $parent = null): void
+    public static function setPeopleValues(TemplateProcessor $template, ?string $people_id = null, string $parent = null): void
     {
         if ($people_id === null) {
             return;
@@ -64,7 +64,7 @@ class Contracts
         }
     }
 
-    public static function setEmployeeValues(TemplateProcessor $template, ?string $people_id = null, ?string $parent = null): void
+    public static function setEmployeeValues(TemplateProcessor $template, ?string $people_id = null, string $parent = null): void
     {
         if ($people_id === null) {
             return;
@@ -85,7 +85,7 @@ class Contracts
         }
     }
 
-    public static function setAddressesValues(TemplateProcessor $template, ?MorphMany $addressable = null, ?string $parent = null): void
+    public static function setAddressesValues(TemplateProcessor $template, ?MorphMany $addressable = null, string $parent = null): void
     {
         if ($addressable === null || $parent === null) {
             return;

@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{FuelTypes, SteeringTypes, TransmissionTypes};
+use App\Filament\Admin\Clusters\VehicleCluster;
 use App\Filament\Admin\Resources\VehicleResource\{Pages};
 use App\Models\{Accessory, Brand, Extra, People, Store, VehicleType};
 use App\Models\{Vehicle, VehicleModel};
@@ -13,6 +14,7 @@ use Filament\Forms\{Form, Get};
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\Summarizers\{Count, Sum};
 use Filament\Tables\Columns\{TextColumn, ToggleColumn};
@@ -27,16 +29,18 @@ class VehicleResource extends Resource
 {
     protected static ?string $model = Vehicle::class;
 
+    protected static ?string $cluster = VehicleCluster::class;
+
     protected static ?int $navigationSort = 24;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
 
     protected static ?string $navigationIcon = 'icon-car';
 
     protected static ?string $recordTitleAttribute = 'plate';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Vehicle');
-    }
 
     public static function getModelLabel(): string
     {
@@ -255,11 +259,6 @@ class VehicleResource extends Resource
                     ->sortable()
                     ->money('BRL')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->summarize(Sum::make()->money('BRL')),
-                TextColumn::make('expenses.value')
-                    ->label('Expenses')
-                    ->money('BRL')
-                    ->state(fn ($record) => $record->expenses()->exists() ? $record->expenses()->sum('value') : 0)
                     ->summarize(Sum::make()->money('BRL')),
                 TextColumn::make('model.name')
                     ->sortable()
@@ -498,19 +497,17 @@ class VehicleResource extends Resource
                                 }
                             }
 
-                            if ($vehicle->sale !== null) {
-                                foreach ($vehicle->sale as $sale) { //@phpstan-ignore-line
-                                    if ($sale->paymentInstallments !== null) {
-                                        foreach ($sale->paymentInstallments as $installment) {
-                                            $installment->update(['store_id' => $newStore]);
-                                        }
+                            if ($vehicle->sale()->exists()) {
+                                if ($vehicle->paymentInstallments()->exists()) {
+                                    foreach ($vehicle->paymentInstallments as $installment) { //@phpstan-ignore-line
+                                        $installment->update(['store_id' => $newStore]);
                                     }
-
-                                    $sale->update(['store_id' => $newStore]);
                                 }
-                            }
 
-                            $vehicle->update(['store_id' => $newStore]);
+                                $vehicle->sale()->update(['store_id' => $newStore]);
+
+                                $vehicle->update(['store_id' => $newStore]);
+                            }
 
                             Notification::make()->body(__('Vehicle transferred successfully'))->icon('heroicon-o-check-circle')->iconColor('success')->send();
                         }),

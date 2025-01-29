@@ -13,9 +13,9 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: 'veiculoprime.test',
+        host: 'motormarket.test',
         hmr: {
-            host: 'veiculoprime.test',
+            host: 'motormarket.test',
         },
     },
 });

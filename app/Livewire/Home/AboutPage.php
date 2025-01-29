@@ -4,8 +4,10 @@ namespace App\Livewire\Home;
 
 use App\Models\{Photo, Settings, Store};
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.app')]
 class AboutPage extends Component
 {
     public Collection $banners;

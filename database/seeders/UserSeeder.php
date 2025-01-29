@@ -10,10 +10,9 @@ class UserSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
         User::create([
-            'tenant_id'         => $tenant_id,
             'name'              => 'admin',
             'email'             => 'admin@admin.com',
             'email_verified_at' => now(),

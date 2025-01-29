@@ -9,11 +9,10 @@ class SettingsSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
         \App\Models\Settings::create([
-            'tenant_id' => $tenant_id,
-            'name'      => 'Veiculo Prime',
+            'name'      => 'Motor Market',
             'opened_in' => '2021-07-02',
             'cnpj'      => '99.999.999/9999-99',
             'about'     => 'Somos uma empresa de venda de veículos, na qual prezamos pela qualidade e satisfação do cliente.',

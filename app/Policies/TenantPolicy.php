@@ -11,7 +11,7 @@ class TenantPolicy
      */
     public function viewAny(User $user): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_read');
     }
 
     /**
@@ -19,7 +19,7 @@ class TenantPolicy
      */
     public function view(User $user, Tenant $tenant): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_read');
     }
 
     /**
@@ -27,7 +27,7 @@ class TenantPolicy
      */
     public function create(User $user): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_create');
     }
 
     /**
@@ -35,7 +35,7 @@ class TenantPolicy
      */
     public function update(User $user, Tenant $tenant): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_update');
     }
 
     /**
@@ -43,7 +43,7 @@ class TenantPolicy
      */
     public function delete(User $user, Tenant $tenant): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_delete');
     }
 
     /**
@@ -51,7 +51,7 @@ class TenantPolicy
      */
     public function restore(User $user, Tenant $tenant): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_delete');
     }
 
     /**
@@ -59,6 +59,6 @@ class TenantPolicy
      */
     public function forceDelete(User $user, Tenant $tenant): bool
     {
-        return auth_user()->roles()->pluck('hierarchy')->min() === 0;
+        return $user->hasAbility('tenant_delete');
     }
 }

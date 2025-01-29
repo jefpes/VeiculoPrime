@@ -6,6 +6,9 @@ use App\Enums\{MaritalStatus, Sexes};
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\People>
+ */
 class PeopleFactory extends Factory
 {
     /**

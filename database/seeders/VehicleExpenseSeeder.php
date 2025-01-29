@@ -10,7 +10,7 @@ class VehicleExpenseSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(?string $tenant_id = null): void
+    public function run(): void
     {
         $vehicles = Vehicle::all();
         $user     = User::all();
@@ -18,7 +18,6 @@ class VehicleExpenseSeeder extends Seeder
         for ($i = 0; $i < 60; $i++) {
             $vehicle = $vehicles->random();
             VehicleExpense::create([
-                'tenant_id'   => $tenant_id,
                 'store_id'    => $vehicle->store_id,
                 'date'        => now()->subDays(rand(1, 180)),
                 'description' => 'Despesa de teste',

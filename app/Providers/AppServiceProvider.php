@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use Filament\Facades\Filament;
+use Filament\Http\Middleware\Authenticate;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\{Config, URL};
 use Illuminate\Support\{ServiceProvider};
 
@@ -35,15 +39,23 @@ class AppServiceProvider extends ServiceProvider
 
         if (env("APP_ENV") == "local") {
             $domain = "http://$domain";
+            setlocale(LC_ALL, "pt_BR", "pt_BR.utf-8", "pt_BR.utf-8", "portuguese");
         }
 
         if (env("APP_ENV") == "production") {
             $domain = "https://$domain";
             URL::forceScheme('https');
+            setlocale(LC_TIME, 'pt_BR.utf8');
         }
 
         Config::set("APP_URL", $domain);
 
         Config::set("ASSET_URL", $domain);
+
+        Authenticate::redirectUsing(fn (): string => Filament::getLoginUrl());
+
+        AuthenticateSession::redirectUsing(fn (): string => Filament::getLoginUrl());
+
+        AuthenticationException::redirectUsing(fn (): string => Filament::getLoginUrl());
     }
 }

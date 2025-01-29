@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\{PaymentMethod, StatusPayments};
+use App\Filament\Admin\Clusters\FinancialCluster;
 use App\Filament\Admin\Resources\SaleResource\RelationManagers\InstallmentsRelationManager;
 use App\Filament\Admin\Resources\SaleResource\{Pages};
 use App\Models\{People, Sale, Store, Vehicle, VehicleModel};
@@ -12,6 +13,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\{FileUpload, Group, Section, Select, TextInput, ToggleButtons};
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\{Average, Count, Sum, Summarizer};
@@ -27,14 +29,16 @@ class SaleResource extends Resource
 {
     protected static ?string $model = Sale::class;
 
+    protected static ?string $cluster = FinancialCluster::class;
+
+    public static function getSubNavigationPosition(): SubNavigationPosition
+    {
+        return auth_user()->navigation_mode ? SubNavigationPosition::Start : SubNavigationPosition::Top;
+    }
+
     protected static ?int $navigationSort = 31;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('Financial');
-    }
 
     public static function getModelLabel(): string
     {
@@ -348,14 +352,14 @@ class SaleResource extends Resource
                 Filter::make('seller')->form([
                     Select::make('seller')
                         ->searchable()
-                        ->options(fn () => People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
+                        ->options(fn () => \App\Models\People::query()->orderBy('name')->whereHas('seller')->get()->pluck('name', 'id')),
                 ])->query(function ($query, array $data) {
                     return $query->when($data['seller'], fn ($query) => $query->where('seller_id', $data['seller']));
                 })->indicateUsing(function (array $data): array {
                     $indicators = [];
 
                     if ($data['seller'] ?? null) {
-                        $indicators[] = __('Seller') . ': ' . People::find($data['seller'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Seller') . ': ' . \App\Models\People::find($data['seller'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;
@@ -364,7 +368,7 @@ class SaleResource extends Resource
                     Select::make('client')
                         ->searchable()
                         ->options(function () {
-                            return People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
+                            return \App\Models\People::query()->orderBy('name')->whereHas('client')->get()->pluck('name', 'id');
                         }),
                 ])->query(function ($query, array $data) {
                     return $query
@@ -373,7 +377,7 @@ class SaleResource extends Resource
                     $indicators = [];
 
                     if ($data['client'] ?? null) {
-                        $indicators[] = __('Client') . ': ' . People::find($data['client'])->name; //@phpstan-ignore-line
+                        $indicators[] = __('Client') . ': ' . \App\Models\People::find($data['client'])->name; //@phpstan-ignore-line
                     }
 
                     return $indicators;

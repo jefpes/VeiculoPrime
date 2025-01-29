@@ -3,8 +3,10 @@
 namespace App\Livewire\Home;
 
 use App\Models\Vehicle;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.app')]
 class ProductPage extends Component
 {
     public Vehicle $vehicle;

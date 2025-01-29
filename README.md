@@ -1,6 +1,6 @@
-## Sobre Veiculo Prime
+## Sobre Motor Market
 
-Veiculo Prime é uma aplicação voltada para lojistas do ramo automobilístico de pequeno e médio porte, permitindo a digitalização de seus negócios. Com o Veiculo Prime, os lojistas podem gerenciar suas finanças, exibir seu estoque de veículos por meio de um site personalizado e participar de um marketplace de veículos.
+Motor Market é uma aplicação voltada para lojistas do ramo automobilístico de pequeno e médio porte, permitindo a digitalização de seus negócios. Com o Motor Market, os lojistas podem gerenciar suas finanças, exibir seu estoque de veículos por meio de um site personalizado e participar de um marketplace de veículos.
 
 ## Tecnologias e plugins
 
@@ -52,11 +52,27 @@ php artisan storage:link
 
 #### Migrações e seed
 
-###### Painel Master ( /master e /admin )
+###### Painel Master ( /master )
 
 ```bash
-php artisan migrate:fresh
+php artisan migrate:fresh --seeder=LandlordSeeder
 ```
+
+user: `master@admin.com`
+password: `admin`
+
+###### Painel Tenant ( /admin )
+
+Crie um tenant no painel master ( /master )
+
+quando registrar o email e a senha serao suas credenciais, para ter um banco populado ( testes ), apos a criacao do tenant
+
+```bash
+php artisan tenants:migrate-fresh && php artisan tenants:seed
+```
+
+user: `master@admin.com`
+password: `admin`
 
 #### Copiar as fotos para exemplo
 
