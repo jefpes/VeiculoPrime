@@ -57,4 +57,12 @@ enum Permission: string
     case VEHICLE_EXPENSE_READ   = 'vehicle_expense_read';
     case VEHICLE_EXPENSE_UPDATE = 'vehicle_expense_update';
     case VEHICLE_EXPENSE_DELETE = 'vehicle_expense_delete';
+
+    case VEHICLE_EXPENSE_CATEGORY_CREATE = 'vehicle_expense_category_create';
+
+    case VEHICLE_EXPENSE_CATEGORY_READ = 'vehicle_expense_category_read';
+
+    case VEHICLE_EXPENSE_CATEGORY_UPDATE = 'vehicle_expense_category_update';
+
+    case VEHICLE_EXPENSE_CATEGORY_DELETE = 'vehicle_expense_category_delete';
 }
