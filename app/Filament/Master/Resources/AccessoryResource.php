@@ -3,12 +3,12 @@
 namespace App\Filament\Master\Resources;
 
 use App\Filament\Master\Resources\AccessoryResource\{Pages};
-use App\Forms\Components\SvgColumn;
 use App\Models\Accessory;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\{Forms, Tables};
+use Illuminate\Support\HtmlString;
 
 class AccessoryResource extends Resource
 {
@@ -35,9 +35,11 @@ class AccessoryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                SvgColumn::make('icon')
-                    ->label('Ícone')
-                    ->svg(),
+                Tables\Columns\TextColumn::make('icon')
+                    ->badge()
+                    ->limit(100000)
+                    ->color('primary')
+                    ->formatStateUsing(fn ($state) => new HtmlString($state)),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
