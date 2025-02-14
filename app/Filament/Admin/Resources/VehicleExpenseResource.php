@@ -208,6 +208,15 @@ class VehicleExpenseResource extends Resource
                 }
             }
 
+            // Indicator for model filter
+            if (!empty($data['expense_category_id'])) {
+                $category = \App\Models\VehicleExpenseCategory::query()->find($data['expense_category_id'])->name ?? null;
+
+                if ($category) {
+                    $indicators[] = __('Category') . ': ' . $category;
+                }
+            }
+
             if (!empty($data['vehicle_id'])) {
                 $plate = Vehicle::query()->find($data['vehicle_id'])->plate ?? null;
 
