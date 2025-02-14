@@ -58,11 +58,11 @@ class VehicleExpenseResource extends Resource
                         ->required()
                         ->createOptionForm([
                             Forms\Components\TextInput::make('name')
-                                ->required()
+                                ->required(),
                         ])
                         ->editOptionForm([
                             Forms\Components\TextInput::make('name')
-                                ->required()
+                                ->required(),
                         ]),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
