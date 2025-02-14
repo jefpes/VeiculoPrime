@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class BaseModel
  * @package App\Models
- * @property string $id
- * @property string|null $tenant_id
+ *
+ * @method BelongsTo tenant()
  * @property Tenant $tenant
  */
 class BaseModel extends Model

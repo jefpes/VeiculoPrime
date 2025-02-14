@@ -115,7 +115,7 @@ class ProductsPage extends Component
         return Brand::query()
             ->whereHas('models', function ($query) {
                 $query->whereHas('vehicles', function ($query) {
-                    $query->vehicleMarketPlace()->whereNull('vehicles.sold_date');
+                    $query->vehicleMarketPlace()->whereNull('vehicles.sold_date'); // @phpstan-ignore-line
                 });
 
                 if ($this->vehicle_type) {

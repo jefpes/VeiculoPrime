@@ -55,7 +55,15 @@ class VehicleExpenseResource extends Resource
                         ->required(),
                 Forms\Components\Select::make('vehicle_expense_category_id')
                         ->relationship('expenseCategory', 'name')
-                        ->required(),
+                        ->required()
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required()
+                        ])
+                        ->editOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->required()
+                        ]),
                 Forms\Components\DatePicker::make('date')
                     ->required(),
                 Money::make('value')
@@ -85,11 +93,6 @@ class VehicleExpenseResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('expenseCategory.name')
-                    ->label('Category')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable()
@@ -97,12 +100,16 @@ class VehicleExpenseResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->date('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('expenseCategory.name')
+                    ->label('Category')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('value')
                     ->money('BRL')
                     ->sortable()
                     ->summarize(Sum::make()->money('BRL')),
+                Tables\Columns\TextColumn::make('description')
+                    ->searchable(),
             ])
             ->filters([
                 Filter::make('filter')

@@ -17,7 +17,7 @@ class FormFields
                 ->addActionLabel(__('Add Address'))
                 ->relationship('addresses')
                 ->schema([
-                    Grid::make()->columns(['md' => 2, 1])->schema([
+                    Grid::make()->columns(['md' => 2, 'sm' => 1])->schema([
                         ZipCode::make('zip_code'),
                         TextInput::make('state')
                             ->required()
