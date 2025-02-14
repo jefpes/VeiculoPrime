@@ -21,16 +21,19 @@
 
 
     </div>
-    <div>
-        {{-- @todo possivel simulacao de financiamento
-        <button @click="modalIsOpen = true" class="font-medium text-black underline-offset-2 underline focus:outline-none mt-2">
-            {{ trans('Payment methods') }}
-        </button>
+    @if ($vehicle->store->phones->isNotEmpty())
+        <div>
+            {{-- @todo possivel simulacao de financiamento
+            <button @click="modalIsOpen = true" class="font-medium text-black underline-offset-2 underline focus:outline-none mt-2">
+                {{ trans('Payment methods') }}
+            </button>
 
-        <x-vehicle.payment-methods :methods="$paymentMethods" />
-        --}}
-        <a href="{{ $vehicle->store->phones->random()->gerarLinkWhatsApp() }}" target="_blank" class="bg-[var(--f-secondary-color)] text-[var(--f-text-variant-1)] font-semibold px-6 py-2 rounded-lg focus:outline-none">
-            {{ trans('Buy') }}
-        </a>
-    </div>
+            <x-vehicle.payment-methods :methods="$paymentMethods" />
+            --}}
+
+            <a href="{{ $vehicle->store->phones->random()->gerarLinkWhatsApp() }}" target="_blank" class="bg-[var(--f-secondary-color)] text-[var(--f-text-variant-1)] font-semibold px-6 py-2 rounded-lg focus:outline-none">
+                {{ trans('Buy') }}
+            </a>
+        </div>
+    @endif
 </div>

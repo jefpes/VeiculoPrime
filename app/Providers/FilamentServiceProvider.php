@@ -175,7 +175,7 @@ class FilamentServiceProvider extends ServiceProvider
 
         Infolists\Components\Section::macro('empty', function () {
             /** @var Infolists\Components\Section $this */
-            return $this->extraAttributes(['empty' => true]);
+            return $this->extraAttributes(['empty' => true]); // @phpstan-ignore-line
         });
     }
 }

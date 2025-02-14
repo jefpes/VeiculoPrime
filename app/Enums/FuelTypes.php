@@ -14,7 +14,7 @@ enum FuelTypes: string implements HasLabel
     case ELECTRIC = 'ELETRICO';
     case OTHER    = 'OUTRO';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::GASOLINE => 'Gasolina',
